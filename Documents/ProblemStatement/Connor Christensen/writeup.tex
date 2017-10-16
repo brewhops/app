@@ -1,0 +1,75 @@
+% Problem Statement
+% CS 461 - CS Senior Capstone
+% Fall 2017
+% Author: Connor Christensen
+
+
+\documentclass[draftclsnofoot,onecolumn,letterpaper,10pt]{IEEEtran}
+
+% Packaging
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{titling}
+\usepackage{color}
+\usepackage{listings}
+\usepackage{cite}
+
+% Type of paper
+\geometry{letterpaper, margin=.75in}
+
+% Title page
+\title{CS 461 - CS Senior Capstone
+	\\Fall 2017
+	\\Problem Statement
+}
+\author{Connor I. Christensen \\ \small{\(chriconn@oregonstate.edu\)}}
+
+\begin{document}
+
+\begin{titlingpage}
+    \maketitle
+    \begin{abstract}
+	Ninkasi is a brewing Company based in Eugene, Oregon. Ninkasi produces beer for 9 US states and several locations across the Canadian west coast. The current method of brewery data organization is to enter data manually into an Excel spreadsheet and email it around the company. This is inefficient, error-prone and not suitable for their current operations. In 2010 they produced 32,000 barrels, and by 2013 production had increased to 86,000 barrels. The need to be able to easily record, show and transmit data is important to the continued improvement of their product. Our team is tasked with creating a web app that will provide a convenient interface for data entry, access, display, and basic analytics. This app will allow input from automated brewery data collection systems, and give employees the ability to manually enter and modify data points.
+
+
+    \end{abstract}
+\end{titlingpage}
+
+\section{Problem}
+
+The current method for tracking all their brewery process data is through Excel spreadsheets and a variety of paper forms, which is later entered into Excel spreadsheets. The method for sharing these Excel spreadsheets is to email them around the company, which is a laborious, time-consuming and an error-prone process. The amount of time it takes to maintain this procedure, could be much better spent refining the brewing process. Ninkasi is now producing beer at large enough quantities where standardization and data organization is becoming an issue. The company is potentially missing out on deeper insights if the data is not widely accessible to those involved in the manufacturing process, which could very well be the case if the data is being handled by only a few people emailing around an excel spreadsheet. In addition to being inaccessible to everyone, there is also a limitation on where the data can be accessed from within the company. Employees of the company are highly active and mobile as their brewing is a hands-on experience, and having to use a laptop or desktop while managing the brewery floor can be a difficult process.
+
+
+
+
+
+\section{Proposed solution}
+
+The software built to suit their needs for data flow, storage and access requires that it be adaptable to a wide variety of screen sizes and mobility ranging from desktop computing to convenient methods of entering and displaying data on the cell phone or tablet. Given that most of the data interaction will take place through mobile devices, it was originally requested that an app for send mobile devices would be built. However, building an application for iOS and for android would be labor and time intensive, while simultaneously being limiting on the number of operating systems they can run on. Developing mobile applications excludes any desktop or laptop devices, and being able to utilize the extra screen real-estate is beneficial for data visualization and comparison. The proposed solution is to construct a web app that would be compatible with a wide range of devices. This web app will link to a Ninkasi database, receive manual and automatic input of data into the database, and provide a user-friendly interface for all employees accessing and managing the data.
+
+The specifics about which technology will be utilized for automatic data collection will be clarified as more information is gathered on the brewing process. As such, it is difficult to foresee how this technology will be integrated with the software that we are building, and how much energy it will take to accomplish the task. However, we know that whatever system we end up building will be used to evaluate whether a custom-built data entry system will be useful for the company in the future. This means that whatever code we end up writing and systems we set up, they need to be well documented and easily modular, as they will likely be used by the company later.
+
+
+\section{Desired Outcomes}
+
+The desired outcomes of the project is to be able to reduce manual data entry from a variety of sources, into a one entry per data point. This involves the combination of manual input from employees and automated input from a variety of sensors monitoring to bring process.  All in all, the more this web app can reduce the amount of time it takes to collect data, the better.
+
+As mentioned in a problem statement, all the data is being shared through Excel spreadsheets and email. This would ideally be a situation that could be solved by web technology. Currently the method for data storage does not provide the brewery with quick and efficient methods for accessing the data. Through any level of analytics that the web app could perform automatically, efficiency of the employees can be increased.
+
+For most redundant and overly laborious tasks that the employees must carry through to be able to access and modify data regarding the brewing process this web app should ideally be able to improve any of the systems.
+
+
+
+
+\section{Performance metrics}
+
+The intent of this project is to create a test version of this system to trial in our brewery and provide justification for continued development. The lowest bar that is needed to be met for the project to be complete is a semi-easy way for employees of Ninkasi to input data into a database. The point is to speed up information input, reduce errors, simplify the data sharing process and allow for data retrieval. A standalone web app would satisfy the needs of the company. There are of course, always more features that could be added to the project, and that will be discussed in more detail when we outline a more detailed timeline.
+
+There will be multiple stopping points for the project, which will allow for a very flexible delivery schedule, as well as the ability to scale the project as time goes on. Software project estimation is a difficult skill even for professionals, so this project will be keeping that in mind during the construction of the timeline of the project.
+
+
+
+
+\nocite{*}
+
+\end{document}
