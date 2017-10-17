@@ -1,0 +1,36 @@
+\documentclass[draftclsnofoot, onecolumn, letterpaper, 10pt]{IEEEtran}
+% Packages
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{titling}
+\usepackage{color}
+\usepackage{listings}
+\usepackage{cite}
+
+% Type of paper
+\geometry{letterpaper, margin=.75in}
+
+% Title Information
+\title{CS Capstone - Problem Statement \\ Fall 2017}
+\author{Lily Shellhammer}
+\date{October 9th, 2017}
+
+\begin{document}
+\begin{titlingpage}
+\maketitle
+	%abstraction
+	\begin{abstract}
+	Our project is to create a uniform data-entry system for Ninaksi?s brewing operations. Currently, Ninkasi?s brewers are gathering data during cellaring on Excel sheets, post-its, and loose pieces of paper. This process causes a bottleneck in their production because of the time it takes to manually input data later. They have also lost data in this process. My team will be creating a web app that is accessible on any mobile phone, tablet, or desktop connected to the internet. Depending on the size of the device, there will be different functionalities for searching or displaying recent activity. All device sites will have legible text above input boxes that fit the size of the screen. Our web app will reduce Ninkasi?s time spent waiting for manual data entry or bottlenecks caused by missing data. The site will connect to a cloud hosting site chosen by Ninkasi. We will move Ninkasi?s data to the new hosting site as well as the incoming data through our web app. 
+	\end{abstract}
+\end{titlingpage}
+
+\section{Problem Statement}
+Ninkasi currently does not have a uniform data entry system for beer cellaring data.  All their quality control data points are manually typed into Excel spreadsheets before being saved in CSV* files and exported to their current database system. Before entering the data points into Excel, the brewers have been writing them down on pieces of paper, post-it notes, or notes in their phones. The brewers have been emailing data points to each other and the information is not entered at the time it is gathered. This process causes a bottleneck in production because of the time it takes to manually input the data later. It has also caused loss of data when pieces of paper go missing, are mislabeled, or are lost to human error. The data is critical and cannot be lost because it contains information about *, *, and alcohol content. These all must be closely monitored so that the beer is uniform in each keg and is produced without imperfections. If information about these aspects is missing and the lack of information is not found until later, the brewery has to delay production and go back and find the data in an unorganized system. Ninkasi also does not have a database that will be able to hold enough data points for the coming years. 
+\section{Proposed Solution}
+Our proposed solution to streamline Ninkasi?s data entry system is to create a web app that can be accessed on any internet-connected mobile device, tablet, laptop, or desktop computer. The app would connect Ninkasi's database with brewers, who could enter data points on their phone or tablet as they work in the plant and not wait to get to a desktop computer. We will include ?checks? in our system that will make it quicker and easier to catch mistakes and blank spaces in the database. These ?checks? include adding a time stamp and a brewer identification data point. When a piece of data is entered, the time and date are automatically entered. In order for a data point to be entered, a brewer identification must be tied to the entry. That way when mistakes happen, the time and person responsible are available. Machines in the brewery also transmit data to the database, so the data entered from our web app will be cohesive with the data entry from machines in order to produce easy-to-analyze data files from Ninkasi?s database. We will also set up Ninkasi?s data in a cloud hosting site of their choosing, to avoid running out of space in their database. 
+\section{Desired Outcomes}
+Our goal is to streamline the way Ninkasi enters data during the fermentation and bottling processes. After-the-fact data entry will no longer be necessary, as brewers can enter data points as soon as they gather them from any internet connected computer device. Checks within our data system, including added time stamps and a brewer identification tied to the data entry, will allow mistakes in data to be quickly caught and corrected. The web app will easily display information from the most recent data entries or from information related to search queries. The new cloud hosting site we help Ninkasi transition into using will avoid the possibility of running out of database space and not being able to store critical data.
+\section{Measurable Outcomes}
+Our data entry website would have clearly marked, legible input boxes for *, *, and gravity. Each box would fit the width of the screen so that it is easily tapped or clicked on. This needs to be usable in an active and possibly wet work environment; wet fingers would mean tiny buttons are hard to click accurately. On larger screens, the boxes would not span the whole width of the screen, making room for a search bar and options menu. On large tablet, laptop, or Desktop screens, there will be a menu with options to allow you to see recently inputted data, or search for data by entry name***. The layout will be simple, with a Ninkasi header and the ability to scroll down to all possible input boxes.  In order to test our form?s effectiveness, we will do a trail run in the brewery from multiple devices and later make sure the data was entered into the system. We will check that the search data function works and displays the correct data**. Each brewer will get an ID and we will check that their ID?s correspond to the appropriate data points. We will make sure the previous Ninkasi data is exported to the new cloud hosting site, and that our new data funnels into the cloud database in the same data format as the previous database. 
+
+\end{document}
