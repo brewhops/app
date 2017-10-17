@@ -7,6 +7,6 @@ A project for Ninkasi Brewery to modernize data storage methods for brewery oper
     * ProblemStatement
 
 # Contributors
-Connor Christensen (chriconn)
-Lily Shellhammer (shellhal)
+Connor Christensen (chriconn)<br/>
+Lily Shellhammer (shellhal)</br>
 William Buffum (buffumw)
