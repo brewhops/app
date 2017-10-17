@@ -1,0 +1,93 @@
+
+Description:
+	Production breweries create a large amount of data[1]. To efficiently capture and use this data, systems must be tailored made to the unique process flows of each brewery. The aim of this project is to create a brewery operations management system and program that can used by brewing team and cellar team members to input data and update task status [2] that allow for real time reporting and access to up to date information[3]. The reporting and communications will be determined by production related data and process updates entered by the production staff or collected automatically via sensors[4]. The scope of this project will be confined to brewing processes from beginning of fermentation to finished beer immediately prior to packaging[5]. It will not include brewhouse related data collection or processes or packaging related data or processes. This will project will be used as a demonstration to its stakeholders of the gains and advantages of a easy to use system and to provide justification to expand the development[6] and scope of this project in future years.
+	
+	[1] 
+		○ What is meant by "large" (thousands, millions, billions of data points?)
+		○ Format of data currently
+		○ Is there prior data that will need to be converted from current methods to new system
+	[2] 
+		○ What security requirements exist (internal permissions, external vulnerabilities, checks and balances)
+		○ Medium for input (web, mobile, etc.)
+	[3]
+		○ Actual real-time or pseudo-real-time (is there an acceptable delay of up-to-date information?)
+	[4]
+		○ Are there APIs for accessing sensor information?
+		○ Make/model of sensors (investigate necessary firmware)
+	[5]
+		○ Verify scope
+	[6]
+		○ Our role in this justification beyond system development
+
+Motivation:
+	Breweries rely on rapid transfer of information to track and produce quality beer. Currently, our brewery relies on paper logs with repetitive entry points that require manual data entry into our digital spreadsheet tracking[7]. These methods of data entry and tracking are time consuming[8] and prone to errors[9] which can lead to confusion and delays in receiving important and time sensitive information for process decisions[3][10]. Additionally, data points are regularly missed due lack of queues to collect data points[11]. When process points are delayed or production schedules are changed, information is not updated in a manner that allows the team to implement these changes[3][12] into their task planning until it is too late. Addressing these issues would save time, money, and labor[13] as well as streamline data acquisition and reporting for statistical process analyses[14] that would help detect and mitigate quality or production issues in a more timely manner.
+	
+	[7]
+		○ Current tools?
+	[8]
+		○ Acceptable time consumed?
+	[9]
+		○ Breakdown of possible errors and importance
+			§ System may need to handle these accordingly
+	[10]
+		○ Quantify "time sensitive" (connect back to [3] above)
+	[11]
+		○ Data points to collect?
+	[12]
+		○ How should system handle necessary changes (alerts to worker, automatic adjustments?)
+	[13]
+		○ Acceptable metrics to measure against?
+			§ How can we measure these?
+		○ Do we have statistics on these fields (time, money, labor) before system development to measure against?
+	[14]
+		○ Current tools?
+		○ How should data integrate to theses processes?
+
+Objectives:
+	• Reduce manual data entry to one entry per data point[15]
+	• Eliminate sharing of daily production data and reports via excel and email[16]
+	• Eliminate manual entry[17] or manual transfer of data that is collected automatically[17][18]
+	• Eliminate paper tracking logs[19] with real time updates[3][20] that can accessed from any device[21]
+	
+	[15]
+		○ Define "data point"
+	[16]
+		○ Eliminate, or eliminate and replace
+			§ If replace: with what?
+	[17]
+		○ Current methods?
+		○ Ideal method?
+	[18]
+		○ Eliminate, or eliminate and replace?
+	[19]
+		○ Ideal replacement?
+	[20]
+		○ See above on definition of "real-time" and acceptable delays
+	[21]
+		○ Which devices are priority
+		○ Usage needed on devices (Does usage needs eliminate any devices)
+
+Deliverables (original from client):
+	• Design an easy to use mobile and desktop[22] friendly human interface for production data collection and reporting[23]
+	• Create production reports[24] of cellaring activities
+	• Design structure to allow future integration of automatic data entry from instruments and sensors[25]
+
+	[22]
+		○ Native apps or web apps okay?
+	[23]
+		○ What does this process look like currently
+		○ Steps for data collection and reporting
+	[24]
+		○ Report format?
+		○ Needed functionality in addition to report
+	[25]
+		○ Which instruments/sensors, idea on specifics (need specs to be able to expose proper APIs to handle incoming data)
+
+Comments:
+	The intent of this project is to create a test version of this system to trial in our brewery and provide justification for continued development. There are a few platforms out there already to reference.
+
+Existing Solutions:
+	• https://www.orchestratedbeer.com/
+	• http://ekosbrewmaster.com/
+	• https://inductiveautomation.com/scada-software/
+	• https://www.nwasoft.com/industries/food

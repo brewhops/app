@@ -1,0 +1,131 @@
+% Problem Statement
+% CS 461 - CS Senior Capstone
+% Fall 2017
+% Author: William Buffum
+
+
+\documentclass[draftclsnofoot,onecolumn,letterpaper,10pt]{IEEEtran}
+
+% Packaging
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{titling}
+\usepackage{color}
+\usepackage{listings}
+\usepackage{cite}
+
+% Type of paper
+\geometry{letterpaper, margin=.75in}
+
+% Title page
+\title{CS 461 - CS Senior Capstone
+	\\Fall 2017
+	\\Problem Statement
+}
+\author{William B. Buffum \\ \small{\(buffumw@oregonstate.edu\)}}
+
+
+\begin{document}
+
+\begin{titlingpage}
+    \maketitle
+    \begin{abstract}
+Brewing processes vary between companies, making it difficult to develop a "one size fits all" management system. There are several competing systems on the market [1] but none match the needs of Ninkasi Brewing Company. Daniel Sharp, Director of Brewing Operations at Ninkasi, would like our team to engineer a solution specific enough to address their current issues and flexible enough for future integration with data collection instruments. As a team, we will analyze the systems in place, identify problem areas, develop methods addressing these issues, implement solutions, deploy solutions, and test solutions; ensuring throughout that Ninkasi needs are met.
+    \end{abstract}
+\end{titlingpage}
+
+\section{\textbf{Project Description}}
+
+\subsection{\textit{Overview}}
+Ninkasi relies on outdated process management methods; as production increases, these issues will manifest. As a small organization, Ninkasi may not have resources to invest in a brewing operations management system.
+
+\subsection{\textit{Problems}}
+Listed below are issues with the current system:
+\begin{itemize}
+    \item {Producing "large" [2] amounts of data and failing to effectively capture and leverage data [3]}
+        \begin{itemize}
+            \item {Ninkasi monitors data points throughout the brewing process to ensure a quality product. Beer is brewed in large [4] vats. A major factor in the brewing process is gravity [5]; during fermentation, changes in specific gravity are used to calculate the alcohol content of the beverage. Without accurate measurements and systems in place to handle issues, batches of product may vary in consistency.}
+        \end{itemize}
+\item {Relying on "paper logs" and "manual data entry into ... digital spreadsheet"}
+        \begin{itemize}
+\item {Paper logs require manual entry and retrieval, likely increases error in the data [6]. Integrating automatic pipelines to process and record data will reduce this error [7] and improve product quality and consistency [8]. These improvements will also free up human labor [9] to be used in more beneficial capacities.}
+        \end{itemize}
+\item {Data logging process is "time consuming" and "prone to errors"}
+        \begin{itemize}
+\item {Like previous issue, data logging increases human error and requires human capital that would otherwise benefit other brewing processes.}
+        \end{itemize}
+\item {"Confusion and delays in receiving ... time sensitive information"}
+        \begin{itemize}
+\item {Breweries require real-time [10] monitoring of brewing processes. Batches of product need to continue processing until they hit certain benchmarks [11], after which the product moves to the next stage of brewing. Missing these critical points can cost [12] breweries time and money. Automating these system checks and pipelining information from process to process can reduce errors in the brewing process and ultimately increase Ninkasi’s bottom line [13].}
+        \end{itemize}
+\item {Data points are missed or incorrectly collected}
+        \begin{itemize}
+\item {Automating data collection will allow Ninkasi to specify information pipelines to properly handle all data [14]. This will prevent missed data points and reduce error within the data [15]. Since data is routinely run through their statistical analysis unit, it is vital that the information is correct so that accurate conclusions may be created.}
+        \end{itemize}
+\item {Process and production delays are not communicated "until it is too late"}
+\end{itemize}
+
+
+\section{\textbf{System Objectives}}
+Below are objectives designated by client:
+
+
+\begin{itemize}
+\item {Reduce manual data entry to one entry per data point}
+        \begin{itemize}
+\item {Our system will allow brewers to monitor the brewing process from their desktop computers via web application. Creating processing pipelines that peripheral instruments and sensors send data to will allow us to consolidate information and present it in a singular interface to the brewers. This will ensure brewers only interact with data through one entry point.}
+        \end{itemize}
+\item {Eliminate sharing of daily production data and reports via excel and email}
+        \begin{itemize}
+\item {Instead of requiring brewers to email reports, our system will provide a shared interface that each person can log in to. Creating a shared drive of information and developing a user interface to present this information will eliminate the need to email production data and reports.}
+        \end{itemize}
+\item {Eliminate manual entry or manual transfer of data that is collected automatically}
+        \begin{itemize}
+\item {Current systems require manual data collection for peripheral sensors. If instruments allow, we will write software to automatically process data from peripheral sensors into the core system. After persistence into databases, brewers will be able to further process the collected information from web application.}
+        \end{itemize}
+\item {Eliminate paper tracking logs with real time updates that can accessed from any device}
+        \begin{itemize}
+\item {Automating data collection processes will eliminate paper tracking logs. A web application built for Ninkasi servers will allow brewers to access up-to-date information from any devices. We can also build in security restrictions to ensure only Ninkasi approved devices have access to network information.}
+        \end{itemize}
+\end{itemize}
+
+\section{\textbf{Deliverables}}
+Our comprehensive solution will include a web application to serve as an interface for the brewing operations management system. We will deploy this application on the Ninkasi network. The application will use database information to generate reports and monitor brewing processes. During the brewing process, our system will generate flags when issues arise and alert necessary brewers of pertinent information. Behind the scene, our system will interface with brewing sensors to pipeline data from collection to proper database locations, allowing for timely information. Overall, this system will reduce manual data entry to a single interface, eliminate sharing of daily production data and reports via excel and email, eliminate manual entry and transfer of data, and eliminate paper tracking logs to ensure important information is always up-to-date.
+
+\section{\textbf{Metrics}}
+\begin{itemize}
+\item {Reduce brewer interaction with data to singular interface}
+\item {Allow brewers to view reports within system interface}
+\item {Allow brewers to generate reports within system interface}
+\item {Eliminate manual data entry to reduce error by:}
+\item {Eliminate paper tracking logs}
+\item {Automate data collection and processing into system}
+\item {Analyze server needs and generate recommendation for either in-house system or migration to cloud services}
+\end{itemize}
+
+\section{\textbf{Clarifications}}
+\begin{enumerate}
+\item {Existing Solutions:}
+\begin{itemize}
+\item {https://www.orchestratedbeer.com/}
+\item {http://ekosbrewmaster.com/}
+\item {https://inductiveautomation.com/scada-software}
+\item {https://www.nwasoft.com/industries/food}
+\end{itemize}
+\item {Definition of "large": (waiting on client)}
+\item {Definition of "effectively capture and leverage": (waiting on client)}
+\item {Waiting for size specifications from client}
+\item {"refers to the specific gravity, or relative density compared to water, of the wort or must at various stages in the fermentation" (https://goo.gl/sA5yEe)}
+\item {Waiting on error estimation from client}
+\item {Discuss error reduction goals with client}
+\item {Discuss how to measure quality and consistency currently against after system implementation}
+\item {Define cost of current system and benefit of increase human capital}
+\item {Work with client to define real time in terms of acceptable information delays}
+\item {Define these benchmarks}
+\item {Define cost of missing these checkpoints (in terms of money and time)}
+\item {Define potential cost benefit of system automation}
+\item {Will determine what properly handling data entails after meeting with client}
+\item {Use error reduction as possible metric to compare against}
+\end{enumerate}
+
+\end{document}
