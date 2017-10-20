@@ -66,7 +66,7 @@
 
 	\item {"Confusion and delays in receiving ... time sensitive information"}
       		\begin{itemize}
-			\item {Breweries require constant monitoring of processes and quick feedback. Batches of product need to continue processing until they hit temperature and density benchmarks \footnote{temperature and density levels vary based on product that is being brewed}, after which the product moves to the next stage of brewing. Missing these critical points can cost \footnote{cost depends on size of batch, but cost may be several thousand dollars} breweries time \footnote{brewing a batch of beer can take two weeks} and money. Automating these system checks and pipelining information from process to process will reduce errors and provide a smoother brewing process.
+			\item {Breweries require constant monitoring of processes and quick feedback. Batches of product need to continue processing until they hit temperature and density benchmarks \footnote{temperature and density levels vary based on product that is being brewed}, after which the product moves to the next stage of brewing. Missing these critical points can cost \footnote{cost depends on size of batch, but cost may be several thousand dollars} breweries time \footnote{brewing a batch of beer can take two weeks} and money. Automating these system checks and pipelining information from process to process will reduce errors and provide a smoother brewing process.}
       		\end{itemize}
 
 	\item {Data points are missed or incorrectly collected}
@@ -103,10 +103,10 @@ The software built to suit their needs for data flow, storage and access require
 
 \begin{itemize}
 
-		\item {Reduce manual data entry to one entry per data point}
-			\begin{itemize}
-			\item {Our system will allow brewers to monitor the brewing process from a wide variety of devices from desktops to phones. Creating processing pipelines that peripheral instruments and sensors send data to will allow us to consolidate information and present it in a singular interface to the brewers. This will ensure brewers interact with data through one entry point.}
-			\end{itemize}
+	\item {Reduce manual data entry to one entry per data point}
+		\begin{itemize}
+			\item {Our system will allow brewers to monitor the brewing process from both smartphones and desktops via a web application. We will take the Telnet \footnote{Telnet is the system that provides the physical measure of various data points and provides APIs to that data} data feeds and pipeline information into the database. This will allow us to develop application programming interfaces to retrieve and update information in the database. This will ensure brewers interact with data through one entry point.}
+		\end{itemize}
 
 
 	\item {Eliminate sharing of production data and reports via excel and email}
@@ -117,9 +117,8 @@ The software built to suit their needs for data flow, storage and access require
 
 	\item {Eliminate paper tracking logs with updates that can accessed from any device}
 	    \begin{itemize}
-			\item {Automating data collection processes will eliminate paper tracking logs. A web application built for Ninkasi servers will allow brewers to access up-to-date information from any devices. We can also build in security restrictions to ensure only Ninkasi approved devices have access to network information.}
-			\end{itemize}
-
+			\item {Pipelining physical measurements from Telnet instruments \footnote{Telnet is the company that provides physical measure of data points and exposes API to the data} to the database will eliminate brewers need to copy data to the master spreadsheet manually. The web application will allow access to this information.}
+		\end{itemize}
 \end{itemize}
 
 \section{\textbf{Deliverables}}
