@@ -122,10 +122,27 @@ The software built to suit their needs for data flow, storage and access require
 \end{itemize}
 
 \section{\textbf{Deliverables}}
-Our comprehensive solution will include a web application to serve as an interface for the brewing operations management system. We will deploy this application on the Ninkasi network. The application will use database information to generate reports and monitor brewing processes. During the brewing process, our system will generate flags when issues arise and alert necessary brewers of pertinent information. Behind the scene, our system will interface with brewing sensors to pipeline data from collection to proper database locations, allowing for timely information. Overall, this system will reduce manual data entry to a single interface, eliminate sharing of daily production data and reports via excel and email, eliminate manual entry and transfer of data, and eliminate paper tracking logs to ensure important information is always up-to-date.
+Our comprehensive solution will include a web application to serve as an interface for the brewing operations management system. We will deploy this application on the Ninkasi network. The application will use database information to generate reports and monitor brewing processes. 
+
+During the brewing process, our system will generate flags when issues arise and alert necessary brewers of pertinent information. Behind the scene, our system will interface with brewing sensors to pipeline data from collection to proper database locations, allowing for timely information. Overall, this system will reduce manual data entry to a single interface, eliminate sharing of daily production data and reports via excel and email, eliminate manual entry and transfer of data, and eliminate paper tracking logs to ensure important information is always up-to-date.
 
 \section{\textbf{Metrics}}
 \begin{itemize}
+\item {Database}
+\begin{itemize}
+\item {Provide recommendation for internal/external data storage}
+\item {Create database to store temperature, gravity, timelines, and hop amounts}
+\item {Insert 3 months of cellar data from existing master spreadsheet into database}
+\end{itemize}
+\item{Web Application}
+\begin{itemize}
+\item {Build website that scales based on screen size}
+\item {Backend will transfer Telnet data into database}
+\item {Brewers will input data via web application running on smartphone or desktop computer}
+\end{itemize}
+
+
+
 \item {Reduce brewer interaction with data to singular piece of software}
 \item {Allow brewers to view reports within system interface}
 \item {Eliminate paper tracking logs}
