@@ -1,23 +1,22 @@
+# Makefile creted by Connor Christensen
+
+# This file contains four options:
+# 	make            - run the default task
+#   make clean      - remove all the intermeiate build files for latex
+#   make clean-hard - remove all intermeiate files and the pdf
+#   make build		- builds without cleaning the intermeiate files
+
+# this is the name of the .tex file
 TARGET=writeup
-TEX=latex
-default: pdf
 
-clean: clean-doc
-# Documentation
+# the default behavior is to compile a latex document
+# it requires that the .tex file exists first
+default: $(TARGET).tex
+	make build
+	make clean
 
-pdf: ps
-	ps2pdf $(TARGET).ps
-
-ps: dvi
-	dvips $(TARGET).dvi
-
-dvi: $(TARGET).tex
-	$(TEX) $(TARGET).tex
-	#Comment out if bibliography is included: bibtex $(TARGET)
-	$(TEX) $(TARGET).tex
-	$(TEX) $(TARGET).tex
-
-clean-doc:
+# clean removes lots of documents that are used in the intermediate build process
+clean:
 	rm -f $(TARGET).aux
 	rm -f $(TARGET).dvi
 	rm -f $(TARGET).log
@@ -26,7 +25,13 @@ clean-doc:
 	rm -f $(TARGET).toc
 	rm -f $(TARGET).bbl
 	rm -f $(TARGET).blg
+	rm -f $(TARGET).fdb_latexmk
+	rm -f $(TARGET).fls
+	rm -f $(TARGET).synctex.gz
 
-all: pdf prog
+clean-hard:
+	make clean
+	rm -f $(TARGET).pdf
 
-.PHONY: all
+build: $(TARGET).tex
+	pdflatex $(TARGET).tex
