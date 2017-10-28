@@ -100,20 +100,47 @@
         Brewers will adapt to using our web form rather than continue implementing the system they previously used. They will enter data not through paper logs or emails, but only through the web app. Our web form will need to connect to the chosen database, which may be hosted on site on Ninkasi’s server.
         
 	\subsection{Product functions}
+    Product include development of relational database and development of web application to process and present database information. Brewers will input information to the database using a form on the website, and retrieve information from the database as a .csv file.
+    
 	\subsection{User characteristics}
+    Brewers using the web app will have all levels of education, including PhD, MS, BS, AAS, and no college experience. Their technical expertise about web development and coding in general will be minimal, but they will understand how to use mobile applications, how to access websites, and how to enter data into forms.
+    
 	\subsection{Constraints}
 		\subsubsection{Regulatory policies}
-		\subsubsection{Hardware limitations (e.g., signal timing requirements)}
+        Not applicable for BrewHops team.
+        
+		\subsubsection{Hardware limitations}
+        No hardware limitations\footnote{Need to verify that BrewHops team will have access to Ninkasi server}.
+        
 		\subsubsection{Interfaces to other applications}
+        BrewHops application will integrate with Telnet\footnote{Telnet is the system that performs physical measurements inside brewing vats} application.
+        
 		\subsubsection{Parallel operation}
+        Database will allow concurrent read access.
+        
 		\subsubsection{Audit functions}
+        Not applicable for BrewHops team.
+        
 		\subsubsection{Control functions}
+        Not applicable for BrewHops team.
+        
 		\subsubsection{Higher-order language requirements}
+        Objects and callback functionality required.
+        
 		\subsubsection{Signal handshake protocols (e.g., XON-XOFF, ACK-NACK)}
+        Not applicable for BrewHops team.
+        
 		\subsubsection{Reliability requirements}
+        Ensure data integrity for automated data collection. Do not ensure data integrity for manual data entry.
+        
 		\subsubsection{Criticality of the application}
+        Application not critical to Ninkasi Brewing Company's success.
+        
 		\subsubsection{Safety and security considerations.}
+        Not applicable for BrewHops team. BrewHops team is not ensuring proper system security.
+        
 	\subsection{Assumptions and dependencies}
+    BrewHops team will have access to Ninkasi Brewing Company's server to deploy application.
 
 \section{Specific requirements}
 	\subsection{External interfaces}
