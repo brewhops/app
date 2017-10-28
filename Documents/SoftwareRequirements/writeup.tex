@@ -21,7 +21,7 @@
 % Title page
 \title{CS 461 - CS Senior Capstone
 	\\Fall 2017
-	\\Problem Statement
+	\\Software Requirements Specification
 }
 
 
@@ -41,7 +41,7 @@
 \begin{titlingpage}
     \maketitle
     \begin{abstract}
-			Ninkasi Brewing Company is using an outdated brewing operations management system. To update the data management system, the BrewHops team will implement a web application and relational database.
+			Ninkasi Brewing Company is using an error prone, labor intensive and outdated brewing operations management system (BOMS) to manage the brewery data produced during the fermentation process. Our team (BrewHops) is tasked with creating a new system as both a proof of concept about new technology, and to give them another option for storing and viewing the brewery data. The new application will be web-based, to be lightweight, easy to use and accessible on many devices. The data will be hosted in a relational database to provide stability, power and consistent usability through time.
 			\\
 			\textbf{Keywords:} Brewing, Operations, Management, Ninkasi
     \end{abstract}
@@ -51,8 +51,9 @@
 
 \section{Introduction}
 	\subsection{Purpose}
-    In this document, we outline the requirements for Ninkasi’s brewing operations data management system we will implement. This includes a detailed description of the product created and the technology we will be using to complete the product. This document is intended for a technical audience and will be used primarily by our instructors, Kirsten Winters and Kevin McGrath, and our sponsor, Daniel Sharp.
-    
+	This document will outline the project that satisfies the requirements for Ninkasi’s new brewing operations data management system. This includes a detailed description of the product created and the technology utilized to build the product. This document is intended for a technical audience, primarily for our instructors, Kirsten Winters and Kevin McGrath, and our sponsor, Daniel Sharp.
+
+
 	\subsection{Scope}
     We will develop a web application and relational database model to manage Ninkasi data. We will perform a cost-benefit analysis to recommend hosting system with web service provider versus hosting on Ninkasi servers. Database will store: beer type identifier, batch number, GEN\footnote{Need clarification from Daniel on what this is}, Dry Hop/Adjunct Type\footnote{Need clarification from Daniel on what this is}, hop amount, and data on internal brewing vat (IBV) measurements. IBV data points include: S.G.\footnote{Need clarification from Daniel on what this is}, pH level, Alcohol By Volume (ABV), and beer temperature. Provided interface will allow brewers to manually insert new batch records, update incorrect data, and view existing data. Interface will allow Ninkasi personnel to view data using downloadable .csv files. We will gage adequacy of interface based on 60\% approval from Ninkasi personnel, of which Daniel Sharp must approve. The goal of these requirements is to stop paper tracking of information and stop use of Excel as primary data storage.
     \\
