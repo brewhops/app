@@ -54,7 +54,7 @@
     In this document, we outline the requirements for Ninkasi’s brewing operations data management system we will implement. This includes a detailed description of the product created and the technology we will be using to complete the product. This document is intended for a technical audience and will be used primarily by our instructors, Kirsten Winters and Kevin McGrath, and our sponsor, Daniel Sharp.
     
 	\subsection{Scope}
-    We will develop a web application and relational database model to manage Ninkasi data. We will perform a cost-benefit analysis to recommend hosting system with web service provider versus hosting on Ninkasi servers. Database will store: beer type identifier, batch number, GEN\footnote{Need clarification from Daniel on what this is}, Dry Hop/Adjunct Type\footnote{Need clarification from Daniel on what this is}, hop amount, and data on internal brewing vat (IBV) measurements. IBV data points include: S.G.\footnote{Need clarification from Daniel on what this is}, pH level, Alcohol By Volume (ABV), and beer temperature. Provided interface will allow brewers to manually insert new batch records, update incorrect data, and view existing data. Interface will allow Ninkasi personnel to view data using downloadable .csv files. We will gage adequacy of interface based on 60% approval from Ninkasi personnel, of which Daniel Sharp must approve. The goal of these requirements is to stop paper tracking of information and stop use of Excel as primary data storage.
+    We will develop a web application and relational database model to manage Ninkasi data. We will perform a cost-benefit analysis to recommend hosting system with web service provider versus hosting on Ninkasi servers. Database will store: beer type identifier, batch number, GEN\footnote{Need clarification from Daniel on what this is}, Dry Hop/Adjunct Type\footnote{Need clarification from Daniel on what this is}, hop amount, and data on internal brewing vat (IBV) measurements. IBV data points include: S.G.\footnote{Need clarification from Daniel on what this is}, pH level, Alcohol By Volume (ABV), and beer temperature. Provided interface will allow brewers to manually insert new batch records, update incorrect data, and view existing data. Interface will allow Ninkasi personnel to view data using downloadable .csv files. We will gage adequacy of interface based on 60\% approval from Ninkasi personnel, of which Daniel Sharp must approve. The goal of these requirements is to stop paper tracking of information and stop use of Excel as primary data storage.
     \\
     \\
     Stretch goals include: login system and data viewing in browser (no download required).
@@ -73,12 +73,32 @@
 \section{Description}
 	\subsection{Product Perspective}
 		\subsubsection{System interfaces}
+        Brewers will interact with our web app in the cellar. The web app interacts with the database and will enter data points from the brewer's entry into the form. If we meet our stretch goals, brewers will be able to extract Excel spreadsheets from our web app.
+        
 		\subsubsection{User interfaces}
+        The user will interact with the web app through either an internet connected phone, tablet, desktop or laptop computer. Phones will operate almost exclusively in portrait mode. Apart from the occasional chart or data display, most of the use for the phone will be entering data, which benefits from a portrait layout. Tablets have the ability to use both portrait or landscape mode, depending on how they would like to use the device, and which method is more convenient for them. Desktops and laptops will work in a landscape mode. For big enough screens, extra space can be used to fit more functionality on one page without having to hide menu items or actions, such as extracting data from the database.
+        \\
+        \\
+        All Ninkasi brewers use a company provided phone and most of the brewer's work will be done through that phone. It's important that the site be consistent between iOS and Android to increase reliability, allow brewers to help each other with problems regardless of operating system, and reduce the learning curve. The environment in which the brewers are working requires that the data entry system be clear, easy to see and have a forgiving interface. For any new hires, the system should be intuitive\footnote{60\% acceptance of interface required to be considered "intuitive"}. Some phones may have smaller screens or may be held at a distance, so it's important that the font be big enough, the contrast strong enough, and the input boxes take up as much space as they can so they are easy to tap and input is easy to see. Brewers may have water, grain dust or other materials on their hands that will interfere with the touch capabilities of the device. Making the interface forgiving by making buttons, input fields and any other interactive components large will reduce error and frustration.
+        \\
+        \\
+        If the system should use terminology that the brewers are familiar with. Reports should be color coded to keep the screen from filling with text and to allow the brewers to access the data at a glance.
+        
 		\subsubsection{Hardware interfaces}
+        Ninkasi has a small server in their headquarters. A cost-benefit analysis will determine if this server will satisfy the hardware requirements of the system. If it will not, we will provide recommendations for web service providers.
+        
 		\subsubsection{Software interfaces}
+        The user will interact with data via a web application. The application will expose input forms to submit data and downloadable .csv files to view data. We will release the software in stages, starting with a database, then a basic web input form connected to the database, then our final minimum viable product will include downloadable .csv files. 
+        
 		\subsubsection{Communications interfaces}
+        Web application will not implement other interfaces.
+        
 		\subsubsection{Memory constraints}
+        Currently Ninkasi has space on a single server in a back room. Ninkasi will quickly grow out of server space which would constrain how much data we can host there. If Ninkasi decides to host our database on a 3rd party cloud hosting site, the memory constraints will be those of how much space they buy.
+        
 		\subsubsection{Site adaptation requirements}
+        Brewers will adapt to using our web form rather than continue implementing the system they previously used. They will enter data not through paper logs or emails, but only through the web app. Our web form will need to connect to the chosen database, which may be hosted on site on Ninkasi’s server.
+        
 	\subsection{Product functions}
 	\subsection{User characteristics}
 	\subsection{Constraints}
