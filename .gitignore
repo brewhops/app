@@ -1,1 +1,10 @@
 .DS_STORE
+
+# ignores for latex intermediate files
+*.fls
+*.out
+*.aux
+*.gz
+*.toc
+*.log
+*.fdb*
