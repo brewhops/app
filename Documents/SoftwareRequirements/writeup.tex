@@ -41,9 +41,9 @@
 \begin{titlingpage}
     \maketitle
     \begin{abstract}
-			Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+			Ninkasi Brewing Company is using an outdated brewing operations management system. To update the data management system, the BrewHops team will implement a web application and relational database.
 			\\
-			\textbf{Keywords:} These, Are, Keywords, For, The, Document
+			\textbf{Keywords:} Brewing, Operations, Management, Ninkasi
     \end{abstract}
 		\pagebreak
 		\tableofcontents
@@ -51,10 +51,24 @@
 
 \section{Introduction}
 	\subsection{Purpose}
+    In this document, we outline the requirements for Ninkasi’s brewing operations data management system we will implement. This includes a detailed description of the product created and the technology we will be using to complete the product. This document is intended for a technical audience and will be used primarily by our instructors, Kirsten Winters and Kevin McGrath, and our sponsor, Daniel Sharp.
+    
 	\subsection{Scope}
+    We will develop a web application and relational database model to manage Ninkasi data. We will perform a cost-benefit analysis to recommend hosting system with web service provider versus hosting on Ninkasi servers. Database will store: beer type identifier, batch number, GEN\footnote{Need clarification from Daniel on what this is}, Dry Hop/Adjunct Type\footnote{Need clarification from Daniel on what this is}, hop amount, and data on internal brewing vat (IBV) measurements. IBV data points include: S.G.\footnote{Need clarification from Daniel on what this is}, pH level, Alcohol By Volume (ABV), and beer temperature. Provided interface will allow brewers to manually insert new batch records, update incorrect data, and view existing data. Interface will allow Ninkasi personnel to view data using downloadable .csv files. We will gage adequacy of interface based on 60% approval from Ninkasi personnel, of which Daniel Sharp must approve. The goal of these requirements is to stop paper tracking of information and stop use of Excel as primary data storage.
+    \\
+    \\
+    Stretch goals include: login system and data viewing in browser (no download required).
+    \\
+    \\
+    We are not be responsible for application security, data integrity (during manual entry), or direct control of any brewing process.
+    
 	\subsection{Definitions, acronyms and abbreviations}
+    Data collected by our database will be referred to as “cellaring data”. This means data that has been collected while cellaring beers. Data points include but are not limited to: beer temperature, maturation time, amount of hops and other materials added. 
+    
 	\subsection{References}
+    No references as of 10/27/2017.
 	\subsection{Overview}
+    In the next sections, this document outlines details on the hardware, software, and user interface requirements for our project. It explains what needs to be done in order to launch our minimum viable product. Security, functionality, and organization are explained in detail.
 
 \section{Description}
 	\subsection{Product Perspective}
