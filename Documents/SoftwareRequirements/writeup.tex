@@ -116,7 +116,7 @@
         BrewHops application will integrate with Telnet\footnote{Telnet is the system that performs physical measurements inside brewing vats} application.
         
 		\subsubsection{Parallel operation}
-        Database will allow concurrent read access.
+        Database will allow concurrent read access and use transactions for insertions and updates.
         
 		\subsubsection{Audit functions}
         Not applicable for BrewHops team.
@@ -144,6 +144,23 @@
 
 \section{Specific requirements}
 	\subsection{External interfaces}
+    Included in product are as follows:
+        \begin{itemize}
+            \item{Database: A database will either be hosted on Ninkasi's server or through a 3rd party site. The input to the database will include multiple columns of cellaring data, who entered the information, and timestamps. }
+            
+            \item{Web Application:}
+            The web application will consist of a website that scales/changes functionality to fit the device.
+                \begin{itemize}
+                    \item{Mobile Phone Page: The web app will scale to fit the mobile phone, mostly in portrait mode. The mobile version will be used for data entry and will have minimal options in comparison with the tablet or desktop. Data will not be extracted in .csv files through the mobile site.}
+                    
+                    \item{Tablet Page: Tablets will operate in either portrait or landscape mode and will have the form and possibly more options for data extraction.}
+                    
+                    \item{Desktop/Laptop Computer Page: This page will operate in landscape mode and will have the most options of the three pages.}
+                    
+                    \item{Output from the database will be extracted in .csv files}
+                \end{itemize}
+        \end{itemize}
+        
 	\subsection{Functions}
 	\subsection{Performance requirements}
 	\subsection{Logical database requirements}
