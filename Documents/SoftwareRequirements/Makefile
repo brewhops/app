@@ -13,7 +13,6 @@ TARGET=writeup
 # it requires that the .tex file exists first
 default: $(TARGET).tex
 	make build
-	make clean
 
 # clean removes lots of documents that are used in the intermediate build process
 clean:
@@ -22,7 +21,6 @@ clean:
 	rm -f $(TARGET).log
 	rm -f $(TARGET).out
 	rm -f $(TARGET).ps
-	rm -f $(TARGET).toc
 	rm -f $(TARGET).bbl
 	rm -f $(TARGET).blg
 	rm -f $(TARGET).fdb_latexmk
@@ -32,6 +30,20 @@ clean:
 clean-hard:
 	make clean
 	rm -f $(TARGET).pdf
+	rm -f $(TARGET).toc
 
+# build it several times to build all our dependencies and then build the
+# final product with our dependencies included in the finished version
 build: $(TARGET).tex
+
+	# main document structure
+	pdflatex $(TARGET).tex
+
+	# make the bibtec document if you need it
+	# bibtex $(TARGET)
+
+	# make the table of contents
+	pdflatex $(TARGET).tex
+
+	# include all the intermediate files
 	pdflatex $(TARGET).tex
