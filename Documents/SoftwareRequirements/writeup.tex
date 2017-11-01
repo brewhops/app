@@ -14,6 +14,11 @@
 \usepackage{listings}
 \usepackage{cite}
 \usepackage{pdfpages}
+\usepackage{xargs}                      % Use more than one optional parameter in a new commands
+\usepackage[pdftex,dvipsnames]{xcolor}  % Coloured text etc.
+%
+\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
+\newcommandx{\note}[2][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
 
 \newcommand\question[1]{\footnote{\textcolor{red}{#1}}}
 
@@ -261,10 +266,45 @@
 		\subsubsection{Standards compliance}
 	\subsection{Software system attributes}
 		\subsubsection{Reliability}
+
+		There is room for occasional bugs given that they do not damage data or inhibit the brewery process.
+		Reliability of the system is a desirable goal, but the product is not a mission critical piece of software.
+		Down time would be frustrating for employees, but would not render the company useless.
+		That being said, it’s a reasonable goal that the system should be up 96\% of the time\question{What kind of uptime would be acceptable for the company?}.
+
 		\subsubsection{Availability}
+
+		The system should not require a reboot, recovery or restart.
+		Stretch goals include making a daily backup of the information in the database if the system were to crash or the data were to be corrupted.
+
 		\subsubsection{Security}
+
+		This product will be light on security, as it is an internal application and should only be accessed by verified employees in the company.
+		As this is not a public facing product, malicious activity is low on our list of priorities.
+		Stretch goals will focus on security such as providing a login interface for employees, adding time stamps for data entered, and providing an easy method to find out who was responsible for entering incorrect data or misused the system.
+		There will be some checks built into the delivered product, but those will primarily be designed for taking care of user error rather than malicious intent.
+		\question{What kind of security would the company like to have?}
+
 		\subsubsection{Maintainability}
+
+		This software is designed to be a proof of concept that having a system like this would be beneficial to Ninkasi's business development.
+		Therefore, maintainability is not only good as a good coding practice, but it is one of the core requirements for the project that the code be maintainable and easy for others to understand.
+		\\ \\
+		There should be a clear separation between the frontend and the database connections.
+		Our current plan involves using a REST API structure to ensure that if someone wanted to swap out the interface, or if someone needed a new connection to the database to be made, that a new port could be opened up and accessed from that space.
+		\\ \\
+		For the most part, code should be broken up into discrete functions that would allow for easy unit testing in the future.
+		Though unit testing is not required as a goal for this project, the ability to attach some kind of testing framework will be useful for our code.
+
 		\subsubsection{Portability}
+
+		This program is designed to be highly portable and the format of the product was selected specifically for that reason.
+		The percentage of code and components with host-depenedent elements should be as small as possible, likely around 40\%.
+		Our site will be built using web technologies that should be able to operate on any common browser such as Firefox, Chrome and Edge.
+		The most dependent code we will have will be the code running the database, and that will simply depend on the confguration that the server will have.
+		If someone wanted to migrate the product over to a different server, they would only have to be sure that the underlying programming language like PHP, Rails some form of SQL or other tech is installed
+		\footnote{We will decide on the host technology later}.
+
 	\subsection{Organizing the specific requirements}
 		\subsubsection{System mode}
 		\subsubsection{User class}
