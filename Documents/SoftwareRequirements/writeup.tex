@@ -14,6 +14,11 @@
 \usepackage{listings}
 \usepackage{cite}
 \usepackage{pdfpages}
+\usepackage{xargs}                      % Use more than one optional parameter in a new commands
+\usepackage[pdftex,dvipsnames]{xcolor}  % Coloured text etc.
+%
+\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
+\newcommandx{\note}[2][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
 
 \newcommand\question[1]{\footnote{\textcolor{red}{#1}}}
 
@@ -262,6 +267,8 @@
 		\\ \\
 		For the most part, code should be broken up into discrete functions that would allow for easy unit testing in the future.
 		Though unit testing is not required as a goal for this project, the ability to attach some kind of testing framework will be useful for our code.
+
+		\note[inline]{This section of maintainability needs some work}
 
 		\subsubsection{Portability}
 
