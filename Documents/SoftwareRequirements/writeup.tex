@@ -156,16 +156,21 @@
 
 	\subsection{Constraints}
 		\subsubsection{Regulatory policies}
-        Not applicable for BrewHops team.
+		Because we are creating this software from the group up and there are no previous regulations for a system like this, this section is not applicable for the BrewHops team.
 
 		\subsubsection{Hardware limitations}
-        No hardware limitations\footnote{Need to verify that BrewHops team will have access to Ninkasi server}.
+		Ninkasi has a small server that we may utilize for the database.
+		If we decide not to use a third party hosting site, then the small server means there will only be the amount of free space on the server available.
+		This is a not a limitation for our project so much as a limitation for any possible continuation of our project from Ninkasi.
 
 		\subsubsection{Interfaces to other applications}
-        BrewHops application will integrate with Tanknet\footnote{Tanknet is the system that performs physical measurements inside brewing vats} application.
+		BrewHops’ application will integrate with Tanknet.\footnote{Tanknet is the system that performs physical measurements inside brewing vats}
+		Tanknet is a hardware/software system that connects to the fermenting vats and automatically collects temperature data.
+		The web app will automatically collect temperature information from Tanknet and store it in our database.
+
 
 		\subsubsection{Parallel operation}
-        Database will allow concurrent read access and use transactions for insertions and updates.
+        Our web app will allow concurrent read access and use transactions for insertions and updates.
 
 		\subsubsection{Audit functions}
         Not applicable for BrewHops team.
@@ -180,14 +185,20 @@
         Not applicable for BrewHops team.
 
 		\subsubsection{Reliability requirements}
-        Ensure data integrity for automated data collection. Do not ensure data integrity for manual data entry.
+		The web app will ensure data integrity for automated data collection.
+		The web app will not ensure data integrity for manual data entry.
+		Our site will be accessible without wait time longer than 5 seconds 90\% of the time.
+		If multiple users are using the system, it shouldn’t slow down the web app by more than 3 seconds.
+
 
 		\subsubsection{Criticality of the application}
-        Application not critical to Ninkasi Brewing Company's success.
+		The web app is not critical to Ninkasi Brewing Company’s success, but it would save the company data entry time.
+		Ninkasi already has a working system that is not online.
+		Our system would improve the current system by reducing time wasted from entry error and replace their working data entry processes.
+
 
 		\subsubsection{Safety and security considerations.}
-        Not applicable for BrewHops team.
-				BrewHops team is not ensuring proper system security.
+		Security concerns are not applicable to BrewHops’ project. A login is the maximum amount of security BrewHops is accountable for.
 
 	\subsection{Assumptions and dependencies}
     BrewHops team will have access to Ninkasi Brewing Company's server to deploy application.
