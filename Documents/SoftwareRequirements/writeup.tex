@@ -253,6 +253,16 @@
 		\subsubsection{Availability}
 		\subsubsection{Security}
 		\subsubsection{Maintainability}
+
+		This software is designed to be a proof of concept that having a system like this would be beneficial to Ninkasi's business development.
+		Therefore, maintainability is not only good as a good coding practice, but it is one of the core requirements for the project that the code be maintainable and easy for others to understand.
+		\\ \\
+		There should be a clear separation between the frontend and the database connections.
+		Our current plan involves using a REST API structure to ensure that if someone wanted to swap out the interface, or if someone needed a new connection to the database to be made, that a new port could be opened up and accessed from that space.
+		\\ \\
+		For the most part, code should be broken up into discrete functions that would allow for easy unit testing in the future.
+		Though unit testing is not required as a goal for this project, the ability to attach some kind of testing framework will be useful for our code.
+
 		\subsubsection{Portability}
 
 		This program is designed to be highly portable and the format of the product was selected specifically for that reason.
