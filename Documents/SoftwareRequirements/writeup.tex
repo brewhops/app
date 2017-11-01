@@ -255,6 +255,65 @@
 		95\% of interactions with the web page should happen in less than 5 seconds.
 
 	\subsection{Logical database requirements}
+    \begin{itemize}
+        \item{Information pulled from Master Excel Spreadsheet}
+            \begin{itemize}
+                \item{\textbf{FV}:
+                    \question{Is this the vat identifier?}
+                }
+                \item{\textbf{BEER}:
+                    \question{Should these be abbreviations of beer names, or is it preferable to store complete name?},
+                    \question{Are beer names associated with unique brewing processes},
+                }
+                \item{\textbf{BATCH}:
+                    \question{What are the format specifications for textit{batch identifiers}?}
+                }
+                \item{\textbf{GEN}:
+                    \question{What is GEN?}
+                }
+                \item{\textbf{Vol To Ferm (BBL)}:
+                    \question{What is this?}
+                }
+                \item{\textbf{Vol To Bright (BBL)}: 
+                    \question{What is this?}
+                }
+                \item{\textbf{BRIGHT}:
+                    \question{What is this and when is it stored?}
+                }
+                \item{\textbf{\% Yield}:
+                    \question{Is this stored once per batch?}
+                }
+                \item{\textbf{Dry Hop/Amount Type}:
+                    \question{Is this two distinct pieces of data that are shown together?}
+                }
+                \item{\textbf{Amount (lb)}:
+                    \question{Is this manually measured by brewers or automatically measured with sensors?}
+                }
+                \item{\textbf{Daily Monitoring Points}:
+                    \question{How frequently should these data points be updated?},
+                    \question{If measured multiple times per day, should history of data be shown for individual day?}
+                }
+                \begin{itemize}
+                    \item{\textbf{S.G.}:
+                        \question{What is this?}
+                    }
+                    \item{\textbf{pH}: pH level of batch in brewing vat.}
+                    \item{\textbf{ABV}: Alcohol By Volumne of batch.}
+                    \item{\textbf{Temp}: Temperature of batch.}
+                    \item{\textbf{Action}: Action to be taken.}
+                    \item{\textbf{By}: 
+                        \question{Is this the person taking the action?}
+                    }
+                \end{itemize}
+            \end{itemize}
+        \item{Frequency of use}
+        
+            Data currently updated daily and read throughout the day.
+            
+        \item{Accessing Capabilities}
+        
+            Database will be access from database access layer of web application.
+    \end{itemize}
 
 	\subsection{Design constraints}
 		Ninkasi currently has one server and a database hosted in microsoft access\question{is this an accurate?}.
