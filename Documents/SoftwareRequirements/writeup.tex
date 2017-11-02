@@ -70,8 +70,8 @@
 
 		We will develop a web application and relational database model to manage Ninkasi data.
 		We will perform a cost-benefit analysis to recommend hosting system with web service provider versus hosting on Ninkasi servers.
-		Database will store: beer type identifier, batch number, GEN\footnote{Need clarification from Daniel on what this is}, Dry Hop/Adjunct Type\footnote{Need clarification from Daniel on what this is}, hop amount, and data on internal brewing vat (IBV) measurements.
-		IBV data points include: S.G.\footnote{Need clarification from Daniel on what this is}, pH level, Alcohol By Volume (ABV), and beer temperature.
+		Database will store: beer type identifier, batch number, GEN\question{Need clarification from Daniel on what this is}, Dry Hop/Adjunct Type\question{Need clarification from Daniel on what this is}, hop amount, and data on internal brewing vat (IBV) measurements.
+		IBV data points include: S.G.\question{Need clarification from Daniel on what this is}, pH level, Alcohol By Volume (ABV), and beer temperature.
 		Provided interface will allow brewers to manually insert new batch records, update incorrect data, and view existing data.
 		Interface will allow Ninkasi personnel to view data using downloadable .csv files.
 		We will gage adequacy of interface based on 60\% approval from Ninkasi personnel, of which Daniel Sharp must approve.
@@ -169,8 +169,8 @@
 		This is a not a limitation for our project so much as a limitation for any possible continuation of our project from Ninkasi.
 
 		\subsubsection{Interfaces to other applications}
-		BrewHops’ application will integrate with Tanknet.\footnote{Tanknet is the system that performs physical measurements inside brewing vats}
-		Tanknet is a hardware/software system that connects to the fermenting vats and automatically collects temperature data.
+		BrewHops’ application will integrate with Tanknet.
+		\footnote{Tanknet is a a hardware and software system that performs physical measurements inside brewing vats and automatically collects the data and exports it digitally}
 		The web app will automatically collect temperature information from Tanknet and store it in our database.
 
 
@@ -193,7 +193,7 @@
 		The web app will ensure data integrity for automated data collection.
 		The web app will not ensure data integrity for manual data entry.
 		Our site will be accessible without wait time longer than 5 seconds 90\% of the time.
-		If multiple users are using the system, it shouldn’t slow down the web app by more than 3 seconds.
+		If multiple users are using the system, it should not slow down operations on the web app by more than 3 seconds.
 
 
 		\subsubsection{Criticality of the application}
@@ -203,7 +203,9 @@
 
 
 		\subsubsection{Safety and security considerations.}
-		Security concerns are not applicable to BrewHops’ project. A login is the maximum amount of security BrewHops is accountable for.
+		This product will be light on security, as it is an internal application and should only be accessed by verified employees in the company.
+		As this is not a public facing product, malicious activity is low on our list of priorities.
+		Further details are outlined under the Specific Requirements section.
 
 	\subsection{Assumptions and dependencies}
     BrewHops team will have access to Ninkasi Brewing Company's server to deploy application.
@@ -227,7 +229,7 @@
 
                     \item{Desktop/Laptop Computer Page: This page will operate in landscape mode and will have the most options of the three pages.}
 
-                    \item{Output from the database will be extracted in .csv files}
+                    \item{Streatch goals include the ability to extracted database info in the form of .csv files}
                 \end{itemize}
         \end{itemize}
 
@@ -323,6 +325,9 @@
 		Stretch goals are to expand the database and data entry options, given we have time to do so.
 
 		\subsubsection{Standards compliance}
+
+		There are no standards compliance requirements for our software.
+
 	\subsection{Software system attributes}
 		\subsubsection{Reliability}
 
