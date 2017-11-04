@@ -70,8 +70,38 @@
 
 		We will develop a web application and relational database model to manage Ninkasi data.
 		We will perform a cost-benefit analysis to recommend hosting system with web service provider versus hosting on Ninkasi servers.
-		Database will store: beer type identifier, batch number, GEN\question{Need clarification from Daniel on what this is}, Dry Hop/Adjunct Type\question{Need clarification from Daniel on what this is}, hop amount, and data on internal brewing vat (IBV) measurements.
-		IBV data points include: S.G.\question{Need clarification from Daniel on what this is}, pH level, Alcohol By Volume (ABV), and beer temperature.
+		Database will store:
+		\begin{itemize}
+			\item{
+				Beer type identifier
+				\footnote{A unique identifier for the type of beer, generally the name of the beer}
+			}
+			\item{
+				Batch number
+			}
+			\item{
+				Generation (GEN)
+				\footnote{This the generation of the yeast we use to ferment the beer.
+				We have to track this because we limit our yeast to ~10 generations before repropagating it.}
+			}
+			\item{
+				Dry Hop/Adjunct Type
+				\footnote{This is a field that calls out the amount of hops that need to be added to the fermenter or adjunct (special ingredient) that needs to be added to the brite tank (like vanilla beans)
+				It has as a status callout to track when the hops/adjuncts were added and by whom.}
+			}
+			\item{Hop amount}
+			\item{Data on internal brewing vat (IBV) measurements}
+		\end{itemize}
+
+		IBV data points include:
+		\begin{itemize}
+			\item{Specific Gravity (S.G.)
+				\footnote{A measure that represents the amount of sugar left in the beer. This number starts high and decreases throughtout fermentation. When it stops we move on to the next process step.}}
+			\item{pH level}
+			\item{Alcohol By Volume (ABV)}
+			\item{Beer temperature}
+		\end{itemize}
+
 		Provided interface will allow brewers to manually insert new batch records, update incorrect data, and view existing data.
 		Interface will allow Ninkasi personnel to view data using downloadable .csv files.
 		We will gage adequacy of interface based on 60\% approval from Ninkasi personnel, of which Daniel Sharp must approve.
