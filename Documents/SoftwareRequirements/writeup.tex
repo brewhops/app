@@ -70,8 +70,38 @@
 
 		We will develop a web application and relational database model to manage Ninkasi data.
 		We will perform a cost-benefit analysis to recommend hosting system with web service provider versus hosting on Ninkasi servers.
-		Database will store: beer type identifier, batch number, GEN\question{Need clarification from Daniel on what this is}, Dry Hop/Adjunct Type\question{Need clarification from Daniel on what this is}, hop amount, and data on internal brewing vat (IBV) measurements.
-		IBV data points include: S.G.\question{Need clarification from Daniel on what this is}, pH level, Alcohol By Volume (ABV), and beer temperature.
+		Database will store:
+		\begin{itemize}
+			\item{
+				Beer type identifier
+				\footnote{A unique identifier for the type of beer, generally the name of the beer}
+			}
+			\item{
+				Batch number
+			}
+			\item{
+				Generation (GEN)
+				\footnote{This the generation of the yeast we use to ferment the beer.
+				We have to track this because we limit our yeast to ~10 generations before repropagating it.}
+			}
+			\item{
+				Dry Hop/Adjunct Type
+				\footnote{This is a field that calls out the amount of hops that need to be added to the fermenter or adjunct (special ingredient) that needs to be added to the brite tank (like vanilla beans)
+				It has as a status callout to track when the hops/adjuncts were added and by whom.}
+			}
+			\item{Hop amount}
+			\item{Data on internal brewing vat (IBV) measurements}
+		\end{itemize}
+
+		IBV data points include:
+		\begin{itemize}
+			\item{Specific Gravity (S.G.)
+				\footnote{A measure that represents the amount of sugar left in the beer. This number starts high and decreases throughtout fermentation. When it stops we move on to the next process step.}}
+			\item{pH level}
+			\item{Alcohol By Volume (ABV)}
+			\item{Beer temperature}
+		\end{itemize}
+
 		Provided interface will allow brewers to manually insert new batch records, update incorrect data, and view existing data.
 		Interface will allow Ninkasi personnel to view data using downloadable .csv files.
 		We will gage adequacy of interface based on 60\% approval from Ninkasi personnel, of which Daniel Sharp must approve.
@@ -81,7 +111,7 @@
 		Stretch goals include: login system and data viewing in browser (no download required).
 		\\
 		\\
-		We are not be responsible for application security, data integrity (during manual entry), or direct control of any brewing process.
+		We are not be responsible for advanced application security or direct control of any brewing process.
 
 	\subsection{Definitions, acronyms and abbreviations}
 		Data collected by our database will be referred to as “cellaring data”.
@@ -270,14 +300,12 @@
                 \item{\textbf{BATCH}:
                     \question{What are the format specifications for textit{batch identifiers}?}
                 }
-                \item{\textbf{GEN}:
-                    \question{What is GEN?}
+                \item{\textbf{Generation}:
+									The generation of the yeast we use to ferment the beer.
                 }
                 \item{\textbf{Vol To Ferm (BBL)}:
-                    \question{What is this?}
                 }
-                \item{\textbf{Vol To Bright (BBL)}: 
-                    \question{What is this?}
+                \item{\textbf{Vol To Bright (BBL)}:
                 }
                 \item{\textbf{BRIGHT}:
                     \question{What is this and when is it stored?}
@@ -296,24 +324,22 @@
                     \question{If measured multiple times per day, should history of data be shown for individual day?}
                 }
                 \begin{itemize}
-                    \item{\textbf{S.G.}:
-                        \question{What is this?}
-                    }
+                    \item{\textbf{Specific Gravity}: A measure that represents the amount of sugar left in the beer. This number starts high and decreases throughtout fermentation. When it stops we move on to the next process step}
                     \item{\textbf{pH}: pH level of batch in brewing vat.}
                     \item{\textbf{ABV}: Alcohol By Volumne of batch.}
                     \item{\textbf{Temp}: Temperature of batch.}
                     \item{\textbf{Action}: Action to be taken.}
-                    \item{\textbf{By}: 
+                    \item{\textbf{By}:
                         \question{Is this the person taking the action?}
                     }
                 \end{itemize}
             \end{itemize}
         \item{Frequency of use}
-        
+
             Data currently updated daily and read throughout the day.
-            
+
         \item{Accessing Capabilities}
-        
+
             Database will be access from database access layer of web application.
     \end{itemize}
 
@@ -370,13 +396,7 @@
 		\footnote{We will decide on the host technology later}.
 
 	\subsection{Organizing the specific requirements}
-		\subsubsection{System mode}
-		\subsubsection{User class}
-		\subsubsection{Objects}
-		\subsubsection{Feature}
-		\subsubsection{Stimulus}
-		\subsubsection{Response}
-		\subsubsection{Functional hierarchy}
+		We will build a user class based system. This will allow us to separate responsibilities and functionality so individuals only have access to their required tasks. In this system, we can design it hierarchically so that managers have access to all data manipulation privileges while brewers only have read or write privileges through structure forms.\question{Is this level of separation necessary?}
 	\subsection{Comments}
 \section{Appendixes}
 \section{Index}
