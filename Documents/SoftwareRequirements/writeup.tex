@@ -61,22 +61,22 @@
 
 \section{Introduction}
 	\subsection{Purpose}
-		This document will outline a project that satisfies the requirements for Ninkasi’s new brewing operations data management system.
+		This document will outline a project that satisfies the requirements for Ninkasi's new brewing operations data management system.
 		This includes a detailed description of the product created and the technology utilized to build the product.
 		This document is intended for a technical audience, primarily for our instructors, Kirsten Winters and Kevin McGrath, and our sponsor, Daniel Sharp.
 
 	\subsection{Scope}
 
-		We will develop a web application and relational database model to manage Ninkasi data.
+		This project is to develop a web application and relational database model to manage Ninkasi's data.
 		We will perform a cost-benefit analysis to recommend hosting the system with web service provider versus hosting on Ninkasi servers.
-		Database will store all information that is required during the brewing process. 
-        This information is pulled directly from the Master Excel Spreadsheet that Ninkasi currently uses to track brewing process data\footnote{Details on database information are outlined in section 3.4}.
+		The database\footnote{Details on database information are outlined in section 3.4} will store all information that is required during the brewing process.
+        This information is pulled directly from the Master Excel Spreadsheet that Ninkasi uses to track brewing process data.
         \\
         \\
-		Provided interface will allow brewers to manually insert new batch records, update incorrect data, and view existing data.
-		Interface will allow Ninkasi personnel to view data using downloadable .csv files.
-		We will gage adequacy of interface based on 60\% approval from Ninkasi personnel, of which Daniel Sharp must approve.
-		The goal of these requirements is to stop paper tracking of information and stop use of Excel as primary data storage.
+		The provided interface will allow brewers to manually insert new batch records, update incorrect data, and view existing data.
+		The web application interface will allow Ninkasi personnel to view basic status information on tanks at a glance.
+		We will gage adequacy of interface based on a minimum 60\% approval from Ninkasi personnel, of which Daniel Sharp must approve.
+		The goal of these requirements is to stop use of Excel as primary data storage.
 		\\
 		\\
 		Stretch goals are outlined in section 3.2.
@@ -137,8 +137,10 @@
 
 		\subsubsection{Software interfaces}
 			The user will interact with data via a web application.
-			The application will expose input forms to submit data, and downloadable .csv files to view data.
-			We will release the software in stages, starting with a database, then a basic web input form connected to the database, then our final minimum viable product will include downloadable .csv files.
+			The application will expose input forms to submit data.
+			We will release the software in stages, starting with a database, then a basic web input form connected to the database, then our final minimum viable product will include the data display interface.
+			The data display interface will involve giving basic information about the status of the tanks in the facility, and which actions the brewers should take to make sure that the product will be developed properly.
+			Streatch goals include more advanced data display such as the ability to show simple graphs of data over time for any tank.
 
 		\subsubsection{Communications interfaces}
 			Web application will not implement other interfaces.
@@ -154,7 +156,7 @@
 
 	\subsection{Product functions}
 		Product includes the development of a relational database and development of a web application to process and present database information.
-		Brewers will input information to the database using a form on the website, and retrieve information from the database as a .csv file.
+		Brewers will input information to the database using a form on the website.
 
 	\subsection{User characteristics}
 		Brewers using the web application will have all levels of education, including PhD, MS, BS, and little to no college experience.
@@ -220,14 +222,12 @@
 
                 \begin{itemize}
 				    \item{Mobile Phone Page: The web application will scale to fit the mobile phone, mostly in portrait mode.
-					The mobile version will be used for data entry and will have minimal options in comparison with the tablet or desktop.
-				    Data will not be extracted in .csv files through the mobile site.}
+					The mobile version will be used for data entry and will have minimal options in comparison with the tablet or desktop.}
 
                     \item{Tablet Page: Tablets will operate in either portrait or landscape mode and will have the form and possibly more options for data extraction.}
 
                     \item{Desktop/Laptop Computer Page: This page will operate in landscape mode and will have the most options of the three pages.}
 
-                    \item{Stretch goals include the ability to extract database information using .csv files}
                 \end{itemize}
         \end{itemize}
 
@@ -251,13 +251,13 @@
 	\subsection{Performance requirements}
 		Multiple users on the web application at once will be permitted.
         Application should not crash if multiple brewers input data at the same time.
-		95\% of interactions with the web page should happen in less than 20 seconds\footnote{For basic interactions when the user knows exactly what they are trying to do. This assumes prior experience with the system.}.
+		95\% of interactions with the web page should happen in less than 20 seconds\footnote{This assumes basic interactions and prior experience with the system.}.
 
 	\subsection{Logical database requirements}
     \begin{itemize}
         \item{Information pulled from Master Excel Spreadsheet}
             \begin{itemize}
-                \item{\textbf{Fermentation Vessel, FV}: 
+                \item{\textbf{Fermentation Vessel, FV}:
                     tank fermentation is carried out in.
                 }
                 \item{\textbf{BEER}:
