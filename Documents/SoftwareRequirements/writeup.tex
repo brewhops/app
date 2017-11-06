@@ -49,9 +49,9 @@
     \maketitle
     \begin{abstract}
 			Ninkasi Brewing Company is using an error prone, labor intensive and outdated brewing operations management system (BOMS) to manage the brewery data produced during the fermentation process.
-			Our team (BrewHops) is tasked with creating a new system as both a proof of concept about new technology, and to give them another option for storing and viewing the brewery data.
-			The new application will be web-based, to be lightweight, easy to use and accessible on many devices.
-			The data will be hosted in a relational database to provide stability, power and consistent usability through time.
+			Our team (BrewHops) is tasked with creating a new system as both a proof of concept about new technology, and to give Ninkasi another option for storing and viewing brewery data.
+			This application will be web-based to be lightweight, easy to use, and accessible on many devices.
+			The data will be hosted in a relational database to provide stability, power, and consistent usability through time.
 			\\
 			\textbf{Keywords:} Brewing, Operations, Management, Ninkasi
     \end{abstract}
@@ -61,84 +61,56 @@
 
 \section{Introduction}
 	\subsection{Purpose}
-		This document will outline the project that satisfies the requirements for Ninkasi’s new brewing operations data management system.
+		This document will outline a project that satisfies the requirements for Ninkasi’s new brewing operations data management system.
 		This includes a detailed description of the product created and the technology utilized to build the product.
 		This document is intended for a technical audience, primarily for our instructors, Kirsten Winters and Kevin McGrath, and our sponsor, Daniel Sharp.
-
 
 	\subsection{Scope}
 
 		We will develop a web application and relational database model to manage Ninkasi data.
-		We will perform a cost-benefit analysis to recommend hosting system with web service provider versus hosting on Ninkasi servers.
-		Database will store:
-		\begin{itemize}
-			\item{
-				Beer type identifier
-				\footnote{A unique identifier for the type of beer, generally the name of the beer}
-			}
-			\item{
-				Batch number
-			}
-			\item{
-				Generation (GEN)
-				\footnote{This the generation of the yeast we use to ferment the beer.
-				We have to track this because we limit our yeast to ~10 generations before repropagating it.}
-			}
-			\item{
-				Dry Hop/Adjunct Type
-				\footnote{This is a field that calls out the amount of hops that need to be added to the fermenter or adjunct (special ingredient) that needs to be added to the brite tank (like vanilla beans)
-				It has as a status callout to track when the hops/adjuncts were added and by whom.}
-			}
-			\item{Hop amount}
-			\item{Data on internal brewing vat (IBV) measurements}
-		\end{itemize}
-
-		IBV data points include:
-		\begin{itemize}
-			\item{Specific Gravity (S.G.)
-				\footnote{A measure that represents the amount of sugar left in the beer. This number starts high and decreases throughtout fermentation. When it stops we move on to the next process step.}}
-			\item{pH level}
-			\item{Alcohol By Volume (ABV)}
-			\item{Beer temperature}
-		\end{itemize}
-
+		We will perform a cost-benefit analysis to recommend hosting the system with web service provider versus hosting on Ninkasi servers.
+		Database will store all information that is required during the brewing process. 
+        This information is pulled directly from the Master Excel Spreadsheet that Ninkasi currently uses to track brewing process data\footnote{Details on database information are outlined in section 3.4}.
+        \\
+        \\
 		Provided interface will allow brewers to manually insert new batch records, update incorrect data, and view existing data.
 		Interface will allow Ninkasi personnel to view data using downloadable .csv files.
 		We will gage adequacy of interface based on 60\% approval from Ninkasi personnel, of which Daniel Sharp must approve.
 		The goal of these requirements is to stop paper tracking of information and stop use of Excel as primary data storage.
 		\\
 		\\
-		Stretch goals include: login system and data viewing in browser (no download required).
+		Stretch goals are outlined in section 3.2.
 		\\
 		\\
 		We are not be responsible for advanced application security or direct control of any brewing process.
 
-	\subsection{Definitions, acronyms and abbreviations}
-		Data collected by our database will be referred to as “cellaring data”.
-		This means data that has been collect while cellaring beers.
-		Data points include but are not limited to: beer temperature, maturation time, amount of hops and other materials added.
+	\subsection{Definitions, Acronyms and Abbreviations}
+        Database - area in system where collected information will be stored
+        
+        Cellaring data - data collected by our database; data collected while cellaring beers
+    
+		Data points - information to be stored in our database\footnote{Breakdown of all data points found in section 3.4}
 
 		BrewHops - The name of our team
 
 		BOMS - Brewery Operations Management System
+        
+        Master Excel Spreadsheet - Ninkasi currently tracks all data using a spreadsheet, referred to as the "Master Excel Spreadsheet"
 
-
-	\subsection{References}
-    No references as of 10/27/2017.
 	\subsection{Overview}
 		In the next sections, this document outlines details on the hardware, software, and user interface requirements for our project.
-		It explains what needs to be done in order to launch our minimum viable product.
+		It explains what needs to be completed in order to launch our minimum viable product.
 		Security, functionality, and organization are explained in detail.
 
 \section{Description}
 	\subsection{Product Perspective}
 		\subsubsection{System interfaces}
-			Brewers will interact with our web app in the cellar.
-			The web app interacts with the database and will enter data points from the brewer's entry into the form.
-			If we meet our stretch goals, brewers will be able to extract Excel spreadsheets from our web app.
+			Brewers will interact with our web application in the cellar.
+			The web application interacts with the database and will enter data points from the brewer's entry into the form.
+			If we meet our stretch goals, brewers will be able to extract Excel spreadsheets from our web application.
 
 		\subsubsection{User interfaces}
-			The user will interact with the web app through either an internet connected phone, tablet, desktop or laptop computer.
+			The user will interact with the web application through either an internet connected phone, tablet, desktop, or laptop computer.
 			Phones will operate almost exclusively in portrait mode.
 			Apart from the occasional chart or data display, most of the use for the phone will be entering data, which benefits from a portrait layout.
 			Tablets have the ability to use both portrait or landscape mode, depending on how they would like to use the device, and which method is more convenient for them.
@@ -148,24 +120,24 @@
 			\\
 			All Ninkasi brewers use a company provided phone and most of the brewer's work will be done through that phone.
 			It's important that the site be consistent between iOS and Android to increase reliability, allow brewers to help each other with problems regardless of operating system, and reduce the learning curve.
-			The environment in which the brewers are working requires that the data entry system be clear, easy to see and have a forgiving interface.
+			The environment in which the brewers are working requires that the data entry system be clear, easy to see, and have a forgiving\footnote{Error handling to prevent incorrect information from being added to the database. Will require Daniel Sharp's approval to be considered adequate.} interface.
 			For any new hires, the system should be intuitive\footnote{60\% acceptance of interface required to be considered "intuitive"}.
 			Some phones may have smaller screens or may be held at a distance, so it's important that the font be big enough, the contrast strong enough, and the input boxes take up as much space as they can so they are easy to tap and input is easy to see.
 			Brewers may have water, grain dust or other materials on their hands that will interfere with the touch capabilities of the device.
 			Making the interface forgiving by making buttons, input fields and any other interactive components large will reduce error and frustration.
 			\\
 			\\
-			If the system should use terminology that the brewers are familiar with.
-			Reports should be color coded to keep the screen from filling with text and to allow the brewers to access the data at a glance.
+			The system should use terminology that brewers are familiar with.
+			Reports should be color coded to keep the screen from filling with text and to allow brewers access to data easily\footnote{60\% approval from brewers will be considered "easily" accessible data}.
 
 		\subsubsection{Hardware interfaces}
 			Ninkasi has a small server in their headquarters.
 			A cost-benefit analysis will determine if this server will satisfy the hardware requirements of the system.
-			If it will not, we will provide recommendations for web service providers.
+			If it will not, we will provide at least one recommendation for web service providers.
 
 		\subsubsection{Software interfaces}
 			The user will interact with data via a web application.
-			The application will expose input forms to submit data and downloadable .csv files to view data.
+			The application will expose input forms to submit data, and downloadable .csv files to view data.
 			We will release the software in stages, starting with a database, then a basic web input form connected to the database, then our final minimum viable product will include downloadable .csv files.
 
 		\subsubsection{Communications interfaces}
@@ -173,25 +145,24 @@
 
 		\subsubsection{Memory constraints}
 			Currently Ninkasi has space on a single server in a back room.
-			Ninkasi will quickly grow out of server space which would constrain how much data we can host there.
+			If Ninkasi's storage requirements grow quickly, a single server may not meet the needs of our system.
 			If Ninkasi decides to host our database on a 3rd party cloud hosting site, the memory constraints will be those of how much space they buy.
 
 		\subsubsection{Site adaptation requirements}
 			Brewers will adapt to using our web form rather than continue implementing the system they previously used.
-			They will enter data not through paper logs or emails, but only through the web app.
-			Our web form will need to connect to the chosen database, which may be hosted on site on Ninkasi’s server.
+			They will enter data only through the web application.
 
 	\subsection{Product functions}
-		Product include development of relational database and development of web application to process and present database information.
+		Product includes the development of a relational database and development of a web application to process and present database information.
 		Brewers will input information to the database using a form on the website, and retrieve information from the database as a .csv file.
 
 	\subsection{User characteristics}
-		Brewers using the web app will have all levels of education, including PhD, MS, BS, AAS, and no college experience.
+		Brewers using the web application will have all levels of education, including PhD, MS, BS, and little to no college experience.
 		Their technical expertise about web development and coding in general will be minimal, but they will understand how to use mobile applications, how to access websites, and how to enter data into forms.
 
 	\subsection{Constraints}
 		\subsubsection{Regulatory policies}
-		Because we are creating this software from the group up and there are no previous regulations for a system like this, this section is not applicable for the BrewHops team.
+		Because we are creating this software from the ground up and there are no previous regulations for a system like this, this section is not applicable for the BrewHops team.
 
 		\subsubsection{Hardware limitations}
 		Ninkasi has a small server that we may utilize for the database.
@@ -200,37 +171,33 @@
 
 		\subsubsection{Interfaces to other applications}
 		BrewHops’ application will integrate with Tanknet.
-		\footnote{Tanknet is a a hardware and software system that performs physical measurements inside brewing vats and automatically collects the data and exports it digitally}
-		The web app will automatically collect temperature information from Tanknet and store it in our database.
-
+		\footnote{Tanknet is a a hardware and software system that performs physical measurements of brewing vats and automatically collects the data and exports it digitally}
+		The web application will automatically collect temperature information from Tanknet and store it in our database.
 
 		\subsubsection{Parallel operation}
-        Our web app will allow concurrent read access and use transactions for insertions and updates.
+        Our web application will allow concurrent read access and use transactions for insertions and updates.
 
 		\subsubsection{Audit functions}
-        Not applicable for BrewHops team.
+        The system will store past data\footnote{Past data stored as far back as deemed necessary by Daniel Sharp, or within limitations of server space.} to be used for audit functionality.
 
 		\subsubsection{Control functions}
         Not applicable for BrewHops team.
 
 		\subsubsection{Higher-order language requirements}
-        Objects and callback functionality required.
+        Objects and callback functionality may be necessary.
 
 		\subsubsection{Signal handshake protocols (e.g., XON-XOFF, ACK-NACK)}
-        Not applicable for BrewHops team.
+        BrewHops team will not work directly with handshake protocols, these protocols will be abstracted by the technologies used.
 
 		\subsubsection{Reliability requirements}
-		The web app will ensure data integrity for automated data collection.
-		The web app will not ensure data integrity for manual data entry.
-		Our site will be accessible without wait time longer than 5 seconds 90\% of the time.
-		If multiple users are using the system, it should not slow down operations on the web app by more than 3 seconds.
-
+		The web application will ensure data integrity for automated data collection.
+		The web application will validate data entered manually.
+		Our site will be accessible without wait time longer than 5 seconds 90\% of the time\footnote{This may vary depending on the hardware capabilities of Ninkasi servers.}.
 
 		\subsubsection{Criticality of the application}
-		The web app is not critical to Ninkasi Brewing Company’s success, but it would save the company data entry time.
+		The web application is not critical to Ninkasi Brewing Company’s success, but it will save the company data entry time.
 		Ninkasi already has a working system that is not online.
-		Our system would improve the current system by reducing time wasted from entry error and replace their working data entry processes.
-
+		Our system will improve the current system by reducing time wasted from data entry error and replace their working data entry processes.
 
 		\subsubsection{Safety and security considerations.}
 		This product will be light on security, as it is an internal application and should only be accessed by verified employees in the company.
@@ -239,35 +206,35 @@
 
 	\subsection{Assumptions and dependencies}
     BrewHops team will have access to Ninkasi Brewing Company's server to deploy application.
+    Ninkasi is willing to use the software technologies and languages we develop in.
 
 \section{Specific requirements}
 	\subsection{External interfaces}
     Included in product are as follows:
         \begin{itemize}
-						\item{Database: A database will either be hosted on Ninkasi's server or through a 3rd party site.
-						The input to the database will include multiple columns of cellaring data, who entered the information, and timestamps. }
+				\item{Database: A database will either be hosted on Ninkasi's server or through a 3rd party site.
+                The input to the database will include multiple columns of cellaring data, who entered the information, and timestamps. }
 
             \item{Web Application:}
             The web application will consist of a website that scales/changes functionality to fit the device.
 
                 \begin{itemize}
-										\item{Mobile Phone Page: The web app will scale to fit the mobile phone, mostly in portrait mode.
-										The mobile version will be used for data entry and will have minimal options in comparison with the tablet or desktop.
-										Data will not be extracted in .csv files through the mobile site.}
+				    \item{Mobile Phone Page: The web application will scale to fit the mobile phone, mostly in portrait mode.
+					The mobile version will be used for data entry and will have minimal options in comparison with the tablet or desktop.
+				    Data will not be extracted in .csv files through the mobile site.}
 
                     \item{Tablet Page: Tablets will operate in either portrait or landscape mode and will have the form and possibly more options for data extraction.}
 
                     \item{Desktop/Laptop Computer Page: This page will operate in landscape mode and will have the most options of the three pages.}
 
-                    \item{Streatch goals include the ability to extracted database info in the form of .csv files}
+                    \item{Stretch goals include the ability to extract database information using .csv files}
                 \end{itemize}
         \end{itemize}
 
 	\subsection{Functions}
 
-		When data is being input into the database, there will be basic checks on the data.
+		Data will be validated upon input to database.
 		Information being entered that is far outside the range of expected values will prompt the user to verify that the information is indeed correct.
-
 		Every input form will strip out all html special characters to make sure that no harmful code can be injected into the database.
 
 		Stretch goals include:
@@ -282,10 +249,9 @@
 		\end{itemize}
 
 	\subsection{Performance requirements}
-		Multiple users on the web app at once will be permitted.
-		There few Ninkasi brewers who will be entering data and it will be rare to have two entering at the same time.
-		We will update this part of the doc when we receive the spreadsheet format from Daniel and are able to specify what values go where.
-		95\% of interactions with the web page should happen in less than 5 seconds.
+		Multiple users on the web application at once will be permitted.
+        Application should not crash if multiple brewers input data at the same time.
+		95\% of interactions with the web page should happen in less than 20 seconds\footnote{For basic interactions when the user knows exactly what they are trying to do. This assumes prior experience with the system.}.
 
 	\subsection{Logical database requirements}
     \begin{itemize}
@@ -314,7 +280,7 @@
                 \item{\textbf{Dry Hop/Amount Type}:
                     recipe for given dry hop
                     \footnote{Example: dry hop type A = 50 lb, dry hop type B = 75 lb.}
-                    \footnote{dependent on the BEER and volume in fermentation (for dry hops).}.
+                    \footnote{Dependent on the BEER and volume in fermentation (for dry hops).}.
                 }
                 \item{\textbf{Amount (lb)}:
                     amount in lbs of dry hops to be added to tank.
@@ -357,7 +323,7 @@
 
 		\subsubsection{Standards compliance}
 
-		There are no standards compliance requirements for our software.
+		The database will store information with correct relationships according to Ninkasi's current Master Excel Spreadsheet.
 
 	\subsection{Software system attributes}
 		\subsubsection{Reliability}
@@ -365,11 +331,11 @@
 		There is room for occasional bugs given that they do not damage data or inhibit the brewery process.
 		Reliability of the system is a desirable goal, but the product is not a mission critical piece of software.
 		Down time would be frustrating for employees, but would not render the company useless.
-		That being said, it’s a reasonable goal that the system should be up 96\% of the time\footnote{Ideally as close to 100\% of the time as possible.}.
+        A stretch requirement will be that the system is active or available 96\% of the time\footnote{Measuring this will depend on if the system is deployed for at least 30 days before the Spring term expo showcase.}.
 
 		\subsubsection{Availability}
 
-		The system should not require a reboot, recovery or restart.
+		The system should not require a reboot, recovery or restart after deployment.
 		Stretch goals include making a daily backup of the information in the database if the system were to crash or the data were to be corrupted.
 
 		\subsubsection{Security}
@@ -382,25 +348,27 @@
 		\subsubsection{Maintainability}
 
 		This software is designed to be a proof of concept that having a system like this would be beneficial to Ninkasi's business development.
-		Therefore, maintainability is not only good as a good coding practice, but it is one of the core requirements for the project that the code be maintainable and easy for others to understand.
+		Therefore, maintainability is not only good as a good coding practice, but it is one of the core requirements for the project that the code be maintainable and well documented\footnote{Documentation will be stored in the GitHub repository.}.
 		\\ \\
 		There should be a clear separation between the frontend and the database connections.
-		Our current plan involves using a REST API structure to ensure that if someone wanted to swap out the interface, or if someone needed a new connection to the database to be made, that a new port could be opened up and accessed from that space.
+        This may be done through a REST API structure.
+        This would allow future developers to implement new interfaces as needed.
 		\\ \\
-		For the most part, code should be broken up into discrete functions that would allow for easy unit testing in the future.
-		Though unit testing is not required as a goal for this project, the ability to attach some kind of testing framework will be useful for our code.
+		For the most part, code should be broken up into discrete functions that would allow for unit testing in the future.
+		Though unit testing is not required as a goal for this project, the ability to attach some kind of testing framework will be useful.
 
 		\subsubsection{Portability}
 
 		This program is designed to be highly portable and the format of the product was selected specifically for that reason.
-		The percentage of code and components with host-depenedent elements should be as small as possible, likely around 40\%.
-		Our site will be built using web technologies that should be able to operate on any common browser such as Firefox, Chrome and Edge.
-		The most dependent code we will have will be the code running the database, and that will simply depend on the confguration that the server will have.
-		If someone wanted to migrate the product over to a different server, they would only have to be sure that the underlying programming language like PHP, Rails some form of SQL or other tech is installed
-		\footnote{We will decide on the host technology later}.
+		The percentage of code and components with host-dependent elements should be as small as possible, likely around 40\%.
+		Our site will be built using web technologies that will operate properly on Chrome and Firefox.
+        In order for the system to function properly, the hosting server must have the technologies used in the system, installed.
 
 	\subsection{Organizing the specific requirements}
-		We will build a user class based system. This will allow us to separate responsibilities and functionality so individuals only have access to their required tasks. In this system, we can design it hierarchically so that managers have access to all data manipulation privileges while brewers only have read or write privileges through structure forms. As a stretch goal, manager level individuals will be able to modify user permissions as needed.
+		We will build a user class based system. 
+        This will allow us to separate responsibilities and functionality so individuals only have access to their required tasks. 
+        In this system, we can design it hierarchically so that managers have access to all data manipulation privileges while brewers only have read or write privileges through structured forms. 
+        As a stretch goal, manager level individuals will be able to modify user permissions as needed.
 	\subsection{Comments}
 \section{Appendixes}
 \section{Index}
