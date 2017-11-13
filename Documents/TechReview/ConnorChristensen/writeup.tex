@@ -1,0 +1,83 @@
+% Technology Review
+% CS 461 - CS Senior Capstone
+% Fall 2017
+% Authors: Connor Christensen
+
+% Paper requirements:
+% 1. Your team number, your name, and project name
+% 2. Your role in the project
+% 3. What you are trying to accomplish (at a very high level) -- use info from your problem statement, but focus on the specific sub-pieces you, as an individual, are working on.
+% 4. Three possible technologies that could be used to accomplish the different pieces you selected to examine in more detail. Identify these potential technologies even if your client has told you which one to use.
+% 5. After conducting research and analyzing trade-offs, identify which technology you have selected for each piece of the project, and why. Convince the reader your analysis is unbiased and well-considered.
+
+
+\documentclass[draftclsnofoot,onecolumn,letterpaper,10pt,compsoc]{IEEEtran}
+
+% Packaging
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{titling}
+\usepackage{color}
+\usepackage{listings}
+\usepackage{cite}
+\usepackage{pdfpages}
+\usepackage{xargs}                      % Use more than one optional parameter in a new commands
+
+
+\usepackage[pdftex,dvipsnames]{xcolor}  % Coloured text etc.
+\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
+\newcommandx{\note}[2][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
+
+\newcommand\question[1]{\footnote{\textcolor{red}{#1}}}
+
+
+% Paper type
+\geometry{letterpaper, margin=.75in}
+
+% Title page
+\title{CS 461 - CS Senior Capstone
+  \\Team 10 - Brewing Operations Management System
+	\\Fall 2017
+	\\Technology Review
+}
+
+
+\author{
+	Connor I. Christensen \\
+	\texttt{chriconn@oregonstate.edu}
+}
+
+\begin{document}
+
+\begin{titlingpage}
+    \maketitle
+    \begin{abstract}
+      \\
+			\textbf{Keywords:}
+    \end{abstract}
+		\pagebreak
+		\tableofcontents
+\end{titlingpage}
+
+\section{Introduction}
+
+
+\section{Data Visualization}
+  \subsection{Introduction}
+  \subsection{D3.js}
+  \subsection{C3.js}
+  \subsection{Chart.js}
+  \subsection{Conclusion}
+
+
+\section{Technology 2}
+	\subsection{Technology 2.1}
+	\subsection{Technology 2.2}
+	\subsection{Technology 2.3}
+
+\section{Technology 3}
+	\subsection{Technology 3.1}
+	\subsection{Technology 3.2}
+	\subsection{Technology 3.3}
+
+\end{document}
