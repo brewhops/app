@@ -60,6 +60,7 @@
 \section{System Peripherals}
 	\subsection{Native Mobile Application}
     Summary:
+        Generally recognized as good for sale to external customers.
     
     Pros:
         Do not need internet connection to view application.
@@ -69,6 +70,9 @@
         Development kits generally have "drag-and-drop" interface builders.
         If BrewHops team wanted to continue with this project after             Capstone, this would allow us to distribute via app stores.
         Host only stores data, does not store static content.
+        Can have data duplication on all devices to reduce risk of              corrupting information.
+        Can use push notifications.
+        Faster than mobile-web applications.
         
     Cons:
         Different languages and development processes for different devices.
@@ -76,38 +80,47 @@
         Must deploy through app store for specific device or given directly     to each device by developer.
         Must download updates after initial release (through methods listed     above).
         If deployed on App stores, must be approved, this can delay             deployment.
+        If device is stolen, potential security risk if data stored on          device.
     
     Sources:
     https://goo.gl/QkQdvf
     https://www.lifewire.com/native-apps-vs-web-apps-2373133
-        
+    
     
 	\subsection{Naive Desktop Application}
     Summary:
     
     Pros:
+        Have direct access to computer hardware.
     
     Cons:
+        Each computer maker uses their own languages and frameworks.
+        Will have to build additional interfaces for each type of computer          client uses.
+    
     
 	\subsection{Web Application}
     Summary:
+        Generally recognized as good for cross-platform internal usage.
     
     Pros:
-    Easy to maintain (same languages for all devices).
-    No approval from app stores.
-    No downloads from app stores necessary.
-    Don't need to update any device specific code since code is hosted.
-    Easy to build devices specific interfaces based on screen size.
+        Easy to maintain (same languages for all devices).
+        No approval from app stores.
+        No downloads from app stores necessary.
+        Don't need to update any device specific code since code is hosted.
+        Easy to build devices specific interfaces based on screen size.
     
     Cons:
-    Brewers need internet connection to view the application.
-    Cannot store information on device like we could with native apps.
-    Must give code to client to host.
-    Host must store static content in addition to data.
+        Brewers need internet connection to view the application.
+        Cannot store information on device like we could with native apps.
+        Must give code to client to host.
+        Host must store static content in addition to data.
+        Cannot utilize gesture recognition.
+        Cannot send push notifications.
+        Slower than native apps if processing lots of information (may not          scale).
     
     Sources:
-    https://goo.gl/QkQdvf
-    https://www.lifewire.com/native-apps-vs-web-apps-2373133
+        https://goo.gl/QkQdvf
+        https://www.lifewire.com/native-apps-vs-web-apps-2373133
 
 \section{Technology 2}
 	\subsection{Technology 2.1}
