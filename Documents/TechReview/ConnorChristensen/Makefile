@@ -40,7 +40,7 @@ build: $(TARGET).tex
 	pdflatex $(TARGET).tex
 
 	# make the bibtec document if you need it
-	# bibtex $(TARGET)
+	bibtex $(TARGET)
 
 	# make the table of contents
 	pdflatex $(TARGET).tex

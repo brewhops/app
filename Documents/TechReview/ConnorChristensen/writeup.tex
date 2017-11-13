@@ -22,6 +22,7 @@
 \usepackage{cite}
 \usepackage{pdfpages}
 \usepackage{pdflscape}
+\usepackage{url}
 \usepackage{xargs}                      % Use more than one optional parameter in a new commands
 
 
@@ -149,7 +150,7 @@
   Chart.js is a JavaScript library that allows you to draw different types of charts using the HTML5 canvas element
   \footnote{HTML Canvas: A new web standard that allows web programmers to create computer graphics created and rendered in the browser.}.
   Use of the canvas comes with a few drawbacks, the most common issue being that it cannot scale without loss of quality.
-  The HTML5 Canvas specification recommends that authors should not use the canvas element when they have other more suitable means available.
+  The HTML5 Canvas specification recommends that authors should not use the canvas element when they have other more suitable means available.\cite{CanvasVsSVG}
   Canvas is good for 3d graphics, but this ability is not beneficial if you simply want a bar graph.
   If you are drawing little details all very close together, canvas is great for that.
   Canvas is not very accessible as it is just drawing pixels and no data can be extracted by assistive technology or bots.
@@ -184,5 +185,9 @@
 	\subsection{Technology 3.1}
 	\subsection{Technology 3.2}
 	\subsection{Technology 3.3}
+
+
+\bibliography{references}{}
+\bibliographystyle{plain}
 
 \end{document}
