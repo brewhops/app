@@ -53,10 +53,10 @@
       \textbf{Keywords:} Brewing, Operations, Management
     \end{abstract}
 		\pagebreak
-		\tableofcontents
 \end{titlingpage}
 
 \section{Introduction}
+In this technology review, we will analyze the costs and benefits associated with various tools in three components of our project. First, we will look at peripheral interfaces. It is important to understand how brewers will access information managed by our system and recognize the positive and negative attributes of each option that exists. Next, we will look at database technologies. It is important to look at the structure of our data and understand the costs and benefits of choosing a certain technology. Finally, task runners and module bundlers are an important tool in any efficient development process. Looking at the different options and determining which is a good fit is important before the BrewHops team can effectively develop a software solution for Ninkasi Brewing Company. Overall, each technology conveys pros and cons for its usage; in some scenarios there is no perfect answer, but understanding why certain technologies exist will help improve the development of our data management system.
 
 \section{System Peripherals}
     \subsection{Introduction}
@@ -192,13 +192,28 @@
             "... not encountered as 'databases', but more as configuration files..." \cite{Techwalla}.
 
 
-\section{Build Pipelines}
+\section{Task Runners and Module Bundlers}
 	\subsection{Grunt}
-        
+        Grunt is built on top of NodeJS. 
+        Grunt was one of the first tools that allowed "front-end developers to run predefined reptitive tasks"\cite{TaskRunners}. 
+        A major benefit of Grunt is the shear number of modules available for developers to use. 
+        One important distinction with Grunt is that it focuses on configuration over coding. 
+        Developers are expected to reuse configuration objects to automate their tasks. 
+        This can lead to bloated Grunt scripts that are not maintainable\cite{TaskRunners}.
     
 	\subsection{Gulp}
+        Gulp was developed after Grunt. Gulp focuses on code over configuration\cite{TaskRunners}; using JavaScript functions to define when and how tasks should be completed. 
+        Gulp scripts tend to run more quickly than Grunt configuration files\cite{GulpGruntSpeed}. 
+        This is because of Gulp's "stream usage and in-memory operations"\cite{TaskRunners}. 
+        While the benefits of Gulp are great, some of the paradigms that Gulp relies on can be tricky to understand and properly learn. 
+        The most notible being streams and promises\cite{TaskRunners}.
     
-	\subsection{Bamboo}
+	\subsection{WebPack}
+        WebPack differs from Grunt and Gulp in that it is a module bundler. 
+        It takes various modules that all have dependencies and bundles them together in a way that reduces redundancy\cite{WebPack}. 
+        It creates a dependency graph of all modules needed in your system and consolidates them into individual bundles\cite{WebPack}.
+        Another benefit of WebPack is using hot-reloading to more efficiently develop the frontend of an application\cite{TaskRunners}.
+        Finally, the main difficulty with WebPack is it can be difficult to configure at first and there exists a learning curve to its technology\cite{TaskRunners}.
 
 \bibliography{references}{}
 \bibliographystyle{plain}
