@@ -60,35 +60,41 @@
 
 \section{System Peripherals}
     \subsection{Introduction}
-    This is an overview of the various peripheral technologies our team may utilize to interface with the data management system. There are benefits and costs associated with each technology as described below.
+        This is an overview of the various peripheral technologies our team may utilize to interface with the data management system. 
+        We will analyze the positive and negative impacts of creating a native mobile application, a native desktop application, or a web application.
+        There are benefits and costs associated with each technology as described below.
 
 	\subsection{Native Mobile Application}
         \subsubsection{Summary}
-            Generally recognized as good for sale to external customers.
+            Native mobile apps play an integral part in many business product lines.
+            These applications are written in languages specific to devices they run on.
+            These are generally recognized as good for sale to external customers\cite{SearchCloudOverview}.
 
         \subsubsection{Pros}
-            Do not need internet connection to view application.
-            Have direct access to device capabilities.
-            Can store information on device.
-            Able to distribute application without giving client the code.
-            Development kits generally have "drag-and-drop" interface builders.
-            If BrewHops team wanted to continue with this project after Capstone, this would allow us to distribute via app stores.
-            Host only stores data, does not store static content.
-            Can have data duplication on all devices to reduce risk of corrupting information.
-            Can use push notifications.
-            Faster than mobile-web applications.
+            Native mobile applications have access to all capabilities of the smart phones on which they run. 
+            This includes push notifications which may be required in the data management system. 
+            Push notifications would allow brewers to receive updates on time-critical tasks without having to refresh the application.
+            Since native mobile applications run on the specific device, this allows them to be used while not connected to the internet.
+            It is unknown whether or not brewers will have good internet connection where they plan to use the application\question{We need to ask Daniel about internet availability.}.
+            Another benefit of running natively is that data can be stored directly on the device.
+            This would ensure that data is never stored in a single, vulnerable space.
+            Along these lines, running native mobile applications would reduce hosting needs to only data storage.
+            When developing native mobile applications, most development kits come with "drag-and-drop" interface builders. 
+            This feature could reduce development time and increase maintainability once BrewHops team finishes.
+            Finally, native mobile application interfaces run more quickly than mobile-web applications.
+            Depending on how fast-pace the brewers' use of the application will be, this may reduce time spent in application.
 
         \subsubsection{Cons}
-            Different languages and development processes for different devices.
-            Not maintainable for Ninkasi.
-            Must deploy through app store for specific device or given directly to each device by developer.
-            Must download updates after initial release (through methods listed above).
-            If deployed on App stores, must be approved, this can delay deployment.
-            If device is stolen, potential security risk if data stored on device.
-
-        Sources:
-        https://goo.gl/QkQdvf
-        https://www.lifewire.com/native-apps-vs-web-apps-2373133
+            Native mobile applications can drastically increase the development timeline.
+            Each device the application will run on must have its own version of the application.
+            If Ninkasi uses multiple smartphones (E.G iPhone and Android), then each platform requires the application to be written in its native language.
+            Learning new languages and platform specific standards will increase the time to project completion.
+            After creation, deploying native mobile applications is more difficult than web-based applications.
+            Native applications require download from the platform's app store or direct deployment from the developer.
+            This may make it difficult to onboard new brewers or remove brewer's access.
+            Once downloaded, any updates to the interface must be downloaded onto each device.
+            Again, each update must be written for each hardware platform.
+            Finally, if a brewer's device is lost or stolen then there is a potential security risk if Ninkasi data is stored on the device.
     
     
 	\subsection{Naive Desktop Application}
