@@ -218,19 +218,25 @@ There is no dedicated team making sure that all the legal agreements line up, an
     Any method in this styling section is using CSS at some level to deliver it's product.
 
     \textbf{Pros:}
-    \begin{itemize}
-      \item The de facto standard for styling websites
-      \item Known by all web developers
-      \item Easy debugging
-    \end{itemize}
+
+    Raw CSS is the de facto standard for styling websites.
+    There is no other method for changing text color, aligning content on a page, adding drop shadows, etc. other than CSS.
+    It is known by all web developers and the community is massive.
+    Every bit of code written for styling the web, uses CSS at some point, and because the web always makes client side code like CSS visible to the user, anything you can see is an example you can follow.
+    It is easy to debug when you put raw CSS straight into the browser, and if you are writing CSS, you can simply drop that into a browser and it will run without any extra effort.
 
     \textbf{Cons:}
-    \begin{itemize}
-      \item Easy to produce difficult to maintain code
-      \item Requires developers to be highly organized to produce good considered
-      \item Requires copying and pasting to remain consistent
-      \item CSS is a syntactically easy language, but its results are often difficult to work with
-    \end{itemize}
+
+    Many developers have moved away from writing raw CSS and use a preprocessor or framework, as it is easy to produce difficult to maintain code.
+    CSS is much better than the alternative of writing all the styles into the HTML, but CSS still lacks some features that would make organization easier on developers.
+    As such, developers working in CSS need to be highly organized if the project gets big enough, and the documentation they write must be clear so other developers can work from what they have built.
+    CSS is a syntactically easy language, and in many cases, understanding it is intuitive.
+    But there are components to CSS that are complicated and much less intuitive, generally having to do with layout.
+    CSS requires documentation for future engineers to quickly make sense of the complicated parts of CSS, as writing raw CSS means there is no framework to help standardize how CSS is written.
+    For larger projects, CSS developers end up copying and pasting code frequently, which is a bad sign.
+    This makes it much easier for inconsistent code to appear and makes it harder to change something on a wide scale.
+    Say for example you want to change a single color across your site.
+    In CSS, this requires finding every instance of that color and changing it to the new value.
 
   \subsection{Preprocessors}
     \textbf{About:}
