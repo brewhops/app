@@ -154,8 +154,24 @@
         \subsubsection{Summary}
     
         \subsubsection{Pros}
+            There is no defined structure to the database.
+            The structure is dynamic and can be updated without having to shutdown the database\cite{MongoDBProsCons}.
+            Another benefit of NoSQL databases is their ability to handle "Big Data".
+            There are tools available such as Hadoop that can handle the processing requirements of big data systems\cite{NoSQLProsCons}.
+            Ninkasi produces high amounts of information that is monitored daily.
+            Ideally, the client would prefer to track this information more frequently, which would lead to larger amounts of information.
+            Also, "NoSQL databases typically use clusters of cheap commodity servers to manage the exploding data and transaction volumes."\cite{NoSQLProsCons}.
+            This may be essential if the BrewHops team uses Raspberry Pis or Intel Nucs to host system information.
+            
     
         \subsubsection{Cons}
+            While there are benefits to using a NoSQL database, there are also drawbacks.
+            NoSQL technologies are typically open-source projects that do not have the support and resources that major relational database management systems have\cite{NoSQLProsCons}.
+            There are still several security issues associated with NoSQL databases\cite{NoSQLSecurityIssues}.
+            There is no guarantee data consistency when using NoSQL databases\cite{ChannelFutures}.
+            They use "eventual consistency" which implies times of inconsistency.
+            Some NoSQL databases do not automatically shard data to properly spread data across clusters\cite{ChannelFutures}.
+            This will only be an issue if Ninkasi data needs will require multiple nodes.
         
         
 	\subsection{Flat File Database}
@@ -175,6 +191,7 @@
 
 \section{Technology 3}
 	\subsection{Technology 3.1}
+    
 	\subsection{Technology 3.2}
 	\subsection{Technology 3.3}
 
