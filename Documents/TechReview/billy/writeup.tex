@@ -143,16 +143,21 @@
 
 \section{Data Storage}
 	\subsection{SQL Database}
-        \subsubsection{Summary}
-    
         \subsubsection{Pros}
+            Using SQL databases, it is easy to retrieve necessary information.
+            SQL databases can use transactions which ensure that interactions with the database either complete fully or any changes are rolled back.
+            SQL databases are structured.
+            There exists many methodologies for normalization data to ensure it is stored efficiently\cite{TechwallaSQL}.
+            SQL databases allow for multiple users to access information at the same time\cite{TechwallaSQLPros}.
+            Database administrators can easily control operation permissions for each user in the system.
+            Along with this, many tools exist to help developers optimize queries to access the database.
     
         \subsubsection{Cons}
-        
+            Enterprise level SQL servers can be expensive to develop and maintain.
+            Depending on the database, tables can have limits on their structure\cite{TechwallaSQLCons}.
+
         
 	\subsection{NoSQL Database}
-        \subsubsection{Summary}
-    
         \subsubsection{Pros}
             There is no defined structure to the database.
             The structure is dynamic and can be updated without having to shutdown the database\cite{MongoDBProsCons}.
@@ -175,8 +180,6 @@
         
         
 	\subsection{Flat File Database}
-        \subsubsection{Summary}
-    
         \subsubsection{Pros}
             Incredibly simple to set up, literally just a file.
             Easily read since there is a standard structure using delimeters or line length.
