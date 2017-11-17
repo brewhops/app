@@ -1,0 +1,398 @@
+% Technology Review
+% CS 461 - CS Senior Capstone
+% Fall 2017
+% Authors: Connor Christensen
+
+% Paper requirements:
+% 1. Your team number, your name, and project name
+% 2. Your role in the project
+% 3. What you are trying to accomplish (at a very high level) -- use info from your problem statement, but focus on the specific sub-pieces you, as an individual, are working on.
+% 4. Three possible technologies that could be used to accomplish the different pieces you selected to examine in more detail. Identify these potential technologies even if your client has told you which one to use.
+% 5. After conducting research and analyzing trade-offs, identify which technology you have selected for each piece of the project, and why. Convince the reader your analysis is unbiased and well-considered.
+
+
+\documentclass[draftclsnofoot,onecolumn,letterpaper,10pt,compsoc]{IEEEtran}
+
+% Packaging
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{titling}
+\usepackage{color}
+\usepackage{listings}
+\usepackage{cite}
+\usepackage{pdfpages}
+\usepackage{pdflscape}
+\usepackage{url}
+\usepackage{xargs}                      % Use more than one optional parameter in a new commands
+
+
+\usepackage[pdftex,dvipsnames]{xcolor}  % Coloured text etc.
+\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
+\newcommandx{\note}[2][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
+
+\newcommand\question[1]{\footnote{\textcolor{red}{#1}}}
+
+
+\definecolor{lightgray}{rgb}{.9,.9,.9}
+\definecolor{darkgray}{rgb}{.4,.4,.4}
+\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
+
+\lstdefinelanguage{JavaScript}{
+  keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywords={class, export, boolean, throw, implements, import, this},
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{
+   language=JavaScript,
+   extendedchars=true,
+   basicstyle=\footnotesize\ttfamily,
+   showstringspaces=false,
+   showspaces=false,
+   tabsize=2,
+   breaklines=true,
+   showtabs=false,
+   captionpos=b,
+   basicstyle=\tiny
+}
+
+
+
+% Paper type
+\geometry{letterpaper, margin=.75in}
+
+% Title page
+\title{CS 461 - CS Senior Capstone
+  \\Team 10 - Brewing Operations Management System
+	\\Fall 2017
+	\\Technology Review
+}
+
+
+\author{
+	Connor I. Christensen \\
+  \small{Front-End Developer} \\
+	\texttt{chriconn@oregonstate.edu}
+}
+
+\begin{document}
+
+\begin{titlingpage}
+    \maketitle
+    \begin{abstract}
+      Ninkasi Brewing Company is based in Eugene, Oregon, producing and distributing tens of thousands of barrels of beer each year across the United States and Canada.
+      Maintaining a consistently high quality product is vital to the longevity of Ninkasi.
+      Scalable brewing is a detail-oriented and organized process; companies require unique data tracking methods to fit the needs of their brewing process.
+      Ninkasi currently tracks brewery data using Microsoft Excel spreadsheets.
+      This process is laborious, time consuming, and error prone.
+      The goal of this project is to create a brewing operations management system to add and monitor brewery data.
+      The brewing and cellar team members will utilize the system to access up-to-date information.
+      \\
+      \textbf{Keywords:} Brewing, Operations, Management
+    \end{abstract}
+		\pagebreak
+		\tableofcontents
+\end{titlingpage}
+
+\section{Introduction}
+
+This is a comparison of three front end technologies for web design.
+Data visualization seeks to find a framework that will aid in the display of information from the database in a user-friendly way.
+Styling attempts to cover available options for creating a nice user interface for the project.
+Interactive web frameworks outlines the difference between the major pro's and con's of JavaScript frameworks and whether or not they should be used at all.
+
+\textbf{Warning:}
+The majority of technologies listed in these categories comes with the possibility that including code from other products and services could potentially lead to legal issues.
+Every piece of code that gets added into the project adds an extra legal agreement that could prove to be a problem later.
+These legal agreements may or may not be enforced and they may or may not conflict with each-other.
+It is common web development practice to build frameworks from many little utilities and packages that are available in the open source community.
+There is no dedicated team making sure that all the legal agreements line up, and it is up to the client to decide if they want to take that risk or not.
+
+\section{Data Visualization}
+  \subsection{Introduction}
+  This is an overview of libraries written for data display in web browsers.
+  Each of these libraries are build out of the web language JavaScript to allow for live interaction with the user.
+  Table 1 shows the code needed to set up a basic bar graph using each library.
+  These yield approximately the same visual results.
+  All have the con that they require JavaScript to be enabled.
+  All of them are open source and free.
+
+  \subsection{D3.js}
+  \textbf{About:}
+
+  D3 stands for Data-Driven Documents and it is a powerhouse of a library for data visualization.
+  It was created by a team of PhD graduates working out of the Stanford Visualization Group and is essentially the library for creating amazing data visualization.
+  It has a relatively bulky setup, but allows fine grained detail and control over how data is displayed.
+  This library is so powerful that it functions more as a library for painting than for graphing.
+
+  \textbf{Pros:}
+
+  D3 uses SVG's \footnote{\textbf{S}calable \textbf{V}ector \textbf{G}raphics: A visual component defined mathematically. It can scale up or down to any size without loss of image quality.} which allows it to be able to create any 2d shape that can be mathematically defined.
+  SVG's do not require JavaScript to work, though D3 can't run without JavaScript enabled.
+  The D3 library uses pre-build JavaScript functions to select elements, create SVG objects, and be able to preform a wide number of transformations on them.
+  Transformations are just as precise as the drawing abilities and are limited only by the processing power of the computer and the skill of the programmer.
+  It uses jQuery and CSS styled selection and modification of content for flexibility and ease of use.
+  Objects that are made with D3 are easily syllable with CSS, meaning that data display can inherit styling rules to maintain a consistent look across the platform.
+  D3 has a large community.
+  It was built by very intelligent people early on, and has only gained in popularity since then.
+  The majority of data frameworks are built off of D3.
+  As such, there are a huge number of online examples.
+
+  \textbf{Cons:}
+
+  Despite all its good features, the D3 library adds a lot of code to a project, the learning curve is steep, and the code needed to accomplish a task is verbose.
+  The code required to set up a bar graph is massive compared to most other frameworks and the time that it takes to learn D3 is an even bigger obstacle.
+
+  \subsection{C3.js}
+  \textbf{About:}
+  C3 is a package built off D3 and is formatted specifically for creating graphs.
+
+  \textbf{Pros:}
+
+  It is beautifully simple to create a graph and plug and play really works in this context.
+  It has a great set of examples and documentation is readily available.
+  It can easily switch between chart types and display multiple chart types mixed in with a single variable changed in the code.
+  The amount of things that just work coming out of C3 is impressive, inclusive of the animations that simply show up whenever you load up a graph.
+
+  \textbf{Cons:}
+
+  Since it is built off D3, C3 requires D3 to be installed, which causes many lines of code to be added to the project.
+  There are nearly 10,000 lines of JavaScript in both D3 and C3, bringing in almost 20,000 lines of code for data display.
+  The interface is much easier to use, the tradeoff being more limiting in its expressions.
+
+
+  \subsection{Chart.js}
+  \textbf{About:}
+  Chart.js is a JavaScript library that allows you to draw different types of charts using the HTML5 canvas element
+  \footnote{HTML Canvas: A new web standard that allows web programmers to create computer graphics created and rendered in the browser.}.
+
+  \textbf{Pros:}
+
+  Chart.js is not built of of D3, which means that it is significantly more lightweight as a package. Like C3, it is very responsive and the documentation is very good.
+
+  \textbf{Cons:}
+
+  Use of the canvas comes with a few drawbacks, the most common issue being that it cannot scale without loss of quality.
+  The HTML5 Canvas specification recommends that authors should not use the canvas element when they have other more suitable means available.\cite{CanvasVsSVG}
+  Canvas is good for 3d graphics, but this ability is not beneficial if you simply want a bar graph.
+  If you are drawing little details all very close together, canvas is great for that.
+  Canvas is not very accessible as it is just drawing pixels and no data can be extracted by assistive technology or bots.
+
+  \subsection{Conclusion}
+
+  Though D3 can produce some seriously impressive data visualizations, and chart.js is small and simple, it is on our recommendation that C3 be the framework of choice.
+  As seen in Table 1 on the following page, the amount of code it takes to create a bar graph is very concise and easy to use, which makes development and maintenance straightforward and produce a small amount of bugs.
+  The results are beautiful, informative and user friendly.
+  Given the scope of the project, being able to utilize SVG graphing technology in a straightforward and simple way will enhance the product.
+
+
+  \begin{landscape}
+    \begin{table}[]
+    \centering
+    \caption{Charts - D3.js vs Chart.js vs C3.js}
+    \label{my-label}
+      \begin{tabular}{lllll}
+        & \lstinputlisting{d3.js} & \lstinputlisting{chart.js} & \lstinputlisting{c3.js} & \\
+      \end{tabular}
+    \end{table}
+  \end{landscape}
+
+
+\section{Styling}
+
+  \subsection{Introduction}
+  \subsection{CSS}
+
+    \textbf{About:}
+
+    Apart from some technologies like SVG's and the HTML5 canvas, CSS is responsible for all website styling.
+    It was invented in 1996 and has been one of the three major web languages since then.
+    Any method in this styling section is using CSS at some level to deliver it's product.
+
+    \textbf{Pros:}
+
+    Raw CSS is the de facto standard for styling websites.
+    There is no other method for changing text color, aligning content on a page, adding drop shadows, etc. other than CSS.
+    It is known by all web developers and the community is massive.
+    Every bit of code written for styling the web, uses CSS at some point, and because the web always makes client side code like CSS visible to the user, anything you can see is an example you can follow.
+    It is easy to debug when you put raw CSS straight into the browser, and if you are writing CSS, you can simply drop that into a browser and it will run without any extra effort.
+
+    \textbf{Cons:}
+
+    Many developers have moved away from writing raw CSS and use a preprocessor or framework, as it is easy to produce difficult to maintain code.
+    CSS is much better than the alternative of writing all the styles into the HTML, but CSS still lacks some features that would make organization easier on developers.
+    As such, developers working in CSS need to be highly organized if the project gets big enough, and the documentation they write must be clear so other developers can work from what they have built.
+    CSS is a syntactically easy language, and in many cases, understanding it is intuitive.
+    But there are components to CSS that are complicated and much less intuitive, generally having to do with layout.
+    CSS requires documentation for future engineers to quickly make sense of the complicated parts of CSS, as writing raw CSS means there is no framework to help standardize how CSS is written.
+    For larger projects, CSS developers end up copying and pasting code frequently, which is a bad sign.
+    This makes it much easier for inconsistent code to appear and makes it harder to change something on a wide scale.
+    Say for example you want to change a single color across your site.
+    In CSS, this requires finding every instance of that color and changing it to the new value.
+
+  \subsection{Preprocessors}
+    \textbf{About:}
+
+    Preprocessors are programming languages that utilize some kind of compiler to translate the code into CSS to style web pages.
+    They come with the benefit of being able to build new features to make it easier on developers without needing to consult with the W3C\footnote{Listed in the appendix}.
+    This allows for flexible work environments which can lead to safer, more efficient and easier coding environments.
+    The downside to this freedom is the cost of including another service standing in-between your coding and the finished product.
+    It's possible that the preprocessor can develop or contain bugs, and its possible they stop supporting or developing the software.
+    That being said, preprocessors have become powerful, widely understood and supported, and have become a tool useful for most projects.
+
+    \textbf{Pros:}
+
+     Developing with a preprocessor produces the same lightweight code for the user as if the developer had written it straight in CSS. This makes it easier on developers with no sacrifices for the users. Preprocessors provide some really great features like:
+     \begin{itemize}
+       \item Modular code abilities - developers can separate code into multiple files, which helps with organization. This also means they can include someone else's code into a project without directly pasting it into the custom code for the project.
+       \item Less redundancy in code - preprocessors support the ability to define functions and macros that can reduce the amount of code the developers have to write.
+       \item Make it easy to make cascading changes - the ability to define variables makes for simple changes\footnote{CSS is implementing variables in its new standards now, however, this is still slower and not as well supported.}.
+       \item Faster development compared to regular CSS - less typing and more organization makes it faster for developers to work.
+       \item Safer code - preprocessors usually automate the long and difficult process of making sure code is compatible with all browsers.
+     \end{itemize}
+
+     All the extra steps required by a preprocessor to compile before use are done before deploying, meaning that the client sees no slower performance as a result of the developers using a preprocessor.
+     This gives the developers more freedom without a sacrifice for the user.
+
+    \textbf{Cons:}
+
+    Given all those nice pro's, preprocessors are still less well known than CSS.
+    The different versions of preprocessors make it more difficult to find a whole development team that is already familiar with the language.
+    In order for the developers to use whichever preprocessor they pick, this involves another thing they have to install to be able to get a website up and running.
+    Installing a compiler also means that whatever code you write now relies on the compiler to be able to produce code that can be interpreted by browsers.
+
+
+	\subsection{Bootstrap}
+
+    \textbf{Pros:}
+
+    Bootstrap is an open source and free framework developed by twitter with a huge amount of users and documentation.
+    It has been "battle tested" on thousands of website implementations and has a small amount of issues.
+    It includes HTML, JS and CSS components built in, which allows for development magnitudes faster than writing the code by hand.
+    Bootstrap is designed with mobile layouts in mind, and has the feature that your website will be compatible with all sorts of screens right off the bat.
+    Bootstrap has specified layouts, buttons, menus and icons that they want you to use which is limiting, but means a development team can produce something that looks good without needing anyone who understands graphic design.
+    It is standardized and many developers know the framework, so maintenance and development by other teams is easy.
+
+    \textbf{Cons:}
+
+    Bootstrap is a really helpful but very big framework.
+    There are tens of thousands of lines of code included in the project, and it also requires jQuery, which further inflates the size of the framework.
+    This makes sites slower, heavier, and if you want to customize any elements in the page, you have to overwrite the CSS rules in Bootstrap.
+    This can be a painful process as it is a bad coding practice to put more code into a project to cancel out previous code.
+    It leads to bugs and weird visual issues that would not show up with good development from scratch.
+    With allowing the users to write less CSS, it requires that they offload page content, styling and functionality into the HTML, which can create bulky and illegible code for the content of your page.
+    The drawback of having a framework make the stylistic decisions for you is that all Bootstrap websites end up looking the same.
+
+  \subsection{Conclusion}
+
+  Preprocessors are generally considered the best option for projects that want the benefit of being able to create custom interfaces without having to deal with the drawbacks of writing raw CSS.
+  Stylus is one of the big three preprocessors, which offers a lot of flexibility in how you write the code, and really speeds up the development process.
+  If for some reason the next group decides that they want to work just with CSS, they can always compile the CSS and then work with that from then on.
+
+\section{Interactive Web Frameworks}
+  \subsection{Introduction}
+
+  There are many JavaScript frameworks out there for creating interactive websites.
+  In fact, there are so many that the biggest issue becomes which one to choose, rather than whether to use it or not.
+  They have built in functionality for a wide variety of things that are rather complicated to with native JavaScript.
+  These JavaScript frameworks are so popular that nearly every major tech company has created their own and were kind enough to make them open source.
+
+
+  \subsection{Pros and cons for all JavaScript frameworks}
+    \textbf{Pros:}
+    \begin{itemize}
+      \item Responsive websites - It is easy for the user to interact with components and get feedback.
+      \item Much faster than developing it all from scratch.
+      \item Frequently have the ability to extend the framework with plugins.
+      \item Uses Model-View-Controller philosophy - This is a practice that helps developers keep a seperation of states for data in the website. It leads to more controllable and better coding.
+    \end{itemize}
+
+    \textbf{Cons:}
+    \begin{itemize}
+      \item They all have quite the learning curve. Some more than others.
+    \end{itemize}
+
+	\subsection{Angular}
+
+  \textbf{Pros:}
+
+  Angular was created early in the age of JavaScript frameworks.
+  It was one of the first systems of its kind to be invented and is currently being maintained by Google.
+  This means that it has a huge user base and it is easy to find someone that has experience in developing with it.
+
+    \textbf{Cons:}
+
+    \begin{itemize}
+      \item One of the oldest of its kind - It didn't have other frameworks come first to learn what mistakes not to make.
+      \item Versioning of Angular is really confusing and each version is so different it could be considered a different framework.
+      \item Angular 1 is really slow.
+      \item Angular 1 can get messy really easily.
+      \item Angular is really big, but someone that knows Angular 1 does not necessarily know Angular 2.
+      \item Angular 2 solves some of the problems from Angular 1, but Angular 2 is still very new.
+    \end{itemize}
+
+
+	\subsection{React}
+    \textbf{Pros:}
+    \begin{itemize}
+      \item Maintained by Facebook
+      \item Relatively fast
+    \end{itemize}
+
+    \textbf{Cons:}
+    \begin{itemize}
+      \item Community conventions are still developing
+      \item Big learning curve
+    \end{itemize}
+
+
+  \subsection{Vue}
+
+    \textbf{Pros:}
+    \begin{itemize}
+      \item Small - Only about 10,000 lines of code, which is very small for a JavaScript framework.
+      \item Fast - Speed benchmarks for simple tasks are faster than almost every framework in almost every way measured. It is a few milliseconds slower than raw JavaScript. This is not conclusive results that it the fastest out there, but its not something to dismiss.\cite{SpeedReport}
+      \item Simple - Vue's syntax is much lighter and easier to use than frameworks like Angular 1 or React
+      \item Builds on the good parts of Angular and React
+      \item Good documentation
+      \item Growing fast - Trends in searches for vue.js is almost surpassing that of Angular
+    \end{itemize}
+
+    \textbf{Cons:}
+    \begin{itemize}
+      \item Smaller community
+      \item Less well known as other development languages
+    \end{itemize}
+
+  \subsection{Conclusion}
+  Vue.js is a relatively new framework, but its popularity is still growing, the amount of features it offers is impressive and the size of the package is a major bonus.
+  With less code comes less bugs.
+  For the scope of this project, having a framework that is lightweight, easy to use, and has all the benefits of the bigger frameworks like Angular and React is a good choice.
+  Its possible that the features that this framework offers might not be a requirement for the client, but if a JavaScript framework will help the project, then Vue.js is the best choice for it.
+
+\section{Appendix}
+
+\begin{itemize}
+  \item Macros - Segments of code that can be called multiple times and get compiled in. This
+  \item CSS: Cascading Style Sheets - A language that defines the style of a websites interface.
+  \item W3C: World Wide Web Consortium - A committee in charge of deciding web standards. They vote yes or no on implementing new standards, and then any web browser that wants to remain competitive should implement those features as soon as they can.
+  \item Compiled/Compiler - A compiler is a program that takes a programming language and converts it into another programming language. Generally done because the first language is easy to write and the second language can be run on the computer.
+\end{itemize}
+
+
+\clearpage
+
+
+\bibliography{references}{}
+\bibliographystyle{plain}
+
+\end{document}
