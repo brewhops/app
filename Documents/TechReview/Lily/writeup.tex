@@ -1,0 +1,234 @@
+
+% Technology Review
+% CS 461 - CS Senior Capstone
+% Fall 2017
+% Author: Lily Shellhammer
+
+
+\documentclass[draftclsnofoot,onecolumn,letterpaper,10pt,compsoc]{IEEEtran}
+
+% Packaging
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{titling}
+\usepackage{color}
+\usepackage{listings}
+\usepackage{cite}
+\usepackage{pdfpages}
+\usepackage{xargs}                      % Use more than one optional parameter in a new commands
+%\usepackage[pdftex,dvipsnames]{xcolor}  % Coloured text etc.
+%
+%\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
+%\newcommandx{\note}[2][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
+
+%\newcommand\question[1]{\footnote{\textcolor{red}{#1}}}
+
+% Paper type
+\geometry{letterpaper, margin=.75in}
+
+% Title page
+\title{CS 461 - CS Senior Capstone
+	\\Fall 2017
+	\\Technology Review - Group 10
+}
+
+
+\author{
+	Lily Shellhammer \\
+	\texttt{shellhal@oregonstate.edu}
+}
+
+\begin{document}
+
+\begin{titlingpage}
+    \maketitle
+    \begin{abstract}
+      Ninkasi Brewing Company is based in Eugene, Oregon, producing and distributing tens of thousands of barrels of beer each year across the United States and Canada.
+      Maintaining a consistently high quality product is vital to the longevity of Ninkasi.
+      Scalable brewing is a detail-oriented and organized process; companies require unique data tracking methods to fit the needs of their brewing process.
+      Ninkasi currently tracks brewery data using Microsoft Excel spreadsheets.
+      This process is laborious, time consuming, and error prone.
+      The goal of this project is to create a brewing operations management system to add and monitor brewery data.
+      The brewing and cellar team members will utilize the system to access up-to-date information.
+      \\
+      \textbf{Keywords:} Brewing, Operations, Management
+    \end{abstract}
+		\pagebreak
+		\tableofcontents
+\end{titlingpage}
+
+\section{Introduction}
+My job in the Ninkasi BrewHops project is to develop and organize the middle of the stack: the languages that connect the database to the front end.
+I will be working on the databse interaction languages and how to pull information from/put information into the database.
+This documents explains three different technoligies for hosting, platform and database interaction language possibilities.
+\\
+DISCLAIMER: This is a rough draft and I'm working on the citations. This is not what I think a professional document's citations should look like, don't worry.
+\section{Hosting}
+    \subsection{Hosting Summary}
+		Ninkasi needs to host it's data somehwere, either remotely using cloud hosting or locally using a server of some type.
+		Below are the outlined options for small local servers or cloud hosting.
+		Through the course of this research, our group has decided to use cloud hosting for its flexibility, ease of use, and scalability.
+	\subsection{Intel NUC}
+            The first option for hosting our data is the Intel NUC, which stands for Next Unit of Computing.
+						For an always-on server that doesn't need to hold a huge amount of data, the NUC is a great option.
+						It has a low power consumption, idling at 8 watts and is barely audible (alphr). For the size, 5\" square by 1.5\" tall , the NUC is powerful ...(alphr).
+						For a small company like Ninkasi, this would work well for the amount of data they are storing.
+						If they wanted a scalable product, that’s where NUC would fall short.
+						It has a limited amount of space and has a load capacity....
+						Price wise, NUC's fall between 274 and 500 dollars (pcworld).
+						There are also 4x4\" NUC boards that look very similar to Raspberry Pi's.
+						These have 4-32 GB and cost from 120-575 dollars (intel).
+						Raspberry Pi\'s hold similar amounts of data and are much less expensive.
+				\\ \\
+				\textbf{Pros: Small and powerful for its size, quiet, good for a small server for a small business.}
+				\\
+        \textbf{Cons: Expensive, storage size limitations so not scalable.}
+						\\
+        Sources:
+        http://www.alphr.com/intel/intel-nuc/32113/intel-nuc-review
+        https://www.pcworld.com/article/3039441/hardware/the-mighty-mini-pc-we-review-everything-from-bare-bones-to-ready-made.html
+				https://www.intel.com/content/www/us/en/products/boards-kits/nuc/boards.html
+
+
+
+	\subsection{Raspberry Pi}
+			Raspberry Pi's are the economically friendly option for hosting.
+			The devices run between 5 and 35 dollars per unit and can be used as a small server(raspberrypi).
+			Space is limited and the devices have poor CPU performance(copahost). They also have poor IO performance as the device relies on an SD card(copahost).
+			For small projects this is a perfect device, but for a large craft brewery to rely on for their database, this is too small of an option.
+			Ninkasi needs something larger and more suitable for the long term.
+			\\ \\
+			\textbf{Pros: Cheap and you get a lot for your money, server is on site.}
+			\\
+			\textbf{Cons: Cheap and not reliable, not enough storage space, setting it up and maintaining the hardware would be hard for someone with no little knowledge.}
+			\\
+			Sources:
+			https://www.raspberrypi.org/ \\
+			https://www.copahost.com/blog/is-it-possible-to-run-a-web-server-in-a-raspberry-pi-3-as-a-dedicated-server/ \\ \\
+
+	\subsection{Cloud Hosting}
+        Cloud hosting is a way of hosting your data on a remote server.
+				People with limited technical knowledge can use this service easily because you can be provided with a software environment that requires no setup or hardware (interoute).
+				The system is very scalable, you pay for what you need and if you need more space you can buy more (interroute).
+				Unlike the NUC or Raspberry Pi, this method of hosting isn't a one-time payment, you have to pay for the space you reserved each month (thebalance).
+				Some of the dangers of using cloud are that you are stuck as a \"forever\" customer if you can't convert your data from the host's system to another system (the balance).
+				Cloud is the best choice for this project.
+				Without any technical knowledge or hardware knowledge, and not knowing if the scale of the data will increase a lot in the coming years, having the ease and flexibility of cloud hosting would benefit Ninkasi.
+				\\ \\
+				\textbf{Pros: Reliable, scalable, easy to use with no technological knowledge, no hardware required.}
+				\\
+				\textbf{Cons: Have to pay each month, could potentially be stuck with a service if there is not a system for converting your data to anther service/system, poor customer service}
+				\\
+    Sources: \\
+        https://www.thebalance.com/disadvantages-of-cloud-computing-4067218 \\
+				https://www.interoute.com/what-cloud-hosting \\ \\
+
+
+\section{Platform}
+\subsection{Platform Summary}
+The platform for our web servers will dictate the ease and speed of running concurrent processes, and what kind of stack we will be able to sue.
+The web servers we will use for our project are ...
+	\subsection{Nginx}
+		NGINX is 2.5 times faster than Apache when serving static content and consumes less memory of the two when running the same amount of concurrent processes(hostingadvice).
+		That being said, the PHP runtime between the two is very similar (hostingadvice).
+		If Ninkasi were serving a lot of static content and media streams, NGINX would be better as it is much faster for static content than Apache.
+		Ninkasi just needs a simple database, so this is not relevant to our project.
+		For our project, the advanced features of NGINX are appealing.
+		\\ \\
+		\textbf{Pros: Good security, faster and less space consuming for static content, many advanced features, handles load balancing well}
+		\\
+		\textbf{Cons: Most modules don't support dynamic loading}
+		\\
+		Sources: \\
+		http://www.hostingadvice.com/how-to/nginx-vs-apache/\\ \\
+	\subsection{Apache}
+		Apache is part of the LAMP stack (Linux or other OS, Apache, MySQL, Php or similar lanugage) which is a traditional stack model (upwork).
+		It has 3 ways of request processing which scale differently.
+		Apache has great OS support (better than NGINX which lacks good Windows support) and can run on many systems (hostingadvice).
+		It has good security and great documentation and supports dynamic loading well (hostingadvice).
+		This would be a good choice for this project, but with the language uniformity of Express, isn't our main choice.
+		\\ \\
+		\textbf{Pros: Request processing 3 ways, handles load balancing well, excellent documentation, good security, supports dynamic laoding}
+		\\
+		\textbf{Cons: Slow for static content, doesn't scale well}
+		\\
+		Sources:\\
+		http://www.hostingadvice.com/how-to/nginx-vs-apache/\\
+		https://www.upwork.com/hiring/development/choosing-the-right-software-stack-for-your-website/ \\ \\
+	\subsection{Express}
+		Express.js is part of the MEAN stack (mongo-db, express.js, angular, node.js) stack and is a great choice for a modern platform if you want language uniformity and the ability to be mobile friendly(upwork).
+		Since we are not creating apps, the mobile ability is less important but the language uniformity would be helpful.
+		That way regardless of what part of the stack the group is working on, they will know the language for all other sides of the stack.
+		This system is also very flexible and offers lots of packages and plugins.
+		It is an opensource product with a large community and lots of support(jssolutionsdev).
+		Express is an event  driven server, meaning it has a single threaded framework(jssolutionsdev).
+		Inexperienced developers may find this confusing if they aren\'t familiar with the callback nature of this type of server (jssolutionsdev).
+		\\ \\
+		\textbf{Pros: Flexible, modern, mobile friendly, uniform lanuage for full stack}
+		\\
+		\textbf{Cons: Confusing if unfamiliar with callback nature of server}
+		\\
+		Sources:\\
+		https://jssolutionsdev.com/blog/express-mobile-app-development/ \\
+		https://www.upwork.com/hiring/development/choosing-the-right-software-stack-for-your-website/ \\ \\
+
+\section{Database Interaction}
+\subsection{Database Interaction Summary}
+	The choice of which lanugage with which we will use to interact with our database is an important decision.
+	We want our projec to be very maintainable, both in the language\'s support and community, and the code we create with the language.
+	For our project we want/don\'t... want lots of abstraction and are looking to use an old/modern... language. Because of these wants, we have chosen to use ... as our database interaction language.
+	\subsection{Rails}
+		Ruby on Rails is a flexible and expressive language that has been at the foreground of database interaction languages in recent years.
+		There are a lot of protocols for how to implement web features in Rails. Rails is opinionated, meaning most features have a standard way of being created.
+		This has positives and negatives; making implementing forms or buttons standardized makes Rails easily maintainable, but also doesn't allow the coder as much flexibility in designing their own functions.
+		Problems arise when Rails has no opinion on how to implement a web feature, then the style of \"one size fits all\" in Rails doesn't work well. Rails is also very slow in comparison with Node or Php.
+		For our purposes, Rails would be great for developing our project.
+		We want our project to be as maintainable as possible, so it\'s a toss up on whether Rails or Node will be better.
+		Both are anticipated to
+		\\ \\
+		\textbf{Pros: Maintainable, clean, protocols for everything}
+		\\
+		\textbf{Cons: A lot of abstraction (possibly too much depending on your purposes), not a defined way to do everything, way slow in comparison with other languages.}
+		\\
+		Sources: \\
+		https://medium.com/@TechMagic/nodejs-vs-ruby-on-rails-comparison-2017-which-is-the-best-for-web-development-9aae7a3f08bf \\
+		http://railsapps.github.io/what-is-ruby-rails.html \\ \\
+
+	\subsection{Node.js}
+			Node.js is a language you can use for full stack development.
+			It allows Javascript to be run on the server side.
+			Node is easy to learn, but unlike Rails, you have to build everything from the ground up.
+			With little abstraction, you have total control of how features are implemented but development takes much longer.
+			Node updates are often not backward compatible.
+			Node can handle multiple requests at the same time and is way better at handling concurrent requests than Ruby.
+			This means the app takes up less RAM and functions faster.
+			Node has a high market demand, so for the intents of our project it would be very maintainable when we hand off our project to Ninkasi to expand.
+			\\ \\
+			\textbf{Pros: You can build a full stack with one language, easy to learn, strong community, actively developed language.}
+			\\
+			\textbf{Cons: You have to build every feature from the ground up, often backward incompatible updates.}
+			\\
+			Sources: \\
+			https://medium.com/@TechMagic/nodejs-vs-ruby-on-rails-comparison-2017-which-is-the-best-for-web-development-9aae7a3f08bf \\
+			https://www.netguru.co/blog/pros-cons-use-node.js-backend \\
+
+	\subsection{Php}
+		Php has the benefit of being around for a long time (infoworld).
+		This language has a lot of longevity and is constantly updated. It has a large open source community and lots of support, so maintainability would be high(medium).
+		The language is inconsistent and clunky, so this would diminish our development ease.
+		There is a lack of abstraction, similar to Node.js, and often has repetitive code (railsapps), something Rails would reduce.
+		For the ease of our coding, php would not work well in this project.
+		\\ \\
+		\textbf{Pros: Huge ecosystem and large open source community, always being updated, commonly used in industry for a long time.}
+		\\
+		\textbf{Cons: Very old, language is inconsistent, clunky, lack of abstraction.}
+		\\
+		Sources: \\
+		http://railsapps.github.io/what-is-ruby-rails.html \\
+		https://www.infoworld.com/article/2852329/php/reasons-for-developers-to-love-hate-php.html \\
+		https://medium.com/@smartgamma/what-are-the-pros-and-cons-of-using-php-490553ed8ff2 \\
+
+%\bibliography{references}{}
+%\bibliographystyle{plain}
+
+\end{document}
