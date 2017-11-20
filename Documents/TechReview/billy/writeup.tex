@@ -201,7 +201,13 @@ Overall, each technology conveys pros and cons for its usage; in some scenarios 
     Based on the criteria for our system peripherals, we have decided to build a web application to access the data management system.
 
 \section{Data Storage}
+    \subsection{Introduction}
+    This is an overview of various types of databases. Databases will be used to store and access information that Ninkasi measures inside of each brewing vat.
+    
 	\subsection{SQL Database}
+        \subsubsection{Summary}
+            SQL Databases, also known as "relational" databases, are widely used to store highly \textit{structured} information\footnote{"Structured" information is data whose structure rarely, if ever, changes and is consistent between entities.}.
+        
         \subsubsection{Pros}
             Using SQL databases, it is easy to retrieve necessary information.
             SQL databases can use transactions which ensure that interactions with the database either complete fully or any changes are rolled back.
@@ -217,6 +223,9 @@ Overall, each technology conveys pros and cons for its usage; in some scenarios 
 
         
 	\subsection{NoSQL Database}
+        \subsubsection{Summary}
+            NoSQL databases, also known as "non-relational" databases, are widely used to increase speed and decrease storage space of \textit{unstructured} information\footnote{"Unstructured" data is information that is not consistent between entities.}.
+        
         \subsubsection{Pros}
             There is no defined structure to the database.
             The structure is dynamic and can be updated without having to shutdown the database\cite{MongoDBProsCons}.
@@ -239,6 +248,9 @@ Overall, each technology conveys pros and cons for its usage; in some scenarios 
         
         
 	\subsection{Flat File Database}
+        \subsubsection{Summary}
+            Flat file databases are commonly used to store configuration settings for software systems.
+        
         \subsubsection{Pros}
             Incredibly simple to set up, literally just a file.
             Easily read since there is a standard structure using delimeters or line length.
@@ -249,6 +261,33 @@ Overall, each technology conveys pros and cons for its usage; in some scenarios 
             Not usually accessed via network since they're offline entities that are part of the operating system\cite{Techwalla}.
             "... a flat file database is disadvantageous to a network user, who is accessing a multi-access, multi-tasking relational online databse which can be viewed from many different aspects." \cite{Techwalla}.
             "... not encountered as 'databases', but more as configuration files..." \cite{Techwalla}.
+    
+    \subsection{Conclusion}
+        Listed below are the requirements of the database system that will be used in this data management system.
+        
+        \begin{center}
+            \begin{tabular}{| m{15em} | m{10em} | m{10em} | m{10em} |}
+                \hline
+                    & SQL Database & NoSQL Database & Flat Files \\
+                
+                \hline
+                    Minimal data duplication & X & X & \\
+                    
+                \hline
+                    Data Integrity & X &  &  \\
+                
+                \hline
+                    Data retrieval reliability & X &  & X \\
+                    
+                \hline
+                    Strong Documentation & X & X & X \\
+                    
+                \hline
+                    Free to use & X\footnote{There are certain versions of SQL databases that are free.} & X & X \\
+                    
+                \hline
+            \end{tabular}
+        \end{center}
 
 
 \section{Task Runners and Module Bundlers}
