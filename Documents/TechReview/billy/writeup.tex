@@ -4,6 +4,14 @@
 % Authors: William Buffum
 
 
+% Paper requirements:
+% 1. Your team number, your name, and project name
+% 2. Your role in the project
+% 3. What you are trying to accomplish (at a very high level) -- use info from your problem statement, but focus on the specific sub-pieces you, as an individual, are working on.
+% 4. Three possible technologies that could be used to accomplish the different pieces you selected to examine in more detail. Identify these potential technologies even if your client has told you which one to use.
+% 5. After conducting research and analyzing trade-offs, identify which technology you have selected for each piece of the project, and why. Convince the reader your analysis is unbiased and well-considered.
+
+
 \documentclass[draftclsnofoot,onecolumn,letterpaper,10pt,compsoc]{IEEEtran}
 
 % Packaging
@@ -14,13 +22,17 @@
 \usepackage{listings}
 \usepackage{cite}
 \usepackage{pdfpages}
+\usepackage{pdflscape}
+\usepackage{url}
+\usepackage{array}
 \usepackage{xargs}                      % Use more than one optional parameter in a new commands
-%\usepackage[pdftex,dvipsnames]{xcolor}  % Coloured text etc.
-%
+
+
+\usepackage[pdftex,dvipsnames]{xcolor}  % Coloured text etc.
 %\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
 %\newcommandx{\note}[2][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
 
-%\newcommand\question[1]{\footnote{\textcolor{red}{#1}}}
+\newcommand\question[1]{\footnote{\textcolor{red}{#1}}}
 
 % Paper type
 \geometry{letterpaper, margin=.75in}
@@ -53,6 +65,7 @@
       \textbf{Keywords:} Brewing, Operations, Management
     \end{abstract}
 		\pagebreak
+        \tableofcontents
 \end{titlingpage}
 
 \section{Introduction}
@@ -67,6 +80,29 @@ Overall, each technology conveys pros and cons for its usage; in some scenarios 
 
 \section{System Peripherals}
     \subsection{Introduction}
+    
+        To access and work with the data management system, there are several requirements. Listed below are the criteria along with an evaluation of each technology's ability to meet the requirement:\\
+        
+        
+        \begin{center}
+            \begin{tabular}{ |m{5em}|m{10em}|m{10em}|m{10em}|}
+                \hline
+                    & Native Mobile & Native Desktop & Web Application \\
+                
+                \hline
+                    Criteria 1 & X & X & X \\
+                    
+                \hline
+                    Criteria 2 & X & X & X \\
+                    
+                \hline
+                    Criteria 3 & X & X & X \\
+                    
+                \hline
+            \end{tabular}
+        \end{center}
+        
+    
         This is an overview of the various peripheral technologies our team may utilize to interface with the data management system. 
         We will analyze the positive and negative impacts of creating a native mobile application, a native desktop application, or a web application.
         There are benefits and costs associated with each technology as described below.
@@ -222,7 +258,7 @@ Overall, each technology conveys pros and cons for its usage; in some scenarios 
         Another benefit of WebPack is using hot-reloading to more efficiently develop the frontend of an application\cite{TaskRunners}.
         Finally, the main difficulty with WebPack is it can be difficult to configure at first and there exists a learning curve to its technology\cite{TaskRunners}.
 
-\bibliography{references}{}
+\bibliography{./references}{}
 \bibliographystyle{plain}
 
 \end{document}
