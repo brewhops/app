@@ -80,45 +80,6 @@ Overall, each technology conveys pros and cons for its usage; in some scenarios 
 
 \section{System Peripherals}
     \subsection{Introduction}
-    
-        To access and work with the data management system, there are several requirements. Listed below are the criteria along with an evaluation of each technology's ability to meet the requirement:\\
-        
-        
-        \begin{center}
-            \begin{tabular}{ |m{14em}|m{9em}|m{9em}|m{9em}|}
-                \hline
-                    & Native Mobile & Native Desktop & Web Application \\
-                
-                \hline
-                    Accessable in Ninkasi cellar & X & & X \\
-                    
-                \hline
-                    Accessible in Ninkasi offices & X & X & X \\
-        
-                \hline
-                    Cross Platform &  &  & X \\
-                    
-                \hline
-                    Immediately deployable &  &  & X \\
-                    
-                \hline
-                    Prior development experience &  &  & X \\
-                    
-                \hline
-                     Database connectable & X & X & X \\
-                     
-                \hline
-                    Open source & & & X \\
-                
-                \hline
-                    Strong community & X & X & X \\
-                
-                \hline
-        
-            \end{tabular}
-        \end{center}
-        
-    
         This is an overview of the various peripheral technologies our team may utilize to interface with the data management system. 
         We will analyze the positive and negative impacts of creating a native mobile application, a native desktop application, or a web application.
         There are benefits and costs associated with each technology as described below.
@@ -134,7 +95,7 @@ Overall, each technology conveys pros and cons for its usage; in some scenarios 
             This includes push notifications which may be required in the data management system. 
             Push notifications would allow brewers to receive updates on time-critical tasks without having to refresh the application.
             Since native mobile applications run on the specific device, this allows them to be used while not connected to the internet.
-            It is unknown whether or not brewers will have good internet connection where they plan to use the application\question{We need to ask Daniel about internet availability.}.
+            It is unknown whether or not brewers will have good internet connection where they plan to use the application.
             Another benefit of running natively is that data can be stored directly on the device.
             This would ensure that data is never stored in a single, vulnerable space.
             Along these lines, running native mobile applications would reduce hosting needs to only data storage.
@@ -199,6 +160,45 @@ Overall, each technology conveys pros and cons for its usage; in some scenarios 
             Depending on how often individuals access the application, this may increase storage and processing requirements.
             Finally, web application interfaces tend to be slower than native applications\cite{LifeWireOverview}.
 
+    \subsection{Conclusion}
+    To access and work with the data management system, there are several requirements. Listed below are the criteria along with an evaluation of each technology's ability to meet the requirement:\\
+        
+        
+        \begin{center}
+            \begin{tabular}{ |m{14em}|m{9em}|m{9em}|m{9em}|}
+                \hline
+                    & Native Mobile & Native Desktop & Mobile Web \\
+                
+                \hline
+                    Accessable in Ninkasi cellar & X & & X \\
+                    
+                \hline
+                    Accessible in Ninkasi offices & X & X & X \\
+        
+                \hline
+                    Cross Platform &  &  & X \\
+                    
+                \hline
+                    Immediately deployable &  &  & X \\
+                    
+                \hline
+                    Prior development experience &  &  & X \\
+                    
+                \hline
+                     Database connectable & X & X & X \\
+                     
+                \hline
+                    Open source & & & X \\
+                
+                \hline
+                    Strong community & X & X & X \\
+                
+                \hline
+        
+            \end{tabular}
+        \end{center}
+    
+    Based on the criteria for our system peripherals, we have decided to build a web application to access the data management system.
 
 \section{Data Storage}
 	\subsection{SQL Database}
