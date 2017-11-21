@@ -1,3 +1,46 @@
-\begin{thebibliography}{}
+\begin{thebibliography}{10}
+
+\bibitem{Intel}
+Intel nuc kits.
+
+\bibitem{Medium}
+Nodejs vs ruby on rails comparison 2017. which is the best for web development?
+
+\bibitem{RaspberryPi}
+Raspberry pi.
+
+\bibitem{InterRoute}
+What is cloud hosting?
+
+\bibitem{NGINX}
+What is nginx?
+
+\bibitem{CopaHost}
+Gustavo Carvalho.
+\newblock Raspberry as a dedicated server? the result is amazing.
+
+\bibitem{IntelNUCReview}
+Darien Graham-Smith.
+\newblock Intel nuc review.
+
+\bibitem{HostingAd}
+Alexandra Leslie.
+\newblock Nginx vs. apache (pro/con review, uses, & hosting for each).
+
+\bibitem{TheBalance}
+5~Disadvantages of~Cloud~Computing.
+
+\bibitem{JSSolutionsDev}
+Tymets Volodymyr.
+\newblock Home - express.js mobile app development: Pros and cons for
+  developers express.js mobile app development: Pros and cons for developers.
+
+\bibitem{UpWork}
+Carey Wodehouse.
+\newblock Choosing the right software stack.
+
+\bibitem{PCWorld}
+Alaina Yee.
+\newblock The mighty mini-pc: These little computers can have big uses.
 
 \end{thebibliography}
