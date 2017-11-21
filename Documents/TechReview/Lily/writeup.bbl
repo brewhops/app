@@ -1,5 +1,11 @@
 \begin{thebibliography}{10}
 
+\bibitem{Bitnami}
+Django.
+
+\bibitem{FullStackPython}
+Django.
+
 \bibitem{Intel}
 Intel nuc kits.
 
@@ -19,13 +25,26 @@ What is nginx?
 Gustavo Carvalho.
 \newblock Raspberry as a dedicated server? the result is amazing.
 
+\bibitem{NetGuru}
+Natalia Chrzanowska.
+\newblock Why to use node.js: Pros and cons of choosing node.js for back-end
+  development.
+
 \bibitem{IntelNUCReview}
 Darien Graham-Smith.
 \newblock Intel nuc review.
 
+\bibitem{RailsApps}
+Daniel Kehoe.
+\newblock What is ruby on rails?
+
+\bibitem{InfoWorldPhp}
+Paul Krill.
+\newblock Why developers love and hate php.
+
 \bibitem{HostingAd}
 Alexandra Leslie.
-\newblock Nginx vs. apache (pro/con review, uses, & hosting for each).
+\newblock Nginx vs. apache (pro/con review, uses, and hosting for each).
 
 \bibitem{TheBalance}
 5~Disadvantages of~Cloud~Computing.

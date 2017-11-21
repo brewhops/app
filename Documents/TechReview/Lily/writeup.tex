@@ -97,6 +97,7 @@ In this document, I outline three different possibilities we could use in our pr
 			This also requires setup that may be confusing for a non-technical user.
 			On most version of raspberry pi boards there are 4 USB 2 ports, and 4 Pole stereo/composite video ports\cite{RaspberryPi}, so the device is very customizable.
 			For small projects this is a perfect device, but would be a poor decision if the project increases dramatically in size.
+			\\\\
 			\textbf{Pros: Cheap and you get a lot for your money, server is on site.}
 			\\
 			\textbf{Cons: Cheap and not reliable, not enough storage space, setting it up and maintaining the hardware would be hard for someone with no little knowledge.}
@@ -141,7 +142,7 @@ The web servers we will use for our project are Apache, because they are fast, r
 	\subsection{Nginx}
 		NGINX is an open source server software that handles web serving as well as media streaming, caching, load balancing, and more\cite{NGINX}.
 		NGINX is known for being very fast, especially around media streaming and serving static content\cite{NGINX}.
-		NGINX is 2.5 times faster than Apache when serving static content and consumes less memory of the two when running the same amount of concurrent processes HostingAd.
+		NGINX is 2.5 times faster than Apache when serving static content and consumes less memory of the two when running the same amount of concurrent processes\cite{HostingAd}.
 		If Ninkasi were serving a lot of static content and media streams, NGINX would be better as it is much faster for static content than Apache.
 		Ninkasi just needs a simple database, so this is not relevant to our project.
 		For our project, the advanced features of NGINX are appealing.
@@ -215,12 +216,12 @@ The web servers we will use for our project are Apache, because they are fast, r
 		\textbf{Cons: A lot of abstraction (possibly too much depending on your purposes), not a defined way to do everything, way slow in comparison with other languages.}
 
 	\subsection{Node.js}
-			Node.js is a language you can use for full stack development.
-			It allows Javascript to be run on the server side.
-			Node is easy to learn, but unlike Rails, you have to build everything from the ground up.
+			Node.js is a language you can use for full stack development\cite{Medium}.
+			It allows Javascript to be run on the server side\cite{Medium}.
+			Node is easy to learn, but unlike Rails, you have to build everything from the ground up\cite{NetGuru}.
 			With little abstraction, you have total control of how features are implemented but development takes much longer.
 			Node updates are often not backward compatible.
-			Node can handle multiple requests at the same time and is way better at handling concurrent requests than Ruby.
+			Node can handle multiple requests at the same time and is way better at handling concurrent requests than Ruby\cite{Medium}.
 			This means the app takes up less RAM and functions faster.
 			Node has a high market demand, so for the intents of our project it would be very maintainable when we hand off our project to Ninkasi to expand.
 			\\ \\
@@ -230,9 +231,9 @@ The web servers we will use for our project are Apache, because they are fast, r
 
 	\subsection{Php}
 	Php has the benefit of being around for a long time\cite{InfoWorldPhp}.
-	This language has a lot of longevity and is constantly updated. It has a large open source community and lots of support, so maintainability would be high(medium).
+	This language has a lot of longevity and is constantly updated. It has a large open source community and lots of support, so maintainability would be high\cite{Medium}.
 	The language is inconsistent and clunky, so this would diminish our development ease.
-	There is a lack of abstraction, similar to Node.js, and often has repetitive code (railsapps), something Rails would reduce.
+	There is a lack of abstraction, similar to Node.js, and often has repetitive code\cite{RailsApps}, something Rails would reduce.
 	Php fits into the LAMP stack so we would be able to work with a relational database.
 		\\ \\
 		\textbf{Pros: Huge ecosystem and large open source community, always being updated, commonly used in industry for a long time.}
@@ -241,11 +242,11 @@ The web servers we will use for our project are Apache, because they are fast, r
 
 \subsection{Django}
 		Django is a python web framework that works similar to a LAMP framework.
-		This stack is comprised of MySQL relational databases, Apache, and python (bitnami).
+		This stack is comprised of MySQL relational databases, Apache, and python\cite{Bitnami}.
 		This is perfect for our need for relational database support. It allows for python front end development, which Connor is interested in.
-		Similar to Node, Django is opinionated, having a self-proclaimed “batteries included” philosophy (fullstackpython).
-		This means there is common functionality for building web apps. Authentication, URL routing, database scheme migrations, etc. are all included in Django framework and standardized(fullstackpython).
-		The stability, performance, and community of Django have grown stronger in recent years (fullstackpython).
+		Similar to Node, Django is opinionated, having a self-proclaimed “batteries included” philosophy\cite{FullStackPython}.
+		This means there is common functionality for building web apps. Authentication, URL routing, database scheme migrations, etc. are all included in Django framework and standardized\cite{FullStackPython}.
+		The stability, performance, and community of Django have grown stronger in recent years\cite{FullStackPython}.
 		\\ \\
 		\textbf{Pros: Works with the stack we want, opinionated lanugage, easy to use, strong stability, performance and community }
 		\\
