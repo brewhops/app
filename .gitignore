@@ -14,3 +14,5 @@
 *.toc
 *.log
 *.fdb*
+*.bbl
+*.blg
