@@ -4,6 +4,14 @@
 % Authors: William Buffum
 
 
+% Paper requirements:
+% 1. Your team number, your name, and project name
+% 2. Your role in the project
+% 3. What you are trying to accomplish (at a very high level) -- use info from your problem statement, but focus on the specific sub-pieces you, as an individual, are working on.
+% 4. Three possible technologies that could be used to accomplish the different pieces you selected to examine in more detail. Identify these potential technologies even if your client has told you which one to use.
+% 5. After conducting research and analyzing trade-offs, identify which technology you have selected for each piece of the project, and why. Convince the reader your analysis is unbiased and well-considered.
+
+
 \documentclass[draftclsnofoot,onecolumn,letterpaper,10pt,compsoc]{IEEEtran}
 
 % Packaging
@@ -14,13 +22,17 @@
 \usepackage{listings}
 \usepackage{cite}
 \usepackage{pdfpages}
+\usepackage{pdflscape}
+\usepackage{url}
+\usepackage{array}
 \usepackage{xargs}                      % Use more than one optional parameter in a new commands
-%\usepackage[pdftex,dvipsnames]{xcolor}  % Coloured text etc.
-%
+
+
+\usepackage[pdftex,dvipsnames]{xcolor}  % Coloured text etc.
 %\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
 %\newcommandx{\note}[2][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
 
-%\newcommand\question[1]{\footnote{\textcolor{red}{#1}}}
+\newcommand\question[1]{\footnote{\textcolor{red}{#1}}}
 
 % Paper type
 \geometry{letterpaper, margin=.75in}
@@ -53,6 +65,7 @@
       \textbf{Keywords:} Brewing, Operations, Management
     \end{abstract}
 		\pagebreak
+        \tableofcontents
 \end{titlingpage}
 
 \section{Introduction}
@@ -82,7 +95,7 @@ Overall, each technology conveys pros and cons for its usage; in some scenarios 
             This includes push notifications which may be required in the data management system. 
             Push notifications would allow brewers to receive updates on time-critical tasks without having to refresh the application.
             Since native mobile applications run on the specific device, this allows them to be used while not connected to the internet.
-            It is unknown whether or not brewers will have good internet connection where they plan to use the application\question{We need to ask Daniel about internet availability.}.
+            It is unknown whether or not brewers will have good internet connection where they plan to use the application.
             Another benefit of running natively is that data can be stored directly on the device.
             This would ensure that data is never stored in a single, vulnerable space.
             Along these lines, running native mobile applications would reduce hosting needs to only data storage.
@@ -147,9 +160,54 @@ Overall, each technology conveys pros and cons for its usage; in some scenarios 
             Depending on how often individuals access the application, this may increase storage and processing requirements.
             Finally, web application interfaces tend to be slower than native applications\cite{LifeWireOverview}.
 
+    \subsection{Conclusion}
+    To access and work with the data management system, there are several requirements. Listed below are the criteria along with an evaluation of each technology's ability to meet the requirement:\\
+        
+        
+        \begin{center}
+            \begin{tabular}{ |m{14em}|m{9em}|m{9em}|m{9em}|}
+                \hline
+                    & Native Mobile & Native Desktop & Mobile Web \\
+                
+                \hline
+                    Accessable in Ninkasi cellar & X & & X \\
+                    
+                \hline
+                    Accessible in Ninkasi offices & X & X & X \\
+        
+                \hline
+                    Cross Platform &  &  & X \\
+                    
+                \hline
+                    Immediately deployable &  &  & X \\
+                    
+                \hline
+                    Prior development experience &  &  & X \\
+                    
+                \hline
+                     Database connectable & X & X & X \\
+                     
+                \hline
+                    Open source & & & X \\
+                
+                \hline
+                    Strong community & X & X & X \\
+                
+                \hline
+        
+            \end{tabular}
+        \end{center}
+    
+    Based on the criteria for our system peripherals, we have decided to build a web application to access the data management system.
 
 \section{Data Storage}
+    \subsection{Introduction}
+    This is an overview of various types of databases. Databases will be used to store and access information that Ninkasi measures inside of each brewing vat.
+    
 	\subsection{SQL Database}
+        \subsubsection{Summary}
+            SQL Databases, also known as "relational" databases, are widely used to store highly \textit{structured} information\footnote{"Structured" information is data whose structure rarely, if ever, changes and is consistent between entities.}.
+        
         \subsubsection{Pros}
             Using SQL databases, it is easy to retrieve necessary information.
             SQL databases can use transactions which ensure that interactions with the database either complete fully or any changes are rolled back.
@@ -165,6 +223,9 @@ Overall, each technology conveys pros and cons for its usage; in some scenarios 
 
         
 	\subsection{NoSQL Database}
+        \subsubsection{Summary}
+            NoSQL databases, also known as "non-relational" databases, are widely used to increase speed and decrease storage space of \textit{unstructured} information\footnote{"Unstructured" data is information that is not consistent between entities.}.
+        
         \subsubsection{Pros}
             There is no defined structure to the database.
             The structure is dynamic and can be updated without having to shutdown the database\cite{MongoDBProsCons}.
@@ -187,6 +248,9 @@ Overall, each technology conveys pros and cons for its usage; in some scenarios 
         
         
 	\subsection{Flat File Database}
+        \subsubsection{Summary}
+            Flat file databases are commonly used to store configuration settings for software systems.
+        
         \subsubsection{Pros}
             Incredibly simple to set up, literally just a file.
             Easily read since there is a standard structure using delimeters or line length.
@@ -197,32 +261,123 @@ Overall, each technology conveys pros and cons for its usage; in some scenarios 
             Not usually accessed via network since they're offline entities that are part of the operating system\cite{Techwalla}.
             "... a flat file database is disadvantageous to a network user, who is accessing a multi-access, multi-tasking relational online databse which can be viewed from many different aspects." \cite{Techwalla}.
             "... not encountered as 'databases', but more as configuration files..." \cite{Techwalla}.
-
+    
+    \subsection{Conclusion}
+        Listed below are the requirements of the database system that will be used in this data management system.
+        
+        \begin{center}
+            \begin{tabular}{| m{15em} | m{10em} | m{10em} | m{10em} |}
+                \hline
+                    & SQL Database & NoSQL Database & Flat Files \\
+                
+                \hline
+                    Minimal data duplication & X & X & \\
+                    
+                \hline
+                    Data Integrity & X &  &  \\
+                
+                \hline
+                    Data retrieval reliability & X &  & X \\
+                    
+                \hline
+                    Strong Documentation & X & X & X \\
+                    
+                \hline
+                    Free to use & X\footnote{There are certain versions of SQL databases that are free.} & X & X \\
+                    
+                \hline
+            \end{tabular}
+        \end{center}
+        
+        Based on the criteria, we will store our data in a relational SQL database.
 
 \section{Task Runners and Module Bundlers}
+    \subsection{Introduction}
+        This section gives an overview on various task runners and module bundlers. 
+        It is common practice in web development to use small open source packages/libraries to complete specific tasks. 
+        Each of these libraries comes with dependencies along with other tasks that need to be handled before deployment. 
+        Task runners and module bundlers take care of these dependencies and performing routine pre-deployment operations.
+    
 	\subsection{Grunt}
-        Grunt is built on top of NodeJS. 
-        Grunt was one of the first tools that allowed "front-end developers to run predefined reptitive tasks"\cite{TaskRunners}. 
-        A major benefit of Grunt is the shear number of modules available for developers to use. 
-        One important distinction with Grunt is that it focuses on configuration over coding. 
-        Developers are expected to reuse configuration objects to automate their tasks. 
-        This can lead to bloated Grunt scripts that are not maintainable\cite{TaskRunners}.
+        \subsubsection{Summary}
+            Grunt is a tool that allows "front-end developers to run predefined reptitive tasks"\cite{TaskRunners}. This is commonly used in enterprise level web applications.
+        
+        \subsubsection{Pros}
+            Grunt is built on top of NodeJS which makes it integrate easily with other Node based applications.
+            Grunt is the oldest tool of its kind and has a strong community behind it.
+            This also ensures the stability and further development of Grunt.
+            Along with this, Grunt has thousands of modules available for developers to use.
+            An important difference between Grunt and other task runners is its focus on configuration over code.
+            To make Grunt work for you, you configure the tasks it completes.
+        
+        \subsubsection{Cons} 
+            There are some downsides to Grunt as well.
+            Developers reuse configuration objects to automate their tasks.
+            This can lead to bloated Grunt scripts that are not maintainable\cite{TaskRunners}.
     
 	\subsection{Gulp}
-        Gulp was developed after Grunt. Gulp focuses on code over configuration\cite{TaskRunners}; using JavaScript functions to define when and how tasks should be completed. 
-        Gulp scripts tend to run more quickly than Grunt configuration files\cite{GulpGruntSpeed}. 
-        This is because of Gulp's "stream usage and in-memory operations"\cite{TaskRunners}. 
-        While the benefits of Gulp are great, some of the paradigms that Gulp relies on can be tricky to understand and properly learn. 
-        The most notible being streams and promises\cite{TaskRunners}.
+        \subsubsection{Summary}
+            Gulp is a task runner that requires developers to write code to automate repetitive tasks\cite{TaskRunners}.
+            Gulp was developed after Grunt.
+            
+        \subsubsection{Pros}
+            A major benefit of Gulp is its use of Javascript functions to define when and how tasks should execute.
+            Another benefit is that Gulp scripts tend to run more quickly than Grunt configuration\cite{GulpGruntSpeed}.
+            This is possible ecause of Gulp's "stream usage and in-memory operations"\cite{TaskRunners}.
+        
+        \subsubsection{Cons}
+            Gulp relies on several paradigms that are not common practice in other areas of development.
+            These paradigms can make it difficult for new developers to create efficently create automation scripts.
+            There is no reason to use a task runner on small projects if the developer can quickly and easily perform the tasks by hand.
     
 	\subsection{WebPack}
-        WebPack differs from Grunt and Gulp in that it is a module bundler. 
-        It takes various modules that all have dependencies and bundles them together in a way that reduces redundancy\cite{WebPack}. 
-        It creates a dependency graph of all modules needed in your system and consolidates them into individual bundles\cite{WebPack}.
-        Another benefit of WebPack is using hot-reloading to more efficiently develop the frontend of an application\cite{TaskRunners}.
-        Finally, the main difficulty with WebPack is it can be difficult to configure at first and there exists a learning curve to its technology\cite{TaskRunners}.
+        \subsubsection{Summary}
+            WebPack differs from Grunt and Gulp in that it is a module bundler.
+            It takes various modules that all have dependencies and bundles them together in a way that reduces redundancy\cite{WebPack}. 
+            It creates a dependency graph of all modules needed in your system and consolidates them into individual bundles\cite{WebPack}.
+        
+        \subsubsection{Pros}
+            The major benefit of using WebPack is its ability to reduce software size through its consolidation method of individual modules.
+            Another benefit of WebPack is using hot-reloading to more efficiently develop the frontend of an application\cite{TaskRunners}.
+        
+        \subsubsection{Cons}
+            Finally, the main difficulty with WebPack is it can be difficult to configure at first and there exists a learning curve to its technology\cite{TaskRunners}.
+            WebPack is a technology that is extremely useful for major enterprise level applications, but tends to be over-powered for small applications.
+            WebPack would likely increase development time for the BrewHops team instead of aid in the development of our software.
+            
+    \subsection{Conclusion}
+        Listed below are the various criteria needed in a task runner and module bundling system.
+    
+    \begin{center}
+            \begin{tabular}{| m{15em} | m{10em} | m{10em} | m{10em} |}
+                \hline
+                    & Grunt & Gulp & WebPack \\
+                
+                \hline
+                    Software size reduction & X & X & X \\
+                    
+                \hline
+                    Automatable for deployment & X & X & X \\
+                    
+                \hline
+                    Easy to learn & X &  &  \\
+                
+                \hline
+                    Strong community & X & X & X \\
+                    
+                \hline
+                    Strong Documentation & X & X & X \\
+                    
+                \hline
+                    Free to use & X & X & X \\
+                    
+                \hline
+            \end{tabular}
+        \end{center}
+        
+        Based on the criteria, we will be using Grunt to automate repetitive tasks.
 
-\bibliography{references}{}
+\bibliography{./references}{}
 \bibliographystyle{plain}
 
 \end{document}
