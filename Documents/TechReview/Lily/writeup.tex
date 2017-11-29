@@ -1,0 +1,273 @@
+
+% Technology Review
+% CS 461 - CS Senior Capstone
+% Fall 2017
+% Author: Lily Shellhammer
+
+
+\documentclass[draftclsnofoot,onecolumn,letterpaper,10pt,compsoc]{IEEEtran}
+
+% Packaging
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{titling}
+\usepackage{color}
+\usepackage{listings}
+\usepackage{cite}
+\usepackage{pdfpages}
+\usepackage{pdflscape}
+\usepackage{url}
+\usepackage{array}
+\usepackage{xargs}                       % Use more than one optional parameter in a new commands
+\usepackage[pdftex,dvipsnames]{xcolor}  % Coloured text etc.
+%
+%\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
+%\newcommandx{\note}[2][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
+
+%\newcommand\question[1]{\footnote{\textcolor{red}{#1}}}
+
+% Paper type
+\geometry{letterpaper, margin=.75in}
+
+% Title page
+\title{CS 461 - CS Senior Capstone
+	\\Fall 2017
+	\\Technology Review - Group 10
+}
+
+
+\author{
+	Lily Shellhammer \\
+	\texttt{shellhal@oregonstate.edu}
+}
+
+\begin{document}
+
+\begin{titlingpage}
+    \maketitle
+    \begin{abstract}
+		This document is a review of possible technologies for the middle-stack of the Ninkasi BrewHops data entry website.
+		Outlined are three possibilities for the technologies we could use for data hosting, server software, and database interaction language.
+		Currently Ninkasi does not have an adequate server, so they need a place to host their cellaring data. Our website will interact with the database, so we need to choose server software and language to interact with the software that will be flexible, maintainable, and easy to code.
+		This document discusses whether local or remote servers will be better for Ninkasi, the pros and cons of different server software and database interaction languages, and the decisions about which technologies we have chosen to implement.
+			\\
+      \textbf{Keywords:} Brewing, Operations, Management
+    \end{abstract}
+		\pagebreak
+		\tableofcontents
+\end{titlingpage}
+
+\section{Introduction}
+My job in the Ninkasi BrewHops project is to develop and organize the middle of the stack: the languages that connect the database to the front end.
+I will be coding the database interaction languages and the functionality to pull information from/put information into the database.
+In this document, I outline three different possibilities we could use in our project for hosting, platform, and database interaction language possibilities.
+
+\section{Hosting}
+    \subsection{Overview}
+		Ninkasi needs to host it's data somehwere, either remotely using cloud hosting or locally using a server of some type.
+		Below are the outlined options for small local servers or cloud hosting.
+		Space available, scalability, cost, and complexity of each are explained.
+		For a cheap, efficient, small server, our team has chosen to work with Raspberry Pi's.
+		\subsection{Criteria}
+		\begin{itemize}
+  \item Scalable in terms of space, or if not scalable, ability to upgrade or cluster
+  \item Low cost in the long run
+  \item Easy for client to use after we leave this project
+\end{itemize}
+
+	\subsection{Intel NUC}
+            The first option for hosting our data is the Intel NUC, or “Next Unit of Computing”.
+						It has a low power consumption, idling at 8 watts and is barely audible (alphr). For the size, 5\textquotedblleft square by 1.5\textquotedblleft tall, the NUC is powerful \cite{IntelNUCReview}.
+						Each version averages around 32 GB \cite{Intel}, but this is a fixed-size memory space.
+						For a small company like Ninkasi, this would work well for the amount of data they are storing.
+						If they wanted a scalable product in case their data became larger than 32 GB, that’s where NUC would fall short.
+						Price wise, NUC's  fall between 274 and 500 dollars\cite{PCWorld}.
+						There are also 4x4\textquotedblleft NUC boards that look very similar to Raspberry Pi's.
+						These have 4-32 GB and cost from 120-575 dollars \cite{Intel}.
+				\\ \\
+				\textbf{Pros: Small and powerful for its size, quiet, good for a small server for a small business.}
+				\\
+        \textbf{Cons: Expensive, storage size limitations so not scalable.}
+
+	\subsection{Raspberry Pi}
+			Raspberry Pi's are the economically friendly option for hosting.
+			The devices run between 5 and 35 dollars per unit and, although it is not the most common use of the technology, can be used as a small server\cite{CopaHost}.
+			The raspberry pi itself only contains 1GB of space, and relies of a microSD card (which can hold upto 32GB and still be compatible with the device)\cite{CopaHost}.
+			Raspberry Pi’s reliance on the SD card for I/O means the cost of using this technology is not limited to the board.
+			This also requires setup that may be confusing for a non-technical user.
+			On most version of raspberry pi boards there are 4 USB 2 ports, and 4 Pole stereo/composite video ports\cite{RaspberryPi}, so the device is very customizable.
+			For small projects this is a perfect device, but would be a poor decision if the project increases dramatically in size.
+			\\\\
+			\textbf{Pros: Cheap and you get a lot for your money, server is on site.}
+			\\
+			\textbf{Cons: Cheap and not reliable, not enough storage space, setting it up and maintaining the hardware would be hard for someone with no little knowledge.}
+
+	\subsection{Cloud Hosting}
+        Cloud hosting is a way of hosting your data on a remote server through a company who charges you for that space.
+				People with limited technical knowledge can use this service easily because you can be provided with a software environment that requires no setup or hardware\cite{InterRoute}.
+				The system is very scalable, you pay for what you need and if you need more space you can buy more\cite{InterRoute}.
+				Unlike the NUC or Raspberry Pi, this method of hosting isn't a one-time payment, you have to pay for the space you reserved each month\cite{TheBalance}.
+				Some of the dangers of using cloud are that you are stuck as a “forever” customer if you can't convert your data from the host's system to another system\cite{TheBalance}.
+				\\ \\
+				\textbf{Pros: Reliable, scalable, easy to use with no technological knowledge, no hardware required.}
+				\\
+				\textbf{Cons: Have to pay each month, could potentially be stuck with a service if there is not a system for converting your data to anther service/system, poor customer service}
+
+
+			\subsection{Discussion}
+				Raspberry Pi and NUC offer a lot of similar benefits for a small at-home server, but Raspberry Pi’s are much less expensive.
+				NUC holds a similar amount of data as a Raspberry Pi combined with an SD card and is less complicated to set up and maintain.
+				That being said, Raspberry Pi's are exponentially cheaper.
+				Cloud hosting is the most appealing for ease of use for our client, but as a monthly service the service provider will charge Ninkasi every month.
+				Again, as Ninkasi is a successful company, this is not the most important consideration, but it is costlier in the long run.
+
+				\subsection{Conclusion}
+				For the creation of this project, we will use Raspberry Pi’s for this project because our client has specifically requested it.
+				They are cheap and have good documentation and online support.
+				NUC is easier to set up but is much more expensive, so we won’t choose NUC because it works similarly to the Raspberry Pi’s.
+				Cloud hosting is a commitment financially and is still an option in the future if Raspberry Pi’s are not able to scale to Ninkasi’s liking.
+
+\section{Platform}
+\subsection{Overview}
+The platform for our web servers will dictate the ease and speed of running concurrent processes, and what kind of stack we will be able to use.
+This section outlines the pros and cons of Nginx, Apache, and Express.js.
+The web servers we will use for our project are Apache, because they are fast, reliable, well documented and supported, and allow us to use Django and Python and relational databases.
+\subsection{Criteria}
+\begin{itemize}
+\item Allows for a relational database
+\item Easy to use and reliable
+\item Well document and supported
+\end{itemize}
+
+	\subsection{Nginx}
+		NGINX is an open source server software that handles web serving as well as media streaming, caching, load balancing, and more\cite{NGINX}.
+		NGINX is known for being very fast, especially around media streaming and serving static content\cite{NGINX}.
+		NGINX is 2.5 times faster than Apache when serving static content and consumes less memory of the two when running the same amount of concurrent processes\cite{HostingAd}.
+		If Ninkasi were serving a lot of static content and media streams, NGINX would be better as it is much faster for static content than Apache.
+		Ninkasi just needs a simple database, so this is not relevant to our project.
+		For our project, the advanced features of NGINX are appealing.
+		\\ \\
+		\textbf{Pros: Good security, faster and less space consuming for static content, many advanced features, handles load balancing well}
+		\\
+		\textbf{Cons: Most modules don't support dynamic loading, not good OS support for Windows}
+
+	\subsection{Apache}
+		Apache is part of the LAMP stack (Linux or other OS, Apache, MySQL, Php or similar lanugage) which is a traditional stack model\cite{UpWork}.
+		It has 3 ways of request processing which scale differently.
+		Apache has great OS support (better than NGINX which lacks good Windows support) and can run on many systems\cite{HostingAd}.
+		It has good security and great documentation and supports dynamic loading well\cite{HostingAd}.
+		\\ \\
+		\textbf{Pros: Request processing 3 ways, handles load balancing well, excellent documentation, good security, supports dynamic laoding}
+		\\
+		\textbf{Cons: Slow for static content, doesn't scale well}
+
+
+	\subsection{Express}
+		Express.js is part of the MEAN stack (mongo-db, express.js, angular, node.js) stack and is a great choice for a modern platform if you want language uniformity and the ability to be mobile friendly\cite{UpWork}.
+		Since we are not creating apps, the mobile ability is less important but the language uniformity would be helpful.
+		That way regardless of what part of the stack the group is working on, they will know the language for all other sides of the stack.
+		This system is also very flexible and offers lots of packages and plugins.
+		It is an opensource product with a large community and lots of support\cite{JSSolutionsDev}.
+		Express is an event  driven server, meaning it has a single threaded framework\cite{JSSolutionsDev}.
+		Inexperienced developers may find this confusing if they aren't familiar with the callback nature of this type of server\cite{JSSolutionsDev}.
+		Express works with Mongo-db which is a non-relational database. Express doesn’t allow for relational databases, which we need in our project.
+		\\ \\
+		\textbf{Pros: Flexible, modern, mobile friendly, uniform lanuage for full stack}
+		\\
+		\textbf{Cons: Confusing if unfamiliar with callback nature of server}
+
+		\subsection{Discussion}
+		Our main interests in choosing server software are that it is compatible with a relational database, is easy to use and is well documented.
+		NGINX and Apache allow us to use a relational database, while Express does not.
+		Express is part of the MEAN stack, which means it’s language compatible and allows JavaScript, but we are limited in flexibility and have to use a NoSQL database.
+		NGINX is faster than Apache while serving static content and also consumes less memory. That being said, the PHP runtime between the two types of server software are very similar\cite{HostingAd}.
+		Since our website will not have a lot of static content and won’t be streaming any videos or audio, streaming speed doesn’t play a role in our decision.
+		\subsection{Conclusion}
+		Since Express doesn’t allow for a relational database, it will not be our server software.
+		NGINX is faster than Apache, but we won’t be streaming media so this isn’t our main concern.
+		Both NGINX and Apache are well documented, well supported, and easy to use.
+		Apache has better support for Windows computers and many of Ninkasi’s computers are Windows, so this will be our choice.
+
+\section{Database Interaction Language}
+\subsection{Overview}
+	The choice of which language with which we will use to interact with our database is an important decision.
+	We want our project to be very maintainable, both in the language's support and community, and the code we create with the language.
+	For our project we don’t want to work with Php, because of previous experience in other areas and ease of use.
+	We also want to use Apache so we can have a relational database and support for Windows OS.
+	Because of these wants, we have chosen to use Django as our database interaction language.
+	\subsection{Criteria}
+	\begin{itemize}
+	\item Works with the type of LAMP stack we are looking for
+	\item Easy to code with
+	\item Language that is popular and continually developed
+	\end{itemize}
+	\subsection{Ruby On Rails}
+		Ruby on Rails is a flexible and expressive language that has been at the foreground of database interaction languages in recent years.
+		There are a lot of protocols for how to implement web features in Rails.
+		Rails is opinionated, meaning most features have a standard way of being create\cite{Medium}.
+		This has positives and negatives; making implementing forms or buttons standardized makes Rails easily maintainable, but also doesn't allow the coder as much flexibility in designing their own functions.
+		Problems arise when Rails has no opinion on how to implement a web feature, then the style of \textquotedblleft one size fits all\textquotedblright in Rails doesn't work well\cite{Medium}.
+		Rails is also very slow in comparison with Node or Php\cite{Medium}.
+		For our purposes, Rails would be great for developing our project.
+		Rails operates as part of LAMP stacks, which we need in order to implement a relational database.
+		\\ \\
+		\textbf{Pros: Maintainable, clean, protocols for everything}
+		\\
+		\textbf{Cons: A lot of abstraction (possibly too much depending on your purposes), not a defined way to do everything, way slow in comparison with other languages.}
+
+	\subsection{Node.js}
+			Node.js is a language you can use for full stack development\cite{Medium}.
+			It allows Javascript to be run on the server side\cite{Medium}.
+			Node is easy to learn, but unlike Rails, you have to build everything from the ground up\cite{NetGuru}.
+			With little abstraction, you have total control of how features are implemented but development takes much longer.
+			Node updates are often not backward compatible.
+			Node can handle multiple requests at the same time and is way better at handling concurrent requests than Ruby\cite{Medium}.
+			This means the app takes up less RAM and functions faster.
+			Node has a high market demand, so for the intents of our project it would be very maintainable when we hand off our project to Ninkasi to expand.
+			\\ \\
+			\textbf{Pros: You can build a full stack with one language, easy to learn, strong community, actively developed language.}
+			\\
+			\textbf{Cons: You have to build every feature from the ground up, often backward incompatible updates.}
+
+	\subsection{Php}
+	Php has the benefit of being around for a long time\cite{InfoWorldPhp}.
+	This language has a lot of longevity and is constantly updated. It has a large open source community and lots of support, so maintainability would be high\cite{Medium}.
+	The language is inconsistent and clunky, so this would diminish our development ease.
+	There is a lack of abstraction, similar to Node.js, and often has repetitive code\cite{RailsApps}, something Rails would reduce.
+	Php fits into the LAMP stack so we would be able to work with a relational database.
+		\\ \\
+		\textbf{Pros: Huge ecosystem and large open source community, always being updated, commonly used in industry for a long time.}
+		\\
+		\textbf{Cons: Very old, language is inconsistent, clunky, lack of abstraction.}
+
+\subsection{Django}
+		Django is a python web framework that works similar to a LAMP framework.
+		This stack is comprised of MySQL relational databases, Apache, and python\cite{Bitnami}.
+		This is perfect for our need for relational database support. It allows for python front end development, which Connor is interested in.
+		Similar to Node, Django is opinionated, having a self-proclaimed “batteries included” philosophy\cite{FullStackPython}.
+		This means there is common functionality for building web apps. Authentication, URL routing, database scheme migrations, etc. are all included in Django framework and standardized\cite{FullStackPython}.
+		The stability, performance, and community of Django have grown stronger in recent years\cite{FullStackPython}.
+		\\ \\
+		\textbf{Pros: Works with the stack we want, opinionated lanugage, easy to use, strong stability, performance and community }
+		\\
+		\textbf{Cons: Not as old as Php or Rails and there potentially less longevity}
+
+		\subsection{Discussion}
+		Node.js is a easy to use, well supported language, but it is a part of the MEAN stack so we won’t be able to use it with a relational database.
+		Rails and Php are both well documented and have strong open source communities online.
+		Php is clunky, but has extreme longevity, so maintainability is high.
+		Rails is opinionated, which makes development quick.
+		This also makes implementations abstract and farther from the control of the developer, but this is standard in modern web development, so doesn't play a large role in our decision.
+		Django is similar in flexibility and ease of use to Rails, and allows python to run, which Connor, our front end developer is interested in.
+
+		\subsection{Conclusion}
+		Node.js is a easy to use, well supported language, but it is a part of the MEAN stack so we won’t be able to use it with a relational database.
+		Php is clunky and inconsistent, so we do not want to develop in Php when we can create similar results with Django.
+		Rails has a lot of benefits, but the ability to use the Apache, MySQL, Python stack with Django makes it our choice.
+
+\clearpage
+
+\bibliography{./references}{}
+\bibliographystyle{plain}
+
+\end{document}

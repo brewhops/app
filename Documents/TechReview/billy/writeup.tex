@@ -1,0 +1,383 @@
+% Technology Review
+% CS 461 - CS Senior Capstone
+% Fall 2017
+% Authors: William Buffum
+
+
+% Paper requirements:
+% 1. Your team number, your name, and project name
+% 2. Your role in the project
+% 3. What you are trying to accomplish (at a very high level) -- use info from your problem statement, but focus on the specific sub-pieces you, as an individual, are working on.
+% 4. Three possible technologies that could be used to accomplish the different pieces you selected to examine in more detail. Identify these potential technologies even if your client has told you which one to use.
+% 5. After conducting research and analyzing trade-offs, identify which technology you have selected for each piece of the project, and why. Convince the reader your analysis is unbiased and well-considered.
+
+
+\documentclass[draftclsnofoot,onecolumn,letterpaper,10pt,compsoc]{IEEEtran}
+
+% Packaging
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{titling}
+\usepackage{color}
+\usepackage{listings}
+\usepackage{cite}
+\usepackage{pdfpages}
+\usepackage{pdflscape}
+\usepackage{url}
+\usepackage{array}
+\usepackage{xargs}                      % Use more than one optional parameter in a new commands
+
+
+\usepackage[pdftex,dvipsnames]{xcolor}  % Coloured text etc.
+%\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
+%\newcommandx{\note}[2][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
+
+\newcommand\question[1]{\footnote{\textcolor{red}{#1}}}
+
+% Paper type
+\geometry{letterpaper, margin=.75in}
+
+% Title page
+\title{CS 461 - CS Senior Capstone
+	\\Fall 2017
+	\\Technology Review
+}
+
+
+\author{
+	William B. Buffum \\
+	\texttt{buffumw@oregonstate.edu}
+}
+
+\begin{document}
+
+\begin{titlingpage}
+    \maketitle
+    \begin{abstract}
+      Ninkasi Brewing Company is based in Eugene, Oregon, producing and distributing tens of thousands of barrels of beer each year across the United States and Canada.
+      Maintaining a consistently high quality product is vital to the longevity of Ninkasi.
+      Scalable brewing is a detail-oriented and organized process; companies require unique data tracking methods to fit the needs of their brewing process.
+      Ninkasi currently tracks brewery data using Microsoft Excel spreadsheets.
+      This process is laborious, time consuming, and error prone.
+      The goal of this project is to create a brewing operations management system to add and monitor brewery data.
+      The brewing and cellar team members will utilize the system to access up-to-date information.
+      \\
+      \textbf{Keywords:} Brewing, Operations, Management
+    \end{abstract}
+		\pagebreak
+        \tableofcontents
+\end{titlingpage}
+
+\section{Introduction}
+In this technology review, we will analyze the costs and benefits associated with various tools in three components of our project. 
+First, we will look at peripheral interfaces. 
+It is important to understand how brewers will access information managed by our system and recognize the positive and negative attributes of each option that exists. 
+Next, we will look at database technologies. 
+It is important to look at the structure of our data and understand the costs and benefits of choosing a certain technology. 
+Finally, task runners and module bundlers are an important tool in any efficient development process. 
+Looking at the different options and determining which is a good fit is important before the BrewHops team can effectively develop a software solution for Ninkasi Brewing Company. 
+Overall, each technology conveys pros and cons for its usage; in some scenarios there is no perfect answer, but understanding why certain technologies exist will help improve the development of our data management system.
+
+\section{System Peripherals}
+    \subsection{Introduction}
+        This is an overview of the various peripheral technologies our team may utilize to interface with the data management system. 
+        We will analyze the positive and negative impacts of creating a native mobile application, a native desktop application, or a web application.
+        There are benefits and costs associated with each technology as described below.
+
+	\subsection{Native Mobile Application}
+        \subsubsection{Summary}
+            Native mobile apps play an integral part in many business product lines.
+            These applications are written in languages specific to devices they run on.
+            These are generally recognized as good for sale to external customers\cite{SearchCloudOverview}.
+
+        \subsubsection{Pros}
+            Native mobile applications have access to all capabilities of the smart phones on which they run. 
+            This includes push notifications which may be required in the data management system. 
+            Push notifications would allow brewers to receive updates on time-critical tasks without having to refresh the application.
+            Since native mobile applications run on the specific device, this allows them to be used while not connected to the internet.
+            It is unknown whether or not brewers will have good internet connection where they plan to use the application.
+            Another benefit of running natively is that data can be stored directly on the device.
+            This would ensure that data is never stored in a single, vulnerable space.
+            Along these lines, running native mobile applications would reduce hosting needs to only data storage.
+            When developing native mobile applications, most development kits come with "drag-and-drop" interface builders. 
+            This feature could reduce development time and increase maintainability once BrewHops team finishes.
+            Finally, native mobile application interfaces run more quickly than mobile-web applications.
+            Depending on how fast-pace the brewers' use of the application will be, this may reduce time spent in application.
+
+        \subsubsection{Cons}
+            Native mobile applications can drastically increase the development timeline.
+            Each device the application will run on must have its own version of the application.
+            If Ninkasi uses multiple smartphones (E.G iPhone and Android), then each platform requires the application to be written in its native language.
+            Learning new languages and platform specific standards will increase the time to project completion.
+            After creation, deploying native mobile applications is more difficult than web-based applications.
+            Native applications require download from the platform's app store or direct deployment from the developer.
+            This may make it difficult to onboard new brewers or remove brewer's access.
+            Once downloaded, any updates to the interface must be downloaded onto each device.
+            Again, each update must be written for each hardware platform.
+            Finally, if a brewer's device is lost or stolen then there is a potential security risk if Ninkasi data is stored on the device.
+    
+    
+	\subsection{Naive Desktop Application}
+        \subsubsection{Summary}
+            Many of the same costs and benefits that arise with native mobile applications, come about with native desktop applications.
+        
+        \subsubsection{Pros}
+            When developing native desktop applications, applications have direct access to the host utilities. 
+            This is beneficial when many of these functions are needed in the application.
+            Native desktop applications do not require internet connection to function.
+            Depending on how information is stored, internet may still be required to access data.
+            Since the application is running natively, data can be stored in the computer's memory.
+            This can help create a fluid user experience.
+    
+        \subsubsection{Cons}
+            Similar to native mobile applications, native desktop applications require additional versions of the application written for each hardware platform supported.
+            This may not be an issue if Ninkasi uses a single technology ecosystem; but it can make it difficult to switch platforms if there is ever a need.
+            Native desktop applications must be downloaded onto each desktop computer that needs to run the program.
+            This can increase the time needed to onboard new employees who require access to the software.
+            Along with downloading the application onto each device, it'll become necessary to remove the application and all application data from the device when Ninkasi no longer uses the computer.
+    
+    
+	\subsection{Web Application}
+        \subsubsection{Summary}
+            Web applications are generally recognized as good for cross-platform internal usage\cite{SearchCloudOverview}.
+    
+        \subsubsection{Pros}
+            Web applications allow for each cross-platform functionality.
+            Ninkasi brewers will access the system from their smartphones, desktops, and tablets.
+            A web application will allow us to develop one application that exposes certain functionality based on the device used.
+            These benefits also carry onward to different technology ecosystems.
+            A single web application will run the same on an OSX device as it runs on a Windows device.
+            When deploying web applications, nothing is downloaded since it runs in the browser.
+            Web applications are also easily maintained and updated.
+            They are written using common languages that every developer and many non-developers have seen before.
+            It is possible to create push notifications in web sites\cite{GooglePushNotifications}.
+    
+        \subsubsection{Cons}
+            Unfortunately, since the application is hosted, brewers will need to maintain an internet connection to use the application.
+            Without internet, there will be no way to work with live data from the database.
+            Also, without native software, the application will not have access to hardware specific functions.
+            Web applications also require static storage of the system along with database storage.
+            Depending on how often individuals access the application, this may increase storage and processing requirements.
+            Finally, web application interfaces tend to be slower than native applications\cite{LifeWireOverview}.
+
+    \subsection{Conclusion}
+    To access and work with the data management system, there are several requirements. Listed below are the criteria along with an evaluation of each technology's ability to meet the requirement:\\
+        
+        
+        \begin{center}
+            \begin{tabular}{ |m{14em}|m{9em}|m{9em}|m{9em}|}
+                \hline
+                    & Native Mobile & Native Desktop & Mobile Web \\
+                
+                \hline
+                    Accessable in Ninkasi cellar & X & & X \\
+                    
+                \hline
+                    Accessible in Ninkasi offices & X & X & X \\
+        
+                \hline
+                    Cross Platform &  &  & X \\
+                    
+                \hline
+                    Immediately deployable &  &  & X \\
+                    
+                \hline
+                    Prior development experience &  &  & X \\
+                    
+                \hline
+                     Database connectable & X & X & X \\
+                     
+                \hline
+                    Open source & & & X \\
+                
+                \hline
+                    Strong community & X & X & X \\
+                
+                \hline
+        
+            \end{tabular}
+        \end{center}
+    
+    Based on the criteria for our system peripherals, we have decided to build a web application to access the data management system.
+
+\section{Data Storage}
+    \subsection{Introduction}
+    This is an overview of various types of databases. Databases will be used to store and access information that Ninkasi measures inside of each brewing vat.
+    
+	\subsection{SQL Database}
+        \subsubsection{Summary}
+            SQL Databases, also known as "relational" databases, are widely used to store highly \textit{structured} information\footnote{"Structured" information is data whose structure rarely, if ever, changes and is consistent between entities.}.
+        
+        \subsubsection{Pros}
+            Using SQL databases, it is easy to retrieve necessary information.
+            SQL databases can use transactions which ensure that interactions with the database either complete fully or any changes are rolled back.
+            SQL databases are structured.
+            There exists many methodologies for normalization data to ensure it is stored efficiently\cite{TechwallaSQL}.
+            SQL databases allow for multiple users to access information at the same time\cite{TechwallaSQLPros}.
+            Database administrators can easily control operation permissions for each user in the system.
+            Along with this, many tools exist to help developers optimize queries to access the database.
+    
+        \subsubsection{Cons}
+            Enterprise level SQL servers can be expensive to develop and maintain.
+            Depending on the database, tables can have limits on their structure\cite{TechwallaSQLCons}.
+
+        
+	\subsection{NoSQL Database}
+        \subsubsection{Summary}
+            NoSQL databases, also known as "non-relational" databases, are widely used to increase speed and decrease storage space of \textit{unstructured} information\footnote{"Unstructured" data is information that is not consistent between entities.}.
+        
+        \subsubsection{Pros}
+            There is no defined structure to the database.
+            The structure is dynamic and can be updated without having to shutdown the database\cite{MongoDBProsCons}.
+            Another benefit of NoSQL databases is their ability to handle "Big Data".
+            There are tools available such as Hadoop that can handle the processing requirements of big data systems\cite{NoSQLProsCons}.
+            Ninkasi produces high amounts of information that is monitored daily.
+            Ideally, the client would prefer to track this information more frequently, which would lead to larger amounts of information.
+            Also, "NoSQL databases typically use clusters of cheap commodity servers to manage the exploding data and transaction volumes."\cite{NoSQLProsCons}.
+            This may be essential if the BrewHops team uses Raspberry Pis or Intel Nucs to host system information.
+            
+    
+        \subsubsection{Cons}
+            While there are benefits to using a NoSQL database, there are also drawbacks.
+            NoSQL technologies are typically open-source projects that do not have the support and resources that major relational database management systems have\cite{NoSQLProsCons}.
+            There are still several security issues associated with NoSQL databases\cite{NoSQLSecurityIssues}.
+            There is no guarantee data consistency when using NoSQL databases\cite{ChannelFutures}.
+            They use "eventual consistency" which implies times of inconsistency.
+            Some NoSQL databases do not automatically shard data to properly spread data across clusters\cite{ChannelFutures}.
+            This will only be an issue if Ninkasi data needs will require multiple nodes.
+        
+        
+	\subsection{Flat File Database}
+        \subsubsection{Summary}
+            Flat file databases are commonly used to store configuration settings for software systems.
+        
+        \subsubsection{Pros}
+            Incredibly simple to set up, literally just a file.
+            Easily read since there is a standard structure using delimeters or line length.
+    
+        \subsubsection{Cons}
+            Duplicate data, any new entries require a new row
+            No transactions
+            Not usually accessed via network since they're offline entities that are part of the operating system\cite{Techwalla}.
+            "... a flat file database is disadvantageous to a network user, who is accessing a multi-access, multi-tasking relational online databse which can be viewed from many different aspects." \cite{Techwalla}.
+            "... not encountered as 'databases', but more as configuration files..." \cite{Techwalla}.
+    
+    \subsection{Conclusion}
+        Listed below are the requirements of the database system that will be used in this data management system.
+        
+        \begin{center}
+            \begin{tabular}{| m{15em} | m{10em} | m{10em} | m{10em} |}
+                \hline
+                    & SQL Database & NoSQL Database & Flat Files \\
+                
+                \hline
+                    Minimal data duplication & X & X & \\
+                    
+                \hline
+                    Data Integrity & X &  &  \\
+                
+                \hline
+                    Data retrieval reliability & X &  & X \\
+                    
+                \hline
+                    Strong Documentation & X & X & X \\
+                    
+                \hline
+                    Free to use & X\footnote{There are certain versions of SQL databases that are free.} & X & X \\
+                    
+                \hline
+            \end{tabular}
+        \end{center}
+        
+        Based on the criteria, we will store our data in a relational SQL database.
+
+\section{Task Runners and Module Bundlers}
+    \subsection{Introduction}
+        This section gives an overview on various task runners and module bundlers. 
+        It is common practice in web development to use small open source packages/libraries to complete specific tasks. 
+        Each of these libraries comes with dependencies along with other tasks that need to be handled before deployment. 
+        Task runners and module bundlers take care of these dependencies and performing routine pre-deployment operations.
+    
+	\subsection{Grunt}
+        \subsubsection{Summary}
+            Grunt is a tool that allows "front-end developers to run predefined reptitive tasks"\cite{TaskRunners}. This is commonly used in enterprise level web applications.
+        
+        \subsubsection{Pros}
+            Grunt is built on top of NodeJS which makes it integrate easily with other Node based applications.
+            Grunt is the oldest tool of its kind and has a strong community behind it.
+            This also ensures the stability and further development of Grunt.
+            Along with this, Grunt has thousands of modules available for developers to use.
+            An important difference between Grunt and other task runners is its focus on configuration over code.
+            To make Grunt work for you, you configure the tasks it completes.
+        
+        \subsubsection{Cons} 
+            There are some downsides to Grunt as well.
+            Developers reuse configuration objects to automate their tasks.
+            This can lead to bloated Grunt scripts that are not maintainable\cite{TaskRunners}.
+    
+	\subsection{Gulp}
+        \subsubsection{Summary}
+            Gulp is a task runner that requires developers to write code to automate repetitive tasks\cite{TaskRunners}.
+            Gulp was developed after Grunt.
+            
+        \subsubsection{Pros}
+            A major benefit of Gulp is its use of Javascript functions to define when and how tasks should execute.
+            Another benefit is that Gulp scripts tend to run more quickly than Grunt configuration\cite{GulpGruntSpeed}.
+            This is possible ecause of Gulp's "stream usage and in-memory operations"\cite{TaskRunners}.
+        
+        \subsubsection{Cons}
+            Gulp relies on several paradigms that are not common practice in other areas of development.
+            These paradigms can make it difficult for new developers to create efficently create automation scripts.
+            There is no reason to use a task runner on small projects if the developer can quickly and easily perform the tasks by hand.
+    
+	\subsection{WebPack}
+        \subsubsection{Summary}
+            WebPack differs from Grunt and Gulp in that it is a module bundler.
+            It takes various modules that all have dependencies and bundles them together in a way that reduces redundancy\cite{WebPack}. 
+            It creates a dependency graph of all modules needed in your system and consolidates them into individual bundles\cite{WebPack}.
+        
+        \subsubsection{Pros}
+            The major benefit of using WebPack is its ability to reduce software size through its consolidation method of individual modules.
+            Another benefit of WebPack is using hot-reloading to more efficiently develop the frontend of an application\cite{TaskRunners}.
+        
+        \subsubsection{Cons}
+            Finally, the main difficulty with WebPack is it can be difficult to configure at first and there exists a learning curve to its technology\cite{TaskRunners}.
+            WebPack is a technology that is extremely useful for major enterprise level applications, but tends to be over-powered for small applications.
+            WebPack would likely increase development time for the BrewHops team instead of aid in the development of our software.
+            
+    \subsection{Conclusion}
+        Listed below are the various criteria needed in a task runner and module bundling system.
+    
+    \begin{center}
+            \begin{tabular}{| m{15em} | m{10em} | m{10em} | m{10em} |}
+                \hline
+                    & Grunt & Gulp & WebPack \\
+                
+                \hline
+                    Software size reduction & X & X & X \\
+                    
+                \hline
+                    Automatable for deployment & X & X & X \\
+                    
+                \hline
+                    Easy to learn & X &  &  \\
+                
+                \hline
+                    Strong community & X & X & X \\
+                    
+                \hline
+                    Strong Documentation & X & X & X \\
+                    
+                \hline
+                    Free to use & X & X & X \\
+                    
+                \hline
+            \end{tabular}
+        \end{center}
+        
+        Based on the criteria, we will be using Grunt to automate repetitive tasks.
+
+\bibliography{./references}{}
+\bibliographystyle{plain}
+
+\end{document}
