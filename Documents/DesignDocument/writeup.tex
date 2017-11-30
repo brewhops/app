@@ -13,6 +13,18 @@
 \usepackage{color}
 \usepackage{listings}
 \usepackage{cite}
+\usepackage{pdfpages}
+\usepackage{pdflscape}
+\usepackage{url}
+\usepackage{array}
+\usepackage{xargs}                      % Use more than one optional parameter in a new commands
+
+
+\usepackage[pdftex,dvipsnames]{xcolor}  % Coloured text etc.
+\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
+\newcommandx{\note}[2][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
+
+\newcommand\question[1]{\footnote{\textcolor{red}{#1}}}
 
 % Type of paper
 \geometry{letterpaper, margin=.75in}
@@ -40,8 +52,52 @@
 \begin{titlingpage}
     \maketitle
     \begin{abstract}
-
+			Ninkasi Brewing Company is based in Eugene, Oregon, producing and distributing nearly 100,000 barrels of beer each year across the United States and Canada.
+			Ninkasi currently tracks brewery data using digital spreadsheets, a laborious, time consuming, and error prone process.
+			Quality brewing requires the company to be detail-oriented, organize its data and provide timely actions in the brewing process.
+			In order to maintain good quality control in their product and give the company room to scale in its production, our team has been tasked with creating software that will improve the process of entering, storing and accessing data related to the brewing process.
+			This document seeks to outline the general design of the project.
+			The design will be continously improved throughout the life of the project to bring in feedback from the client and reach a product that is satisfactory to all parties.
+			\\
+			\textbf{Keywords:} Brewing, Operations, Management
     \end{abstract}
 \end{titlingpage}
+
+\section{Overview}
+	\subsection{Scope}
+	\textbf{What is this document about?}\\
+	Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+	\subsection{Purpose}
+	\textbf{Why does the document exist?}\\
+	Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+	\subsection{Intended audience}
+	\textbf{Who is this document made for?}\\
+	Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+\section{Definitions}
+	\textbf{Are there any keywords that need defining?}
+
+
+	\textbf{Include a flowchart of how all the components are going to fit together}
+
+
+\section{Design}
+	\subsection{Introduction}
+	\textbf{What will these sections describe in the document?}
+
+	\subsection{Viewpoints}
+		\subsubsection{Example element (eg. Database desgin)}~\\
+		\textbf{Concern:} Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+		\noindent
+		\textbf{Analysis methods:}
+		Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+		\noindent
+		\textbf{Rationale:}
+		Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+
+
 
 \end{document}
