@@ -21,6 +21,8 @@
 \usepackage{graphicx}
 \usepackage{sidecap}
 \usepackage{subcaption}
+\usepackage{float}
+\usepackage{longtable}
 
 \graphicspath{ {images/mobile/} }
 \graphicspath{ {images/stack/} }
@@ -81,33 +83,32 @@
 	The document is also aimed towards those that wish to gain a more technical explanation about how the BrewHops team will approach the project.
 
 \section{Definitions}
-	\begin{description}
-		\item[Host] The hardware the database is hosted on
-		\item[Platform] The application that the database will run on
-		\item[Database] The program that stores and retrieves the information
-		\item[Database Interaction Language] The langauage that serves as the middle man between the database and the front end. It makes requests to the database and processes those requests to send the smallest and most organized form of the information it can to the front end.
-		\item[Styling] The look of the website
-		\item[Interactive Web Framework] A package of code that allows for easy manipulation of the content and look of the page without having to refresh the page or interact with the server.
-		\item[Client] Daniel Sharp, Ninkasi Brewmaster
-		\item[BrewHops] Name of the development team
-		\item[Cellaring Data] Data of the beers fermenting in the cellar
-		\item[Specific Gravity] Measurement that represents the amount of sugar left in the beer. This number decreases throughout fermentation and is inversely related to alcohol content.
-		\item[ABV] Alcohol by Volume
-		\item[Brand] Name of the beer associated with the recipe
-		\item[Generation] Generation of yeast used to ferment
-		\item[Volume to Ferment] Volume of beer going into the fermentation process
-		\item[CRUD] Create, Read, Update, Delete
-		\item[GET] A method of getting information through the URL
-		\item[POST] A method of sending information from a website to a server
-		\item[PUT] Sends information to a specific server and if something is already there, it will overwrite it.
-		\item[PATCH] Sends information to a location and updates what is there
-		\item[DELETE] Deletes information on the server it makes the request to
-		\item[Routes] A method of creating specific paths in the URL where the website can make requests to get or modify data from the server.
-		\item[API] Application Program Interface: A method for designing how a piece of software or user can interact with a program
-		\item[REST] REpresentational State Transfer: A design pattern for web development that utilizes an API for all interactions between servers and web clients.
-		\item[Server side processing] Code that is run on the server
-	\end{description}
-
+\begin{longtable}{p{4cm}p{12cm}}
+    Host & The hardware the database is hosted on \\
+    Platform & The application that the database will run on \\
+    Database & The program that stores and retrieves the information \\
+    Database Interaction Language & The langauage that serves as the middle man between the database and the front end. It makes requests to the database and processes those requests to send the smallest and most organized form of the information it can to the front end. \\
+    Styling & The look of the website \\
+    Interactive Web Framework & A package of code that allows for easy manipulation of the content and look of the page without having to refresh the page or interact with the server. \\
+    Client & Daniel Sharp, Ninkasi Brewmaster \\
+    BrewHops & Name of the development team \\
+    Cellaring Data & Data of the beers fermenting in the cellar \\
+    Specific Gravity & Measurement that represents the amount of sugar left in the beer. This number decreases throughout fermentation and is inversely related to alcohol content. \\
+    ABV & Alcohol by Volume \\
+    Brand & Name of the beer associated with the recipe \\
+    Generation & Generation of yeast used to ferment \\
+    Volume to Ferment & Volume of beer going into the fermentation process \\
+    CRUD & Create, Read, Update, Delete \\
+    GET & A method of getting information through the URL \\
+    POST & A method of sending information from a website to a server \\
+    PUT & Sends information to a specific server and if something is already there, it will overwrite it. \\
+    PATCH & Sends information to a location and updates what is there \\
+    DELETE & Deletes information on the server it makes the request to \\
+    Routes & A method of creating specific paths in the URL where the website can make requests to get or modify data from the server. \\
+    API & Application Program Interface: A method for designing how a piece of software or user can interact with a program \\
+    REST & REpresentational State Transfer: A design pattern for web development that utilizes an API for all interactions between servers and web clients. \\
+    Server side processing & Code that is run on the server \\
+\end{longtable}
 
 \section{Design}
 	\subsection{Introduction}
@@ -120,7 +121,7 @@
 		\item maintainability
 	\end{itemize}
 
-	\begin{figure}[h]
+	\begin{figure}[H]
     \centering
     \begin{subfigure}[b]{0.2\textwidth}
         \includegraphics[height=5cm]{images/stack/abstract}
