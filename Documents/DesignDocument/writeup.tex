@@ -193,15 +193,19 @@
 		Ninkasi needs all CRUD operations available to their user interfaces.
 		To adhere with these standards, the API must be fully RESTful and expose the necessary GET, POST, PUT, PATCH, and DELETE routes.
 
+
 		The API will have direct access into the database and will need to be secured per user so that only individuals with adequate permissions have access to certain API routing features.
-		Other security concerns are the individuals outside of Ninkasi do not have access to the API.
+		Other security concerns are that individuals outside of Ninkasi do not have access to the API.
 		This will not be the BrewHops team’s primary concern as Ninkasi network security should handle these concerns when application is deployed.
+
 
 		The user interfaces for the data management system need efficient access to all information stored in the database.
 		The interfaces need to be able to get the data, insert new data, update old data, and delete incorrect data.
 		Each route of the REST API will give access to these operations based on the type of operation performed on the url.
 
+
 		Follows are each route and their purpose in the API:
+
 
 		Interfaces will need access to all information in the VatInfo table.
 		To allow this, the routes on the /vats url will handle retrieving all Vats data, inserting and updating Vats data, and retrieving batch information for each vat.
@@ -232,6 +236,7 @@
 				\end{itemize}
 		\end{itemize}
 
+
 		The user interfaces also need access to the Employees table in the database to authenticate users and regulate permission capabilities of various users.
 		To do this, we expose a /users route on the url that allows the interfaces to pull back information on all users or specific users.
 		/api/users:
@@ -247,6 +252,7 @@
 				\item DELETE: destroy user resource
 			\end{itemize}
 		\end{itemize}
+
 
 		Our user interfaces may also need access to brand information on different beers.
 		To facilitate these needs, we expose a /brand route on the url to access all brands or specific brands stored in the BrandInfo table.
@@ -268,6 +274,7 @@
 				\item DELETE: delete brand resource
 			\end{itemize}
 		\end{itemize}
+
 
 		A RESTful API is important because it improves application maintainability and testability.
 		Maintainability is a primary concern and requirement of this project.
