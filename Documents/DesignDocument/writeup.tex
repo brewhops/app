@@ -120,7 +120,7 @@
 		\item maintainability
 	\end{itemize}
 
-	\begin{figure}
+	\begin{figure}[h]
     \centering
     \begin{subfigure}[b]{0.2\textwidth}
         \includegraphics[height=5cm]{images/stack/abstract}
@@ -153,15 +153,25 @@
 		\subsubsection{Database Structure}
 			\textbf{Concerns}
 
-			The main purpose of our project is to bridge the gap between Brewers and the database at Ninkasi. Designing a functional database is key to making this project a success. Our database needs to connect the cellaring data on each beer for each day it is measured. The beers need to be connected to their predefined recipes. As brewers make decisions on what steps to complete next, the database needs to show what steps have already been completed via the information previously entered. It needs to keep track of who entered what data and whether the information entered is within the acceptable measurement ranges.
+			The main purpose of our project is to bridge the gap between Brewers and the database at Ninkasi. Designing a functional database is key to making this project a success.
+			Our database needs to connect the cellaring data on each beer for each day it is measured.
+			The beers need to be connected to their predefined recipes.
+			As brewers make decisions on what steps to complete next, the database needs to show what steps have already been completed via the information previously entered.
+			It needs to keep track of who entered what data and whether the information entered is within the acceptable measurement ranges.
 
 
 			\textbf{Analysis methods}
 
-			The database system is based off of the excel spreadsheet currently in use by Ninkasi for storing data. Each beer is connected to a predefined recipe, and each beer currently in the cellar is associated with data collected each day, along with the alerts in place for that day.
-			Our database design has 5 tables: VatActions, VatContents, VatInfo, BrandInfo, and Employees.  Employees contains login usernames, passwords, and ID numbers for the employees. This is used for the login system and also for keeping track of who entered the VatContents information.
-			The BrandInfo table keeps track of a brand’s recipe and the ranges associated with correct values. This is so that we can alert the brewers if temperature, gravity or pH are outside of the typical or safe levels. The last three tables are associated with the vats, what’s inside of them, and the measurements of the beer in each vat.
-			The VatInfo table contains VatID, beer name, batch number, generation, and volume to ferment. Each vat can have 1 or more VatContents, as each VatContent data set is taken on a different day and a batch can be in a vat for multiple weeks.
+			The database system is based off of the excel spreadsheet currently in use by Ninkasi for storing data.
+			Each beer is connected to a predefined recipe, and each beer currently in the cellar is associated with data collected each day, along with the alerts in place for that day.
+			Our database design has 5 tables: VatActions, VatContents, VatInfo, BrandInfo, and Employees.
+			Employees contains login usernames, passwords, and ID numbers for the employees.
+			This is used for the login system and also for keeping track of who entered the VatContents information.
+			The BrandInfo table keeps track of a brand’s recipe and the ranges associated with correct values.
+			This is so that we can alert the brewers if temperature, gravity or pH are outside of the typical or safe levels.
+			The last three tables are associated with the vats, what’s inside of them, and the measurements of the beer in each vat.
+			The VatInfo table contains VatID, beer name, batch number, generation, and volume to ferment.
+			Each vat can have 1 or more VatContents, as each VatContent data set is taken on a different day and a batch can be in a vat for multiple weeks.
 			VatContents contain the date on which the measurements took place, specific gravity, pH, ABV, temperature, and the EmployeeID who entered the data.
 			VatActions hold actions that need to happen, the date, the VatID they are associated with, and the EmployeeID who satisfied the action, if they have fixed the problem.
 
@@ -191,17 +201,23 @@
 		\subsubsection{RESTful API}
 			\textbf{Concerns}
 
-			Ninkasi needs all CRUD operations available to their user interfaces. To adhere with these standards, the API must be fully RESTful and expose the necessary GET, POST, PUT, PATCH, and DELETE routes.
+			Ninkasi needs all CRUD operations available to their user interfaces.
+			To adhere with these standards, the API must be fully RESTful and expose the necessary GET, POST, PUT, PATCH, and DELETE routes.
 
-			The API will have direct access into the database and will need to be secured per user so that only individuals with adequate permissions have access to certain API routing features. Other security concerns are the individuals outside of Ninkasi do not have access to the API. This will not be the BrewHops team’s primary concern as Ninkasi network security should handle these concerns when application is deployed.
+			The API will have direct access into the database and will need to be secured per user so that only individuals with adequate permissions have access to certain API routing features.
+			Other security concerns are the individuals outside of Ninkasi do not have access to the API.
+			This will not be the BrewHops team’s primary concern as Ninkasi network security should handle these concerns when application is deployed.
 
 			\textbf{Analysis methods}
 
-			The user interfaces for the data management system need efficient access to all information stored in the database. The interfaces need to be able to get the data, insert new data, update old data, and delete incorrect data. Each route of the REST API will give access to these operations based on the type of operation performed on the url.
+			The user interfaces for the data management system need efficient access to all information stored in the database.
+			The interfaces need to be able to get the data, insert new data, update old data, and delete incorrect data.
+			Each route of the REST API will give access to these operations based on the type of operation performed on the url.
 
 			Follows are each route and their purpose in the API:
 
-			Interfaces will need access to all information in the VatInfo table. To allow this, the routes on the /vats url will handle retrieving all Vats data, inserting and updating Vats data, and retrieving batch information for each vat.
+			Interfaces will need access to all information in the VatInfo table.
+			To allow this, the routes on the /vats url will handle retrieving all Vats data, inserting and updating Vats data, and retrieving batch information for each vat.
 
 			/api/vats:
 			\begin{itemize}
@@ -231,7 +247,8 @@
 
 
 
-			The user interfaces also need access to the Employees table in the database to authenticate users and regulate permission capabilities of various users. To do this, we expose a /users route on the url that allows the interfaces to pull back information on all users or specific users.
+			The user interfaces also need access to the Employees table in the database to authenticate users and regulate permission capabilities of various users.
+			To do this, we expose a /users route on the url that allows the interfaces to pull back information on all users or specific users.
 			/api/users:
 			\begin{itemize}
 				\item GET: get a list of all users from Employee table
@@ -246,7 +263,8 @@
 				\end{itemize}
 			\end{itemize}
 
-			Our user interfaces may also need access to brand information on different beers. To facilitate these needs, we expose a /brand route on the url to access all brands or specific brands stored in the BrandInfo table.
+			Our user interfaces may also need access to brand information on different beers.
+			To facilitate these needs, we expose a /brand route on the url to access all brands or specific brands stored in the BrandInfo table.
 
 			/api/brand:
 			\begin{itemize}
@@ -270,8 +288,13 @@
 
 			\textbf{Rationale}
 
-			A RESTful API is important because it improves application maintainability and testability. Maintainability is a primary concern and requirement of this project. Ease of testing ensures the integrity of our final product and gives us further metrics to gage success against.
-			A REST API allows the BrewHops team to fully decouple\footnote{“decouple” means separate user interface concerns from server-side processing concerns} user interfaces from the backend processes. This is important because development on the user interface and the server-side support can work in parallel; the only dependency is how data is structured. Once data structure is determined for each route, our frontend developer can mock data\footnote{mocking data means to create a static data source for testing purposes} to test the interface while our backend developer builds out each route to the specifications. RESTful APIs also improve application testability by allowing developers to leverage testing frameworks designed for specific technologies.
+			A RESTful API is important because it improves application maintainability and testability.
+			Maintainability is a primary concern and requirement of this project.
+			Ease of testing ensures the integrity of our final product and gives us further metrics to gage success against.
+			A REST API allows the BrewHops team to fully decouple\footnote{“decouple” means separate user interface concerns from server-side processing concerns} user interfaces from the backend processes.
+			This is important because development on the user interface and the server-side support can work in parallel; the only dependency is how data is structured.
+			Once data structure is determined for each route, our frontend developer can mock data\footnote{mocking data means to create a static data source for testing purposes} to test the interface while our backend developer builds out each route to the specifications.
+			RESTful APIs also improve application testability by allowing developers to leverage testing frameworks designed for specific technologies.
 
 
 		\subsubsection{General User Interface}
@@ -281,20 +304,28 @@
 
 			\textbf{Analysis methods}
 
-			The UI design decisions will first be made by the BrewHops team. A prototype of the UI w ill be developed by the team based on the goals outlined by the client. The user interface will then go through an iterative feedback process where the client will provide changes, the team will revise the document and make new suggestions, which will then be returned to the client. This process will continue until both parties have verified that the design is both achievable by the development team and meets the goals of the client.
+			The UI design decisions will first be made by the BrewHops team.
+			A prototype of the UI w ill be developed by the team based on the goals outlined by the client.
+			The user interface will then go through an iterative feedback process where the client will provide changes, the team will revise the document and make new suggestions, which will then be returned to the client.
+			This process will continue until both parties have verified that the design is both achievable by the development team and meets the goals of the client.
 
 			\textbf{Rationale}
 
-			Iterative design ensures that there is a balance of input, with multiple opportunities for everyone to contribute to the project. The BrewHops team has design experience, and it will be best for them to make a majority of the decisions about how the user interface will function. This will keep the burden of development off of the client, while still giving them an option to weigh in on changes they see being beneficial to their operations.
+			Iterative design ensures that there is a balance of input, with multiple opportunities for everyone to contribute to the project.
+			The BrewHops team has design experience, and it will be best for them to make a majority of the decisions about how the user interface will function.
+			This will keep the burden of development off of the client, while still giving them an option to weigh in on changes they see being beneficial to their operations.
 
 			\subsubsection{Mobile User Interface}
 				\textbf{Concerns}
 
-				The interface designed must be capable of running on both a large screen desktop and a mobile device. Basic data display and entry functionality must exist on mobile devices to meet project specifications.
+				The interface designed must be capable of running on both a large screen desktop and a mobile device.
+				Basic data display and entry functionality must exist on mobile devices to meet project specifications.
 
 				\textbf{Analysis methods}
 
-				The process for designing the mobile interface will be the same iterative design process as the general interface. A mockup for mobile design shown in the appendix. This is the first form of the interface, and over the course of building the application, frequent feedback from the client will be taken into account to ensure that all goals are met in a way that works well for the client.
+				The process for designing the mobile interface will be the same iterative design process as the general interface.
+				A mockup for mobile design shown in the appendix.
+				This is the first form of the interface, and over the course of building the application, frequent feedback from the client will be taken into account to ensure that all goals are met in a way that works well for the client.
 
 
 				\textbf{Rationale}
@@ -308,23 +339,30 @@
 
 				\textbf{Analysis methods}
 
-				The most important thing is leaving good documentation in the project. This design document, along with the other papers written for the senior capstone course should serve as a good starting point. While the code is being written for the project, documentation on the code itself and its organizational structure should be used. Every folder with custom code in it should have a markdown document describing the contents of the documents. Assistance in locating code will come with use of common programming languages and design patterns. For example, ruby on rails is a popular web framework that comes with a base template. Common structures such as these are familiar to many programmers and should keep the project from being too difficult to interpret for new developers.
+				The most important thing is leaving good documentation in the project.
+				This design document, along with the other papers written for the senior capstone course should serve as a good starting point.
+				While the code is being written for the project, documentation on the code itself and its organizational structure should be used.
+				Every folder with custom code in it should have a markdown document describing the contents of the documents.
+				Assistance in locating code will come with use of common programming languages and design patterns.
+				For example, ruby on rails is a popular web framework that comes with a base template.
+				Common structures such as these are familiar to many programmers and should keep the project from being too difficult to interpret for new developers.
 
 				\textbf{Rationale}
 
-				Open source projects have been struggling with ensuing that contributors know how to read the code that exists in the project, and write changes that are useful to the project. There has been a development of general design strategies used in the open source community to ensure a maintainable project, and utilizing these strategies will create a project that will be maintainable for whoever works on the project after the BrewHops team is done.
+				Open source projects have been struggling with ensuing that contributors know how to read the code that exists in the project, and write changes that are useful to the project.
+				There has been a development of general design strategies used in the open source community to ensure a maintainable project, and utilizing these strategies will create a project that will be maintainable for whoever works on the project after the BrewHops team is done.
 
 				\clearpage
 
 				\section{Appendix}
 				\centering
 				\begin{tabular}{ll}
-				Home & Menu \\
-				\includegraphics[scale=.3]{images/mobile/home} & \includegraphics[scale=.3]{images/mobile/menu} \\
-				Data Entry & Confirmation Page \\
-				\includegraphics[scale=.3]{images/mobile/data_entry} & \includegraphics[scale=.3]{images/mobile/confirmation_page} \\
-				Vat Monitoring & Vat Info \\
-				\includegraphics[scale=.3]{images/mobile/vat_monitoring} & \includegraphics[scale=.3]{images/mobile/vat_info} \\
+						Home & Menu \\
+						\includegraphics[scale=.3]{images/mobile/home} & \includegraphics[scale=.3]{images/mobile/menu} \\
+						Data Entry & Confirmation Page \\
+						\includegraphics[scale=.3]{images/mobile/data_entry} & \includegraphics[scale=.3]{images/mobile/confirmation_page} \\
+						Vat Monitoring & Vat Info \\
+						\includegraphics[scale=.3]{images/mobile/vat_monitoring} & \includegraphics[scale=.3]{images/mobile/vat_info} \\
 				\end{tabular}
 
 
