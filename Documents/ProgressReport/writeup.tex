@@ -66,10 +66,10 @@ At Ninkasi, we learned about the existing systems used to track and monitor brew
 All brewing and cellaring data is stored in a massive excel spreadsheet that Ninkasi employees send to each other via email.
 Brewers are expected to keep track of brewing data by writing this information down and manually entering it into the spreadsheet.
 Many problems exist with this solution; our team, BrewHops, aims to replace this outdated system with a web-based application and relational database.
-Our goals include:
+Our base goals include:
 \begin{itemize}
   \item Create a relational database to store brewing data
-  \item Allow entry of data into the database
+  \item Allow data entry into the database
   \item Provide ability to set a status on a fermentation tank
   \item Implement simple validations on data entry forms
   \item Provide functionality to check current fermentation tank information
@@ -77,13 +77,13 @@ Our goals include:
   \item Design a user interface that scales appropriately to all devices
 \end{itemize}
 
-Along with these goals are some stretch goals that we would complete once our minimum viable product is created. These include:
+Our stretch goals include:
 \begin{itemize}
-  \item Creating a login for Ninkasi employees
-  \item Tagging which employee entered the information in the database
-  \item Generating a daily summary of brewing processes in the company
-  \item Auto importing data from Telnet system into our system
-  \item Creating notification alerts when a tank requires a brewers attention
+  \item Create a login system for Ninkasi employees
+	\item Associate employees with information entered in the database
+  \item Generate a company-wide brewing process daily summary
+  \item Auto-import data from TankNet\footnote{TankNet is the software used to take physical measurements inside the fermentation tanks.} into our system
+  \item Notify Ninkasi personnel when fermentation tank requires attention
 \end{itemize}
 \section{Progress}
 So far we have created six formal documents about our problem and solution. In these we have outlined the specifics of the problem we are trying to solve and the exact requirements for completing our project. This includes metrics about how fast our site is, how it connects to the database and enters data, etc. We have finalized our more general Problem Statement document with the client as well as our highly technical, very detailed Specific Requirements Document. We have researched the possibilities for different technologies needed for our database hosting space, database interaction language, server software, database structure, front end languages, data visualization language, and decided on what we will use:
