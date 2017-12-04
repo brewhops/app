@@ -1,0 +1,204 @@
+% Progress Report
+% CS 461 - CS Senior Capstone
+% Fall 2017
+% Authors: Connor Christensen, Lily Shellhammer, William Buffum
+
+
+\documentclass[draftclsnofoot,onecolumn,letterpaper,10pt,compsoc]{IEEEtran}
+
+% Packaging
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{titling}
+\usepackage{color}
+\usepackage{listings}
+\usepackage{cite}
+\usepackage{pdfpages}
+\usepackage{pdflscape}
+\usepackage{url}
+\usepackage{array}
+
+% Paper type
+\geometry{letterpaper, margin=.75in}
+
+% Title page
+\title{CS 461 - CS Senior Capstone
+	\\Fall 2017
+	\\Progress Report
+}
+
+
+\author{
+	Connor I. Christensen \\
+	\texttt{chriconn@oregonstate.edu}
+	\\
+	Lily M. Shellhammer \\
+	\texttt{shellhal@oregonstate.edu}
+	\\
+	William B. Buffum \\
+	\small{}
+	\texttt{buffumw@oregonstate.edu}
+}
+
+\begin{document}
+\begin{titlingpage}
+    \maketitle
+    \begin{abstract}
+			Ninkasi Brewing Company is based in Eugene, Oregon, producing and distributing nearly 100,000 barrels of beer each year across the United States and Canada.
+			Ninkasi currently tracks brewery data using digital spreadsheets, a laborious, time consuming, and error prone process.
+			Quality brewing requires the company to be detail-oriented, organize its data and provide timely actions in the brewing process.
+			In order to maintain good quality control in their product and give the company room to scale in its production, our team has been tasked with creating software that will improve the process of entering, storing and accessing data related to the brewing process.
+			This document examines work completed on the project to this date.
+			Majority of what has been accomplished this term is documentation.
+			Throughout this Progress Report, readers will see a week-by-week recount of the preparation completed for Winter term.
+			\\
+			\textbf{Keywords:} Brewing, Operations, Management
+    \end{abstract}
+		\pagebreak
+		\tableofcontents
+\end{titlingpage}
+
+\section{Recap}
+Our client is Daniel Sharp, Director of Operations at Ninkasi Brewing Company.
+Once we received approval to work with Daniel, we traveled to Ninkasi in Eugene, Oregon.
+At Ninkasi, we learned about the existing systems used to track and monitor brewing data.
+All brewing and cellaring data is stored in a massive excel spreadsheet that Ninkasi employees send to each other via email.
+Brewers are expected to keep track of brewing data by writing this information down and manually entering it into the spreadsheet.
+Many problems exist with this solution; our team, BrewHops, aims to replace this outdated system with a web-based application and relational database.
+Our base goals include:
+\begin{itemize}
+  \item Create a relational database to store brewing data
+  \item Allow data entry into the database
+  \item Provide ability to set a status on a fermentation tank
+  \item Implement simple validations on data entry forms
+  \item Provide functionality to check current fermentation tank information
+  \item Allow employees to look at fermentation tank data history
+  \item Design a user interface that scales appropriately to all devices
+\end{itemize}
+
+Our stretch goals include:
+\begin{itemize}
+  \item Create a login system for Ninkasi employees
+	\item Associate employees with information entered in the database
+  \item Generate a company-wide brewing process daily summary
+  \item Auto-import data from TankNet\footnote{TankNet is the software used to take physical measurements inside the fermentation tanks.} into our system
+  \item Notify Ninkasi personnel when fermentation tank requires attention
+\end{itemize}
+\section{Progress}
+
+Currently, we have created six documents formalizing our problem and solution.
+We outlined the specific problems Ninkasi faces and discussed how our system requirements resolve these issues.
+Our metrics include: application speed, database access, and interface usability.
+We finalized our Problem Statement and Specific Requirements Document with Daniel Sharp to ensure everyone is on the same page.
+We investigated potential technologies for the database structure, database interaction language, application hosting, server-side language, front end language, data visualization language, and determined our technology stack:
+\begin{itemize}
+	\item We will host our application in a cloud space
+	\item We will run an Apache web server
+	\item Our server-side software will be built using Ruby on Rails
+	\item We will run a PostgreSQL database
+	\item The interface will include a website and mobile-web frontend built in HTML, SCSS, and Vue.js
+	\item We will leverage C3.js for data visualization
+\end{itemize}
+
+\noindent
+We still need client verification on our Technology Review Document and Design Document.
+We will begin programming the application at the beginning of Winter Term.
+Looking at our Gantt Chart, we completed everything necessary for Fall Term and are ahead of schedule on database design and user interface mock ups.
+
+\section{Problem Summary}
+In general, we have not had significant issues.
+During the first group writing assignment, the Problem Statement, there were miscommunications on where the collaborative report was stored.
+Group members redid work that was already complete and there were heightened tensions as individuals felt their work was blatantly ignored.
+Once we recognized that people were working in two different locations, we agreed on a workspace and all tension went away.
+After finishing the Specific Requirements Document, we encountered our second problem: a teammate sent the incomplete Specific Requirements Document to the client for review.
+Luckily, most of the completed document was there and we asked for an extension and were able to finalize the document with the client only one business day later.
+The third problem we faced was on our Technical Review document.
+We completed our reviews separately and then as we tried to confirm our choices, we realized our technologies conflicted (for example: we wanted to use a relational database where traditional NoSql databases are used).
+Once we recognized these issues, we selected technologies that blended well and matched our criteria.
+
+\section{Retrospective}
+\begin{center}
+    \begin{tabular}{|p{0.3\linewidth}|p{0.3\linewidth}|p{0.3\linewidth}|}
+        \hline
+             Positives & Deltas & Actions \\
+        \hline
+            Meeting with the client at Ninkasi was a very positive experience both times.
+						Daniel is engaged and although he does not have a tech background, is able to work with us well and answer our questions.
+						There is no drama between team members and we are respectful of each other and each other’s ideas.
+						Communication has had hardly any major problems, it is mostly open, clear, and honest.
+            &
+            We will need to prepare for client verification of documents better in the future.
+						It was not a big issue but deadlines often caught us off guard, as our client is very busy and cannot verify a document overnight.
+            &
+            We will plan out client verification deadlines on a calendar and watch them approach rather than waiting for them to surprise us.
+            \\
+            \hline
+    \end{tabular}
+\end{center}
+
+\section{Weekly Summaries}
+\subsection{Week 1}
+We waited on official project confirmation from Kevin.
+
+\subsection{Week 2}
+We planned a meeting at Ninkasi with Daniel Sharp to tour the facilities and talk about specific requirements.
+We created communication channels (slack, email threads).
+
+\subsection{Week 3}
+We started and finished the Problem Statement first draft.
+We also created our Github repository and uploaded our Problem Statement.
+Moving forward, all of our version control took place through Github.
+On Wednesday, we met with Daniel Sharp at Ninkasi, got a tour, saw the current technologies in place, and saw Ninkasi's current "database" system.
+We discussed how we could replace the excel spreadsheet with a standalone database and the type of information to store.
+
+\subsection{Week 4}
+We had a communication issue on final draft of the problem statement, which was resolved.
+We learned to have better communication and be clear about where draft development should take place.
+The problem statement was finished this week and sent off to Daniel Sharp for approval.
+We asked Daniel for a copy of the spreadsheet this week so we could begin designing our database.
+Our first meeting with Andrew took place.
+There has not been a lot to discuss during these meetings, so they have been similar to the first meeting.
+
+\subsection{Week 5}
+We finished the Specific Requirements Document first draft.
+It was incomplete, but we had many questions for Daniel Sharp that needed to be addressed before we could determine the project requirements.
+Daniel sent us confirmation of the Problem Statement document final draft.
+This week in our TA meeting, Andrew told us about meeting attendance policies and proper folder format within the Github repo.
+
+\subsection{Week 6}
+We had a significant issue when we sent Daniel Sharp an incomplete version of the Specific Requirements Document, which Daniel reviewed Friday.
+We realized our mistake and asked for extension and got approval to turn our document in Monday.
+We waited for Daniel’s approval of actual complete final draft to turn in Monday of Week 7.
+Earlier that week on Wednesday, we called Daniel to set up a meeting time with another brewery trying to implement a similar system.
+We also discussed questions we had about Daniel’s take on the Specific Requirements Document.
+
+\subsection{Week 7}
+This week we received official confirmation on the Specific Requirements Document final draft from Daniel Sharp.
+We divided up the Technology Review in components that each teammate could complete.
+Connor took on front end technologies and data visualization software, Billy took on the database format and whether our project would be a native app or web app, Lily took on back end technologies and whether we would use a physical server or cloud hosting.
+
+\subsection{Week 8}
+This week we got our first drafts of the Technology Reviews and got them reviewed in class by our peers.
+
+\subsection{Week 9}
+We completed our Technology Review and determined our technology stack.
+We had a problem when our chosen technologies conflicted with other components (see problem 3 in above Problems section).
+Finally, we decided on cloud hosting of our PostgreSQL database, Ruby on Rails as our backend technology, and Apache as our web server.
+On the front end we decided on HTML, SCSS, and Vue.js for the mobile-web user interface and C3.js for data visualization.
+
+\subsection{Week 10}
+We finished our Design Document and started our Progress Report.
+On Friday, we met with Daniel Sharp at Ninkasi and had a Skype call with Deschutes Brewery who is trying to implement a similar system.
+We learned about their database and website (more customizable than ours, but less user friendly) and that there is a great need for this kind of software in the craft brewing industry.
+Daniel, some brewing staff, and the Business Intelligence staff were all thrilled with our progress and plans.
+With their input and help, we clarified some details on how they would like to interact with the interfaces and database.
+We created the Progress Report document and presentation at the end of this week.
+
+\section{Looking Forward}
+Over break, we need our client to approve the final drafts of the Technology Review and the Design Documents.
+Beyond these approvals, we need the client to purchase cloud hosting space because we plan on deploying to a cloud host and will need access to the host during Winter Term.
+We have initial mock designs for the mobile-web and website interfaces.
+We would like several Ninkasi employees to look over these prototypes and provide feedback on necessary changes.
+As Winter Term begins, we will begin developing the web application.
+
+\end{document}
