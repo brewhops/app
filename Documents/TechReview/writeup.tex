@@ -104,6 +104,7 @@
 
 \section{Introduction}
 
+  \subsection{Front-End}
   This is a comparison of three front end technologies for web design.
   \begin{itemize}
     \item Data visualization seeks to find a framework that will aid in the display of information from the database in a user-friendly way.
@@ -119,13 +120,28 @@
   It is common web development practice to build frameworks from many sub-utilities and packages that are available in the open source community.
   As of yet, there is no dedicated team ensuring that all legal agreements agree with each-other and the requirements of the client, and it is up to the client to decide if they want to take steps to guard against the unlikely event that someone stakes a claim against the company based on those licenses.
 
+  \subsection{Connections}
+  My job in the Ninkasi BrewHops project is to develop and organize the middle of the stack: the languages that connect the database to the front end.
+  I will be coding the database interaction languages and the functionality to pull information from/put information into the database.
+  In this document, I outline three different possibilities we could use in our project for hosting, platform, and database interaction language possibilities.
+
+  \subsection{Back-End}
+  In this technology review, we will analyze the costs and benefits associated with various tools in three components of our project.
+  First, we will look at peripheral interfaces.
+  It is important to understand how brewers will access information managed by our system and recognize the positive and negative attributes of each option that exists.
+  Next, we will look at database technologies.
+  It is important to look at the structure of our data and understand the costs and benefits of choosing a certain technology.
+  Finally, task runners and module bundlers are an important tool in any efficient development process.
+  Looking at the different options and determining which is a good fit is important before the BrewHops team can effectively develop a software solution for Ninkasi Brewing Company.
+  Overall, each technology conveys pros and cons for its usage; in some scenarios there is no perfect answer, but understanding why certain technologies exist will help improve the development of our data management system.
+
 \section{Data Visualization}
   \subsection{Introduction}
-      This is an overview of libraries written for data display in web browsers.
-      Each of these libraries are built using the web language JavaScript to allow for live interaction with the user.
-      Table 1 shows the code needed to set up a basic bar graph using each library.
-      These yield approximately the same visual results.
-      All have the con that they require JavaScript to be enabled and all of them are open source and free.
+  This is an overview of libraries written for data display in web browsers.
+  Each of these libraries are built using the web language JavaScript to allow for live interaction with the user.
+  Table 1 shows the code needed to set up a basic bar graph using each library.
+  These yield approximately the same visual results.
+  All have the con that they require JavaScript to be enabled and all of them are open source and free.
 
   \subsection{Critera}
   \begin{itemize}
@@ -135,7 +151,9 @@
     \item easy for developers to work with
   \end{itemize}
 
-  \subsection{D3.js}
+  \subsection{Technology}
+
+    \subsubsection{D3.js}
 
     \textbf{About:}
 
@@ -161,7 +179,7 @@
     Despite all its good features, the D3 library adds a lot of code to a project, the learning curve is steep, and the code needed to accomplish a task is verbose.\cite{DataVisProCon}
     The code required to set up a bar graph is massive compared to most other frameworks and the time that it takes to learn D3 is an even bigger obstacle.
 
-  \subsection{C3.js}
+    \subsubsection{C3.js}
     \textbf{About:}
 
     C3 is a package built off D3 and is formatted specifically for creating graphs.
@@ -180,7 +198,7 @@
     The interface is much easier to use, the tradeoff being more limiting in its expressions.
 
 
-    \subsection{Chart.js}
+    \subsubsection{Chart.js}
     \textbf{About:}
     Chart.js is a JavaScript library that allows you to draw different types of charts using the HTML5 canvas element
     \footnote{HTML Canvas: A new web standard that allows web programmers to create computer graphics created and rendered in the browser.}.
@@ -198,20 +216,18 @@
     Canvas is not very accessible as it is just drawing pixels and no data can be extracted by assistive technology or bots.
 
   \subsection{Conclusion}
-
-    It is on our recommendation that C3 be the framework of choice.
-    D3 can produce some seriously impressive data visualizations, and chart.js is small and simple, but for the purposes of this project, C3 fits the criteria best.
-    As seen in Table 1 in the appendix, the amount of code it takes to create a bar graph is very concise and easy to use, which makes development and maintenance straightforward and produce a small amount of bugs.
-    The results are beautiful, informative and user friendly.
-    Given the scope of the project, being able to utilize SVG graphing technology in a straightforward and simple way will enhance the product.
+  It is on our recommendation that C3 be the framework of choice.
+  D3 can produce some seriously impressive data visualizations, and chart.js is small and simple, but for the purposes of this project, C3 fits the criteria best.
+  As seen in Table 1 in the appendix, the amount of code it takes to create a bar graph is very concise and easy to use, which makes development and maintenance straightforward and produce a small amount of bugs.
+  The results are beautiful, informative and user friendly.
+  Given the scope of the project, being able to utilize SVG graphing technology in a straightforward and simple way will enhance the product.
 
 \section{Styling}
 
   \subsection{Introduction}
-
-    Styling determines how the content is laid out on the page.
-    This is what makes layout usable on a variety of screen sizes and the content user friendly.
-    There are several methods to apply styling for a webpage, either by building your own, or using a framework that other people have written and dropping your content into their code.
+  Styling determines how the content is laid out on the page.
+  This is what makes layout usable on a variety of screen sizes and the content user friendly.
+  There are several methods to apply styling for a webpage, either by building your own, or using a framework that other people have written and dropping your content into their code.
 
   \subsection{Criteria}
   \begin{itemize}
@@ -220,7 +236,8 @@
     \item run quickly
   \end{itemize}
 
-  \subsection{CSS}
+  \subsection{Technology}
+    \subsubsection{CSS}
 
     \textbf{About:}
 
@@ -249,7 +266,7 @@
     Say for example you want to change a single color across your site.
     In CSS, this requires finding every instance of that color and changing it to the new value.
 
-  \subsection{Preprocessors}
+    \subsubsection{Preprocessors}
     \textbf{About:}
 
     Preprocessors are programming languages that utilize some kind of compiler to translate the code into CSS to style web pages.
@@ -281,7 +298,7 @@
     Installing a compiler also means that whatever code you write now relies on the compiler to be able to produce code that can be interpreted by browsers.
 
 
-	\subsection{Bootstrap}
+  	\subsubsection{Bootstrap}
 
     \noindent \textbf{Pros:}
 
@@ -303,18 +320,16 @@
     The drawback of having a framework make the stylistic decisions for you is that all Bootstrap websites end up looking the same.
 
   \subsection{Conclusion}
-
-    Preprocessors are generally considered the best option for projects that want the benefit of being able to create custom interfaces without having to deal with the drawbacks of writing raw CSS.
-    Sass is one of the big three preprocessors, which offers a lot of flexibility in how you write the code, and really speeds up the development process.
-    If for some reason the next group decides that they want to work just with CSS, they can always compile the CSS and then work with that from then on.
+  Preprocessors are generally considered the best option for projects that want the benefit of being able to create custom interfaces without having to deal with the drawbacks of writing raw CSS.
+  Sass is one of the big three preprocessors, which offers a lot of flexibility in how you write the code, and really speeds up the development process.
+  If for some reason the next group decides that they want to work just with CSS, they can always compile the CSS and then work with that from then on.
 
 \section{Interactive Web Frameworks}
   \subsection{Introduction}
-
-    There are many JavaScript frameworks out there for creating interactive websites.
-    In fact, there are so many that the biggest issue becomes which one to choose, rather than whether to use it or not.
-    They have built in functionality for a wide variety of things that are rather complicated to with native JavaScript.
-    These JavaScript frameworks are so popular that nearly every major tech company has created their own and were kind enough to make them open source.
+  There are many JavaScript frameworks out there for creating interactive websites.
+  In fact, there are so many that the biggest issue becomes which one to choose, rather than whether to use it or not.
+  They have built in functionality for a wide variety of things that are rather complicated to with native JavaScript.
+  These JavaScript frameworks are so popular that nearly every major tech company has created their own and were kind enough to make them open source.
 
   \subsection{Critera}
   \begin{itemize}
@@ -326,22 +341,23 @@
 
 
   \subsection{Pros and cons for all JavaScript frameworks}
-    \textbf{Pros:}
-    \begin{itemize}
-      \item Responsive websites - It is easy for the user to interact with components and get feedback.
-      \item Much faster than developing it all from scratch.
-      \item Frequently have the ability to extend the framework with plugins.
-      \item Uses Model-View-Controller philosophy - This is a practice that helps developers keep a separation of states for data in the website. It leads to more controllable and better coding.
-    \end{itemize}
+  \textbf{Pros:}
+  \begin{itemize}
+    \item Responsive websites - It is easy for the user to interact with components and get feedback.
+    \item Much faster than developing it all from scratch.
+    \item Frequently have the ability to extend the framework with plugins.
+    \item Uses Model-View-Controller philosophy - This is a practice that helps developers keep a separation of states for data in the website. It leads to more controllable and better coding.
+  \end{itemize}
 
-    \noindent \textbf{Cons:}
-    \begin{itemize}
-      \item They all have a somewhat steep learning curve.
-      \item There are so many of them it is harder to find a developer that is familiar with even just the popular frameworks
-      \item If you are building a really tiny web app, the use of a JavaScript framework  can slow down the site
-    \end{itemize}
+  \noindent \textbf{Cons:}
+  \begin{itemize}
+    \item They all have a somewhat steep learning curve.
+    \item There are so many of them it is harder to find a developer that is familiar with even just the popular frameworks
+    \item If you are building a really tiny web app, the use of a JavaScript framework  can slow down the site
+  \end{itemize}
 
-	\subsection{Angular}
+  \subsection{Technology}
+  	\subsubsection{Angular}
 
     \textbf{About:}
 
@@ -363,7 +379,7 @@
     Angular 1 is really slow\cite{SpeedReport} and can get messy really easily.
 
 
-	\subsection{React}
+  	\subsubsection{React}
     \textbf{About:}
 
     React allows developers to create large web-applications that use data and can change over time without reloading the page.
@@ -388,7 +404,7 @@
     A developer needs to be good at making decisions about what kind of frameworks should be added onto React to be able to do everything that other frameworks can do.
 
 
-  \subsection{Vue}
+    \subsubsection{Vue}
 
     \textbf{About:}
 
@@ -418,13 +434,8 @@
     For the scope of this project, having a framework that is lightweight, easy to use, and has all the benefits of the bigger frameworks like Angular and React is a good choice.
     Its possible that the features that this framework offers might not be a requirement for the client, but if a JavaScript framework will help the project, then Vue.js is the best choice for it.
 
-		\section{Introduction}
-		My job in the Ninkasi BrewHops project is to develop and organize the middle of the stack: the languages that connect the database to the front end.
-		I will be coding the database interaction languages and the functionality to pull information from/put information into the database.
-		In this document, I outline three different possibilities we could use in our project for hosting, platform, and database interaction language possibilities.
-
 		\section{Hosting}
-		    \subsection{Overview}
+		    \subsection{Introduction}
 				Ninkasi needs to host it's data somehwere, either remotely using cloud hosting or locally using a server of some type.
 				Below are the outlined options for small local servers or cloud hosting.
 				Space available, scalability, cost, and complexity of each are explained.
@@ -436,7 +447,8 @@
 		  \item Easy for client to use after we leave this project
 		\end{itemize}
 
-			\subsection{Intel NUC}
+      \subsection{Technology}
+  			\subsubsection{Intel NUC}
 		            The first option for hosting our data is the Intel NUC, or “Next Unit of Computing”.
 								It has a low power consumption, idling at 8 watts and is barely audible (alphr). For the size, 5\textquotedblleft square by 1.5\textquotedblleft tall, the NUC is powerful \cite{IntelNUCReview}.
 								Each version averages around 32 GB \cite{Intel}, but this is a fixed-size memory space.
@@ -450,7 +462,7 @@
 						\\
 		        \textbf{Cons: Expensive, storage size limitations so not scalable.}
 
-			\subsection{Raspberry Pi}
+  			\subsubsection{Raspberry Pi}
 					Raspberry Pi's are the economically friendly option for hosting.
 					The devices run between 5 and 35 dollars per unit and, although it is not the most common use of the technology, can be used as a small server\cite{CopaHost}.
 					The raspberry pi itself only contains 1GB of space, and relies of a microSD card (which can hold upto 32GB and still be compatible with the device)\cite{CopaHost}.
@@ -463,7 +475,7 @@
 					\\
 					\textbf{Cons: Cheap and not reliable, not enough storage space, setting it up and maintaining the hardware would be hard for someone with no little knowledge.}
 
-			\subsection{Cloud Hosting}
+  			\subsubsection{Cloud Hosting}
 		        Cloud hosting is a way of hosting your data on a remote server through a company who charges you for that space.
 						People with limited technical knowledge can use this service easily because you can be provided with a software environment that requires no setup or hardware\cite{InterRoute}.
 						The system is very scalable, you pay for what you need and if you need more space you can buy more\cite{InterRoute}.
@@ -488,7 +500,7 @@
 						Cloud hosting is relatively inexpensive, is easy to use for our nontechnical client, and is scalable with the growth of the company.
 
 		\section{Platform}
-		\subsection{Overview}
+		\subsection{Introduction}
 		The platform for our web servers will dictate the ease and speed of running concurrent processes, and what kind of stack we will be able to use.
 		This section outlines the pros and cons of Nginx, Apache, and Express.js.
 		The web servers we will use for our project are Apache, because they are fast, reliable, well documented and supported, and allow us to use Django and Python and relational databases.
@@ -499,7 +511,8 @@
 		\item Well document and supported
 		\end{itemize}
 
-			\subsection{Nginx}
+      \subsection{Technology}
+  			\subsubsection{Nginx}
 				NGINX is an open source server software that handles web serving as well as media streaming, caching, load balancing, and more\cite{NGINX}.
 				NGINX is known for being very fast, especially around media streaming and serving static content\cite{NGINX}.
 				NGINX is 2.5 times faster than Apache when serving static content and consumes less memory of the two when running the same amount of concurrent processes\cite{HostingAd}.
@@ -511,7 +524,7 @@
 				\\
 				\textbf{Cons: Most modules don't support dynamic loading, not good OS support for Windows}
 
-			\subsection{Apache}
+  			\subsubsection{Apache}
 				Apache is part of the LAMP stack (Linux or other OS, Apache, MySQL, Php or similar lanugage) which is a traditional stack model\cite{UpWork}.
 				It has 3 ways of request processing which scale differently.
 				Apache has great OS support (better than NGINX which lacks good Windows support) and can run on many systems\cite{HostingAd}.
@@ -522,7 +535,7 @@
 				\textbf{Cons: Slow for static content, doesn't scale well}
 
 
-			\subsection{Express}
+  			\subsubsection{Express}
 				Express.js is part of the MEAN stack (mongo-db, express.js, angular, node.js) stack and is a great choice for a modern platform if you want language uniformity and the ability to be mobile friendly\cite{UpWork}.
 				Since we are not creating apps, the mobile ability is less important but the language uniformity would be helpful.
 				That way regardless of what part of the stack the group is working on, they will know the language for all other sides of the stack.
@@ -549,7 +562,7 @@
 				Apache has better support for Windows computers and many of Ninkasi’s computers are Windows, so this will be our choice.
 
 		\section{Database Interaction Language}
-		\subsection{Overview}
+		\subsection{Introduction}
 			The choice of which language with which we will use to interact with our database is an important decision.
 			We want our project to be very maintainable, both in the language's support and community, and the code we create with the language.
 			For our project we don’t want to work with Php, because of previous experience in other areas and ease of use.
@@ -561,7 +574,9 @@
 			\item Easy to code with
 			\item Language that is popular and continually developed
 			\end{itemize}
-			\subsection{Ruby On Rails}
+
+      \subsection{Technology}
+  			\subsubsection{Ruby On Rails}
 				Ruby on Rails is a flexible and expressive language that has been at the foreground of database interaction languages in recent years.
 				There are a lot of protocols for how to implement web features in Rails.
 				Rails is opinionated, meaning most features have a standard way of being create\cite{Medium}.
@@ -575,7 +590,7 @@
 				\\
 				\textbf{Cons: A lot of abstraction (possibly too much depending on your purposes), not a defined way to do everything, way slow in comparison with other languages.}
 
-			\subsection{Node.js}
+  			\subsubsection{Node.js}
 					Node.js is a language you can use for full stack development\cite{Medium}.
 					It allows Javascript to be run on the server side\cite{Medium}.
 					Node is easy to learn, but unlike Rails, you have to build everything from the ground up\cite{NetGuru}.
@@ -589,7 +604,7 @@
 					\\
 					\textbf{Cons: You have to build every feature from the ground up, often backward incompatible updates.}
 
-			\subsection{Php}
+  			\subsubsection{Php}
 			Php has the benefit of being around for a long time\cite{InfoWorldPhp}.
 			This language has a lot of longevity and is constantly updated. It has a large open source community and lots of support, so maintainability would be high\cite{Medium}.
 			The language is inconsistent and clunky, so this would diminish our development ease.
@@ -600,7 +615,7 @@
 				\\
 				\textbf{Cons: Very old, language is inconsistent, clunky, lack of abstraction.}
 
-		\subsection{Django}
+  		\subsubsection{Django}
 				Django is a python web framework that works similar to a LAMP framework.
 				This stack is comprised of MySQL relational databases, Apache, and python\cite{Bitnami}.
 				This is perfect for our need for relational database support. It allows for python front end development, which Connor is interested in.
@@ -624,19 +639,9 @@
 				Node.js is a easy to use, well supported language, but it is a part of the MEAN stack so we won’t be able to use it with a relational database.
 				Php is clunky and inconsistent, so we do not want to develop in Php when we can create similar results with Rails.
         Django is a good option for us, but because of our groups experience with Rails, that will be our choice.
-				Rails is a modern, easy to use, abstract language that works with our LAMP-like stack. 
+				Rails is a modern, easy to use, abstract language that works with our LAMP-like stack.
 
 		\clearpage
-
-		\section{Introduction}
-		In this technology review, we will analyze the costs and benefits associated with various tools in three components of our project.
-		First, we will look at peripheral interfaces.
-		It is important to understand how brewers will access information managed by our system and recognize the positive and negative attributes of each option that exists.
-		Next, we will look at database technologies.
-		It is important to look at the structure of our data and understand the costs and benefits of choosing a certain technology.
-		Finally, task runners and module bundlers are an important tool in any efficient development process.
-		Looking at the different options and determining which is a good fit is important before the BrewHops team can effectively develop a software solution for Ninkasi Brewing Company.
-		Overall, each technology conveys pros and cons for its usage; in some scenarios there is no perfect answer, but understanding why certain technologies exist will help improve the development of our data management system.
 
 		\section{System Peripherals}
 		    \subsection{Introduction}
@@ -644,13 +649,14 @@
 		        We will analyze the positive and negative impacts of creating a native mobile application, a native desktop application, or a web application.
 		        There are benefits and costs associated with each technology as described below.
 
-			\subsection{Native Mobile Application}
-		        \subsubsection{Summary}
+      \subsection{Technology}
+  			\subsubsection{Native Mobile Application}
+		        \textbf{Summary:}
 		            Native mobile apps play an integral part in many business product lines.
 		            These applications are written in languages specific to devices they run on.
 		            These are generally recognized as good for sale to external customers\cite{SearchCloudOverview}.
 
-		        \subsubsection{Pros}
+		        \noindent \textbf{Pros:}
 		            Native mobile applications have access to all capabilities of the smart phones on which they run.
 		            This includes push notifications which may be required in the data management system.
 		            Push notifications would allow brewers to receive updates on time-critical tasks without having to refresh the application.
@@ -664,7 +670,7 @@
 		            Finally, native mobile application interfaces run more quickly than mobile-web applications.
 		            Depending on how fast-pace the brewers' use of the application will be, this may reduce time spent in application.
 
-		        \subsubsection{Cons}
+		        \noindent \textbf{Cons:}
 		            Native mobile applications can drastically increase the development timeline.
 		            Each device the application will run on must have its own version of the application.
 		            If Ninkasi uses multiple smartphones (E.G iPhone and Android), then each platform requires the application to be written in its native language.
@@ -677,11 +683,11 @@
 		            Finally, if a brewer's device is lost or stolen then there is a potential security risk if Ninkasi data is stored on the device.
 
 
-			\subsection{Naive Desktop Application}
-		        \subsubsection{Summary}
+  			\subsubsection{Naive Desktop Application}
+		        \textbf{Summary:}
 		            Many of the same costs and benefits that arise with native mobile applications, come about with native desktop applications.
 
-		        \subsubsection{Pros}
+		        \noindent \textbf{Pros:}
 		            When developing native desktop applications, applications have direct access to the host utilities.
 		            This is beneficial when many of these functions are needed in the application.
 		            Native desktop applications do not require internet connection to function.
@@ -689,7 +695,7 @@
 		            Since the application is running natively, data can be stored in the computer's memory.
 		            This can help create a fluid user experience.
 
-		        \subsubsection{Cons}
+		        \noindent \textbf{Cons:}
 		            Similar to native mobile applications, native desktop applications require additional versions of the application written for each hardware platform supported.
 		            This may not be an issue if Ninkasi uses a single technology ecosystem; but it can make it difficult to switch platforms if there is ever a need.
 		            Native desktop applications must be downloaded onto each desktop computer that needs to run the program.
@@ -697,11 +703,11 @@
 		            Along with downloading the application onto each device, it'll become necessary to remove the application and all application data from the device when Ninkasi no longer uses the computer.
 
 
-			\subsection{Web Application}
-		        \subsubsection{Summary}
+  			\subsubsection{Web Application}
+		        \textbf{Summary:}
 		            Web applications are generally recognized as good for cross-platform internal usage\cite{SearchCloudOverview}.
 
-		        \subsubsection{Pros}
+		        \noindent \textbf{Pros:}
 		            Web applications allow for each cross-platform functionality.
 		            Ninkasi brewers will access the system from their smartphones, desktops, and tablets.
 		            A web application will allow us to develop one application that exposes certain functionality based on the device used.
@@ -712,7 +718,7 @@
 		            They are written using common languages that every developer and many non-developers have seen before.
 		            It is possible to create push notifications in web sites\cite{GooglePushNotifications}.
 
-		        \subsubsection{Cons}
+		        \noindent \textbf{Cons:}
 		            Unfortunately, since the application is hosted, brewers will need to maintain an internet connection to use the application.
 		            Without internet, there will be no way to work with live data from the database.
 		            Also, without native software, the application will not have access to hardware specific functions.
@@ -764,11 +770,12 @@
 		    \subsection{Introduction}
 		    This is an overview of various types of databases. Databases will be used to store and access information that Ninkasi measures inside of each brewing vat.
 
-			\subsection{SQL Database}
-		        \subsubsection{Summary}
+      \subsection{Technology}
+  			\subsubsection{SQL Database}
+		        \textbf{Summary:}
 		            SQL Databases, also known as "relational" databases, are widely used to store highly \textit{structured} information\footnote{"Structured" information is data whose structure rarely, if ever, changes and is consistent between entities.}.
 
-		        \subsubsection{Pros}
+		        \noindent \textbf{Pros:}
 		            Using SQL databases, it is easy to retrieve necessary information.
 		            SQL databases can use transactions which ensure that interactions with the database either complete fully or any changes are rolled back.
 		            SQL databases are structured.
@@ -777,16 +784,16 @@
 		            Database administrators can easily control operation permissions for each user in the system.
 		            Along with this, many tools exist to help developers optimize queries to access the database.
 
-		        \subsubsection{Cons}
+		        \noindent \textbf{Cons:}
 		            Enterprise level SQL servers can be expensive to develop and maintain.
 		            Depending on the database, tables can have limits on their structure\cite{TechwallaSQLCons}.
 
 
-			\subsection{NoSQL Database}
-		        \subsubsection{Summary}
+  			\subsubsection{NoSQL Database}
+		        \textbf{Summary:}
 		            NoSQL databases, also known as "non-relational" databases, are widely used to increase speed and decrease storage space of \textit{unstructured} information\footnote{"Unstructured" data is information that is not consistent between entities.}.
 
-		        \subsubsection{Pros}
+		        \noindent \textbf{Pros:}
 		            There is no defined structure to the database.
 		            The structure is dynamic and can be updated without having to shutdown the database\cite{MongoDBProsCons}.
 		            Another benefit of NoSQL databases is their ability to handle "Big Data".
@@ -797,7 +804,7 @@
 		            This may be essential if the BrewHops team uses Raspberry Pis or Intel Nucs to host system information.
 
 
-		        \subsubsection{Cons}
+		        \noindent \textbf{Cons:}
 		            While there are benefits to using a NoSQL database, there are also drawbacks.
 		            NoSQL technologies are typically open-source projects that do not have the support and resources that major relational database management systems have\cite{NoSQLProsCons}.
 		            There are still several security issues associated with NoSQL databases\cite{NoSQLSecurityIssues}.
@@ -807,15 +814,15 @@
 		            This will only be an issue if Ninkasi data needs will require multiple nodes.
 
 
-			\subsection{Flat File Database}
-		        \subsubsection{Summary}
+  			\subsubsection{Flat File Database}
+		        \textbf{Summary:}
 		            Flat file databases are commonly used to store configuration settings for software systems.
 
-		        \subsubsection{Pros}
+		        \noindent \textbf{Pros:}
 		            Incredibly simple to set up, literally just a file.
 		            Easily read since there is a standard structure using delimeters or line length.
 
-		        \subsubsection{Cons}
+		        \noindent \textbf{Cons:}
 		            Duplicate data, any new entries require a new row
 		            No transactions
 		            Not usually accessed via network since they're offline entities that are part of the operating system\cite{Techwalla}.
@@ -858,11 +865,12 @@
 		        Each of these libraries comes with dependencies along with other tasks that need to be handled before deployment.
 		        Task runners and module bundlers take care of these dependencies and performing routine pre-deployment operations.
 
-			\subsection{Grunt}
-		        \subsubsection{Summary}
+      \subsection{Technology}
+  			\subsubsection{Grunt}
+		        \textbf{Summary:}
 		            Grunt is a tool that allows "front-end developers to run predefined reptitive tasks"\cite{TaskRunners}. This is commonly used in enterprise level web applications.
 
-		        \subsubsection{Pros}
+		        \noindent \textbf{Pros:}
 		            Grunt is built on top of NodeJS which makes it integrate easily with other Node based applications.
 		            Grunt is the oldest tool of its kind and has a strong community behind it.
 		            This also ensures the stability and further development of Grunt.
@@ -870,37 +878,37 @@
 		            An important difference between Grunt and other task runners is its focus on configuration over code.
 		            To make Grunt work for you, you configure the tasks it completes.
 
-		        \subsubsection{Cons}
+		        \noindent \textbf{Cons:}
 		            There are some downsides to Grunt as well.
 		            Developers reuse configuration objects to automate their tasks.
 		            This can lead to bloated Grunt scripts that are not maintainable\cite{TaskRunners}.
 
-			\subsection{Gulp}
-		        \subsubsection{Summary}
+  			\subsubsection{Gulp}
+		        \textbf{Summary:}
 		            Gulp is a task runner that requires developers to write code to automate repetitive tasks\cite{TaskRunners}.
 		            Gulp was developed after Grunt.
 
-		        \subsubsection{Pros}
+		        \noindent \textbf{Pros:}
 		            A major benefit of Gulp is its use of Javascript functions to define when and how tasks should execute.
 		            Another benefit is that Gulp scripts tend to run more quickly than Grunt configuration\cite{GulpGruntSpeed}.
 		            This is possible ecause of Gulp's "stream usage and in-memory operations"\cite{TaskRunners}.
 
-		        \subsubsection{Cons}
+		        \noindent \textbf{Cons:}
 		            Gulp relies on several paradigms that are not common practice in other areas of development.
 		            These paradigms can make it difficult for new developers to create efficently create automation scripts.
 		            There is no reason to use a task runner on small projects if the developer can quickly and easily perform the tasks by hand.
 
-			\subsection{WebPack}
-		        \subsubsection{Summary}
+  			\subsubsection{WebPack}
+		        \textbf{Summary:}
 		            WebPack differs from Grunt and Gulp in that it is a module bundler.
 		            It takes various modules that all have dependencies and bundles them together in a way that reduces redundancy\cite{WebPack}.
 		            It creates a dependency graph of all modules needed in your system and consolidates them into individual bundles\cite{WebPack}.
 
-		        \subsubsection{Pros}
+		        \noindent \textbf{Pros:}
 		            The major benefit of using WebPack is its ability to reduce software size through its consolidation method of individual modules.
 		            Another benefit of WebPack is using hot-reloading to more efficiently develop the frontend of an application\cite{TaskRunners}.
 
-		        \subsubsection{Cons}
+		        \noindent \textbf{Cons:}
 		            Finally, the main difficulty with WebPack is it can be difficult to configure at first and there exists a learning curve to its technology\cite{TaskRunners}.
 		            WebPack is a technology that is extremely useful for major enterprise level applications, but tends to be over-powered for small applications.
 		            WebPack would likely increase development time for the BrewHops team instead of aid in the development of our software.
