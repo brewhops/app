@@ -15,11 +15,11 @@ A project for Ninkasi Brewery to modernize data storage methods for brewery oper
 * ProblemStatement
     * Defines the problem that the project aims to solve
     * Proposes a solution to the problem
-    * Defines general metrics for success
+    * Defines objectives for the project
 <br></br>
 * SoftwareRequirements
     * Details more information on how that solution should be carried out
-    * Puts measurable numbers to measures of success
+    * Defines success in a measurable way
     * Timeline of the project
 <br></br>
 * TechReview
