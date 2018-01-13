@@ -16,3 +16,11 @@
 *.fdb*
 *.bbl
 *.blg
+
+#Project ignores
+
+#all the development code in the node_modules folder
+node_modules/
+
+#destination location for the compiled project
+dist/
