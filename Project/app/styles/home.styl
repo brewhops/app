@@ -1,0 +1,28 @@
+@import 'modules/header'
+@import 'modules/inputs'
+@import 'modules/buttons'
+@import 'variables/mixins'
+@import 'variables/breakpoints'
+@import 'globals'
+
+#dataEntry
+    display flex
+    flex-direction column
+    align-items center
+    max-width 500px
+
+    // call the less than function
+    // this code will only apply to screen sizes smaller than a tablet
+    +less-than(tablet)
+        width 90vw
+        input
+            margin 2px
+        h2
+            margin 0
+
+    .inline
+        display flex
+        justify-content space-between
+
+        input
+            width 32%
