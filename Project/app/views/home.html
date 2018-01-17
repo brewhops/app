@@ -38,4 +38,53 @@
         </div>
     </div>
 </body>
+
+<script type="text/javascript">
+    //get the specified number of numbers
+    function randomNumber(number) {
+        number = Math.pow(10, number);
+        return Math.floor(Math.random() * number).toString()
+    }
+
+    function idNumber(firstNumber, secondNumber) {
+        return randomNumber(firstNumber) + "-" + randomNumber(secondNumber)
+    }
+
+    // round to a certain precision
+    function precisionRound(number, precision) {
+      var factor = Math.pow(10, precision);
+      return Math.round(number * factor) / factor;
+    }
+
+    function pressure() {
+        return (precisionRound(Math.random() * 100 + 80, 1)).toString()
+    }
+
+    function temperature() {
+        return (Math.floor(Math.random() * 10 + 50)).toString()
+    }
+
+    //where the content will be injected
+    var generatedContent = "";
+
+    //where the squares get built
+    for (var i = 0; i < 50; i++) {
+        generatedContent += '<div class="tank">'
+            //tank number
+            generatedContent += "<span>" + idNumber(5,3) + "</span>"
+            //beer id
+            generatedContent += "<span>" + idNumber(4,2) + "</span>"
+            //batch number
+            generatedContent += "<span>" + idNumber(5,3) + "</span>"
+            //status
+            generatedContent += "<span>OK</span>"
+            //pressure
+            generatedContent += "<span>" + pressure() + "</span>"
+            //temperature
+            generatedContent += "<span>" + temperature() + "</span>"
+        generatedContent += "</div>"
+    }
+
+    document.getElementById('tankInfo').innerHTML = generatedContent;
+</script>
 </html>
