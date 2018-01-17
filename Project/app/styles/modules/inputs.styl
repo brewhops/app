@@ -1,10 +1,14 @@
 @import '../variables/colors'
+@import '../variables/mixins'
 
 input
     padding 10px
     font-size 1em
     display block
-    margin 10px auto
+    margin 10px 0
     width 100%
     color Teal
     font-weight bold
+    outline none
+    border 1px solid #cccccc
+    BackgroundColorTransition(focus, 0.3s, white, darken(white, 5%))
