@@ -73,6 +73,11 @@
         }
     }
 
+    function brand() {
+        var brandVal = ['Prismatic', 'Yours Truly', 'Pacific Rain', 'Total Domination', 'Tricerahops', 'Dawn of the Red', 'Hop Cooler', 'Helles Belles', 'Vanilla Oatis']
+        return brandVal[Math.floor(Math.random()*brandVal.length)]
+    }
+
     var tankStatus = ""
 
     //where the content will be injected
@@ -80,7 +85,7 @@
 
     generatedContent += '<div id="tankContents">'
     //where the squares get built
-    for (var i = 0; i < 50; i++) {
+    for (var i = 0; i < 100; i++) {
         tankStatus = status()
 
         generatedContent += '<a href="">'
@@ -91,11 +96,11 @@
                 generatedContent += "<td>" + idNumber(5,3) + "</td>"
                 //pressure
                 generatedContent += "<td>" + pressure() + "</td>"
-                //beer id
             generatedContent += "</tr>"
 
             generatedContent += "<tr>"
-                generatedContent += "<td>" + idNumber(4,2) + "</td>"
+                //beer id
+                generatedContent += "<td>" + brand() + "</td>"
                 //temperature
                 generatedContent += "<td>" + temperature() + "</td>"
             generatedContent += "</tr>"
