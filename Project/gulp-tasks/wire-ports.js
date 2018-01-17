@@ -13,6 +13,7 @@ var root        = config.root + "/";
 var destination = config.end + "/";
 var anyFile     = "/**/*";
 var not         = "!";
+var localURL    = "http://localhost:" + config.port + "/"
 var paths = {
    start: {
       html: root + config.folders.html + "/*.html",
@@ -38,6 +39,6 @@ gulp.task('wire-port-local', function() {
       destination + "**/*.js"
    ];
    return gulp.src(locations)
-      .pipe(plugin.replace("!!HOST!!", config.localhost.url))
+      .pipe(plugin.replace("!!HOST!!", localURL))
       .pipe(gulp.dest(destination));
 });
