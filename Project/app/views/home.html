@@ -64,26 +64,56 @@
         return (Math.floor(Math.random() * 10 + 50)).toString()
     }
 
-    //where the content will be injected
-    var generatedContent = "";
+    function status() {
+        var statusVal = ["cap", "crash", "cool"]
+        if (Math.floor(Math.random() * 10) > 6) {
+            return statusVal[Math.floor(Math.random()*statusVal.length)]
+        } else {
+            return "ok"
+        }
+    }
 
+    var tankStatus = ""
+
+    //where the content will be injected
+    var generatedContent = "<h2>Tank Info</h2>";
+
+    generatedContent += '<div id="tankContents">'
     //where the squares get built
     for (var i = 0; i < 50; i++) {
-        generatedContent += '<div class="tank">'
-            //tank number
-            generatedContent += "<span>" + idNumber(5,3) + "</span>"
-            //beer id
-            generatedContent += "<span>" + idNumber(4,2) + "</span>"
-            //batch number
-            generatedContent += "<span>" + idNumber(5,3) + "</span>"
-            //status
-            generatedContent += "<span>OK</span>"
-            //pressure
-            generatedContent += "<span>" + pressure() + "</span>"
-            //temperature
-            generatedContent += "<span>" + temperature() + "</span>"
-        generatedContent += "</div>"
+        tankStatus = status()
+
+        generatedContent += '<a href="">'
+        generatedContent += '<table class="tank ' + tankStatus + '">'
+
+            generatedContent += "<tr>"
+                //tank number
+                generatedContent += "<td>" + idNumber(5,3) + "</td>"
+                //pressure
+                generatedContent += "<td>" + pressure() + "</td>"
+                //beer id
+            generatedContent += "</tr>"
+
+            generatedContent += "<tr>"
+                generatedContent += "<td>" + idNumber(4,2) + "</td>"
+                //temperature
+                generatedContent += "<td>" + temperature() + "</td>"
+            generatedContent += "</tr>"
+
+            generatedContent += "<tr>"
+                //batch number
+                generatedContent += "<td>" + idNumber(5,3) + "</td>"
+            generatedContent += "</tr>"
+
+            generatedContent += "<tr>"
+                //status
+                generatedContent += "<td>" + tankStatus + "</td>"
+            generatedContent += "</tr>"
+
+        generatedContent += "</table>"
+        generatedContent += '</a>'
     }
+    generatedContent += '</div>'
 
     document.getElementById('tankInfo').innerHTML = generatedContent;
 </script>

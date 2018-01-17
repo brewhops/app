@@ -26,3 +26,32 @@
 
         input
             width 32%
+
+#tankInfo
+    h2
+        text-align center
+    #tankContents
+        height 80vh
+        overflow scroll
+        padding 0 10px
+        display grid
+        grid-template-columns repeat(3, 200px)
+        grid-gap 10px
+        color white
+        font-weight 100
+        a
+            text-decoration none
+            color white
+        .tank
+            background Teal
+            width 100%
+            td:nth-child(2)
+                text-align right
+            td
+                padding 5px
+        .cap
+            background Orange
+        .cool
+            background Brown
+        .crash
+            background Red
