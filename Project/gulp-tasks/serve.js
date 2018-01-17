@@ -26,8 +26,8 @@ gulp.task('serve-ui', function() {
 gulp.task('open', function() {
    return gulp.src(destination + config.homePage)
       .pipe(plugin.open({
-         uri: 'http://localhost:9000/',
-         app: 'google chrome'
+         uri: config.localhost,
+         app: config.browser
       }));
 });
 

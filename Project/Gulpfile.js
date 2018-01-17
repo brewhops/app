@@ -25,9 +25,17 @@ var anyFile     = "**/*";
 var not         = "!";
 var paths = {
     start: {
-        html:   root + config.folders.html   + "/" + anyFile + ".html",
-        preCSS: root + config.folders.preCSS + "/*.styl",
-        js:     root + config.folders.js     + "/" + anyFile + ".js"
+        all: {
+            html:   root + config.folders.html   + "/**/*.html",
+            css:    root + config.folders.css    + "/**/*.styl",
+            js:     root + config.folders.js     + "/**/*.js",
+            images: root + config.folders.images + "/**/*"
+        },
+        top: {
+            html:   root + config.folders.html + "/*.html",
+            css:    root + config.folders.css  + "/*.styl",
+            js:     root + config.folders.js   + "/*.js"
+        }
    }
 }
 
@@ -36,9 +44,9 @@ var paths = {
 //////////
 //move all the html files to the destination folder
 gulp.task('html', function() {
-   return gulp.src(paths.start.html)    //select all html documents
-      .pipe(plugin.flatten())           //put them in a single folder directory
-      .pipe(gulp.dest(destination));    //send them over to the destination folder
+   return gulp.src(paths.start.all.html) //select all html documents
+      .pipe(plugin.flatten())            //put them in a single folder directory
+      .pipe(gulp.dest(destination));     //send them over to the destination folder
 });
 
 
@@ -47,7 +55,7 @@ gulp.task('html', function() {
 /////////
 // compile our stylus files and send them straight to dist
 gulp.task('css', function() {
-   return gulp.src(paths.start.preCSS)  //get our stylus files
+   return gulp.src(paths.start.top.css) //get our stylus files
       .pipe(plugin.stylus())            //compile them
       .pipe(gulp.dest(destination));    //put them in our destination folder
 });
@@ -58,7 +66,7 @@ gulp.task('css', function() {
 ////////
 //get all js files and put them in the destination folder
 gulp.task('js', function() {
-   return gulp.src(paths.start.js)      //get our js files
+   return gulp.src(paths.start.all.js)  //get our js files
       .pipe(plugin.flatten())           //put them all in a single folder directory
       .pipe(gulp.dest(destination));    //move them to our destination folder
 });
@@ -69,7 +77,7 @@ gulp.task('js', function() {
 ////////////////
 gulp.task('images', function() {
    //get our images folder
-   return gulp.src(root + 'images/**/*')
+   return gulp.src(paths.start.all.images)
       .pipe(gulp.dest(destination + 'images'));
 });
 
@@ -94,9 +102,9 @@ gulp.task('reload', function() {
 // Watch //
 ///////////
 gulp.task('watch', function() {
-   gulp.watch(root + 'styles/**/*.styl', gulp.series('css', 'reload'));
-   gulp.watch(root + '**/*.html',        gulp.series('html', 'wire-port-local', 'reload'));
-   gulp.watch(root + '**/*.js',          gulp.series('js', 'wire-port-local', 'reload'));
+   gulp.watch(paths.start.all.css,  gulp.series('css', 'reload'));
+   gulp.watch(paths.start.all.html, gulp.series('html', 'wire-port-local', 'reload'));
+   gulp.watch(paths.start.all.js,   gulp.series('js', 'wire-port-local', 'reload'));
 });
 
 

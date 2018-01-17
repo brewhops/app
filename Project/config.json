@@ -2,20 +2,12 @@
    "root": "app",
    "end":  "dist",
    "homePage": "index.html",
-
+   "browser":  "google chrome",
    "folders": {
       "html": "views",
       "css":  "styles",
-      "preCSS": "styles",
       "js":   "scripts"
    },
-   "localhost": {
-      "connection": "http",
-      "hostname": "localhost",
-      "port": 8080,
-      "url": "http://localhost:8080/"
-   },
-   "prod": {
-      "url": "http://"
-   }
+   "localhost": "http://localhost:9000/",
+   "prod": "http://"
 }
