@@ -6,7 +6,8 @@
    "folders": {
       "html": "views",
       "css":  "styles",
-      "js":   "scripts"
+      "js":   "scripts",
+      "images": "images"
    },
    "localhost": "http://localhost:9000/",
    "prod": "http://"
