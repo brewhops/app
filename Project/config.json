@@ -1,7 +1,7 @@
 {
    "root": "app",
    "end":  "dist",
-   "homePage": "admin.html",
+   "homePage": "data.html",
    "browser":  "google chrome",
    "folders": {
       "html": "views",
