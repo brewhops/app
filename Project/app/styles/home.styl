@@ -5,7 +5,18 @@
 @import 'variables/breakpoints'
 @import 'globals'
 
+#content
+    display grid
+    grid-template-columns 1fr 1fr
+    grid-template-areas "entry info"
+    +less-than(laptop)
+        grid-template-columns 98vw
+        grid-template-areas "entry" "info"
+    justify-items center
+
+
 #dataEntry
+    grid-area entry
     display flex
     flex-direction column
     align-items center
@@ -25,6 +36,7 @@
             width 32%
 
 #tankInfo
+    grid-area info
     h2
         text-align center
     #tankContents
@@ -33,6 +45,8 @@
         padding 0 10px
         display grid
         grid-template-columns repeat(3, 200px)
+        +less-than(tablet)
+            grid-template-columns repeat(2, 200px)
         grid-gap 10px
         color white
         font-weight 100
