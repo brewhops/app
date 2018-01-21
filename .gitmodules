@@ -1,0 +1,3 @@
+[submodule "Ninkasi-Server"]
+	path = Ninkasi-Server
+	url = https://github.com/WilliamBuffum/Ninkasi-Server.git
