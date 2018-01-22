@@ -13,12 +13,13 @@ var root        = config.root + "/";
 var destination = config.end + "/";
 var anyFile     = "/**/*";
 var not         = "!";
+var localURL    = "http://localhost:" + config.port + "/"
 
 gulp.task('serve-ui', function() {
    return plugin.connect.server({  //create a little server for our site on localhost
       root: destination,           //look for our code in the destination folder
       livereload: true,            //reload the page if anything changes
-      port: 9000,                  //make the connection on port 9000
+      port: config.port,           //make the connection on port 9000
    });
 });
 
@@ -26,8 +27,8 @@ gulp.task('serve-ui', function() {
 gulp.task('open', function() {
    return gulp.src(destination + config.homePage)
       .pipe(plugin.open({
-         uri: 'http://localhost:9000/',
-         app: 'google chrome'
+         uri: localURL + config.homePage,
+         app: config.browser
       }));
 });
 
