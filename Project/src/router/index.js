@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import login from '@/components/login'
 import admin from '@/components/admin'
 import home from '@/components/home'
+import data from '@/components/data'
 
 Vue.use(Router)
 
@@ -22,6 +23,11 @@ export default new Router({
       path: '/home',
       name: 'home',
       component: home
+    },
+    {
+      path: '/data',
+      name: 'data',
+      component: data
     }
   ]
 })
