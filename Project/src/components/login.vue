@@ -23,7 +23,6 @@ export default {
   name: 'login',
   data() {
     return {
-      msg: 'Welcome to Your Vue.js application',
       username: '',
       password: '',
       feedback: {
@@ -43,31 +42,31 @@ export default {
         // if the username is only numbers and letters
         // else there are illegal characters
         if (username.length === 0) {
-          this.feedback.username = '';
+          this.feedback.username = ''
         } else if (username.length < 3 || username.length > 20) {
-          this.feedback.username = 'username must be between 3 and 20 characters';
+          this.feedback.username = 'username must be between 3 and 20 characters'
         } else if (username.match('^[0-9A-z]+$')) {
-          this.feedback.username = '';
+          this.feedback.username = ''
         } else {
-          this.feedback.username = 'username must only be digits and letters';
+          this.feedback.username = 'username must only be digits and letters'
         }
       },
       password() {
         // shorten our username variable for readability
-        const password = this.password;
+        const password = this.password
 
         // if the field is empty, clear the feedback
         // if the password is less than 6 or greater than 25, error
         // if the password is numbers, letters and some select special characters
         // else there are illegal characters
         if (password.length === 0) {
-          this.feedback.password = '';
+          this.feedback.password = ''
         } else if (password.length < 6 || password.length > 25) {
-          this.feedback.password = 'password must be between 6 and 25 characters';
+          this.feedback.password = 'password must be between 6 and 25 characters'
         } else if (password.match('^[0-9A-z@#$%*^!\-=&]+$')) {
-          this.feedback.password = '';
+          this.feedback.password = ''
         } else {
-          this.feedback.password = 'password must only be digits and letters';
+          this.feedback.password = 'password must only be digits and letters'
         }
       },
     };
@@ -75,7 +74,6 @@ export default {
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="stylus" scoped>
 #login
   display flex
