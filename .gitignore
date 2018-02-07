@@ -19,8 +19,18 @@
 
 #Project ignores
 
-#all the development code in the node_modules folder
+.DS_Store
 node_modules/
+/dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-#destination location for the compiled project
-dist/
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
