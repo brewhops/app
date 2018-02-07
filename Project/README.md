@@ -1,10 +1,21 @@
-# App
+# ninkasi-brewhops
 
-This is where the app for the project. All source code is written here.
+> A web app to allow ninkasi brewing to better track and manage brewery data
 
-## Structure
+## Build Setup
 
-* views: html templates and pages
-* styles: styling for the site
-* scripts: vue.js code and other javascript files
-* resources: images and other files that the project might need
+``` bash
+# install dependencies
+npm install
+
+# serve with hot reload at localhost:8080
+npm run dev
+
+# build for production with minification
+npm run build
+
+# build for production and view the bundle analyzer report
+npm run build --report
+```
+
+For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
