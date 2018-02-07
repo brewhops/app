@@ -56,12 +56,12 @@
              <button>Submit</button>
          </div>
      </div>
-      </div>
+    </div>
 </template>
 
 <script>
 export default {
-  name: 'login',
+  name: 'admin',
   data() {
     return {
       msg: ''
