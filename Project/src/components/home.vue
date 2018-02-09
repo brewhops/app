@@ -5,24 +5,7 @@
       <h2>Home</h2>
     </div>
     <div id="content">
-      <div id="dataEntry">
-        <h2>Data Entry</h2>
-        <input type="text" placeholder="Tank Number">
-        <input type="text" placeholder="Tank Status">
-        <input type="text" placeholder="Specific Gravity">
-        <div class="inline">
-          <input type="text" placeholder="pH">
-          <input type="text" placeholder="ABV">
-          <input type="text" placeholder="Temp">
-        </div>
-        <input type="text" placeholder="Volume">
-        <input type="text" placeholder="Generation">
-        <input type="datetime-local" placeholder="Time Measured">
-        <input type="text" placeholder="Brand ID">
-        <input type="text" placeholder="Batch Number">
-        <input type="text" placeholder="Action Needed">
-        <button>Submit</button>
-      </div>
+      <data-entry></data-entry>
       <div id="tankInfo">
         <h2>Tank Info</h2>
         <div id="tankContents">
@@ -49,8 +32,14 @@
 </template>
 
 <script>
+
+import DataEntry from './data-entry.vue'
+
 export default {
   name: 'home',
+  components: {
+    'data-entry': DataEntry
+  },
   data() {
     return {
       msg: '',
@@ -137,27 +126,6 @@ between(size1, size2)
     grid-template-columns 98vw
     grid-template-areas "entry" "info"
   justify-items center
-
-
-#dataEntry
-  grid-area entry
-  display flex
-  flex-direction column
-  align-items center
-  max-width 500px
-
-  // call the less than function
-  // this code will only apply to screen sizes smaller than a tablet
-  +less-than(tablet)
-    width 90vw
-    input
-      margin 2px
-    h2
-      margin 0
-
-  .inline
-    input
-    width 32%
 
 #tankInfo
   grid-area info
