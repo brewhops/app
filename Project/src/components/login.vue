@@ -1,28 +1,30 @@
 <template>
-    <div>
-        <div class="header">
-            <h2>Ninkasi Brew Hops</h2>
-        </div>
-        <div class="column-1">
-            <div id="login">
-                <img src="../assets/logo.png" class="logo-med">
-                <h2>Login</h2>
-                <input v-model.lazy="username" placeholder="username">
-                <p>{{ feedback.username }}</p>
-                <input v-model.lazy="password" placeholder="passwword">
-                <p>{{ feedback.password }}</p>
-                <router-link to="/home"><button>Submit</button></router-link>
-                <router-link to="/admin">Go to admin page</router-link>
-            </div>
-        </div>
-      </div>
+<div>
+  <div class="header">
+    <h2>Ninkasi Brew Hops</h2>
+  </div>
+  <div class="column-1">
+    <div id="login">
+      <img src="../assets/logo.png" class="logo-med">
+      <h2>Login</h2>
+      <input v-model.lazy="username" placeholder="username">
+      <p>{{ feedback.username }}</p>
+      <input v-model.lazy="password" placeholder="passwword">
+      <p>{{ feedback.password }}</p>
+      <router-link to="/home"><button>Submit</button> </router-link>
+      <router-link to="/admin">Go to admin page</router-link>
+    </div>
+  </div>
+</div>
 </template>
 
 <script>
-export default {
+export
+default {
   name: 'login',
   data() {
     return {
+      mobile: false,
       username: '',
       password: '',
       feedback: {
@@ -71,6 +73,11 @@ export default {
       },
     };
   },
+  beforeMount() {
+    if (/iPhone|iPad|iPod|Android|webOS|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
+      mobile = true
+    }
+  }
 };
 </script>
 
