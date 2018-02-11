@@ -1,21 +1,21 @@
-# Ninkasi BOMS
-The client side code for the Ninkasi Brewery Operations Management System (BOMS)
+# ninkasi-brewhops
 
-## Installation Instructions
-1. clone the repository
-1. yarn install
+> A web app to allow ninkasi brewing to better track and manage brewery data
 
-Then you are ready to go
+## Build Setup
 
-## Use Instructions
-This project makes use of Gulp v4.0 which is still under development. It has really nice features built in that make build pipelines quick and efficient.
+``` bash
+# install dependencies
+npm install
 
-This project should ultimately allow for configuration exclusively through the config.json, but for now, some basic knowledge of Gulp will make working with this structure and configuring it much easier.
+# serve with hot reload at localhost:8080
+npm run dev
 
-To see a list of all available tasks, type `gulp ---tasks`.
+# build for production with minification
+npm run build
 
-The ones that you should be calling are probably:
-* `gulp` - which builds a version of the site designed to work locally
-* `gulp prod` - which builds a production version of the site, ready for deployment
-* `gulp build` - builds without serving up the site
-* `gulp clean` - cleans out the files that Gulp builds
+# build for production and view the bundle analyzer report
+npm run build --report
+```
+
+For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
