@@ -4,6 +4,7 @@ import login from '@/components/login'
 import admin from '@/components/admin'
 import home from '@/components/home'
 import data from '@/components/data'
+import tankInfo from '@/components/tank-info'
 
 Vue.use(Router)
 
@@ -28,6 +29,11 @@ export default new Router({
       path: '/data',
       name: 'data',
       component: data
+    },
+    {
+      path: '/tank-info',
+      name: 'tank-info',
+      component: tankInfo
     }
   ]
 })
