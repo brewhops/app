@@ -78,7 +78,7 @@ default {
   beforeMount() {
     if (/iPhone|iPad|iPod|Android|webOS|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
       this.mobile = true
-      this.submitLink = '/tank-info'
+      this.submitLink = '/home-mobile'
     } else {
       this.submitLink = '/home'
     }
