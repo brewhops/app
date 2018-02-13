@@ -8,10 +8,10 @@
     <div id="data">
       <h2>Brand History</h2>
       <div id="charts">
-        <div id="tempChart"></div>
-        <div id="abvChart"></div>
-        <div id="sgChart"></div>
-        <div id="phChart"></div>
+        <temp-chart></temp-chart>
+        <abv-chart></abv-chart>
+        <sg-chart></sg-chart>
+        <ph-chart></ph-chart>
       </div>
     </div>
     <div id="tank">
@@ -70,65 +70,23 @@
 <script>
 
 import recipe from './recipe.vue'
+import tempChart from './charts/temp.vue'
+import abvChart from './charts/abv.vue'
+import sgChart from './charts/specificGravity.vue'
+import phChart from './charts/ph.vue'
 
-export default {
+export
+default {
   name: 'data',
   components: {
-    'recipe': recipe
+    'recipe': recipe,
+    'temp-chart': tempChart,
+    'abv-chart': abvChart,
+    'sg-chart': sgChart,
+    'ph-chart': phChart,
   },
   data() {
     return {
-      msg: '',
-      tanks: [
-        {
-          tankNumber: 13223431,
-          pressure: 15,
-          beerID: 12725,
-          temperature: 69,
-          batchNumber: 1357,
-          status: "cap"
-        },
-        {
-          tankNumber: 14321432,
-          pressure: 1,
-          beerID: 1257,
-          temperature: 69,
-          batchNumber: 13575,
-          status: "ok"
-        },
-        {
-          tankNumber: 15433,
-          pressure: 1,
-          beerID: 139739,
-          temperature: 69,
-          batchNumber: 1439,
-          status: "cool"
-        },
-        {
-          tankNumber: 14653873,
-          pressure: 1,
-          beerID: 137836,
-          temperature: 69,
-          batchNumber: 13468,
-          status: "ok"
-        },
-        {
-          tankNumber: 16438,
-          pressure: 1,
-          beerID: 17368,
-          temperature: 69,
-          batchNumber: 1384,
-          status: "crash"
-        },
-        {
-          tankNumber: 1384346,
-          pressure: 1,
-          beerID: 13687,
-          temperature: 69,
-          batchNumber: 157,
-          status: "ok"
-        }
-      ]
     };
   }
 };
