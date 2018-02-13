@@ -1,0 +1,51 @@
+<template>
+<div id="dataSubmission">
+  <div>
+    <h2>New Data Submitted</h2>
+    <table>
+      <tr>
+        <td>Volume</td>
+        <td>133.2</td>
+      </tr>
+      <tr>
+        <td>pH</td>
+        <td>4.3</td>
+      </tr>
+    </table>
+    <router-link to="/home"> <button type="button" name="button">Edit</button> </router-link>
+    <router-link to="/home"> <button type="button" name="button">OK</button> </router-link>
+  </div>
+</div>
+</template>
+
+<script>
+export default {
+  name: 'data-submission',
+  data() {
+    return {
+    };
+  }
+};
+</script>
+
+<style lang="stylus" scoped>
+@import '../styles/colors'
+@import '../styles/mixins'
+
+html
+  display flex
+
+#dataSubmission
+  Flex(center, center)
+  margin auto
+  text-align center
+  width 400px
+  height 100vh
+  padding 30px
+  table
+    margin 3vh auto
+    font-size 1.3em
+    td
+      padding 5px
+      color Teal
+</style>

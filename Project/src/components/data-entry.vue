@@ -15,7 +15,7 @@
   <input type="text" placeholder="Brand ID">
   <input type="text" placeholder="Batch Number">
   <input type="text" placeholder="Action Needed">
-  <button>Submit</button>
+  <router-link to="/data-submission"><button>Submit</button></router-link>
 </div>
 </template>
 
