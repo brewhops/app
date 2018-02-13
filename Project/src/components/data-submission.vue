@@ -13,7 +13,7 @@
       </tr>
     </table>
     <router-link to="/home"> <button type="button" name="button">Edit</button> </router-link>
-    <router-link to="/home"> <button type="button" name="button">OK</button> </router-link>
+    <router-link v-bind:to="doneLink"> <button type="button" name="button">OK</button> </router-link>
   </div>
 </div>
 </template>
@@ -23,7 +23,15 @@ export default {
   name: 'data-submission',
   data() {
     return {
+      doneLink: ''
     };
+  },
+  beforeMount() {
+    if (/iPhone|iPad|iPod|Android|webOS|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
+      this.doneLink = '/home-mobile'
+    } else {
+      this.doneLink = '/home'
+    }
   }
 };
 </script>
