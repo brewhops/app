@@ -31,23 +31,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-small = 320px;
-mobile = 480px;
-tablet = 768px;
-laptop = 1024px;
-desktop = 1280px;
-
-less-than(size)
-  @media screen and (max-width: size)
-    {block}
-
-greater-than(size)
-  @media screen and (min-width: size)
-    {block}
-
-between(size1, size2)
-  @media screen and (min-width: size1) and (max-width: size2)
-    {block}
+@import '../styles/breakpoints'
 
 #dataEntry
   grid-area entry
