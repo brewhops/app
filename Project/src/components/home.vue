@@ -6,21 +6,21 @@
     </div>
     <div id="content">
       <data-entry></data-entry>
-      <tank-info></tank-info>
+      <tank-monitoring></tank-monitoring>
     </div>
   </div>
 </template>
 
 <script>
 
-import DataEntry from './data-entry.vue'
-import TankInfo from './tank-info.vue'
+import dataEntry from './data-entry.vue'
+import tankMonitoring from './tank-monitoring.vue'
 
 export default {
   name: 'home',
   components: {
-    'data-entry': DataEntry,
-    'tank-info': TankInfo
+    'data-entry': dataEntry,
+    'tank-monitoring': tankMonitoring
   },
   data() {
     return {};

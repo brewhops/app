@@ -1,84 +1,92 @@
 <template>
-<div id="tankInfo">
-  <h2>Tank Info</h2>
-  <div id="tankContents">
-    <router-link to="/data" v-for="tank in tanks" :key="tank.tankNumber">
-      <table class="tank" v-bind:class="tank.status">
+<div>
+  <div class="header">
+    <router-link to="/home">home</router-link>
+    <h2>Tank Data</h2>
+  </div>
+  <div id="content">
+    <div id="data">
+      <h2>Brand History</h2>
+      <div id="charts">
+        <temp-chart></temp-chart>
+        <abv-chart></abv-chart>
+        <sg-chart></sg-chart>
+        <ph-chart></ph-chart>
+      </div>
+    </div>
+    <div id="tank">
+      <h2>Tank ID</h2>
+      <h3>8439-4389</h3>
+      <table>
         <tr>
-          <td>{{tank.tankNumber}}</td>
-          <td>{{tank.pressure}}</td>
+          <td>Status</td>
+          <td>OK</td>
         </tr>
         <tr>
-          <td>{{tank.beerID}}</td>
-          <td>{{tank.temperature}}</td>
+          <td>Brand ID</td>
+          <td>Pacific Rain</td>
         </tr>
         <tr>
-          <td>{{tank.batchNumber}}</td>
-          <td>{{tank.status}}</td>
+          <td>Batch Number</td>
+          <td>3289-2389</td>
+        </tr>
+        <tr>
+          <td>Generation</td>
+          <td>3</td>
+        </tr>
+        <tr>
+          <td>Volume</td>
+          <td>182.3</td>
+        </tr>
+        <tr>
+          <td>Temperature</td>
+          <td>70º F</td>
+        </tr>
+        <tr>
+          <td>Specific Gravity</td>
+          <td>3.4</td>
+        </tr>
+        <tr>
+          <td>pH</td>
+          <td>4.4</td>
+        </tr>
+        <tr>
+          <td>ABV</td>
+          <td>8%</td>
+        </tr>
+        <tr>
+          <td>Time Last Updated</td>
+          <td>2017-18-02 14:24</td>
         </tr>
       </table>
-    </router-link>
+      <button>I'm On It</button>
+      <router-link to="/home"><button>Add Data</button></router-link>
+    </div>
+    <recipe></recipe>
   </div>
 </div>
 </template>
 
 <script>
 
-export default {
+import recipe from './recipe.vue'
+import tempChart from './charts/temp.vue'
+import abvChart from './charts/abv.vue'
+import sgChart from './charts/specificGravity.vue'
+import phChart from './charts/ph.vue'
+
+export
+default {
   name: 'tank-info',
+  components: {
+    'recipe': recipe,
+    'temp-chart': tempChart,
+    'abv-chart': abvChart,
+    'sg-chart': sgChart,
+    'ph-chart': phChart,
+  },
   data() {
     return {
-      msg: '',
-      tanks: [
-        {
-          tankNumber: 13223431,
-          pressure: 15,
-          beerID: 12725,
-          temperature: 69,
-          batchNumber: 1357,
-          status: "cap"
-        },
-        {
-          tankNumber: 14321432,
-          pressure: 1,
-          beerID: 1257,
-          temperature: 69,
-          batchNumber: 13575,
-          status: "ok"
-        },
-        {
-          tankNumber: 15433,
-          pressure: 1,
-          beerID: 139739,
-          temperature: 69,
-          batchNumber: 1439,
-          status: "cool"
-        },
-        {
-          tankNumber: 14653873,
-          pressure: 1,
-          beerID: 137836,
-          temperature: 69,
-          batchNumber: 13468,
-          status: "ok"
-        },
-        {
-          tankNumber: 16438,
-          pressure: 1,
-          beerID: 17368,
-          temperature: 69,
-          batchNumber: 1384,
-          status: "crash"
-        },
-        {
-          tankNumber: 1384346,
-          pressure: 1,
-          beerID: 13687,
-          temperature: 69,
-          batchNumber: 157,
-          status: "ok"
-        }
-      ]
     };
   }
 };
@@ -90,44 +98,42 @@ export default {
 
 #content
   display grid
-  grid-template-columns 1fr 1fr
-  grid-template-areas "entry info"
-  +less-than(laptop)
-    grid-template-columns 98vw
-    grid-template-areas "entry" "info"
-  justify-items center
+  grid-template-columns auto 400px
 
-#tankInfo
-  grid-area info
+  grid-template-areas "data tank" "data recipe"
+  width 100vw
+
+  +less-than(tablet)
+    align-items flex-start
+
+  +less-than(mobile)
+    grid-template-columns 98vw
+    grid-template-areas "tank" "recipe"
+
+#data
+  +less-than(mobile)
+    display none
+  grid-area data
+  #charts
+    display grid
+    grid-template-columns repeat(2, 30vw)
+    +less-than(tablet)
+      grid-template-columns 30vw
   h2
     text-align center
-  #tankContents
-    height 80vh
-    overflow scroll
-    padding 0 10px
-    display grid
-    grid-template-columns repeat(3, 200px)
-    +less-than(tablet)
-      grid-template-columns repeat(2, 200px)
-    grid-gap 10px
-    color white
-    font-weight 100
-    a
-      text-decoration none
-      color white
-    .tank
-      background Teal
-      width 100%
-      td:nth-child(2)
-          text-align right
-      td
-          padding 5px
-    .cap
-        background Orange
-    .cool
-        background Brown
-    .crash
-        background Red
 
 
+#recipe, #tank
+  text-align center
+  table
+    text-align left
+    margin auto
+  h2, h3, h4
+    text-align center
+
+#tank
+  grid-area tank
+
+#recipe
+  grid-area recipe
 </style>

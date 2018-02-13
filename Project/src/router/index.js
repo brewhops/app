@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import login from '@/components/login'
 import admin from '@/components/admin'
 import home from '@/components/home'
-import data from '@/components/data'
+import tankMonitoring from '@/components/tank-monitoring'
 import tankInfo from '@/components/tank-info'
 import homeMobile from '@/components/home-mobile'
 import dataEntry from '@/components/data-entry'
@@ -29,9 +29,9 @@ export default new Router({
       component: home
     },
     {
-      path: '/data',
-      name: 'data',
-      component: data
+      path: '/tank-monitoring',
+      name: 'tank-monitoring',
+      component: tankMonitoring
     },
     {
       path: '/tank-info',
