@@ -60,7 +60,7 @@
         </tr>
       </table>
       <button>I'm On It</button>
-      <router-link to="/home"><button>Add Data</button></router-link>
+      <router-link v-bind:to="doneLink"> <button type="button" name="button">Add Data</button> </router-link>
     </div>
     <recipe></recipe>
   </div>
@@ -87,7 +87,15 @@ default {
   },
   data() {
     return {
+      doneLink: ''
     };
+  },
+  beforeMount() {
+    if (/iPhone|iPad|iPod|Android|webOS|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
+      this.doneLink = '/data-entry'
+    } else {
+      this.doneLink = '/home'
+    }
   }
 };
 </script>
