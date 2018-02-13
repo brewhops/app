@@ -184,4 +184,8 @@ input
   text-align center
 
 
+//************** tables *************//
+table
+  margin auto
+
 </style>
