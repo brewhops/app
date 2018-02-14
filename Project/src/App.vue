@@ -28,19 +28,20 @@ html, body
 h1, h2, h3, h4, h5, h6
   color Teal
   font-weight bold
+  margin 0
 
 h1
   font-size 2em
-  padding 20px
+  padding 2vh
 h2
   font-size 1.8em
-  padding 15px
+  padding 2vh
 h3
   font-size 1.4em
-  padding 10px
+  padding 2vh
 h4
   font-size 1.2em
-  padding 5px
+  padding 1vh
 
 #app
   font-family 'Avenir', Helvetica, Arial, sans-serif
