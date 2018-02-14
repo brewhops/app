@@ -88,30 +88,27 @@ export default {
 @import '../styles/breakpoints'
 
 
-#content
-  display grid
-  grid-template-columns 1fr 1fr
-  grid-template-areas "entry info"
-  +less-than(laptop)
-    grid-template-columns 98vw
-    grid-template-areas "entry" "info"
-  justify-items center
-
 #tankInfo
   grid-area info
   h2
     text-align center
   #tankContents
-    height 80vh
+    max-height 80vh
     overflow scroll
-    padding 0 10px
     display grid
-    grid-template-columns repeat(3, 200px)
-    +less-than(tablet)
-      grid-template-columns repeat(2, 200px)
+    justify-content center
     grid-gap 10px
     color white
     font-weight 100
+
+    +greater-than(desktop)
+      grid-template-columns repeat(4, 170px)
+
+    +between(laptop, desktop)
+      grid-template-columns repeat(3, 150px)
+
+    +less-than(laptop)
+      grid-template-columns repeat(2, 150px)
     a
       text-decoration none
       color white

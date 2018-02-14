@@ -34,9 +34,11 @@ export default {
 
 #content
   display grid
+  +greater-than(desktop)
+    grid-template-columns 1fr 2fr
   grid-template-columns 1fr 1fr
   grid-template-areas "entry info"
-  +less-than(laptop)
+  +less-than(tablet)
     grid-template-columns 98vw
     grid-template-areas "entry" "info"
   justify-items center
