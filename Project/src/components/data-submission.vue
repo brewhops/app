@@ -47,9 +47,8 @@ html
   Flex(center, center)
   margin auto
   text-align center
-  width 400px
+  max-width 400px
   height 100vh
-  padding 30px
   table
     margin 3vh auto
     font-size 1.3em

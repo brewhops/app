@@ -3,14 +3,14 @@
   <h2>Data Entry</h2>
   <input type="text" placeholder="Tank Number">
   <input type="text" placeholder="Tank Status">
-  <input type="text" placeholder="Specific Gravity">
+  <input type="number" placeholder="Specific Gravity">
   <div class="inline">
-    <input type="text" placeholder="pH">
-    <input type="text" placeholder="ABV">
-    <input type="text" placeholder="Temp">
+    <input type="number" placeholder="pH">
+    <input type="number" placeholder="ABV">
+    <input type="number" placeholder="Temp">
   </div>
-  <input type="text" placeholder="Volume">
-  <input type="text" placeholder="Generation">
+  <input type="number" placeholder="Volume">
+  <input type="number" placeholder="Generation">
   <input type="datetime-local" placeholder="Time Measured">
   <input type="text" placeholder="Brand ID">
   <input type="text" placeholder="Batch Number">
