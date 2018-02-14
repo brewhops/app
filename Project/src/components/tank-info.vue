@@ -1,7 +1,7 @@
 <template>
 <div>
   <div class="header">
-    <router-link to="/home">home</router-link>
+    <router-link v-bind:to="home">home</router-link>
     <h2>Tank Data</h2>
   </div>
   <div id="content">
@@ -60,9 +60,10 @@
         </tr>
       </table>
       <button>I'm On It</button>
-      <router-link v-bind:to="doneLink"> <button type="button" name="button">Add Data</button> </router-link>
+      <router-link v-bind:to="doneLink"><button type="button" name="button">Add Data</button> </router-link>
+      <router-link to="/recipe" v-if="mobile"><button type="button" name="button">Recipe</button></router-link>
     </div>
-    <recipe></recipe>
+    <recipe v-if="!mobile"></recipe>
   </div>
 </div>
 </template>
@@ -87,14 +88,19 @@ default {
   },
   data() {
     return {
-      doneLink: ''
+      doneLink: '',
+      home: '',
+      mobile: false
     };
   },
   beforeMount() {
     if (/iPhone|iPad|iPod|Android|webOS|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
+      this.mobile = true
       this.doneLink = '/data-entry'
+      this.home = '/home-mobile'
     } else {
       this.doneLink = '/home'
+      this.home = '/home'
     }
   }
 };
@@ -126,22 +132,17 @@ default {
     display grid
     grid-template-columns repeat(2, 30vw)
     +less-than(tablet)
-      grid-template-columns 30vw
+      grid-template-columns auto
   h2
     text-align center
 
 
-#recipe, #tank
+#tank
   text-align center
   table
     text-align left
     margin auto
   h2, h3, h4
     text-align center
-
-#tank
   grid-area tank
-
-#recipe
-  grid-area recipe
 </style>

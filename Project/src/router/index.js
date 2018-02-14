@@ -8,6 +8,7 @@ import tankInfo from '@/components/tank-info'
 import homeMobile from '@/components/home-mobile'
 import dataEntry from '@/components/data-entry'
 import dataSubmission from '@/components/data-submission'
+import recipe from '@/components/recipe'
 
 Vue.use(Router)
 
@@ -52,6 +53,11 @@ export default new Router({
       path: '/data-submission',
       name: 'data-submission',
       component: dataSubmission
+    },
+    {
+      path: '/recipe',
+      name: 'recipe',
+      component: recipe
     }
   ]
 })
