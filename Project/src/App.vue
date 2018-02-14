@@ -12,63 +12,9 @@ export default {
 
 <style lang="stylus">
 
-// Base colors
-Teal = #00aaa6
-LightTeal = #bce4e3
-Black = #231f20
-
-// Accent colors
-Green = #8dc63f
-Pink = #f6a2a8
-Red = #ee3124
-Orange = #f89728
-Brown = #572700
-
-// Other color related sections
-// for consistent drop shadows for buttons and menus
-Shadow = 0px 3px 6px rgba(0,0,0,0.2)
-
-Flex(vertical, horizontal)
-  display flex
-  align-items vertical
-  justify-content horizontal
-
-BackgroundColorTransition(Action, TransitionTime, StartColor, EndColor)
-  background StartColor
-  transition background transitionTime ease
-  //sets the following code to aply on on the action (hover, focus, etc.)
-  &:{Action}
-    background EndColor
-    transition background TransitionTime ease
-
-Width(Min, Mid, Max)
-  min-width Min
-  width Mid
-  max-width Max
-
-Height(Min, Mid, Max)
-  min-height Min
-  height Mid
-  max-height Max
-
-small = 320px;
-mobile = 480px;
-tablet = 768px;
-laptop = 1024px;
-desktop = 1280px;
-
-less-than(size)
-  @media screen and (max-width: size)
-    {block}
-
-greater-than(size)
-  @media screen and (min-width: size)
-    {block}
-
-between(size1, size2)
-  @media screen and (min-width: size1) and (max-width: size2)
-    {block}
-
+@import './styles/colors'
+@import './styles/mixins'
+@import './styles/breakpoints'
 
 //************* globals *************//
 html, body
@@ -82,19 +28,20 @@ html, body
 h1, h2, h3, h4, h5, h6
   color Teal
   font-weight bold
+  margin 0
 
 h1
   font-size 2em
-  padding 20px
+  padding 2vh
 h2
   font-size 1.8em
-  padding 15px
+  padding 2vh
 h3
   font-size 1.4em
-  padding 10px
+  padding 2vh
 h4
   font-size 1.2em
-  padding 5px
+  padding 1vh
 
 #app
   font-family 'Avenir', Helvetica, Arial, sans-serif
@@ -152,7 +99,7 @@ input
   box-sizing border-box
   font-size 1em
   display block
-  margin 10px 0
+  margin 1vh 0
   width 100%
   color Teal
   font-weight bold
@@ -183,5 +130,9 @@ input
   padding 20px
   text-align center
 
+
+//************** tables *************//
+table
+  margin auto
 
 </style>

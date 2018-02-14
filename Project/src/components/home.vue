@@ -6,21 +6,21 @@
     </div>
     <div id="content">
       <data-entry></data-entry>
-      <tank-info></tank-info>
+      <tank-monitoring></tank-monitoring>
     </div>
   </div>
 </template>
 
 <script>
 
-import DataEntry from './data-entry.vue'
-import TankInfo from './tank-info.vue'
+import dataEntry from './data-entry.vue'
+import tankMonitoring from './tank-monitoring.vue'
 
 export default {
   name: 'home',
   components: {
-    'data-entry': DataEntry,
-    'tank-info': TankInfo
+    'data-entry': dataEntry,
+    'tank-monitoring': tankMonitoring
   },
   data() {
     return {};
@@ -29,30 +29,16 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-small = 320px;
-mobile = 480px;
-tablet = 768px;
-laptop = 1024px;
-desktop = 1280px;
-
-less-than(size)
-  @media screen and (max-width: size)
-    {block}
-
-greater-than(size)
-  @media screen and (min-width: size)
-    {block}
-
-between(size1, size2)
-  @media screen and (min-width: size1) and (max-width: size2)
-    {block}
+@import '../styles/breakpoints'
 
 
 #content
   display grid
+  +greater-than(desktop)
+    grid-template-columns 1fr 2fr
   grid-template-columns 1fr 1fr
   grid-template-areas "entry info"
-  +less-than(laptop)
+  +less-than(tablet)
     grid-template-columns 98vw
     grid-template-areas "entry" "info"
   justify-items center
