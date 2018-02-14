@@ -38,7 +38,12 @@ export default {
   display flex
   flex-direction column
   align-items center
+  width 95vw
+  margin auto
   max-width 500px
+  h2
+    padding 2vh
+    margin 0
   .inline
     input
       width 32%

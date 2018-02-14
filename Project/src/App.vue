@@ -98,7 +98,7 @@ input
   box-sizing border-box
   font-size 1em
   display block
-  margin 10px 0
+  margin 1vh 0
   width 100%
   color Teal
   font-weight bold
