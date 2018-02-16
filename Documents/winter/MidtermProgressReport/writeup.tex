@@ -75,9 +75,82 @@ Provide a recap of the project purposes and goals. \\
 
 \section{Connor Christensen}
 \subsection{Current position in the project timeline}
+
+The app is currently in the final versions of alpha.
+The user interface is almost done, but will not be fully functional until data can be retrieved from the database and injected into the site.
+
+
+Our app is split into three different components, with each member of the team working on their own component.
+There is the front end, back end, and the JavaScript framework between them.
+
+
+For the front-end, the app is currently utilizing a minimal level of Vue.
+js to detect whether it is running on a mobile device, and adapts the content accordingly.
+If Vue detects that it is running on a mobile device, it takes distinct components from single pages and splits them into separate pages, so everything can be accessed on the mobile device without the need to scroll.
+
+
+Vue has the ability to define components, which are fully encapsulated html and css elements with an associated instance of a Vue object.
+These components can be combined together into a single page.
+For example, the homepage for the desktop contains both the data entry and tank monitoring components.
+When on a mobile device, both of these components can be accessed as separate pages.
+
+
+Routing is set up on the project, which allows for a pseudo-multi-page setup.
+There is never any redirecting to a different URL, which is how the mobile and desktop versions work in the same space.
+Each component is registered for its own route, while also serving as components in the desktop version of the pages.
+
+
+The Vue components are compiled down into their respective html, css and javascript files with the help of webpack.
+Webpack provides a method to live render our site on our own machines through a port on localhost, while also giving the option of creating highly minified files ready for deployment.
+
+
+Given the highly modular nature of this project, and the simple requirements for buttons, input fields and some data display, all the styling was written manually.
+This gave the most amount of control to be able to fit exactly what had been decided in the design stage with the client.
+The css is written in stylus, which is a css preprocessor that has some functionality as well as aesthetic benefits for the language itself.
+
+
+
 \subsection{What is left to do}
+
+
+The user interface is in its final stages, so the team will focus most of its energy on finishing the tasks needed to be able to reach a minimum viable product.
+Once the minimum viable product is reached, then the team can focus on stretch goals.
+
+A majority of the work needs to be done on the back and middle end sections.
+
+
 \subsection{Problems encountered and solutions to those problems}
 \subsection{Particularly interesting pieces of code}
+
+This is the borderline crazy single if statement that checks to see whether the device running the site is any form of mobile device. Inside this if statement is the processes of setting routes on links in the page and switching a boolean to true that determines what little components are shown or hidden.
+
+if (/iPhone|iPad|iPod|Android|webOS|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {}
+
+Some code that is particularly impressive in this project is some custom code that was written to improve the ease of use with which to use media queries in css. Media queries are used to define specific rules that should be taking place only under certain circumstances. They are most commonly used as if statements with regards to screen size.
+
+After tinkering with breakpoints, using the traditional media screen definition is consistently confusing and the sizes at which the breakpoints are enacted tend to happen at fairly random screen sizes. The breakpoints stylus file has some breakpoint variables defined at common screen sizes, and there are three mixins defined that make css breakpoint rules easily readable.
+
+small = 320px;
+mobile = 480px;
+tablet = 768px;
+laptop = 1024px;
+desktop = 1280px;
+
+less-than(size)
+  @media screen and (max-width: size)
+    {block}
+
+greater-than(size)
+  @media screen and (min-width: size)
+    {block}
+
+between(min, max)
+  @media screen and (min-width: min) and (max-width: max)
+    {block}
+
+Up next is some stylus code for defining the number of boxes visible in the tank monitoring page at a variety of page sizes. Using the mixins and variables defined above, it is easy to see exactly which lines are being used by these breakpoints, at what size the breakpoints begin working, and in which direction the rules apply.
+
+
 \subsection{Images of the product}
 \section{Lily Shellhammer}
 \subsection{Current position in the project timeline}
