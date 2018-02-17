@@ -233,21 +233,21 @@ Using the mixins and variables defined above, it is easy to see exactly which li
 
 \centerline{\includegraphics[height=5cm]{screenshots/stylus.png}}
 
-\section{Lily} 
+\section{Lily}
 \subsection{Describe where you are currently on the project}
 At the start of this term we had our technologies picked out, but hadn’t started on any coding. Connor had mock-ups of the UI design and was ready to launch into that. At this point in the term, our app looks almost identical to our proposed final product, but lacks the data entry functionality. Clicking on navigation buttons leads you to different pages that display the login, tank statuses, data entry form, and data visualizations. The tank status page and visualizations are filled with dummy values. Now that Connor’s work on the front end design is finished, we are working toward finishing building our database, connecting it to our web app via REST API, and validating user input. Billy has completed setting up our server and building the login information part of the database, and the next step is to pull information about users to the login page to validate login credentials. My role in this project is to develop the middle stack, using Vue.js to connect Connor’s website skeleton with Billy’s database. I have worked on creating the main Vue object for our javascript and binding user input to variables. I use javascript to check input fields on the client’s side before (once this functionality is developed) packaging up those variables in a json object and submitting them into the database. My progress so far is learning about Vue and building Vue components, as well as creating the data variables and functions that validate user input.
 
 \subsection{Describe what you have left to do}
-My next steps include connecting the database with the front end. I need to begin pulling login information from the database using a REST API. The REST API queries the database and generates a json object. I will validate the user’s login information against the values in those json objects from our database. Then I will use the same system to display tank information and allow the user to submit data about each tank, updating the tank information page and displaying any alerts that need to appear. In order to complete these tasks, I need to learn more about how vue components interact with one another. I also need to learn how to build a json object using vue variables. In order to test how the page runs with many tanks (as we currently have dummy data for only 6) I will write a script that creates 100 json objects filled with random data. Then we can check how the app handles displaying lots of information that it has to pull from the database in that moment.  
+My next steps include connecting the database with the front end. I need to begin pulling login information from the database using a REST API. The REST API queries the database and generates a json object. I will validate the user’s login information against the values in those json objects from our database. Then I will use the same system to display tank information and allow the user to submit data about each tank, updating the tank information page and displaying any alerts that need to appear. In order to complete these tasks, I need to learn more about how vue components interact with one another. I also need to learn how to build a json object using vue variables. In order to test how the page runs with many tanks (as we currently have dummy data for only 6) I will write a script that creates 100 json objects filled with random data. Then we can check how the app handles displaying lots of information that it has to pull from the database in that moment.
 
 
 \subsection{Describe any problems that have impeded your progress, with any solutions}
-For the first two weeks of the term I had a really difficult time getting my environment set up with the frameworks needed to run our web app locally. I eventually had to factory reset my computer because there were so many issues. That process, and the process of setting up the environment from scratch took a lot of time and delayed my coding. 
+For the first two weeks of the term I had a really difficult time getting my environment set up with the frameworks needed to run our web app locally. I eventually had to factory reset my computer because there were so many issues. That process, and the process of setting up the environment from scratch took a lot of time and delayed my coding.
 
-Connor developed routing through Vue that, based on screen size, displays different vue object components. On mobile, only tank status or the form page are displayed. On a desktop, both the tank status and form page are displayed side by side. Desktop computers also display charts, generated using C3, displaying data over time. The problem Connor has encountered is that using this method of routing does not allow for an easy way of changing the header. Either all pages have the same header, or the child vue component has to pass information to the parent (called emissions) vue component about what page it is on and what size screen, that way the correct header is displayed. Connor and I are brainstorming ways of fixing this problem. Our current idea is to have the header have all types of header information that get triggered by an if statement based on child emissions about page content and screen size. It isn’t very elegant, but it would fix the problem of incorrect headers. 
+Connor developed routing through Vue that, based on screen size, displays different vue object components. On mobile, only tank status or the form page are displayed. On a desktop, both the tank status and form page are displayed side by side. Desktop computers also display charts, generated using C3, displaying data over time. The problem Connor has encountered is that using this method of routing does not allow for an easy way of changing the header. Either all pages have the same header, or the child vue component has to pass information to the parent (called emissions) vue component about what page it is on and what size screen, that way the correct header is displayed. Connor and I are brainstorming ways of fixing this problem. Our current idea is to have the header have all types of header information that get triggered by an if statement based on child emissions about page content and screen size. It isn’t very elegant, but it would fix the problem of incorrect headers.
 
 \subsection{Include particularly interesting pieces of code}
-Vue is an easy-to-use object oriented javascript language. You create one Vue object for the whole app and components of the vue app contain different pages information. For example, if you have a form, you can save the templated html with the javascript functionality in a component and display that component whenever the user navigates to the form page. In our case, this is useful because we want to display multiple components on desktops, but only one component on smaller mobile devices. 
+Vue is an easy-to-use object oriented javascript language. You create one Vue object for the whole app and components of the vue app contain different pages information. For example, if you have a form, you can save the templated html with the javascript functionality in a component and display that component whenever the user navigates to the form page. In our case, this is useful because we want to display multiple components on desktops, but only one component on smaller mobile devices.
 My main job so far has been creating a Vue object and client-side form validation functionality. Here is an example of a function validating temperature input:
 
 
@@ -256,10 +256,46 @@ My main job so far has been creating a Vue object and client-side form validatio
 The Vue object has two-way-binding which means whenever a data variable is changed (either in the object or by the user) it is updated in both places. This makes client-side form verification easy because we can call the “watch” function whenever a variable is changed by the user. This means instant error checking before we send any variables to the database. We can check for bad integers, values out of the acceptable range, and empty input fields. Because we can accept values as strings and then later convert them to numbers, users can type in values for every field and not rely on clunky numeric input mechanisms.
 
 \section{William Buffum}
+
+Our team is developing a data management system for Ninkasi Brewing Co.
+Ninkasi is a Eugene based brewery that has seen incredible growth over the last ten years.
+This significant increase in production came with a massive increase in data.
+Currently, the brewing team emails a master Excel spreadsheet to each brewer.
+Not only is this system inefficient, it increases error and does not allow for concurrent use.
+These are serious concerns that our client, Daniel Sharp, hopes we can fix with our solution
+
 \subsection{Current position in the project timeline}
+Currently, I am working on creating the database tables and setting up the referential integrity between each relation.
+So far, I’ve created the `Employees` and `Actions` tables in the database.
+I’ve also exposed several routes to the `Employees` table so that frontend applications can hit the API and send or receive data from this table.
+Beyond this, I’ve also successfully deployed the application to our hosting service, Heroku, and set up a continuous integration pipeline that’ll auto-deploy changes to the server-side codebase when changes are merged into the master branch on GitHub.
+With this setup, Lily and Connor will not have to set up Postgres on their local machines to run the server, instead, they can hit the Heroku URL and test their frontend with that.
+
 \subsection{What is left to do}
+There is still a good amount of work left to complete on the backend application.
+There are a few more relations that I need to create in the database.
+Each of these will also require another set of routes on the project URL to adhere to our REST design.
+After I have a completed minimal viable backend, I’ll go through and refactor some of the codebase to be more clean and secure.
+My goal, is to complete these base items in the next month, and have much of the refactoring completed before Spring term.
+
 \subsection{Problems encountered and solutions to those problems}
+The biggest problem I’ve had this term is learning the technologies we’re using in the backend.
+I’ve never had exposure to ruby on rails or to deployment pipelines.
+The hardest part of using these technologies has been getting up-to-speed on their basic functionality.
+It is easy to deploy a basic application to a Heroku server, but customization a deployment pipeline to your needs takes a more advantaged understanding of the platform.
+The rails framework provides a lot of generators that create boilerplate code for your application.
+While this allows for rapid prototyping, it also means there is a significant amount of code in your program that are not written by you.
+Until you have a lot of experience with Rails, it can be difficult to understand how these generated files merge with your custom code.
+
 \subsection{Particularly interesting pieces of code}
+Rails provides a nice convention for creating routes where developers may type:
+
+\centerline{\includegraphics[height=5cm]{screenshots/routesrb.png}}
+
+and it configures the necessary components to expose a REST API on that table.
+So, this will create the necessary functionality to handle GET, POST, PUT, PATCH, and DELETE http operations.
+
+\centerline{\includegraphics[height=5cm]{screenshots/showroutes.png}}
 
 \section{Conclusion}
 
