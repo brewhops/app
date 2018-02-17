@@ -262,7 +262,7 @@ Ninkasi is a Eugene based brewery that has seen incredible growth over the last 
 This significant increase in production came with a massive increase in data.
 Currently, the brewing team emails a master Excel spreadsheet to each brewer.
 Not only is this system inefficient, it increases error and does not allow for concurrent use.
-These are serious concerns that our client, Daniel Sharp, hopes we can fix with our solution
+These are serious concerns that our client, Daniel Sharp, hopes we can fix with our solution.
 
 \subsection{Current position in the project timeline}
 Currently, I am working on creating the database tables and setting up the referential integrity between each relation.
@@ -270,6 +270,13 @@ So far, I’ve created the `Employees` and `Actions` tables in the database.
 I’ve also exposed several routes to the `Employees` table so that frontend applications can hit the API and send or receive data from this table.
 Beyond this, I’ve also successfully deployed the application to our hosting service, Heroku, and set up a continuous integration pipeline that’ll auto-deploy changes to the server-side codebase when changes are merged into the master branch on GitHub.
 With this setup, Lily and Connor will not have to set up Postgres on their local machines to run the server, instead, they can hit the Heroku URL and test their frontend with that.
+We structured our project to be comprised of two separate projects.
+The frontend of our application is a separate git repository than the backend.
+We structured it this way to allow parallel development between the front and backend of the project.
+As we develop, Lily and Connor can work with a backend that is not up-to-date and as long as I do not change the structure of the data returned, it will not affect them.
+For our project, we are transferring data from the database to the user interface using JSON.
+JSON stands for JavaScript Object Notation.
+Essentially, it is a standardized data structure to allow consistent data communication between the front and backend of the project.
 
 \subsection{What is left to do}
 There is still a good amount of work left to complete on the backend application.
