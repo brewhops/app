@@ -268,6 +268,9 @@ These are serious concerns that our client, Daniel Sharp, hopes we can fix with 
 Currently, I am working on creating the database tables and setting up the referential integrity between each relation.
 So far, I’ve created the `Employees` and `Actions` tables in the database.
 I’ve also exposed several routes to the `Employees` table so that frontend applications can hit the API and send or receive data from this table.
+These endpoints are a major component in the project.
+With them, I am able to validate data sent to the database and query the database for specific types of information based on the type of http request sent to the server.
+
 Beyond this, I’ve also successfully deployed the application to our hosting service, Heroku, and set up a continuous integration pipeline that’ll auto-deploy changes to the server-side codebase when changes are merged into the master branch on GitHub.
 With this setup, Lily and Connor will not have to set up Postgres on their local machines to run the server, instead, they can hit the Heroku URL and test their frontend with that.
 We structured our project to be comprised of two separate projects.
@@ -290,7 +293,7 @@ If I can complete these goals ahead of time, I would like to build a more comple
 Also, if I finish my initial goals early, I need to go back and write tests for a lot of the code I've contributed.
 A major component of this project is data integrity.
 Lily is handling data validation on the frontend, but I will need to ensure data integrity and security from the backend.
-Luckily, there are many ruby gems built for authentication and data validation that should make this piece relatively straight forward. 
+Luckily, there are many ruby gems built for authentication and data validation that should make this piece relatively straight forward.
 
 \subsection{Problems encountered and solutions to those problems}
 The biggest problem I’ve had this term is learning the technologies we’re using in the backend.
