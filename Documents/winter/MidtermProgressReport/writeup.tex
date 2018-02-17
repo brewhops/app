@@ -154,7 +154,7 @@ Overall, progress has been slow but steady.
 The user interface is mostly complete.
 At this time, we are working towards connecting that graphic user interface to the backend via VueJS.
 We also have our current backend deployed on a Heroku server where Lily can access it from her Vue controllers.
-Finally, the backend is currently running one completed route, with all the necessary http operations to be considered RESTful. 
+Finally, the backend is currently running one completed route, with all the necessary http operations to be considered RESTful.
 
 \section{Connor Christensen}
 \subsection{Current position in the project timeline}
@@ -267,7 +267,7 @@ Vue is an easy-to-use object oriented javascript language. You create one Vue ob
 My main job so far has been creating a Vue object and client-side form validation functionality. Here is an example of a function validating temperature input:
 
 
-\centerline{\includegraphics[height=5cm]{screenshots/vuecode.png}}
+\centerline{\includegraphics[height=7cm]{screenshots/vuecode.png}}
 
 The Vue object has two-way-binding which means whenever a data variable is changed (either in the object or by the user) it is updated in both places. This makes client-side form verification easy because we can call the “watch” function whenever a variable is changed by the user. This means instant error checking before we send any variables to the database. We can check for bad integers, values out of the acceptable range, and empty input fields. Because we can accept values as strings and then later convert them to numbers, users can type in values for every field and not rely on clunky numeric input mechanisms.
 
@@ -316,12 +316,12 @@ Until you have a lot of experience with Rails, it can be difficult to understand
 \subsection{Particularly interesting pieces of code}
 Rails provides a nice convention for creating routes where developers may type:
 
-\centerline{\includegraphics[height=5cm]{screenshots/routesrb.png}}
+\centerline{\includegraphics[height=2cm]{screenshots/routesrb.png}}
 
 and it configures the necessary components to expose a REST API on that table.
 So, this will create the necessary functionality to handle GET, POST, PUT, PATCH, and DELETE http operations.
 
-\centerline{\includegraphics[height=5cm]{screenshots/showroutes.png}}
+\centerline{\includegraphics[height=2cm]{screenshots/showroutes.png}}
 
 \section{Conclusion}
 Our project's goal is to create a web app that bridges the gap between brewer and database.
