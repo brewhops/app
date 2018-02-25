@@ -12,6 +12,10 @@
       <input v-model.lazy="password" placeholder="password">
       <span>{{ feedback.password }}</span>
       <router-link v-bind:to="submitLink"><button>Submit</button> </router-link>
+      <div v-for="item in database">
+        <li>{{ item.first_name }}</li>
+      </div>
+      {{ debugging }}
     </div>
   </div>
 </div>
@@ -23,6 +27,8 @@ default {
   name: 'login',
   data() {
     return {
+      debugging: 'Debugging Flag: No issues to report.',
+      database: {},
       mobile: false,
       username: '',
       password: '',
@@ -82,6 +88,14 @@ default {
     } else {
       this.submitLink = '/home'
     }
+    //get users from heroku
+    this.$http.get('https://ninkasi-server.herokuapp.com/employees').then(response => {
+      // get body data
+      this.database = response.body;
+    }, response => {
+      this.debugging = 'Debugging Flag: Response error, cant access employees page';
+      console.log(response);
+    });
   }
 };
 </script>
