@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="header">
+    <div class="header" v-if="!mobile">
        <router-link to="/">Logout </router-link>
       <h2>Home</h2>
     </div>
@@ -23,7 +23,14 @@ export default {
     'tank-monitoring': tankMonitoring
   },
   data() {
-    return {};
+    return {
+      mobile: false
+    };
+  },
+  beforeMount() {
+    if (/iPhone|iPad|iPod|Android|webOS|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
+      this.mobile = true
+    }
   }
 };
 </script>
