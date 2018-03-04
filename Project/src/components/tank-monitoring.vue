@@ -111,7 +111,6 @@ export default {
     justify-content center
     grid-gap 10px
     color white
-    font-weight 100
 
     +greater-than(desktop)
       grid-template-columns repeat(4, 170px)
