@@ -104,6 +104,7 @@ export default {
   h2
     text-align center
   #tankContents
+    padding 15px
     max-height 80vh
     overflow scroll
     display grid

@@ -56,7 +56,7 @@ button
   border none
   box-shadow Shadow
   border-radius 15px
-  font-weight 100
+  font-weight 400
   min-width 200px
   max-width 300px
   margin 10px
