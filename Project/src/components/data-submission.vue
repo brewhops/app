@@ -1,19 +1,25 @@
 <template>
-<div id="dataSubmission">
-  <div>
-    <h2>New Data Submitted</h2>
-    <table>
-      <tr>
-        <td>Volume</td>
-        <td>133.2</td>
-      </tr>
-      <tr>
-        <td>pH</td>
-        <td>4.3</td>
-      </tr>
-    </table>
-    <router-link to="/home"> <button type="button" name="button">Edit</button> </router-link>
-    <router-link v-bind:to="doneLink"> <button type="button" name="button">OK</button> </router-link>
+<div>
+  <div class="header">
+     <router-link v-bind:to="doneLink">Home</router-link>
+    <h2>Data Submitted</h2>
+  </div>
+  <div id="dataSubmission">
+    <div>
+      <h2>New Data Submitted</h2>
+      <table>
+        <tr>
+          <td>Volume</td>
+          <td>133.2</td>
+        </tr>
+        <tr>
+          <td>pH</td>
+          <td>4.3</td>
+        </tr>
+      </table>
+      <router-link to="/home"> <button type="button" name="button">Edit</button> </router-link>
+      <router-link v-bind:to="doneLink"> <button type="button" name="button">OK</button> </router-link>
+    </div>
   </div>
 </div>
 </template>
