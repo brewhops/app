@@ -11,18 +11,24 @@
       <span>{{ feedback.username }}</span>
       <input v-model.lazy="password" placeholder="password">
       <span>{{ feedback.password }}</span>
-      <router-link v-bind:to="submitLink"><button>Submit</button> </router-link>
+      <button v-on:click="submit">Submit</button>
+      {{ debugging }}
     </div>
   </div>
 </div>
 </template>
 
 <script>
+
+import router from "../router/index.js"
+
 export
 default {
   name: 'login',
   data() {
     return {
+      debugging: 'Debugging Flag: No issues to report.',
+      database: {},
       mobile: false,
       username: '',
       password: '',
@@ -82,7 +88,30 @@ default {
     } else {
       this.submitLink = '/home'
     }
-  }
+    //get users from heroku
+    this.$http.get('https://ninkasi-server.herokuapp.com/employees').then(response => {
+      // get body data
+      this.database = response.body;
+    }, response => {
+      this.debugging = 'Debugging Flag: Response error, cant access employees page';
+      console.log(response);
+    });
+  },
+  methods: {
+      submit: function () {
+        var flag = false;
+        var x;
+        for(x in this.database) {
+          if(this.database[x].username === this.username) {
+            if(this.database[x].password === this.password) {
+              router.push("home")
+            }
+          }
+        }
+        this.feedback.password = 'Invalid Login'
+      }
+
+    }
 };
 </script>
 
