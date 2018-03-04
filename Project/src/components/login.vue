@@ -11,10 +11,7 @@
       <span>{{ feedback.username }}</span>
       <input v-model.lazy="password" placeholder="password">
       <span>{{ feedback.password }}</span>
-      <router-link v-bind:to="submitLink"><button>Submit</button> </router-link>
-      <div v-for="item in database">
-        <li>{{ item.first_name }}</li>
-      </div>
+      <button v-on:click="submit">Submit</button>
       {{ debugging }}
     </div>
   </div>
@@ -22,6 +19,9 @@
 </template>
 
 <script>
+
+import router from "../router/index.js"
+
 export
 default {
   name: 'login',
@@ -96,7 +96,22 @@ default {
       this.debugging = 'Debugging Flag: Response error, cant access employees page';
       console.log(response);
     });
-  }
+  },
+  methods: {
+      submit: function () {
+        var flag = false;
+        var x;
+        for(x in this.database) {
+          if(this.database[x].username === this.username) {
+            if(this.database[x].password === this.password) {
+              router.push("home")
+            }
+          }
+        }
+        this.feedback.password = 'Invalid Login'
+      }
+
+    }
 };
 </script>
 
