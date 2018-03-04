@@ -27,7 +27,6 @@ default {
   name: 'login',
   data() {
     return {
-      debugging: 'Debugging Flag: No issues to report.',
       database: {},
       mobile: false,
       username: '',
@@ -88,6 +87,7 @@ default {
     } else {
       this.submitLink = '/home'
     }
+    
     //get users from heroku
     this.$http.get('https://ninkasi-server.herokuapp.com/employees').then(response => {
       // get body data
@@ -99,18 +99,20 @@ default {
   },
   methods: {
       submit: function () {
-        var flag = false;
-        var x;
+        // for each element in the database
         for(x in this.database) {
+          // if the username matches the inputed username
           if(this.database[x].username === this.username) {
+            // if the password at that same point matches the user password
             if(this.database[x].password === this.password) {
+              // redirect over to the home page
               router.push("home")
             }
           }
         }
+        // show that the login was invalid
         this.feedback.password = 'Invalid Login'
       }
-
     }
 };
 </script>
