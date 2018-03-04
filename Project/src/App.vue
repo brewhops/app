@@ -56,7 +56,7 @@ button
   border none
   box-shadow Shadow
   border-radius 15px
-  font-weight 100
+  font-weight 400
   min-width 200px
   max-width 300px
   margin 10px
@@ -86,10 +86,8 @@ button
     color white
     text-transform capitalize
     text-decoration none
-    font-weight 100
   h2
     font-size 1.5em
-    font-weight 100
     margin 0
 
 

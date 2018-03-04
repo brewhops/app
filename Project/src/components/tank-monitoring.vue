@@ -1,23 +1,29 @@
 <template>
-<div id="tankInfo">
-  <h2>Tank Info</h2>
-  <div id="tankContents">
-    <router-link to="/tank-info" v-for="tank in tanks" :key="tank.tankNumber">
-      <table class="tank" v-bind:class="tank.status">
-        <tr>
-          <td>{{tank.tankNumber}}</td>
-          <td>{{tank.pressure}}</td>
-        </tr>
-        <tr>
-          <td>{{tank.beerID}}</td>
-          <td>{{tank.temperature}}</td>
-        </tr>
-        <tr>
-          <td>{{tank.batchNumber}}</td>
-          <td>{{tank.status}}</td>
-        </tr>
-      </table>
-    </router-link>
+<div>
+  <div class="header" v-if="mobile">
+     <router-link to="/home-mobile">Home</router-link>
+    <h2>Tank Monitoring</h2>
+  </div>
+  <div id="tankInfo">
+    <h2 v-if="!mobile">Tank Monitoring</h2>
+    <div id="tankContents">
+      <router-link to="/tank-info" v-for="tank in tanks" :key="tank.tankNumber">
+        <table class="tank" v-bind:class="tank.status">
+          <tr>
+            <td>{{tank.tankNumber}}</td>
+            <td>{{tank.pressure}}</td>
+          </tr>
+          <tr>
+            <td>{{tank.beerID}}</td>
+            <td>{{tank.temperature}}</td>
+          </tr>
+          <tr>
+            <td>{{tank.batchNumber}}</td>
+            <td>{{tank.status}}</td>
+          </tr>
+        </table>
+      </router-link>
+    </div>
   </div>
 </div>
 </template>
@@ -28,7 +34,7 @@ export default {
   name: 'tank-monitoring',
   data() {
     return {
-      msg: '',
+      mobile: false,
       tanks: [
         {
           tankNumber: 13223431,
@@ -80,6 +86,11 @@ export default {
         }
       ]
     };
+  },
+  beforeMount() {
+    if (/iPhone|iPad|iPod|Android|webOS|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
+      this.mobile = true
+    }
   }
 };
 </script>
@@ -93,13 +104,13 @@ export default {
   h2
     text-align center
   #tankContents
+    padding 15px
     max-height 80vh
     overflow scroll
     display grid
     justify-content center
     grid-gap 10px
     color white
-    font-weight 100
 
     +greater-than(desktop)
       grid-template-columns repeat(4, 170px)
