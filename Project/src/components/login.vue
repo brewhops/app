@@ -9,9 +9,10 @@
       <h2>Login</h2>
       <input v-model.lazy="username" placeholder="username">
       <span>{{ feedback.username }}</span>
-      <input v-model.lazy="password" placeholder="password">
+      <input v-model.lazy="password" placeholder="password" type="password">
       <span>{{ feedback.password }}</span>
       <button v-on:click="submit">Submit</button>
+      <button v-if="showAdminButton" v-on:click="validateAdmin" type="button" name="button">Admin Page</button>
     </div>
   </div>
 </div>
@@ -29,6 +30,7 @@ default {
     return {
       database: {},
       mobile: false,
+      showAdminButton: false,
       username: '',
       password: '',
       feedback: {
@@ -43,10 +45,6 @@ default {
       // shorten our username variable for readability
       const username = this.username;
 
-      if (username === 'admin') {
-        this.submitLink = '/admin'
-      }
-
       // if the field is empty, clear the feedback
       // if the username is less than 3 or greater than 20, error
       // if the username is only numbers and letters
@@ -59,6 +57,13 @@ default {
         this.feedback.username = ''
       } else {
         this.feedback.username = 'username must only be digits and letters'
+      }
+
+      // if the username is admin
+      for (var x in this.database) {
+        if (this.database[x].admin === true && this.database[x].username == username) {
+          this.showAdminButton = true
+        }
       }
     },
     password: function() {
@@ -111,6 +116,9 @@ default {
         }
         // show that the login was invalid
         this.feedback.password = 'Invalid Login'
+      },
+      validateAdmin: function () {
+          router.push("admin")
       }
     }
 };
