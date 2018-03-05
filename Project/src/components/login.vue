@@ -20,6 +20,7 @@
 <script>
 
 import router from "../router/index.js"
+import CryptoJS from "crypto-js"
 
 export
 default {
