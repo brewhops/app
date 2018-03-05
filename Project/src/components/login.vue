@@ -12,7 +12,6 @@
       <input v-model.lazy="password" placeholder="password">
       <span>{{ feedback.password }}</span>
       <button v-on:click="submit">Submit</button>
-      {{ debugging }}
     </div>
   </div>
 </div>
@@ -87,20 +86,19 @@ default {
     } else {
       this.submitLink = '/home'
     }
-    
+
     //get users from heroku
     this.$http.get('https://ninkasi-server.herokuapp.com/employees').then(response => {
       // get body data
       this.database = response.body;
     }, response => {
-      this.debugging = 'Debugging Flag: Response error, cant access employees page';
-      console.log(response);
+      console.log('Response error, cant access employees page', response);
     });
   },
   methods: {
       submit: function () {
         // for each element in the database
-        for(x in this.database) {
+        for(var x in this.database) {
           // if the username matches the inputed username
           if(this.database[x].username === this.username) {
             // if the password at that same point matches the user password
