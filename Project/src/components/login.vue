@@ -33,6 +33,7 @@ default {
       showAdminButton: false,
       username: '',
       password: '',
+      encryptedPassword: '',
       feedback: {
         username: '',
         password: '',
@@ -62,6 +63,7 @@ default {
       // if the username is admin
       for (var x in this.database) {
         if (this.database[x].admin === true && this.database[x].username == username) {
+          this.encryptedPassword = this.database[x].password
           this.showAdminButton = true
         }
       }
@@ -108,7 +110,12 @@ default {
           // if the username matches the inputed username
           if(this.database[x].username === this.username) {
             // if the password at that same point matches the user password
-            if(this.database[x].password === this.password) {
+            var decryptedPassword = CryptoJS.AES.decrypt(
+                this.encryptedPassword,
+                this.username
+              ).toString(CryptoJS.enc.Utf8)
+
+            if(decryptedPassword === this.password) {
               // redirect over to the home page
               router.push("home")
             }
@@ -118,7 +125,17 @@ default {
         this.feedback.password = 'Invalid Login'
       },
       validateAdmin: function () {
+        // saving for reference: to encrypt
+        // CryptoJS.AES.encrypt(password, username).toString();
+
+        // decrypt the password, salted with the username
+        var decryptedPassword = CryptoJS.AES.decrypt(
+            this.encryptedPassword,
+            this.username
+          ).toString(CryptoJS.enc.Utf8)
+        if (decryptedPassword === this.password) {
           router.push("admin")
+        }
       }
     }
 };
