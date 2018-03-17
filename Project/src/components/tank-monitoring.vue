@@ -1,4 +1,9 @@
 <template>
+<div>
+<div class="header" v-if="mobile">
+   <router-link to="/home-mobile">Home</router-link>
+  <h2>Tank Monitoring</h2>
+</div>
 <div id="tankInfo">
   <h2>Tank Info</h2>
   <div id="tankContents">
@@ -20,6 +25,7 @@
     </router-link>
   </div>
 </div>
+</div>
 </template>
 
 <script>
@@ -28,7 +34,7 @@ export default {
   name: 'tank-monitoring',
   data() {
     return {
-      msg: '',
+      mobile: false,
       batchesData: [],
       batchesContentsData: [],
       tanks: [],
@@ -44,6 +50,11 @@ export default {
     };
   },
   beforeMount() {
+
+    if (/iPhone|iPad|iPod|Android|webOS|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
+      this.mobile = true
+    }
+
     //get batches from heroku
     this.$http.get('https://ninkasi-server.herokuapp.com/batches').then(response1 => {
       this.batchesData = response1.body;
