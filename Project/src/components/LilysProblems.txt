@@ -1,0 +1,9 @@
+1) Can't post to database, not sure why
+    could be there are still some issues with the passwordcheck variable (which is used to make someone enter their password twice)
+
+2) can't get a post to database consistently. Worked once! How I'm not quite sure.
+
+3) Not sure if reusing same formData object is a bad idea? (using in both recipe_submit and login_submit)
+      Theres not memory management in javascript so hopefully ti takes care of everything for me
+
+4) Work with billy on recipe database format

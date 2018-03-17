@@ -88,6 +88,20 @@ default {
   },
   data() {
     return {
+      tankInfo: [{
+       "id" : 1,
+       "recipe_id" : 'Pacific Rain',
+       "tank_id" : 2,
+       "volume": 20.0,
+       "bright": 15.0,
+       "generation" : 10.0,
+       "sG" : 25.0,
+       "pH" :5.5,
+       "aBV": 5.5,
+       "temp": 45,
+       "status": 'ok',
+
+     }],
       doneLink: '',
       home: '',
       mobile: false
