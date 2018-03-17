@@ -117,7 +117,11 @@ default {
 
             if(decryptedPassword === this.password) {
               // redirect over to the home page
-              router.push("home")
+              if (this.mobile) {
+                router.push("home-mobile")
+              } else {
+                router.push("home")
+              }
             }
           }
         }
