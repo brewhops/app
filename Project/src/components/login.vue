@@ -9,10 +9,10 @@
       <h2>Login</h2>
       <input v-model.lazy="username" placeholder="username">
       <span>{{ feedback.username }}</span>
-      <input v-model.lazy="password" placeholder="password">
+      <input v-model.lazy="password" placeholder="password" type="password">
       <span>{{ feedback.password }}</span>
       <button v-on:click="submit">Submit</button>
-      {{ debugging }}
+      <button v-if="showAdminButton" v-on:click="validateAdmin" type="button" name="button">Admin Page</button>
     </div>
   </div>
 </div>
@@ -21,17 +21,19 @@
 <script>
 
 import router from "../router/index.js"
+import CryptoJS from "crypto-js"
 
 export
 default {
   name: 'login',
   data() {
     return {
-      debugging: 'Debugging Flag: No issues to report.',
       database: {},
       mobile: false,
+      showAdminButton: false,
       username: '',
       password: '',
+      encryptedPassword: '',
       feedback: {
         username: '',
         password: '',
@@ -43,10 +45,6 @@ default {
     username: function() {
       // shorten our username variable for readability
       const username = this.username;
-
-      if (username === 'admin') {
-        this.submitLink = '/admin'
-      }
 
       // if the field is empty, clear the feedback
       // if the username is less than 3 or greater than 20, error
@@ -60,6 +58,14 @@ default {
         this.feedback.username = ''
       } else {
         this.feedback.username = 'username must only be digits and letters'
+      }
+
+      // if the username is admin
+      for (var x in this.database) {
+        if (this.database[x].admin === true && this.database[x].username == username) {
+          this.encryptedPassword = this.database[x].password
+          this.showAdminButton = true
+        }
       }
     },
     password: function() {
@@ -88,29 +94,49 @@ default {
     } else {
       this.submitLink = '/home'
     }
+
     //get users from heroku
     this.$http.get('https://ninkasi-server.herokuapp.com/employees').then(response => {
       // get body data
       this.database = response.body;
     }, response => {
-      this.debugging = 'Debugging Flag: Response error, cant access employees page';
-      console.log(response);
+      console.log('Response error, cant access employees page', response);
     });
   },
   methods: {
       submit: function () {
-        var flag = false;
-        var x;
-        for(x in this.database) {
+        // for each element in the database
+        for(var x in this.database) {
+          // if the username matches the inputed username
           if(this.database[x].username === this.username) {
-            if(this.database[x].password === this.password) {
+            // if the password at that same point matches the user password
+            var decryptedPassword = CryptoJS.AES.decrypt(
+                this.encryptedPassword,
+                this.username
+              ).toString(CryptoJS.enc.Utf8)
+
+            if(decryptedPassword === this.password) {
+              // redirect over to the home page
               router.push("home")
             }
           }
         }
+        // show that the login was invalid
         this.feedback.password = 'Invalid Login'
-      }
+      },
+      validateAdmin: function () {
+        // saving for reference: to encrypt
+        // CryptoJS.AES.encrypt(password, username).toString();
 
+        // decrypt the password, salted with the username
+        var decryptedPassword = CryptoJS.AES.decrypt(
+            this.encryptedPassword,
+            this.username
+          ).toString(CryptoJS.enc.Utf8)
+        if (decryptedPassword === this.password) {
+          router.push("admin")
+        }
+      }
     }
 };
 </script>
