@@ -149,7 +149,11 @@ export default {
     .cool
         background Brown
     .crash
+        background green
+    .broken
         background Red
+    .busy
+        background #c9c200
 
 
 </style>
