@@ -1,29 +1,23 @@
 <template>
-<div>
-  <div class="header" v-if="mobile">
-     <router-link to="/home-mobile">Home</router-link>
-    <h2>Tank Monitoring</h2>
-  </div>
-  <div id="tankInfo">
-    <h2 v-if="!mobile">Tank Monitoring</h2>
-    <div id="tankContents">
-      <router-link to="/tank-info" v-for="tank in tanks" :key="tank.tankNumber">
-        <table class="tank" v-bind:class="tank.status">
-          <tr>
-            <td>{{tank.tankNumber}}</td>
-            <td>{{tank.pressure}}</td>
-          </tr>
-          <tr>
-            <td>{{tank.beerID}}</td>
-            <td>{{tank.temperature}}</td>
-          </tr>
-          <tr>
-            <td>{{tank.batchNumber}}</td>
-            <td>{{tank.status}}</td>
-          </tr>
-        </table>
-      </router-link>
-    </div>
+<div id="tankInfo">
+  <h2>Tank Info</h2>
+  <div id="tankContents">
+    <router-link to="/tank-info" v-for="tank in tanks" :key="tank.tankNumber">
+      <table class="tank" v-bind:class="tank.status">
+        <tr>
+          <td>{{tank.tank_id}}</td>
+          <td>{{tank.pressure}}</td>
+        </tr>
+        <tr>
+          <td>{{tank.beerID}}</td>
+          <td>{{tank.temperature}}</td>
+        </tr>
+        <tr>
+          <td>{{tank.batchID}}</td>
+          <td>{{tank.status}}</td>
+        </tr>
+      </table>
+    </router-link>
   </div>
 </div>
 </template>
@@ -34,64 +28,68 @@ export default {
   name: 'tank-monitoring',
   data() {
     return {
-      mobile: false,
-      tanks: [
-        {
-          tankNumber: 13223431,
-          pressure: 15,
-          beerID: 12725,
-          temperature: 69,
-          batchNumber: 1357,
-          status: "cap"
-        },
-        {
-          tankNumber: 14321432,
-          pressure: 1,
-          beerID: 1257,
-          temperature: 69,
-          batchNumber: 13575,
-          status: "ok"
-        },
-        {
-          tankNumber: 15433,
-          pressure: 1,
-          beerID: 139739,
-          temperature: 69,
-          batchNumber: 1439,
-          status: "cool"
-        },
-        {
-          tankNumber: 14653873,
-          pressure: 1,
-          beerID: 137836,
-          temperature: 69,
-          batchNumber: 13468,
-          status: "ok"
-        },
-        {
-          tankNumber: 16438,
-          pressure: 1,
-          beerID: 17368,
-          temperature: 69,
-          batchNumber: 1384,
-          status: "crash"
-        },
-        {
-          tankNumber: 1384346,
-          pressure: 1,
-          beerID: 13687,
-          temperature: 69,
-          batchNumber: 157,
-          status: "ok"
-        }
-      ]
+      msg: '',
+      batchesData: [],
+      batchesContentsData: [],
+      tanks: [],
+      tankInfo: {
+        tank_id: '',
+        pressure: '',
+        temperature: '',
+        beerID: '',
+        batchID: '',
+        status: '',
+      }
+        //tankNumber, pressure, beerID, temperature, batchNumber, Status
     };
   },
   beforeMount() {
-    if (/iPhone|iPad|iPod|Android|webOS|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
-      this.mobile = true
-    }
-  }
+    //get batches from heroku
+    this.$http.get('https://ninkasi-server.herokuapp.com/batches').then(response1 => {
+      this.batchesData = response1.body;
+      this.$http.get('https://ninkasi-server.herokuapp.com/batch_contents_versions').then(response2 => {
+        this.batchesContentsData = response2.body;
+        /***** Inside both get requests *****/
+        //console.log(this.batchesData);
+        for(var x in this.batchesData){
+          var tank = this.tankInfo; //use temp holder that has all the parts of the obj we need
+
+          tank.batchID = this.batchesData[x].id; //save current batchesData
+          tank.tank_id = this.batchesData[x].tank_id;
+
+          var recipe_id = this.batchesData[x].recipe_id;
+          var y;
+          var pressure, temperature; //TODO: CHNGE TO AN OBJECT NOT JUST MULTIPLE VARIABLES
+          var max = -1;
+          //iterate through batch contents, save the contents of the version_number that is the most recent
+          for(y in this.batchesContentsData){
+            if(this.batchesContentsData[y].batch_id === this.batchesData[x].id){
+              if(this.batchesContentsData[y].version_number > max){
+                  console.log()
+                   max = this.batchesContentsData[y].version_number;
+                   pressure = this.batchesContentsData[y].pressure;
+                   temperature = this.batchesContentsData[y].temperature;
+              }
+            }
+          }
+          //save temp and pressure from most recent
+          tank.temperature = temperature;
+          tank.pressure = pressure;
+          tank.status = "OK"; //TODO: TEMPORARY, MAKE NEW
+
+          //push data holder to the tanks array
+          this.tanks.push(tank);
+
+       }
+         /*************************************/
+      }, response2 => {
+        this.debugging = 'Debugging Flag: Response error, cant access batches page';
+      });
+    }, response1 => {
+      this.debugging = 'Debugging Flag: Response error, cant access batches page';
+    });
+
+     }
 };
 </script>
 
@@ -104,13 +102,13 @@ export default {
   h2
     text-align center
   #tankContents
-    padding 15px
     max-height 80vh
     overflow scroll
     display grid
     justify-content center
     grid-gap 10px
     color white
+    font-weight 100
 
     +greater-than(desktop)
       grid-template-columns repeat(4, 170px)
