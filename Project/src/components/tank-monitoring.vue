@@ -9,11 +9,11 @@
           <td>{{tank.pressure}}</td>
         </tr>
         <tr>
-          <td>{{tank.beerID}}</td>
+          <td>{{tank.recipe_id}}</td>
           <td>{{tank.temperature}}</td>
         </tr>
         <tr>
-          <td>{{tank.batchID}}</td>
+          <td>{{tank.batch_id}}</td>
           <td>{{tank.status}}</td>
         </tr>
       </table>
@@ -32,60 +32,76 @@ export default {
       batchesData: [],
       batchesContentsData: [],
       tanks: [],
-      tankInfo: {
-        tank_id: '',
-        pressure: '',
-        temperature: '',
-        beerID: '',
-        batchID: '',
-        status: '',
-      }
-        //tankNumber, pressure, beerID, temperature, batchNumber, Status
+        //tankNumber, pressure, recipe_id, temperature, batchNumber, Status
     };
   },
   beforeMount() {
     //get batches from heroku
-    this.$http.get('https://ninkasi-server.herokuapp.com/batches').then(response1 => {
-      this.batchesData = response1.body;
-      this.$http.get('https://ninkasi-server.herokuapp.com/batch_contents_versions').then(response2 => {
-        this.batchesContentsData = response2.body;
-        /***** Inside both get requests *****/
-        //console.log(this.batchesData);
-        for(var x in this.batchesData){
-          var tank = this.tankInfo; //use temp holder that has all the parts of the obj we need
+    this.$http.get('https://ninkasi-server.herokuapp.com/batches')
+      .then(batchResponse => {
+      this.batchesData = batchResponse.body;
+      //get batch contents to find most recent measurements
+      this.$http.get('https://ninkasi-server.herokuapp.com/batch_contents_versions')
+        .then(batchContentsResponse => {
+        //fill batch contentes with database
+        this.batchesContentsData = batchContentsResponse.body;
+        //get tanks to find status
+        this.$http.get('https://ninkasi-server.herokuapp.com/tanks')
+          .then(tanksResponse => {
 
-          tank.batchID = this.batchesData[x].id; //save current batchesData
-          tank.tank_id = this.batchesData[x].tank_id;
-
-          var recipe_id = this.batchesData[x].recipe_id;
-          var y;
-          var pressure, temperature; //TODO: CHNGE TO AN OBJECT NOT JUST MULTIPLE VARIABLES
-          var max = -1;
-          //iterate through batch contents, save the contents of the version_number that is the most recent
-          for(y in this.batchesContentsData){
-            if(this.batchesContentsData[y].batch_id === this.batchesData[x].id){
-              if(this.batchesContentsData[y].version_number > max){
-                  console.log()
-                   max = this.batchesContentsData[y].version_number;
-                   pressure = this.batchesContentsData[y].pressure;
-                   temperature = this.batchesContentsData[y].temperature;
+            //for each batch, fill variables and most recent brewing data to display
+            for(var x in this.batchesData){
+              //object as a holder for info pulled from batches and batch_contents_versions
+              var tank = {
+                tank_id: '',
+                pressure: '',
+                temperature: '',
+                recipe_id: '',
+                batch_id: '',
+                status: '',
               }
-            }
-          }
-          //save temp and pressure from most recent
-          tank.temperature = temperature;
-          tank.pressure = pressure;
-          tank.status = "OK"; //TODO: TEMPORARY, MAKE NEW
+              //save batch id and tank id
+              tank.batch_id = this.batchesData[x].id;
+              tank.tank_id = this.batchesData[x].tank_id;
+              tank.recipe_id = this.batchesData[x].recipe_id;
 
-          //push data holder to the tanks array
-          this.tanks.push(tank);
+              //iterate through tank database to find tank Status
+              for(var x in (tanksResponse.body)){
+                if((tanksResponse.body)[x].id == tank.tank_id){
+                  tank.status = (tanksResponse.body)[x].status
+                }
+              }
+              //object as holder to find most recent batch_contents_versions
+              var mostRecent = {
+                value: -1,
+                pressure: '',
+                temperature: '',
+              }
+              //iterate through batch contents, save most recent
+              for(var y in this.batchesContentsData){
+                if(this.batchesContentsData[y].batch_id === tank.batch_id){
+                  if(this.batchesContentsData[y].version_number > mostRecent.value){
+                       mostRecent.value = this.batchesContentsData[y].version_number;
+                       mostRecent.pressure = this.batchesContentsData[y].pressure;
+                       mostRecent.temperature = this.batchesContentsData[y].temperature;
+                  }
+                }
+              }
+              //put temp and pressure from most recent into tanks
+              tank.temperature = mostRecent.temperature;
+              tank.pressure = mostRecent.pressure;
 
-       }
+              //push data holder to the tanks array
+              this.tanks.push(tank);
+           }
+          }, tanksResponse => {
+           console.log('Response error, cant access employees page', response);
+         });
          /*************************************/
-      }, response2 => {
+      }, batchContentsResponse => {
         this.debugging = 'Debugging Flag: Response error, cant access batches page';
       });
-    }, response1 => {
+    }, batchResponse => {
       this.debugging = 'Debugging Flag: Response error, cant access batches page';
     });
 
