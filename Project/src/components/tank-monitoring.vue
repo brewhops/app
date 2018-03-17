@@ -32,51 +32,64 @@ export default {
       batchesData: [],
       batchesContentsData: [],
       tanks: [],
+      tankInfo: {
+        tank_id: '',
+        pressure: '',
+        temperature: '',
+        beerID: '',
+        batchID: '',
+        status: '',
+      }
         //tankNumber, pressure, beerID, temperature, batchNumber, Status
     };
   },
   beforeMount() {
     //get batches from heroku
-    this.$http.get('https://ninkasi-server.herokuapp.com/batches').then(response => {
-      this.batchesData = response.body;
-    }, response => {
-      this.debugging = 'Debugging Flag: Response error, cant access batches page';
-    });
-    this.$http.get('https://ninkasi-server.herokuapp.com/batch_contents_versions').then(response => {
-      this.batchesContentsData = response.body;
-    }, response => {
-      this.debugging = 'Debugging Flag: Response error, cant access batches page';
-    });
+    this.$http.get('https://ninkasi-server.herokuapp.com/batches').then(response1 => {
+      this.batchesData = response1.body;
+      this.$http.get('https://ninkasi-server.herokuapp.com/batch_contents_versions').then(response2 => {
+        this.batchesContentsData = response2.body;
+        /***** Inside both get requests *****/
+        //console.log(this.batchesData);
+        for(var x in this.batchesData){
+          var tank = this.tankInfo; //use temp holder that has all the parts of the obj we need
 
-    var x;
-    var obj = {
-      batchID: ''
-    };
-    for(x in this.batchesData){
-      obj.batchID = this.batchesData[x].batchID;
-      this.tanks[x] = obj;
-    /*  this.tanks[x].append('batchID', this.batchesData[x].batchID);
-      this.tanks[x].append('tank_id', this.batchesData[x].tank_id);
-      var recipe_id = this.batchesData[x].recipe_id;
-      this.tanks[x].append('status', "OK"); //TODO: This is termporary! Change when we have a task table
-      console.log(this.tanks);
-      var y;
-      var max;
-      //iterate through batch contents, save the contents of the version_number that is the most recent
-      for(y in this.batchesContentsData){
-        if(this.batchesContentsData[y].batchID === this.batchesData[x].batchID){
-          if(this.batchesContentsData[y].version_number > max){
-               max = this.batchesContentsData[y];
+          tank.batchID = this.batchesData[x].id; //save current batchesData
+          tank.tank_id = this.batchesData[x].tank_id;
+
+          var recipe_id = this.batchesData[x].recipe_id;
+          var y;
+          var pressure, temperature; //TODO: CHNGE TO AN OBJECT NOT JUST MULTIPLE VARIABLES
+          var max = -1;
+          //iterate through batch contents, save the contents of the version_number that is the most recent
+          for(y in this.batchesContentsData){
+            if(this.batchesContentsData[y].batch_id === this.batchesData[x].id){
+              if(this.batchesContentsData[y].version_number > max){
+                  console.log()
+                   max = this.batchesContentsData[y].version_number;
+                   pressure = this.batchesContentsData[y].pressure;
+                   temperature = this.batchesContentsData[y].temperature;
+              }
+            }
           }
-        }
-      }
-      this.tanks[x].append('temperature', this.batchesContentsData[y].temperature);
-      this.tanks[x].append('pressure', this.batchesContentsData[y].pressure)
-      this.tanks[x].append('status', "OK"); //TODO: This is termporary! Change when we have a task table
-    */  //this.tanks[x].append('beerID', recipe_id); //TODO: This is temporary! Change by using recipe ID
+          //save temp and pressure from most recent
+          tank.temperature = temperature;
+          tank.pressure = pressure;
+          tank.status = "OK"; //TODO: TEMPORARY, MAKE NEW
 
-    }
-  }
+          //push data holder to the tanks array
+          this.tanks.push(tank);
+
+       }
+         /*************************************/
+      }, response2 => {
+        this.debugging = 'Debugging Flag: Response error, cant access batches page';
+      });
+    }, response1 => {
+      this.debugging = 'Debugging Flag: Response error, cant access batches page';
+    });
+
+     }
 };
 </script>
 
