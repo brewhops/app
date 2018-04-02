@@ -6,11 +6,33 @@
      </div>
      <div id="content">
          <div id="misc">
-             <h2>Create New Fields</h2>
-             <input type="text" placeholder="Tank Number">
-             <input type="text" placeholder="Action Needed">
-             <button>Submit</button>
+           <!-- Create a new tank, add status and whether or not it is in use -->
+             <h2>Create New Tank</h2>
+             <input v-model.lazy="tank_id" placeholder="New Tank Number">
+             <span>{{ feedback.tank_id }}</span>
+
+             <select v-model="status">
+              <option disabled value="">Status on Tank</option>
+              <option>busy</option>
+              <option>broken</option>
+              <option>available</option>
+              <option>brewing</option>
+              <option>transferring</option>
+              <option>completed</option>
+            </select>
+            <span>Status: {{ status }}</span>
+
+            <input type="radio" id="true" value="true" v-model="in_use">
+            <label for="true">True</label>
+            <br>
+            <input type="radio" id="false" value="false" v-model="in_use">
+            <label for="false">False</label>
+            <br>
+            <span>In Use?: {{ in_use }}</span>
+
+             <button v-on:click="tank_submit">Submit</button>
          </div>
+         <!-- Create new user with username, first, last name, and password and password check -->
          <div id="user">
              <h2>Create New User</h2>
              <input v-model.lazy="first_name" placeholder="First Name">
@@ -95,6 +117,10 @@ export default {
   data() {
     return {
       database: {},
+
+      tank_id: '',
+      status: '',
+      in_use: '',
 
       first_name: '',
       last_name: '',
@@ -195,20 +221,20 @@ export default {
     //get users from heroku
     this.$http.get('https://ninkasi-server.herokuapp.com/employees').then(response => {
       // get body data
-      this.database = response.body;
+      this.database = response.body
     }, response => {
-      this.debugging = 'Debugging Flag: Response error, cant access employees page';
-      console.log(this.database);
+      this.debugging = 'Debugging Flag: Response error, cant access employees page'
+      console.log(this.database)
     });
   },
   methods: {
       login_submit: function () {
-        var flag = true;
-        var x;
+        var flag = true
+        var x
         for(x in this.database){
           if(this.database[x].username === this.username)
             this.feedback.username = 'Username taken'
-            flag = false;
+            flag = false
         }
         // if( !(this.passwordcheck === this.password)){ //TODO: Figure out why passwordcheck variable is "undefined" constantly
         //   flag = false;
@@ -217,22 +243,22 @@ export default {
         //if all checks pass
         if(flag == true){
           var formData = new FormData();
-            formData.append('first_name', this.first_name);
-            formData.append('last_name', this.last_name);
-            formData.append('username', this.username);
-            formData.append('password', this.password);
+            formData.append('first_name', this.first_name)
+            formData.append('last_name', this.last_name)
+            formData.append('username', this.username)
+            formData.append('password', this.password)
             this.$http.post('https://ninkasi-server.herokuapp.com/employees', formData) //TODO: CHECK FORM DATA SUBMISSION, it worked once!
-            console.log(formData);
+            console.log(formData)
         }
         else {
           console.log("ERROR: NEW USER ENTRY NEVER HAPPENING!")
         }
       },
       recipe_submit: function(){
-        var formData = new FormData();
+        var formData = new FormData()
         //Now only add to recipe the values that aren't empty or null
-        var recipe = [];
-        var rates = [];
+        var recipe = []
+        var rates = []
         var x;
         for(x in this.dryhopadjunct){
           if(this.dryhopadjunct[x] != '' || this.dryhopadjunct[x] != null){
@@ -241,17 +267,25 @@ export default {
           }
         }
         //append recipe, submit to database
-        var stringrecipe = "";
-        var stringrates = "";
+        var stringrecipe = ""
+        var stringrates = ""
         for(x in recipe){
-          stringrecipe += recipe[x];
-          stringrecipe =  stringrecipe + " rate: " + rates[x];
+          stringrecipe += recipe[x]
+          stringrecipe =  stringrecipe + " rate: " + rates[x]
         }
-        formData.append('instructions', stringrecipe);
-        formData.append('recipe_name', this.brandID);
-        console.log(formData);
+        formData.append('instructions', stringrecipe)
+        formData.append('recipe_name', this.brandID)
+        console.log(formData)
         this.$http.post('https://ninkasi-server.herokuapp.com/recipes', formData)
-      }
+      },
+      tank_submit: function(){
+        var formData = new FormData();
+        //TODO: if we are specifying tank number and not just letting database generate it, we will need to chekc they aren't entering duplicates
+      //  formData.append('id', this.id);
+        formData.append('status', this.status);
+        formData.append('in_use', this.in_use);
+        this.$http.post('https://ninkasi-server.herokuapp.com/tanks', formData)
+      },
 
     }
 };
