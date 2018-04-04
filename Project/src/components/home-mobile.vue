@@ -1,7 +1,7 @@
 <template lang="html">
   <div>
     <div class="header">
-      <router-link to="/">Logout</router-link>
+      <a v-on:click="logout">Logout</a>
       <h2>Home</h2>
     </div>
     <div id="content">
@@ -45,8 +45,24 @@
 </template>
 
 <script>
-export default {
+import router from "../router/index.js"
+import Cookie from "js-cookie"
 
+export default {
+  beforeMount() {
+    // if the user is not logged in send them to the login page
+    if (!Cookie.get('loggedIn')) {
+        router.push("/")
+    }
+  },
+  methods: {
+    logout: function() {
+      if (Cookie.get('loggedIn')) {
+        Cookie.remove('loggedIn')
+      }
+      router.push("/")
+    }
+  }
 }
 </script>
 

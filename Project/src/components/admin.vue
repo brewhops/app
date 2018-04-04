@@ -1,7 +1,7 @@
 <template>
     <div>
       <div class="header">
-         <router-link to="/">logout</router-link>
+         <a v-on:click="logout">Logout</a>
          <h2>Ninkasi Admin</h2>
      </div>
      <div id="content">
@@ -112,6 +112,11 @@
 </template>
 
 <script>
+
+import router from "../router/index.js"
+import CryptoJS from "crypto-js"
+import Cookie from "js-cookie"
+
 export default {
   name: 'admin',
   data() {
@@ -218,6 +223,13 @@ export default {
     }
   },
   beforeMount() {
+    // if the user is not logged, or they are logged in but not an admin
+    // send them to the login page
+    if (!Cookie.get('loggedIn') || !JSON.parse(Cookie.get('loggedIn')).admin) {
+        console.log(Cookie.get('loggedIn'));
+        router.push("/")
+    }
+
     //get users from heroku
     this.$http.get('https://ninkasi-server.herokuapp.com/employees').then(response => {
       // get body data
@@ -286,7 +298,12 @@ export default {
         formData.append('in_use', this.in_use);
         this.$http.post('https://ninkasi-server.herokuapp.com/tanks', formData)
       },
-
+      logout: function() {
+        if (Cookie.get('loggedIn')) {
+          Cookie.remove('loggedIn')
+        }
+        router.push("/")
+      }
     }
 };
 </script>

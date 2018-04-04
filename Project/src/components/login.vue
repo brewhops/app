@@ -12,7 +12,7 @@
       <input v-model.lazy="password" placeholder="password" type="password">
       <span>{{ feedback.password }}</span>
       <button v-on:click="submit">Submit</button>
-      <button v-if="showAdminButton" v-on:click="validateAdmin" type="button" name="button">Admin Page</button>
+      <button v-if="isAdmin" v-on:click="validateAdmin" type="button" name="button">Admin Page</button>
     </div>
   </div>
 </div>
@@ -22,15 +22,16 @@
 
 import router from "../router/index.js"
 import CryptoJS from "crypto-js"
+import Cookie from "js-cookie"
 
 export
 default {
   name: 'login',
   data() {
     return {
-      database: {},
+      employees: {},
       mobile: false,
-      showAdminButton: false,
+      isAdmin: false,
       username: '',
       password: '',
       encryptedPassword: '',
@@ -61,10 +62,10 @@ default {
       }
 
       // if the username is admin
-      for (var x in this.database) {
-        if (this.database[x].admin === true && this.database[x].username == username) {
-          this.encryptedPassword = this.database[x].password
-          this.showAdminButton = true
+      for (var x in this.employees) {
+        if (this.employees[x].admin === true && this.employees[x].username == username) {
+          this.encryptedPassword = this.employees[x].password
+          this.isAdmin = true
         }
       }
     },
@@ -95,50 +96,72 @@ default {
       this.submitLink = '/home'
     }
 
+    // if the cookie has login information in it already
+    // then send us straight to the home page
+    if (Cookie.get('loggedIn')) {
+      this.sendToHome()
+    }
+
     //get users from heroku
     this.$http.get('https://ninkasi-server.herokuapp.com/employees').then(response => {
       // get body data
-      this.database = response.body;
+      this.employees = response.body;
     }, response => {
       console.log('Response error, cant access employees page', response);
     });
   },
   methods: {
       submit: function () {
-        // for each element in the database
-        for(var x in this.database) {
+        // for each employee in the database
+        for(var x in this.employees) {
           // if the username matches the inputed username
-          if(this.database[x].username === this.username) {
-            // if the password at that same point matches the user password
-            var decryptedPassword = CryptoJS.AES.decrypt(
-                this.encryptedPassword,
-                this.username
-              ).toString(CryptoJS.enc.Utf8)
-
-            if(decryptedPassword === this.password) {
-              // redirect over to the home page
-              if (this.mobile) {
-                router.push("home-mobile")
-              } else {
-                router.push("home")
-              }
+          if(this.employees[x].username === this.username) {
+            if (this.validPassword(this.username, this.encryptedPassword, this.password)) {
+              this.createCookie(this.username, this.isAdmin);
+              // send us over to the home page
+              this.sendToHome()
             }
           }
         }
-        // show that the login was invalid
+        // we were never redirected, so the login was invalid
         this.feedback.password = 'Invalid Login'
       },
       validateAdmin: function () {
         // saving for reference: to encrypt
         // CryptoJS.AES.encrypt(password, username).toString();
 
-        // decrypt the password, salted with the username
-        var decryptedPassword = CryptoJS.AES.decrypt(
-            this.encryptedPassword,
-            this.username
-          ).toString(CryptoJS.enc.Utf8)
-        if (decryptedPassword === this.password) {
+        if (this.validPassword(this.username, this.encryptedPassword, this.password)) {
+          this.createCookie(this.username, this.isAdmin);
           router.push("admin")
+        }
+      },
+      // redirect over to the home page
+      sendToHome: function() {
+        if (this.mobile) {
+          router.push("home-mobile")
+        } else {
+          router.push("home")
+        }
+      },
+      // decrypt the password and check if it is valid
+      validPassword: function(username, encryptedPassword, enteredPassword) {
+        // decrypt the user password from the database
+        var decryptedPassword = CryptoJS.AES.decrypt(
+            encryptedPassword,
+            username
+          ).toString(CryptoJS.enc.Utf8)
+
+        // if the decrypted password at that same point matches the user password
+        if(decryptedPassword === enteredPassword) {
+          return true
+        }
+      },
+      createCookie: function(username, adminStatus) {
+        if (!Cookie.get('loggedIn')) {
+          Cookie.set('loggedIn', {
+            'username': username,
+            'admin': adminStatus,
+          })
         }
       }
     }

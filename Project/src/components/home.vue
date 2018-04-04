@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="header" v-if="!mobile">
-       <router-link to="/">Logout </router-link>
+       <a v-on:click="logout">Logout</a>
       <h2>Home</h2>
     </div>
     <div id="content">
@@ -15,6 +15,8 @@
 
 import dataEntry from './data-entry.vue'
 import tankMonitoring from './tank-monitoring.vue'
+import router from "../router/index.js"
+import Cookie from "js-cookie"
 
 export default {
   name: 'home',
@@ -28,8 +30,21 @@ export default {
     };
   },
   beforeMount() {
+    // if the user is not logged in send them to the login page
+    if (!Cookie.get('loggedIn')) {
+        router.push("/")
+    }
+
     if (/iPhone|iPad|iPod|Android|webOS|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
       this.mobile = true
+    }
+  },
+  methods: {
+    logout: function() {
+      if (Cookie.get('loggedIn')) {
+        Cookie.remove('loggedIn')
+      }
+      router.push("/")
     }
   }
 };
