@@ -22,6 +22,7 @@
 
 import router from "../router/index.js"
 import CryptoJS from "crypto-js"
+import Cookie from "js-cookie"
 
 export
 default {
@@ -95,6 +96,12 @@ default {
       this.submitLink = '/home'
     }
 
+    // if the cookie has login information in it already
+    // then send us straight to the home page
+    if (Cookie.get('loggedIn')) {
+      this.sendToHome()
+    }
+
     //get users from heroku
     this.$http.get('https://ninkasi-server.herokuapp.com/employees').then(response => {
       // get body data
@@ -105,23 +112,22 @@ default {
   },
   methods: {
       submit: function () {
-        // for each element in the database
+        // for each employee in the database
         for(var x in this.database) {
           // if the username matches the inputed username
           if(this.database[x].username === this.username) {
-            // if the password at that same point matches the user password
+            // decrypt the user password from the database
             var decryptedPassword = CryptoJS.AES.decrypt(
                 this.encryptedPassword,
                 this.username
               ).toString(CryptoJS.enc.Utf8)
 
+            // if the decrypted password at that same point matches the user password
             if(decryptedPassword === this.password) {
-              // redirect over to the home page
-              if (this.mobile) {
-                router.push("home-mobile")
-              } else {
-                router.push("home")
-              }
+              // set our Cookie with the username
+              Cookie.set('loggedIn', this.username);
+              // send us over to the home page
+              this.sendToHome()
             }
           }
         }
@@ -137,8 +143,17 @@ default {
             this.encryptedPassword,
             this.username
           ).toString(CryptoJS.enc.Utf8)
+
         if (decryptedPassword === this.password) {
           router.push("admin")
+        }
+      },
+      // redirect over to the home page
+      sendToHome: function() {
+        if (this.mobile) {
+          router.push("home-mobile")
+        } else {
+          router.push("home")
         }
       }
     }
