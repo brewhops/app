@@ -115,17 +115,9 @@ default {
         // for each employee in the database
         for(var x in this.employees) {
           // if the username matches the inputed username
-            // decrypt the user password from the database
-            var decryptedPassword = CryptoJS.AES.decrypt(
-                this.encryptedPassword,
-                this.username
-              ).toString(CryptoJS.enc.Utf8)
-
-            // if the decrypted password at that same point matches the user password
-            if(decryptedPassword === this.password) {
-              // set our Cookie with the username
-              Cookie.set('loggedIn', this.username);
           if(this.employees[x].username === this.username) {
+            if (this.validPassword(this.username, this.encryptedPassword, this.password)) {
+              this.createCookie(this.username, this.isAdmin);
               // send us over to the home page
               this.sendToHome()
             }
@@ -138,13 +130,8 @@ default {
         // saving for reference: to encrypt
         // CryptoJS.AES.encrypt(password, username).toString();
 
-        // decrypt the password, salted with the username
-        var decryptedPassword = CryptoJS.AES.decrypt(
-            this.encryptedPassword,
-            this.username
-          ).toString(CryptoJS.enc.Utf8)
-
-        if (decryptedPassword === this.password) {
+        if (this.validPassword(this.username, this.encryptedPassword, this.password)) {
+          this.createCookie(this.username, this.isAdmin);
           router.push("admin")
         }
       },
@@ -154,6 +141,27 @@ default {
           router.push("home-mobile")
         } else {
           router.push("home")
+        }
+      },
+      // decrypt the password and check if it is valid
+      validPassword: function(username, encryptedPassword, enteredPassword) {
+        // decrypt the user password from the database
+        var decryptedPassword = CryptoJS.AES.decrypt(
+            encryptedPassword,
+            username
+          ).toString(CryptoJS.enc.Utf8)
+
+        // if the decrypted password at that same point matches the user password
+        if(decryptedPassword === enteredPassword) {
+          return true
+        }
+      },
+      createCookie: function(username, adminStatus) {
+        if (!Cookie.get('loggedIn')) {
+          Cookie.set('loggedIn', {
+            'username': username,
+            'admin': adminStatus,
+          })
         }
       }
     }
