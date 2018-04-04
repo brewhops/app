@@ -12,7 +12,7 @@
       <input v-model.lazy="password" placeholder="password" type="password">
       <span>{{ feedback.password }}</span>
       <button v-on:click="submit">Submit</button>
-      <button v-if="showAdminButton" v-on:click="validateAdmin" type="button" name="button">Admin Page</button>
+      <button v-if="isAdmin" v-on:click="validateAdmin" type="button" name="button">Admin Page</button>
     </div>
   </div>
 </div>
@@ -29,9 +29,9 @@ default {
   name: 'login',
   data() {
     return {
-      database: {},
+      employees: {},
       mobile: false,
-      showAdminButton: false,
+      isAdmin: false,
       username: '',
       password: '',
       encryptedPassword: '',
@@ -62,10 +62,10 @@ default {
       }
 
       // if the username is admin
-      for (var x in this.database) {
-        if (this.database[x].admin === true && this.database[x].username == username) {
-          this.encryptedPassword = this.database[x].password
-          this.showAdminButton = true
+      for (var x in this.employees) {
+        if (this.employees[x].admin === true && this.employees[x].username == username) {
+          this.encryptedPassword = this.employees[x].password
+          this.isAdmin = true
         }
       }
     },
@@ -105,7 +105,7 @@ default {
     //get users from heroku
     this.$http.get('https://ninkasi-server.herokuapp.com/employees').then(response => {
       // get body data
-      this.database = response.body;
+      this.employees = response.body;
     }, response => {
       console.log('Response error, cant access employees page', response);
     });
@@ -113,9 +113,8 @@ default {
   methods: {
       submit: function () {
         // for each employee in the database
-        for(var x in this.database) {
+        for(var x in this.employees) {
           // if the username matches the inputed username
-          if(this.database[x].username === this.username) {
             // decrypt the user password from the database
             var decryptedPassword = CryptoJS.AES.decrypt(
                 this.encryptedPassword,
@@ -126,12 +125,13 @@ default {
             if(decryptedPassword === this.password) {
               // set our Cookie with the username
               Cookie.set('loggedIn', this.username);
+          if(this.employees[x].username === this.username) {
               // send us over to the home page
               this.sendToHome()
             }
           }
         }
-        // show that the login was invalid
+        // we were never redirected, so the login was invalid
         this.feedback.password = 'Invalid Login'
       },
       validateAdmin: function () {
