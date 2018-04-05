@@ -7,7 +7,7 @@
 <div id="tankInfo">
   <h2>Tank Info</h2>
   <div id="tankContents">
-    <router-link to="/tank-info" v-for="tank in tanks" :key="tank.tankNumber">
+    <a v-on:click="showTankInfo(tank.tank_id)" v-for="tank in tanks">
       <table class="tank" v-bind:class="tank.status">
         <tr>
           <td>{{tank.tank_id}}</td>
@@ -22,7 +22,7 @@
           <td>{{tank.status}}</td>
         </tr>
       </table>
-    </router-link>
+    </a>
   </div>
 </div>
 </div>
@@ -121,7 +121,14 @@ export default {
       this.debugging = 'Debugging Flag: Response error, cant access batches page';
     });
 
-     }
+  },
+  methods: {
+    showTankInfo: function(tankID) {
+      // send us over to the tank info page and set the id on the url
+      // to be the tankID that we clicked on.
+      router.push({ name: 'tank-info', params: { 'tankID': tankID } })
+    },
+  },
 };
 </script>
 

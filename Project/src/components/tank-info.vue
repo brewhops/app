@@ -16,7 +16,7 @@
     </div>
     <div id="tank">
       <h2>Tank ID</h2>
-      <h3>8439-4389</h3>
+      <h3>{{ $route.params.tankID }}</h3>
       <table>
         <tr>
           <td>Status</td>
