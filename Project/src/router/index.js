@@ -35,7 +35,7 @@ export default new Router({
       component: tankMonitoring
     },
     {
-      path: '/tank-info',
+      path: '/tank-info/:tankID',
       name: 'tank-info',
       component: tankInfo
     },
