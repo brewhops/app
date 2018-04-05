@@ -20,43 +20,43 @@
       <table>
         <tr>
           <td>Status</td>
-          <td>OK</td>
+          <td> {{ tankInfo.status }}</td>
         </tr>
         <tr>
           <td>Brand ID</td>
-          <td>Pacific Rain</td>
+          <td>{{ tankInfo.recipe_id }}</td>
         </tr>
         <tr>
           <td>Batch Number</td>
-          <td>3289-2389</td>
+          <td>{{ tankInfo.batch_id }}</td>
         </tr>
         <tr>
           <td>Generation</td>
-          <td>3</td>
+          <td>{{ tankInfo.generation }}</td>
         </tr>
         <tr>
           <td>Volume</td>
-          <td>182.3</td>
+          <td>{{ tankInfo.volume }}</td>
         </tr>
         <tr>
           <td>Temperature</td>
-          <td>70º F</td>
+          <td>{{ tankInfo.temp }}º F</td>
         </tr>
         <tr>
           <td>Specific Gravity</td>
-          <td>3.4</td>
+          <td>{{ tankInfo.sG }}</td>
         </tr>
         <tr>
           <td>pH</td>
-          <td>4.4</td>
+          <td>{{ tankInfo.pH }}</td>
         </tr>
         <tr>
           <td>ABV</td>
-          <td>8%</td>
+          <td>{{ tankInfo.aBV }}%</td>
         </tr>
         <tr>
           <td>Time Last Updated</td>
-          <td>2017-18-02 14:24</td>
+          <td>{{ tankInfo.time }}</td>
         </tr>
       </table>
       <button>I'm On It</button>
@@ -91,8 +91,8 @@ default {
   },
   data() {
     return {
-      tankInfo: [{
-       "id" : 1,
+      tankInfo: {
+       /*"id" : 1,
        "recipe_id" : 'Pacific Rain',
        "tank_id" : 2,
        "volume": 20.0,
@@ -102,9 +102,21 @@ default {
        "pH" :5.5,
        "aBV": 5.5,
        "temp": 45,
-       "status": 'ok',
+       "status": 'ok',*/
+       "tank_id" : '',
+       "recipe_id" : '',
+       "batch_id" : '',
+       "volume": '',
+       "bright": '',
+       "generation" : '',
+       "sG" : '',
+       "pH" :'',
+       "aBV": '',
+       "temp": '',
+       "status": '',
+       "time" : '',
 
-     }],
+     },
       doneLink: '',
       home: '',
       mobile: false
@@ -125,6 +137,59 @@ default {
       this.doneLink = '/home'
       this.home = '/home'
     }
+
+    //create url to get tank:
+    var tankUrl = 'https://ninkasi-server.herokuapp.com/tanks/' + '1';
+
+    this.$http.get(tankUrl)
+      .then(tanksResponse => {
+      this.tankInfo.tank_id = tanksResponse.body.id; //get tank id
+      this.tankInfo.status = tanksResponse.body.status
+      /********** query batches ********************/
+      this.$http.get('https://ninkasi-server.herokuapp.com/batches')
+        .then(batchResponse => {
+      //  this.batchesData = batchResponse.body
+        /********** query batch_contents_versions ********************/
+        this.$http.get('https://ninkasi-server.herokuapp.com/batch_contents_versions')
+          .then(batchContentsResponse => {
+
+
+            //Get batches information
+           for(var x in (batchResponse.body)){
+            if((batchResponse.body)[x].tank_id === this.tankInfo.tank_id){
+              this.tankInfo.batch_id = (batchResponse.body)[x].id
+              this.tankInfo.bright = (batchResponse.body)[x].bright
+              this.tankInfo.generation = (batchResponse.body)[x].generation
+              this.tankInfo.volume = (batchResponse.body)[x].volume
+              this.tankInfo.recipe_id = (batchResponse.body)[x].recipe_id
+              console.log((batchResponse.body)[x]);
+              console.log(this.tankInfo);
+            }
+          }
+
+          //Find most recent batch in batch contents and pull that info
+          var max = 0
+          for(var y in batchContentsResponse.body){
+            if((batchContentsResponse.body)[y].batch_id === this.tankInfo.batch_id && (batchContentsResponse.body)[y].version_number > max)
+              max = (batchContentsResponse.body)[y].version_number
+              this.tankInfo.aBV = (batchContentsResponse.body)[y].ABV
+              this.tankInfo.pH = (batchContentsResponse.body)[y].ph
+              this.tankInfo.temp = (batchContentsResponse.body)[y].temp
+              this.tankInfo.sG = (batchContentsResponse.body)[y].SG
+              this.tankInfo.time = (batchContentsResponse.body)[y].date_time_reading
+          }
+
+          }, batchContentsResponse => {
+            this.debugging = 'Debugging Flag: Response error, cant access batches page';
+          });
+        /*****************************************/
+      }, batchResponse => {
+        this.debugging = 'Debugging Flag: Response error, cant access batches page';
+      });
+    /*****************************************/
+    }, tanksResponse => {
+      this.debugging = 'Debugging Flag: Response error, cant access tanks page';
+    });
   }
 };
 </script>
