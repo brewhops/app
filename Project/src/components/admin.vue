@@ -13,12 +13,7 @@
 
              <select v-model="status">
               <option disabled value="">Status on Tank</option>
-              <option>busy</option>
-              <option>broken</option>
-              <option>available</option>
-              <option>brewing</option>
-              <option>transferring</option>
-              <option>completed</option>
+              <option v-for="tankStatus in tankStatuses" :value="tankStatus">{{tankStatus}}</option>
             </select>
             <span>Status: {{ status }}</span>
 
@@ -122,6 +117,15 @@ export default {
   data() {
     return {
       database: {},
+
+      tankStatuses: [
+        "busy",
+        "broken",
+        "available",
+        "brewing",
+        "transferring",
+        "completed",
+      ],
 
       tank_id: '',
       status: '',
