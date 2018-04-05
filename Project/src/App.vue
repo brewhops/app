@@ -43,6 +43,9 @@ h4
   font-size 1.2em
   padding 1vh
 
+a
+  cursor pointer
+
 #app
   font-family 'Avenir', Helvetica, Arial, sans-serif
   color #2c3e50
