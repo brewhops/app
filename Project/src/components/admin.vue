@@ -11,19 +11,10 @@
              <input v-model.lazy="tank_id" placeholder="New Tank Number">
              <span>{{ feedback.tank_id }}</span>
 
-             <select v-model="status">
-              <option disabled value="">Status on Tank</option>
-              <option v-for="tankStatus in tankStatuses" :value="tankStatus">{{tankStatus}}</option>
-            </select>
-            <span>Status: {{ status }}</span>
-
-            <input type="radio" id="true" value="true" v-model="in_use">
-            <label for="true">True</label>
-            <br>
-            <input type="radio" id="false" value="false" v-model="in_use">
-            <label for="false">False</label>
-            <br>
-            <span>In Use?: {{ in_use }}</span>
+             <select v-model="status" class="dropdown">
+               <option disabled value="">Status on Tank</option>
+               <option v-for="tankStatus in tankStatuses" :value="tankStatus">{{tankStatus}}</option>
+             </select>
 
              <button v-on:click="tank_submit">Submit</button>
          </div>
@@ -129,7 +120,6 @@ export default {
 
       tank_id: '',
       status: '',
-      in_use: '',
 
       first_name: '',
       last_name: '',
@@ -299,7 +289,11 @@ export default {
         //TODO: if we are specifying tank number and not just letting database generate it, we will need to chekc they aren't entering duplicates
       //  formData.append('id', this.id);
         formData.append('status', this.status);
-        formData.append('in_use', this.in_use);
+        if (this.status === "brewing") {
+          formData.append('in_use', true);
+        } else {
+          formData.append('in_use', false);
+        }
         this.$http.post('https://ninkasi-server.herokuapp.com/tanks', formData)
       },
       logout: function() {
