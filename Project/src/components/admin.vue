@@ -41,57 +41,12 @@
              <span>{{ feedback.brandID }}</span>
              <input v-model="yeast" placeholder="Yeast"> <!-- TODO: Validate Yeast?? maybe-->
              <span>{{ feedback.yeast }}</span>
-             <div class="inline">
-               <input v-model="dryhopadjunct[0]" placeholder="Dry Hop/Adjunct">
-               <span>{{ feedback.first_name }}</span>
-               <input v-model="rate[0]" placeholder="Rate">
-               <span>{{ feedback.last_name }}</span>
+             <div class="inline" v-for="x in hopNumbers">
+               <input v-model="dryHopAdjunct[x-1]" placeholder="Dry Hop/Adjunct">
+               <input v-model="rate[x-1]" placeholder="Rate">
              </div>
-             <div class="inline">
-               <input v-model="dryhopadjunct[1]" placeholder="Dry Hop/Adjunct">
-               <span>{{ feedback.first_name }}</span>
-               <input v-model="rate[1]" placeholder="Rate">
-               <span>{{ feedback.last_name }}</span>
-             </div>
-             <div class="inline">
-               <input v-model="dryhopadjunct[2]" placeholder="Dry Hop/Adjunct">
-               <span>{{ feedback.first_name }}</span>
-               <input v-model="rate[2]" placeholder="Rate">
-               <span>{{ feedback.last_name }}</span>
-             </div>
-             <div class="inline">
-               <input v-model="dryhopadjunct[3]" placeholder="Dry Hop/Adjunct">
-               <span>{{ feedback.first_name }}</span>
-               <input v-model="rate[3]" placeholder="Rate">
-               <span>{{ feedback.last_name }}</span>
-             </div>
-             <div class="inline">
-               <input v-model="dryhopadjunct[4]" placeholder="Dry Hop/Adjunct">
-               <span>{{ feedback.first_name }}</span>
-               <input v-model="rate[4]" placeholder="Rate">
-               <span>{{ feedback.last_name }}</span>
-             </div>
-             <div class="inline">
-               <input v-model="dryhopadjunct[5]" placeholder="Dry Hop/Adjunct">
-               <span>{{ feedback.first_name }}</span>
-               <input v-model="rate[5]" placeholder="Rate">
-               <span>{{ feedback.last_name }}</span>
-             </div>
-             <div class="inline">
-               <input v-model="dryhopadjunct[6]" placeholder="Dry Hop/Adjunct">
-               <span>{{ feedback.first_name }}</span>
-               <input v-model="rate[6]" placeholder="Rate">
-               <span>{{ feedback.last_name }}</span>
-             </div>
-             <div class="inline">
-               <input v-model="dryhopadjunct[7]" placeholder="Dry Hop/Adjunct">
-               <span>{{ feedback.first_name }}</span>
-               <input v-model="rate[7]" placeholder="Rate">
-               <span>{{ feedback.last_name }}</span>
-             </div>
+             <button type="button" v-on:click="hopNumbers+=1">Add Another Row</button>
              <button v-on:click="recipe_submit">Submit</button>
-             {{ dryhopadjunct }}
-             {{ rate }}
          </div>
      </div>
     </div>
@@ -126,7 +81,8 @@ export default {
       username: '',
       password: '',
 
-      dryhopadjunct: [],
+      hopNumbers: 4,
+      dryHopAdjunct: [],
       rate: [],
       brandID: '',
       yeast: '',
