@@ -11,24 +11,10 @@
              <input v-model.lazy="tank_id" placeholder="New Tank Number">
              <span>{{ feedback.tank_id }}</span>
 
-             <select v-model="status">
-              <option disabled value="">Status on Tank</option>
-              <option>busy</option>
-              <option>broken</option>
-              <option>available</option>
-              <option>brewing</option>
-              <option>transferring</option>
-              <option>completed</option>
-            </select>
-            <span>Status: {{ status }}</span>
-
-            <input type="radio" id="true" value="true" v-model="in_use">
-            <label for="true">True</label>
-            <br>
-            <input type="radio" id="false" value="false" v-model="in_use">
-            <label for="false">False</label>
-            <br>
-            <span>In Use?: {{ in_use }}</span>
+             <select v-model="status" class="dropdown">
+               <option disabled value="">Status on Tank</option>
+               <option v-for="tankStatus in tankStatuses" :value="tankStatus">{{tankStatus}}</option>
+             </select>
 
              <button v-on:click="tank_submit">Submit</button>
          </div>
@@ -55,57 +41,12 @@
              <span>{{ feedback.brandID }}</span>
              <input v-model="yeast" placeholder="Yeast"> <!-- TODO: Validate Yeast?? maybe-->
              <span>{{ feedback.yeast }}</span>
-             <div class="inline">
-               <input v-model="dryhopadjunct[0]" placeholder="Dry Hop/Adjunct">
-               <span>{{ feedback.first_name }}</span>
-               <input v-model="rate[0]" placeholder="Rate">
-               <span>{{ feedback.last_name }}</span>
+             <div class="inline" v-for="x in hopNumbers">
+               <input v-model="dryHopAdjunct[x-1]" placeholder="Dry Hop/Adjunct">
+               <input v-model="rate[x-1]" placeholder="Rate">
              </div>
-             <div class="inline">
-               <input v-model="dryhopadjunct[1]" placeholder="Dry Hop/Adjunct">
-               <span>{{ feedback.first_name }}</span>
-               <input v-model="rate[1]" placeholder="Rate">
-               <span>{{ feedback.last_name }}</span>
-             </div>
-             <div class="inline">
-               <input v-model="dryhopadjunct[2]" placeholder="Dry Hop/Adjunct">
-               <span>{{ feedback.first_name }}</span>
-               <input v-model="rate[2]" placeholder="Rate">
-               <span>{{ feedback.last_name }}</span>
-             </div>
-             <div class="inline">
-               <input v-model="dryhopadjunct[3]" placeholder="Dry Hop/Adjunct">
-               <span>{{ feedback.first_name }}</span>
-               <input v-model="rate[3]" placeholder="Rate">
-               <span>{{ feedback.last_name }}</span>
-             </div>
-             <div class="inline">
-               <input v-model="dryhopadjunct[4]" placeholder="Dry Hop/Adjunct">
-               <span>{{ feedback.first_name }}</span>
-               <input v-model="rate[4]" placeholder="Rate">
-               <span>{{ feedback.last_name }}</span>
-             </div>
-             <div class="inline">
-               <input v-model="dryhopadjunct[5]" placeholder="Dry Hop/Adjunct">
-               <span>{{ feedback.first_name }}</span>
-               <input v-model="rate[5]" placeholder="Rate">
-               <span>{{ feedback.last_name }}</span>
-             </div>
-             <div class="inline">
-               <input v-model="dryhopadjunct[6]" placeholder="Dry Hop/Adjunct">
-               <span>{{ feedback.first_name }}</span>
-               <input v-model="rate[6]" placeholder="Rate">
-               <span>{{ feedback.last_name }}</span>
-             </div>
-             <div class="inline">
-               <input v-model="dryhopadjunct[7]" placeholder="Dry Hop/Adjunct">
-               <span>{{ feedback.first_name }}</span>
-               <input v-model="rate[7]" placeholder="Rate">
-               <span>{{ feedback.last_name }}</span>
-             </div>
+             <button type="button" v-on:click="hopNumbers+=1">Add Another Row</button>
              <button v-on:click="recipe_submit">Submit</button>
-             {{ dryhopadjunct }}
-             {{ rate }}
          </div>
      </div>
     </div>
@@ -123,16 +64,25 @@ export default {
     return {
       database: {},
 
+      tankStatuses: [
+        "busy",
+        "broken",
+        "available",
+        "brewing",
+        "transferring",
+        "completed",
+      ],
+
       tank_id: '',
       status: '',
-      in_use: '',
 
       first_name: '',
       last_name: '',
       username: '',
       password: '',
 
-      dryhopadjunct: [],
+      hopNumbers: 4,
+      dryHopAdjunct: [],
       rate: [],
       brandID: '',
       yeast: '',
@@ -295,7 +245,11 @@ export default {
         //TODO: if we are specifying tank number and not just letting database generate it, we will need to chekc they aren't entering duplicates
       //  formData.append('id', this.id);
         formData.append('status', this.status);
-        formData.append('in_use', this.in_use);
+        if (this.status === "brewing") {
+          formData.append('in_use', true);
+        } else {
+          formData.append('in_use', false);
+        }
         this.$http.post('https://ninkasi-server.herokuapp.com/tanks', formData)
       },
       logout: function() {

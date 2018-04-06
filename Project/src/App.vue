@@ -95,7 +95,7 @@ button
 
 
 //************* inputs *************//
-input
+input, .dropdown
   padding 10px
   box-sizing border-box
   font-size 1em
@@ -107,6 +107,9 @@ input
   outline none
   border 1px solid #cccccc
   BackgroundColorTransition(focus, 0.3s, white, darken(white, 5%))
+
+.dropdown
+  height 30px
 
 .inline
   display flex
