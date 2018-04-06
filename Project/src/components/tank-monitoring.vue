@@ -11,11 +11,11 @@
       <table class="tank" v-bind:class="tank.status">
         <tr>
           <td>{{tank.tank_id}}</td>
-          <td>{{tank.pressure}}</td>
+          <td v-if='tank.pressure'>{{tank.pressure}} psi</td>
         </tr>
         <tr>
           <td>{{tank.recipe_id}}</td>
-          <td>{{tank.temperature}}</td>
+          <td v-if='tank.temperature'>{{tank.temperature}}ºF</td>
         </tr>
         <tr>
           <td>{{tank.batch_id}}</td>
@@ -38,8 +38,6 @@ export default {
   data() {
     return {
       mobile: false,
-      batchesData: [],
-      batchesContentsData: [],
       tanks: [],
         //tankNumber, pressure, recipe_id, temperature, batchNumber, Status
     };
@@ -52,60 +50,50 @@ export default {
       this.mobile = true
     }
 
-    //get batches from heroku
+    //get our batches
     this.$http.get('https://ninkasi-server.herokuapp.com/batches')
       .then(batchResponse => {
-      this.batchesData = batchResponse.body;
-      //get batch contents to find most recent measurements
+      var batches = batchResponse.body;
+
+      //get the history of our batches to find most recent measurements
       this.$http.get('https://ninkasi-server.herokuapp.com/batch_contents_versions')
         .then(batchContentsResponse => {
         //fill batch contentes with database
-        this.batchesContentsData = batchContentsResponse.body;
+        var batchesContents = batchContentsResponse.body;
+
         //get tanks to find status
         this.$http.get('https://ninkasi-server.herokuapp.com/tanks')
           .then(tanksResponse => {
+            var tanks = tanksResponse.body
 
-            //for each batch, fill variables and most recent brewing data to display
-            for(var x in this.batchesData){
-              //object as a holder for info pulled from batches and batch_contents_versions
+            for(var x in tanks) {
+              //create a temporary tank for us to fill with data
               var tank = {
-                tank_id: '',
-                pressure: '',
-                temperature: '',
-                recipe_id: '',
-                batch_id: '',
-                status: '',
+                tank_id: tanks[x].id,
+                status: tanks[x].status,
               }
-              //save batch id and tank id
-              tank.batch_id = this.batchesData[x].id;
-              tank.tank_id = this.batchesData[x].tank_id;
-              tank.recipe_id = this.batchesData[x].recipe_id;
 
-              //iterate through tank database to find tank Status
-              for(var x in (tanksResponse.body)){
-                if((tanksResponse.body)[x].id == tank.tank_id){
-                  tank.status = (tanksResponse.body)[x].status
+              for(var z in batches) {
+                //if our batches tankID matches our tankID
+                if (batches[z].tank_id === tank.tank_id) {
+                  //add in our batchesID to the tank info box
+                  tank.batch_id = batches[z].id
+                  //add the recipeID to the tank info box
+                  tank.recipe_id = batches[z].recipe_id
                 }
               }
-              //object as holder to find most recent batch_contents_versions
-              var mostRecent = {
-                value: -1,
-                pressure: '',
-                temperature: '',
-              }
-              //iterate through batch contents, save most recent
-              for(var y in this.batchesContentsData){
-                if(this.batchesContentsData[y].batch_id === tank.batch_id){
-                  if(this.batchesContentsData[y].version_number > mostRecent.value){
-                       mostRecent.value = this.batchesContentsData[y].version_number;
-                       mostRecent.pressure = this.batchesContentsData[y].pressure;
-                       mostRecent.temperature = this.batchesContentsData[y].temperature;
+
+              //for every data point we have in a batch
+              for(var y in batchesContents){
+                //if the batchID of our data point matches the batchID we are looking for
+                if(batchesContents[y].batch_id === tank.batch_id){
+                  //if the version number is 0, it is the most recent one
+                  if(batchesContents[y].version_number === 0){
+                     tank.pressure = batchesContents[y].pressure;
+                     tank.temperature = batchesContents[y].temp;
                   }
                 }
               }
-              //put temp and pressure from most recent into tanks
-              tank.temperature = mostRecent.temperature;
-              tank.pressure = mostRecent.pressure;
 
               //push data holder to the tanks array
               this.tanks.push(tank);
@@ -163,6 +151,7 @@ export default {
     .tank
       background Teal
       width 100%
+      height 100%
       td:nth-child(2)
           text-align right
       td
