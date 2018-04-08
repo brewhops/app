@@ -63,9 +63,11 @@ default {
 
       // if the username is admin
       for (var x in this.employees) {
-        if (this.employees[x].admin === true && this.employees[x].username == username) {
+        if (this.employees[x].username === username) {
           this.encryptedPassword = this.employees[x].password
-          this.isAdmin = true
+          if (this.employees[x].admin === true) {
+            this.isAdmin = true
+          }
         }
       }
     },
