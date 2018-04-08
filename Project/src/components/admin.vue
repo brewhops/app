@@ -27,12 +27,13 @@
              <span>{{ feedback.last_name }}</span>
              <input v-model.lazy="username" placeholder="Username">
              <span>{{ feedback.username }}</span>
-             <input v-model.lazy="password" placeholder="Password">
+             <input v-model.lazy="password" placeholder="Password" type="password">
              <span>{{ feedback.password }}</span>
-             <input v-model.lazy="passwordcheck" placeholder="Re-enter password">
+             <input v-model.lazy="passwordcheck" placeholder="Re-enter password" type="password">
              <span>{{ feedback.passwordcheck }}</span>
 
              <button v-on:click="login_submit">Submit</button>
+             <span>{{ feedback.submissionResults }}</span>
 
          </div>
          <div id="brand">
@@ -80,13 +81,13 @@ export default {
       last_name: '',
       username: '',
       password: '',
+      passwordcheck: '',
 
       hopNumbers: 4,
       dryHopAdjunct: [],
       rate: [],
       brandID: '',
       yeast: '',
-      passwordcheck: '',
 
       feedback: {
         first_name: '',
@@ -94,12 +95,12 @@ export default {
         username: '',
         password: '',
         passwordcheck: '',
+        submissionResults: '',
 
         dryhopadjunct: '',
         brandID: '',
         yeast: '',
       },
-      msg: '',
     };
   },
   watch: {
@@ -126,10 +127,13 @@ export default {
     username: function() {
       const username = this.username;
 
-      var x;
-      for(x in this.database){
-        if(x.username === username)
+      // if the username is already in the database,
+      // give feedback and exit the function
+      for(var x in this.database) {
+        if(this.database[x].username === username) {
           this.feedback.username = 'Username taken'
+          return;
+        }
       }
 
       if (username.length === 0) {
@@ -159,7 +163,7 @@ export default {
       if(this.passwordcheck === this.password)
         this.feedback.passwordcheck = ''
       else {
-        this.feebdback.passwordcheck = 'Passwords must match'
+        this.feedback.passwordcheck = 'Passwords must match'
       }
     },
     brandID: function(){
@@ -191,30 +195,19 @@ export default {
   },
   methods: {
       login_submit: function () {
-        var flag = true
-        var x
-        for(x in this.database){
-          if(this.database[x].username === this.username)
-            this.feedback.username = 'Username taken'
-            flag = false
-        }
-        // if( !(this.passwordcheck === this.password)){ //TODO: Figure out why passwordcheck variable is "undefined" constantly
-        //   flag = false;
-        // }
-
-        //if all checks pass
-        if(flag == true){
-          var formData = new FormData();
-            formData.append('first_name', this.first_name)
-            formData.append('last_name', this.last_name)
-            formData.append('username', this.username)
-            formData.append('password', this.password)
-            this.$http.post('https://ninkasi-server.herokuapp.com/employees', formData) //TODO: CHECK FORM DATA SUBMISSION, it worked once!
-            console.log(formData)
-        }
-        else {
-          console.log("ERROR: NEW USER ENTRY NEVER HAPPENING!")
-        }
+        var newUser = new FormData();
+        newUser.append('first_name', this.first_name)
+        newUser.append('last_name', this.last_name)
+        newUser.append('username', this.username)
+        var encryptedPassword = CryptoJS.AES.encrypt(this.password, this.username).toString()
+        newUser.append('password', encryptedPassword)
+        this.$http.post('https://ninkasi-server.herokuapp.com/employees', newUser).then(response => {
+          if (response.ok === true) {
+            this.feedback.submissionResults = "New user succesfully created"
+          }
+        }, error => {
+          console.log(error)
+        })
       },
       recipe_submit: function(){
         var formData = new FormData()
