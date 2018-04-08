@@ -7,10 +7,28 @@
   <div id="dataEntry">
     <h2 v-if="!mobile">Data Entry</h2>
     <div id="formFields">
-      <select v-model='tank_id' v-on:change="tankChoose" ><option v-for='tank in tanks' v-bind:value='tank_id'> Tank {{ tank.id }}</option></select>
-      <!-- <input v-model="tank_id" placeholder="Tank Number"> -->
-      <select v-model='status'placeholder="Tank Status"><option v-for='option in options' v-bind:value='status'> {{ option }}</option></select>
-
+      <table>
+        <tr>
+          <td>
+            <h4>Tank</h4>
+          </td>
+          <td>
+            <select v-model='tank_id' v-bind:value='tank_id' v-on:change="tankChoose" >
+              <option v-for='tank in tanks'>{{ tank.id }}</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <h4>Status</h4>
+          </td>
+          <td>
+            <select v-model='status'placeholder="Tank Status">
+              <option v-for='option in options' v-bind:value='status'> {{ option }}</option>
+            </select>
+          </td>
+        </tr>
+      </table>
       <input v-model="specificGravity" placeholder="Specific Gravity">
       <div class="inline">
         <input v-model="ph" placeholder="pH">
@@ -25,9 +43,6 @@
       <input v-model="batch_id" placeholder="Batch Number">
       <input v-model="action" placeholder="Action Needed">
     </div>
-    Select a tank and here is where the most recent batch info variables are shown:
-    <br>
-    {{ placeholders }}
     <button v-on:click="submit">Submit</button>
   </div>
 </div>
@@ -48,7 +63,6 @@ export default {
       abv: '',
       temp: '',
       volume: '',
-      //bright: '',   //TODO: DO we need bright on this page?? Yes I think, ask connor for formatting
       generation: '',
       recipe_id: '',
       batch_id: '',
@@ -59,20 +73,6 @@ export default {
       options: [
          "OK", "CRASH", "DRYHOP"
       ],
-      placeholders: {
-        specificGravity: 'Specific Gravity',
-        tank_id: 'Tank ID',
-        status: 'Status',
-        ph: 'pH',
-        abv: 'ABV',
-        temp: 'Temperature',
-        volume: 'Volume',
-        //bright: '',   //TODO: DO we need bright on this page?? Yes I think, ask connor for formatting
-        generation: 'Generation',
-        recipe_id: 'Recipe ID',
-        batch_id: 'Batch ID',
-        action: '',
-      }
     };
   },
   beforeMount() {
@@ -96,27 +96,24 @@ export default {
   },
   methods: {
       tankChoose: function (){
-                //create url to get tank:
+      //create url to get tank:
       var tankUrl = 'https://ninkasi-server.herokuapp.com/tanks/' + this.tank_id;
         this.$http.get(tankUrl)
           .then(tanksResponse => {
-          this.placeholders.tank_id = tanksResponse.body.id; //get tank id
+          this.tank_id = tanksResponse.body.id; //get tank id
           /********** query batches ********************/
           this.$http.get('https://ninkasi-server.herokuapp.com/batches')
             .then(batchResponse => {
-          //  this.batchesData = batchResponse.body
             /********** query batch_contents_versions ********************/
             this.$http.get('https://ninkasi-server.herokuapp.com/batch_contents_versions')
               .then(batchContentsResponse => {
                 //Get batches information
                for(var x in (batchResponse.body)){
                 if((batchResponse.body)[x].tank_id === this.tank_id){
-                  this.placeholders.batch_id = (batchResponse.body)[x].id
-                  //this.placeholders.bright = (batchResponse.body)[x].bright
-                  this.placeholders.generation = (batchResponse.body)[x].generation
-                  this.placeholders.volume = (batchResponse.body)[x].volume
-                  this.placeholders.recipe_id = (batchResponse.body)[x].recipe_id
-
+                  this.batch_id = (batchResponse.body)[x].id
+                  this.generation = (batchResponse.body)[x].generation
+                  this.volume = (batchResponse.body)[x].volume
+                  this.recipe_id = (batchResponse.body)[x].recipe_id
                 }
               }
               //Find most recent batch in batch contents and pull that info
@@ -124,10 +121,10 @@ export default {
               for(var y in batchContentsResponse.body){
                 if((batchContentsResponse.body)[y].batch_id === this.batch_id && (batchContentsResponse.body)[y].version_number > max)
                   max = (batchContentsResponse.body)[y].version_number
-                  this.placeholders.aBV = (batchContentsResponse.body)[y].ABV
-                  this.placeholders.pH = (batchContentsResponse.body)[y].ph
-                  this.placeholders.temp = (batchContentsResponse.body)[y].temp
-                  this.placeholders.specificGravity = (batchContentsResponse.body)[y].SG
+                  this.aBV = (batchContentsResponse.body)[y].ABV
+                  this.pH = (batchContentsResponse.body)[y].ph
+                  this.temp = (batchContentsResponse.body)[y].temp
+                  this.specificGravity = (batchContentsResponse.body)[y].SG
                 }
               }, batchContentsResponse => {
                 this.debugging = 'Debugging Flag: Response error, cant access batches contents page';
