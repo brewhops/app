@@ -22,13 +22,9 @@
             </select>
             <span>Status: {{ status }}</span>
 
-            <input type="radio" id="true" value="true" v-model="in_use">
-            <label for="true">True</label>
-            <br>
-            <input type="radio" id="false" value="false" v-model="in_use">
-            <label for="false">False</label>
-            <br>
-            <span>In Use?: {{ in_use }}</span>
+            <br>In Use?
+            <input type="checkbox" id="checkbox" v-model="in_use">
+            <label for="in_use"></label>
 
              <button v-on:click="tank_submit">Submit</button>
          </div>
