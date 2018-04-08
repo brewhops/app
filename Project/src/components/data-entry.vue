@@ -29,16 +29,15 @@
           </td>
         </tr>
       </table>
-      <input v-model="specificGravity" placeholder="Specific Gravity">
+      <input v-model="specificGravity" type="number" placeholder="Specific Gravity">
       <div class="inline">
-        <input v-model="ph" placeholder="pH">
-        <input v-model="abv" placeholder="ABV">
-        <input v-model="temp" placeholder="Temperature">
+        <input v-model="ph" type="number" placeholder="pH">
+        <input v-model="abv" type="number" placeholder="ABV">
+        <input v-model="temp" type="number" placeholder="Temperature">
       </div>
-      <input v-model="volume" placeholder="Volume">
-      <input v-model="generation" placeholder="Generation">
+      <input v-model="volume" type="number" placeholder="Volume">
+      <input v-model="generation" type="number" placeholder="Generation">
       <input type="datetime-local" placeholder="Time Measured">
-      <!-- <select v-model='tank_id'placeholder="Tank Number"><option v-for='tank in tanks' v-bind:value='tank_id'> Tank {{ tank.id }}</option></select> -->
       <input v-model="recipe_id" placeholder="Brand ID">
       <input v-model="batch_id" placeholder="Batch Number">
       <input v-model="action" placeholder="Action Needed">
