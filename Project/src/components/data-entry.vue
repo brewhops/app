@@ -137,40 +137,26 @@ export default {
         });
     },
     submit: function() {
-
-      var formData1 = new FormData()
+      var batchesData = new FormData()
       var id
-      //formData1.append('id', this.batch_id);  //TODO: do they enter id or does comptuer automate it?
-      function submitBatchData(formData1, callback) {
-        formData1.append('recipe_id', this.recipe_id)
-        formData1.append('tank_id', this.tank_id)
-        formData1.append('volume', this.volume)
-        formData1.append('generation', this.generation)
-
-        callback(formData1)
-      }
-      this.$http.post('https://ninkasi-server.herokuapp.com/batches', formData1).then(response => {
+      batchesData.append('recipe_id', this.recipe_id)
+      batchesData.append('tank_id', this.tank_id)
+      batchesData.append('volume', this.volume)
+      batchesData.append('generation', this.generation)
+      this.$http.post('https://ninkasi-server.herokuapp.com/batches', batchesData).then(response => {
         id = response.body.id;
-        var formData2 = new FormData();
-
-        function submitBatchContentsData(formData2, callback) {
-          formData2.append('batch_id', id)
-          formData2.append('ph', this.ph)
-          formData2.append('abv', this.abv)
-          formData2.append('pressure', this.pressure)
-          formData2.append('temp', this.temp)
-
-          callback(formData2)
-        }
-        this.$http.post('https://ninkasi-server.herokuapp.com/batch_contents_versions', formData2).then(response2 => {
-          console.log(response2);
+        var batchHistory = new FormData();
+        batchHistory.append('batch_id', id)
+        batchHistory.append('ph', this.ph)
+        batchHistory.append('abv', this.abv)
+        batchHistory.append('pressure', this.pressure)
+        batchHistory.append('temp', this.temp)
+        this.$http.post('https://ninkasi-server.herokuapp.com/batch_contents_versions', batchHistory).then(response2 => {
         }, response2 => {
           this.debugging = 'Debugging Flag: Response error, cant access employees page';
-          console.log(response2);
         });
       }, response => {
         this.debugging = 'Debugging Flag: Response error, cant access employees page';
-        console.log(response);
       });
     }
   }
