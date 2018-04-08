@@ -126,10 +126,13 @@ export default {
     username: function() {
       const username = this.username;
 
-      var x;
-      for(x in this.database){
-        if(x.username === username)
+      // if the username is already in the database,
+      // give feedback and exit the function
+      for(var x in this.database) {
+        if(this.database[x].username === username) {
           this.feedback.username = 'Username taken'
+          return;
+        }
       }
 
       if (username.length === 0) {
@@ -191,19 +194,6 @@ export default {
   },
   methods: {
       login_submit: function () {
-        var flag = true
-        var x
-        for(x in this.database){
-          if(this.database[x].username === this.username)
-            this.feedback.username = 'Username taken'
-            flag = false
-        }
-        // if( !(this.passwordcheck === this.password)){ //TODO: Figure out why passwordcheck variable is "undefined" constantly
-        //   flag = false;
-        // }
-
-        //if all checks pass
-        if(flag == true){
           var formData = new FormData();
             formData.append('first_name', this.first_name)
             formData.append('last_name', this.last_name)
@@ -211,10 +201,6 @@ export default {
             formData.append('password', this.password)
             this.$http.post('https://ninkasi-server.herokuapp.com/employees', formData) //TODO: CHECK FORM DATA SUBMISSION, it worked once!
             console.log(formData)
-        }
-        else {
-          console.log("ERROR: NEW USER ENTRY NEVER HAPPENING!")
-        }
       },
       recipe_submit: function(){
         var formData = new FormData()
