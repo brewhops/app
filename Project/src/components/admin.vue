@@ -199,7 +199,8 @@ export default {
         newUser.append('first_name', this.first_name)
         newUser.append('last_name', this.last_name)
         newUser.append('username', this.username)
-        newUser.append('password', this.password)
+        var encryptedPassword = CryptoJS.AES.encrypt(this.password, this.username).toString()
+        newUser.append('password', encryptedPassword)
         this.$http.post('https://ninkasi-server.herokuapp.com/employees', newUser).then(response => {
           if (response.ok === true) {
             this.feedback.submissionResults = "New user succesfully created"
