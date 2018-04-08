@@ -33,6 +33,7 @@
              <span>{{ feedback.passwordcheck }}</span>
 
              <button v-on:click="login_submit">Submit</button>
+             <span>{{ feedback.submissionResults }}</span>
 
          </div>
          <div id="brand">
@@ -94,12 +95,12 @@ export default {
         username: '',
         password: '',
         passwordcheck: '',
+        submissionResults: '',
 
         dryhopadjunct: '',
         brandID: '',
         yeast: '',
       },
-      msg: '',
     };
   },
   watch: {
@@ -194,13 +195,18 @@ export default {
   },
   methods: {
       login_submit: function () {
-          var formData = new FormData();
-            formData.append('first_name', this.first_name)
-            formData.append('last_name', this.last_name)
-            formData.append('username', this.username)
-            formData.append('password', this.password)
-            this.$http.post('https://ninkasi-server.herokuapp.com/employees', formData) //TODO: CHECK FORM DATA SUBMISSION, it worked once!
-            console.log(formData)
+        var newUser = new FormData();
+        newUser.append('first_name', this.first_name)
+        newUser.append('last_name', this.last_name)
+        newUser.append('username', this.username)
+        newUser.append('password', this.password)
+        this.$http.post('https://ninkasi-server.herokuapp.com/employees', newUser).then(response => {
+          if (response.ok === true) {
+            this.feedback.submissionResults = "New user succesfully created"
+          }
+        }, error => {
+          console.log(error)
+        })
       },
       recipe_submit: function(){
         var formData = new FormData()
