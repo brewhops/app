@@ -27,9 +27,9 @@
              <span>{{ feedback.last_name }}</span>
              <input v-model.lazy="username" placeholder="Username">
              <span>{{ feedback.username }}</span>
-             <input v-model.lazy="password" placeholder="Password">
+             <input v-model.lazy="password" placeholder="Password" type="password">
              <span>{{ feedback.password }}</span>
-             <input v-model.lazy="passwordcheck" placeholder="Re-enter password">
+             <input v-model.lazy="passwordcheck" placeholder="Re-enter password" type="password">
              <span>{{ feedback.passwordcheck }}</span>
 
              <button v-on:click="login_submit">Submit</button>
