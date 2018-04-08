@@ -81,13 +81,13 @@ export default {
       last_name: '',
       username: '',
       password: '',
+      passwordcheck: '',
 
       hopNumbers: 4,
       dryHopAdjunct: [],
       rate: [],
       brandID: '',
       yeast: '',
-      passwordcheck: '',
 
       feedback: {
         first_name: '',
@@ -163,7 +163,7 @@ export default {
       if(this.passwordcheck === this.password)
         this.feedback.passwordcheck = ''
       else {
-        this.feebdback.passwordcheck = 'Passwords must match'
+        this.feedback.passwordcheck = 'Passwords must match'
       }
     },
     brandID: function(){
