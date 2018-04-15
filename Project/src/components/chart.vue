@@ -18,6 +18,7 @@ default {
   mounted: function() {
     let data = this.data
     let date = this.date
+    console.log(data);
     c3.generate({
       bindto: this.$el,
       data: {

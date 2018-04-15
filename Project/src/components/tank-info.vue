@@ -9,9 +9,9 @@
       <h2>Brand History</h2>
       <div id="charts">
         <chart v-bind:date="history.date" v-bind:data="history.temp"></chart>
-        <abv-chart></abv-chart>
-        <sg-chart></sg-chart>
-        <ph-chart></ph-chart>
+        <chart v-bind:date="history.date" v-bind:data="history.sg"></chart>
+        <chart v-bind:date="history.date" v-bind:data="history.abv"></chart>
+        <chart v-bind:date="history.date" v-bind:data="history.ph"></chart>
       </div>
     </div>
     <div id="tank">
@@ -71,10 +71,7 @@
 <script>
 
 import recipe from './recipe.vue'
-import tempChart from './charts/temp.vue'
-import abvChart from './charts/abv.vue'
-import sgChart from './charts/specificGravity.vue'
-import phChart from './charts/ph.vue'
+import chart from './chart.vue'
 
 import router from "../router/index.js"
 import Cookie from "js-cookie"
@@ -86,10 +83,7 @@ default {
   name: 'tank-info',
   components: {
     'recipe': recipe,
-    'chart': tempChart,
-    'abv-chart': abvChart,
-    'sg-chart': sgChart,
-    'ph-chart': phChart,
+    'chart': chart,
   },
   data() {
     return {
@@ -167,11 +161,14 @@ default {
           var date
           for(var y in batchContentsResponse.body){
 
-            // if the history temp value is not null
-            if ((batchContentsResponse.body)[y].temp) {
+            if((batchContentsResponse.body)[y].batch_id === this.tankInfo.batch_id) {
+              // format the date to include the month, day, year, hour and minute
               date = moment((batchContentsResponse.body)[y].updated_at).format('MM/DD/YY H:m')
               this.history.date.push(date)
               this.history.temp.push((batchContentsResponse.body)[y].temp)
+              this.history.abv.push((batchContentsResponse.body)[y].ABV)
+              this.history.sg.push((batchContentsResponse.body)[y].SG)
+              this.history.ph.push((batchContentsResponse.body)[y].pH)
             }
 
             if((batchContentsResponse.body)[y].batch_id === this.tankInfo.batch_id && (batchContentsResponse.body)[y].version_number > max) {
