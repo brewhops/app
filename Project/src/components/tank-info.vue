@@ -8,7 +8,7 @@
     <div id="data">
       <h2>Brand History</h2>
       <div id="charts">
-        <temp-chart v-bind:data="history.temp"></temp-chart>
+        <temp-chart v-bind:date="history.date" v-bind:temp="history.temp"></temp-chart>
         <abv-chart></abv-chart>
         <sg-chart></sg-chart>
         <ph-chart></ph-chart>
@@ -79,6 +79,8 @@ import phChart from './charts/ph.vue'
 import router from "../router/index.js"
 import Cookie from "js-cookie"
 
+import moment from "moment"
+
 export
 default {
   name: 'tank-info',
@@ -106,6 +108,7 @@ default {
         "time": '',
       },
       history: {
+        date: ['Date'],
         temp: ['Temperature'],
         abv: ['ABV'],
         sg: ['Specific Gravity'],
@@ -161,10 +164,13 @@ default {
 
           //Find most recent batch in batch contents and pull that info
           var max = 0
+          var date
           for(var y in batchContentsResponse.body){
 
             // if the history temp value is not null
             if ((batchContentsResponse.body)[y].temp) {
+              date = moment((batchContentsResponse.body)[y].updated_at).format('MM/DD/YY H:m')
+              this.history.date.push(date)
               this.history.temp.push((batchContentsResponse.body)[y].temp)
             }
 
