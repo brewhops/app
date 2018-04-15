@@ -8,7 +8,7 @@
     <div id="data">
       <h2>Brand History</h2>
       <div id="charts">
-        <temp-chart v-bind:date="history.date" v-bind:temp="history.temp"></temp-chart>
+        <chart v-bind:date="history.date" v-bind:data="history.temp"></chart>
         <abv-chart></abv-chart>
         <sg-chart></sg-chart>
         <ph-chart></ph-chart>
@@ -86,7 +86,7 @@ default {
   name: 'tank-info',
   components: {
     'recipe': recipe,
-    'temp-chart': tempChart,
+    'chart': tempChart,
     'abv-chart': abvChart,
     'sg-chart': sgChart,
     'ph-chart': phChart,

@@ -1,5 +1,4 @@
 <template>
-  <div id="tempChart"></div>
 </template>
 
 <script>
@@ -11,24 +10,20 @@ import 'c3/c3.min.css'
 
 export
 default {
-  name: 'temp-chart',
-  props: ['date', 'temp'],
+  name: 'chart',
+  props: ['date', 'data'],
   data() {
     return {};
   },
   mounted: function() {
-    let temperature = this.temp
+    let data = this.data
     let date = this.date
-    console.log(date);
     c3.generate({
       bindto: this.$el,
       data: {
         x: 'Date', //bind the x axis to the 'Date' data set
         xFormat: '%m/%d/%Y %H:%M',
-        columns: [
-          date,
-          temperature
-        ]
+        columns: [ date, data ]
       },
       axis: {
         x: {
