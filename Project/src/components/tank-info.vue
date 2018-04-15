@@ -139,7 +139,7 @@ default {
     }
 
     //create url to get tank:
-    var tankUrl = 'https://ninkasi-server.herokuapp.com/tanks/' + '1';
+    var tankUrl = 'https://ninkasi-server.herokuapp.com/tanks/' + this.$route.params.tankID;
 
     this.$http.get(tankUrl)
       .then(tanksResponse => {
