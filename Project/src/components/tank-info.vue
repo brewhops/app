@@ -130,54 +130,51 @@ default {
     }
 
     //create url to get tank:
-    var tankUrl = 'https://ninkasi-server.herokuapp.com/tanks/' + this.$route.params.tankID;
+    var base = 'https://ninkasi-server.herokuapp.com'
+    var tankUrl = base + '/tanks/' + this.$route.params.tankID
 
-    this.$http.get(tankUrl)
-      .then(tanksResponse => {
-      this.tankInfo.tank_id = tanksResponse.body.id; //get tank id
+    this.$http.get(tankUrl).then(tanksResponse => {
+      // set the tank stat]us
+      this.tankInfo.tank_id = tanksResponse.body.id
       this.tankInfo.status = tanksResponse.body.status
       /********** query batches ********************/
-      this.$http.get('https://ninkasi-server.herokuapp.com/batches')
-        .then(batchResponse => {
-      //  this.batchesData = batchResponse.body
+      this.$http.get(base + '/batches').then(batchResponse => {
         /********** query batch_contents_versions ********************/
-        this.$http.get('https://ninkasi-server.herokuapp.com/batch_contents_versions')
-          .then(batchContentsResponse => {
-
-
-            //Get batches information
-           for(var x in (batchResponse.body)){
-            if((batchResponse.body)[x].tank_id === this.tankInfo.tank_id){
-              this.tankInfo.batch_id = (batchResponse.body)[x].id
-              this.tankInfo.bright = (batchResponse.body)[x].bright
-              this.tankInfo.generation = (batchResponse.body)[x].generation
-              this.tankInfo.volume = (batchResponse.body)[x].volume
-              this.tankInfo.recipe_id = (batchResponse.body)[x].recipe_id
+        this.$http.get(base + '/batch_contents_versions').then(batchContentsResponse => {
+          // Get batches information
+          for (let batch of batchResponse.body) {
+            // if our batch tankID is the tankID we are looking for
+            // set some data
+            if(batch.tank_id === this.tankInfo.tank_id) {
+              this.tankInfo.batch_id   = batch.id
+              this.tankInfo.bright     = batch.bright
+              this.tankInfo.generation = batch.generation
+              this.tankInfo.volume     = batch.volume
+              this.tankInfo.recipe_id  = batch.recipe_id
             }
           }
 
-          //Find most recent batch in batch contents and pull that info
+          // Find most recent batch in batch contents and pull that info
           var max = 0
           var date
-          for(var y in batchContentsResponse.body){
-
-            if((batchContentsResponse.body)[y].batch_id === this.tankInfo.batch_id) {
+          for(let batchContents of batchContentsResponse.body){
+            if(batchContents.batch_id === this.tankInfo.batch_id) {
               // format the date to include the month, day, year, hour and minute
-              date = moment((batchContentsResponse.body)[y].updated_at).format('MM/DD/YY H:m')
+              date = moment(batchContents.updated_at).format('MM/DD/YY H:m')
               this.history.date.push(date)
-              this.history.temp.push((batchContentsResponse.body)[y].temp)
-              this.history.abv.push((batchContentsResponse.body)[y].ABV)
-              this.history.sg.push((batchContentsResponse.body)[y].SG)
-              this.history.ph.push((batchContentsResponse.body)[y].pH)
+              this.history.temp.push(batchContents.temp)
+              this.history.abv.push(batchContents.ABV)
+              this.history.sg.push(batchContents.SG)
+              this.history.ph.push(batchContents.pH)
             }
 
-            if((batchContentsResponse.body)[y].batch_id === this.tankInfo.batch_id && (batchContentsResponse.body)[y].version_number > max) {
-              max = (batchContentsResponse.body)[y].version_number
-              this.tankInfo.aBV = (batchContentsResponse.body)[y].ABV
-              this.tankInfo.pH = (batchContentsResponse.body)[y].ph
-              this.tankInfo.temp = (batchContentsResponse.body)[y].temp
-              this.tankInfo.sG = (batchContentsResponse.body)[y].SG
-              this.tankInfo.time = (batchContentsResponse.body)[y].date_time_reading
+            if(batchContents.batch_id === this.tankInfo.batch_id && batchContents.version_number > max) {
+              max = batchContents.version_number
+              this.tankInfo.aBV  = batchContents.ABV
+              this.tankInfo.pH   = batchContents.ph
+              this.tankInfo.temp = batchContents.temp
+              this.tankInfo.sG   = batchContents.SG
+              this.tankInfo.time = batchContents.date_time_reading
             }
           }
 
