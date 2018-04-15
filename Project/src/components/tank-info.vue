@@ -8,7 +8,7 @@
     <div id="data">
       <h2>Brand History</h2>
       <div id="charts">
-        <temp-chart></temp-chart>
+        <temp-chart v-bind:data="history.temp"></temp-chart>
         <abv-chart></abv-chart>
         <sg-chart></sg-chart>
         <ph-chart></ph-chart>
@@ -92,31 +92,25 @@ default {
   data() {
     return {
       tankInfo: {
-       /*"id" : 1,
-       "recipe_id" : 'Pacific Rain',
-       "tank_id" : 2,
-       "volume": 20.0,
-       "bright": 15.0,
-       "generation" : 10.0,
-       "sG" : 25.0,
-       "pH" :5.5,
-       "aBV": 5.5,
-       "temp": 45,
-       "status": 'ok',*/
-       "tank_id" : '',
-       "recipe_id" : '',
-       "batch_id" : '',
-       "volume": '',
-       "bright": '',
-       "generation" : '',
-       "sG" : '',
-       "pH" :'',
-       "aBV": '',
-       "temp": '',
-       "status": '',
-       "time" : '',
-
-     },
+        "tank_id": '',
+        "recipe_id": '',
+        "batch_id": '',
+        "volume": '',
+        "bright": '',
+        "generation": '',
+        "sG": '',
+        "pH": '',
+        "aBV": '',
+        "temp": '',
+        "status": '',
+        "time": '',
+      },
+      history: {
+        temp: ['Temperature'],
+        abv: ['ABV'],
+        sg: ['Specific Gravity'],
+        ph: ['pH'],
+      },
       doneLink: '',
       home: '',
       mobile: false
@@ -162,21 +156,26 @@ default {
               this.tankInfo.generation = (batchResponse.body)[x].generation
               this.tankInfo.volume = (batchResponse.body)[x].volume
               this.tankInfo.recipe_id = (batchResponse.body)[x].recipe_id
-              console.log((batchResponse.body)[x]);
-              console.log(this.tankInfo);
             }
           }
 
           //Find most recent batch in batch contents and pull that info
           var max = 0
           for(var y in batchContentsResponse.body){
-            if((batchContentsResponse.body)[y].batch_id === this.tankInfo.batch_id && (batchContentsResponse.body)[y].version_number > max)
+
+            // if the history temp value is not null
+            if ((batchContentsResponse.body)[y].temp) {
+              this.history.temp.push((batchContentsResponse.body)[y].temp)
+            }
+
+            if((batchContentsResponse.body)[y].batch_id === this.tankInfo.batch_id && (batchContentsResponse.body)[y].version_number > max) {
               max = (batchContentsResponse.body)[y].version_number
               this.tankInfo.aBV = (batchContentsResponse.body)[y].ABV
               this.tankInfo.pH = (batchContentsResponse.body)[y].ph
               this.tankInfo.temp = (batchContentsResponse.body)[y].temp
               this.tankInfo.sG = (batchContentsResponse.body)[y].SG
               this.tankInfo.time = (batchContentsResponse.body)[y].date_time_reading
+            }
           }
 
           }, batchContentsResponse => {
