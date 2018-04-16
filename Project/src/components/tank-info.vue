@@ -171,10 +171,10 @@ default {
             if(batchContents.batch_id === this.tankInfo.batch_id && batchContents.version_number > max) {
               max = batchContents.version_number
               this.tankInfo.aBV  = batchContents.ABV
-              this.tankInfo.pH   = batchContents.ph
+              this.tankInfo.pH   = batchContents.pH
               this.tankInfo.temp = batchContents.temp
               this.tankInfo.sG   = batchContents.SG
-              this.tankInfo.time = batchContents.date_time_reading
+              this.tankInfo.time = moment(batchContents.updated_at).format('MM/DD/YY H:mm')
             }
           }
 
