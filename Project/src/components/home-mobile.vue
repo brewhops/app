@@ -9,37 +9,6 @@
       <router-link to="/tank-monitoring"><button>Tank Monitoring</button></router-link>
       <router-link to="/data-entry"><button>Data Entry</button></router-link>
       <router-link to="/"><button>Schedule</button></router-link>
-      <h3>Quick Tank Monitoring</h3>
-      <router-link to="/tank-info">
-        <button>
-          <table>
-            <tr>
-              <td>Tank 238-232</td>
-              <td>Urgent</td>
-            </tr>
-          </table>
-        </button>
-      </router-link>
-      <router-link to="/tank-info">
-        <button>
-          <table>
-            <tr>
-              <td>Tank 238-232</td>
-              <td>Urgent</td>
-            </tr>
-          </table>
-        </button>
-      </router-link>
-      <router-link to="/tank-info">
-        <button>
-          <table>
-            <tr>
-              <td>Tank 238-232</td>
-              <td>Urgent</td>
-            </tr>
-          </table>
-        </button>
-      </router-link>
     </div>
   </div>
 </template>
