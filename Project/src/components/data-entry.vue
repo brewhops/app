@@ -90,6 +90,7 @@ export default {
           this.tanks.push(response.body[x])
         }
       }
+      this.tanks.sort(this.sortTanks)
 
     }, response => {
       this.debugging = 'Debugging Flag: Response error, cant access employees page';
@@ -162,6 +163,9 @@ export default {
       }, response => {
         this.debugging = 'Debugging Flag: Response error, cant access employees page';
       });
+    },
+    sortTanks: function(a, b) {
+      return a.id - b.id
     }
   }
 };

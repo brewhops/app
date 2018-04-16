@@ -98,6 +98,8 @@ export default {
               //push data holder to the tanks array
               this.tanks.push(tank);
            }
+
+           this.tanks.sort(this.sortTanks)
           }, tanksResponse => {
            console.log('Response error, cant access employees page', response);
          });
@@ -115,6 +117,9 @@ export default {
       // send us over to the tank info page and set the id on the url
       // to be the tankID that we clicked on.
       router.push({ name: 'tank-info', params: { 'tankID': tankID } })
+    },
+    sortTanks: function(a, b) {
+      return a.tank_id - b.tank_id
     },
   },
 };
