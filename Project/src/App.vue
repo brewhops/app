@@ -109,7 +109,7 @@ input, .dropdown
   BackgroundColorTransition(focus, 0.3s, white, darken(white, 5%))
 
 .dropdown
-  height 30px
+  min-height 30px
 
 .inline
   display flex
