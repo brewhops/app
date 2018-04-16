@@ -29,10 +29,19 @@ export default {
             tick: {
               format: '%m-%d %H:%M'
             }
+          },
+          y : {
+            tick: {
+              // format: d3.format(".4f")
+              format: function(d) { return +d.toFixed(10) }
+            }
           }
         },
+        zoom: {
+            enabled: true
+        },
       });
-    }
+    },
   }
 };
 </script>
