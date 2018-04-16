@@ -143,8 +143,7 @@ default {
         this.$http.get(base + '/batch_contents_versions').then(batchContentsResponse => {
           // Get batches information
           for (let batch of batchResponse.body) {
-            // if our batch tankID is the tankID we are looking for
-            // set some data
+            // if our batch tankID is the tankID we are looking for set some data
             if(batch.tank_id === this.tankInfo.tank_id) {
               this.tankInfo.batch_id   = batch.id
               this.tankInfo.bright     = batch.bright
@@ -174,6 +173,8 @@ default {
               this.tankInfo.pH   = batchContents.pH
               this.tankInfo.temp = batchContents.temp
               this.tankInfo.sG   = batchContents.SG
+              // use a lowercase h to change the hours from 24 to 12
+              // the mm sets the minute with a leading 0
               this.tankInfo.time = moment(batchContents.updated_at).format('MM/DD/YY H:mm')
             }
           }

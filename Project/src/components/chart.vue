@@ -15,8 +15,11 @@ export default {
     return {};
   },
   watch: {
+    // when the data array changes, redraw the chart
     data: function() {
+      // create our chart
       c3.generate({
+        // bind it to this instance of the component
         bindto: this.$el,
         data: {
           x: 'Date', //bind the x axis to the 'Date' data set
@@ -27,16 +30,21 @@ export default {
           x: {
             type: 'timeseries', // the x axis has a timeseries data type
             tick: {
-              format: '%m-%d %H:%M'
+              // the format shown when the mouse hovers over that dot
+              format: '%m/%d %H:%M'
+              // fit: false, if you want to keep the x axis ticks from sticking to the data points
+              // count: 4 if you want to set the ticks to a fixed ammount
             }
           },
           y : {
             tick: {
-              // format: d3.format(".4f")
+              // round the numbers on the y axis to a max of 10 decimal places
+              // this gets the y axis numbers behaving and not getting too long
               format: function(d) { return +d.toFixed(10) }
             }
           }
         },
+        // allow the user to zoom in and scroll around on the map
         zoom: {
             enabled: true
         },
