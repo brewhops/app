@@ -8,10 +8,10 @@
     <div id="data">
       <h2>Brand History</h2>
       <div id="charts">
-        <temp-chart></temp-chart>
-        <abv-chart></abv-chart>
-        <sg-chart></sg-chart>
-        <ph-chart></ph-chart>
+        <chart v-bind:date="history.date" v-bind:data="history.temp"></chart>
+        <chart v-bind:date="history.date" v-bind:data="history.sg"></chart>
+        <chart v-bind:date="history.date" v-bind:data="history.abv"></chart>
+        <chart v-bind:date="history.date" v-bind:data="history.ph"></chart>
       </div>
     </div>
     <div id="tank">
@@ -71,52 +71,43 @@
 <script>
 
 import recipe from './recipe.vue'
-import tempChart from './charts/temp.vue'
-import abvChart from './charts/abv.vue'
-import sgChart from './charts/specificGravity.vue'
-import phChart from './charts/ph.vue'
+import chart from './chart.vue'
 
 import router from "../router/index.js"
 import Cookie from "js-cookie"
+
+import moment from "moment"
 
 export
 default {
   name: 'tank-info',
   components: {
     'recipe': recipe,
-    'temp-chart': tempChart,
-    'abv-chart': abvChart,
-    'sg-chart': sgChart,
-    'ph-chart': phChart,
+    'chart': chart,
   },
   data() {
     return {
       tankInfo: {
-       /*"id" : 1,
-       "recipe_id" : 'Pacific Rain',
-       "tank_id" : 2,
-       "volume": 20.0,
-       "bright": 15.0,
-       "generation" : 10.0,
-       "sG" : 25.0,
-       "pH" :5.5,
-       "aBV": 5.5,
-       "temp": 45,
-       "status": 'ok',*/
-       "tank_id" : '',
-       "recipe_id" : '',
-       "batch_id" : '',
-       "volume": '',
-       "bright": '',
-       "generation" : '',
-       "sG" : '',
-       "pH" :'',
-       "aBV": '',
-       "temp": '',
-       "status": '',
-       "time" : '',
-
-     },
+        "tank_id": '',
+        "recipe_id": '',
+        "batch_id": '',
+        "volume": '',
+        "bright": '',
+        "generation": '',
+        "sG": '',
+        "pH": '',
+        "aBV": '',
+        "temp": '',
+        "status": '',
+        "time": '',
+      },
+      history: {
+        date: ['Date'],
+        temp: ['Temperature'],
+        abv: ['ABV'],
+        sg: ['Specific Gravity'],
+        ph: ['pH'],
+      },
       doneLink: '',
       home: '',
       mobile: false
@@ -139,44 +130,52 @@ default {
     }
 
     //create url to get tank:
-    var tankUrl = 'https://ninkasi-server.herokuapp.com/tanks/' + '1';
+    var base = 'https://ninkasi-server.herokuapp.com'
+    var tankUrl = base + '/tanks/' + this.$route.params.tankID
 
-    this.$http.get(tankUrl)
-      .then(tanksResponse => {
-      this.tankInfo.tank_id = tanksResponse.body.id; //get tank id
+    this.$http.get(tankUrl).then(tanksResponse => {
+      // set the tank stat]us
+      this.tankInfo.tank_id = tanksResponse.body.id
       this.tankInfo.status = tanksResponse.body.status
       /********** query batches ********************/
-      this.$http.get('https://ninkasi-server.herokuapp.com/batches')
-        .then(batchResponse => {
-      //  this.batchesData = batchResponse.body
+      this.$http.get(base + '/batches').then(batchResponse => {
         /********** query batch_contents_versions ********************/
-        this.$http.get('https://ninkasi-server.herokuapp.com/batch_contents_versions')
-          .then(batchContentsResponse => {
-
-
-            //Get batches information
-           for(var x in (batchResponse.body)){
-            if((batchResponse.body)[x].tank_id === this.tankInfo.tank_id){
-              this.tankInfo.batch_id = (batchResponse.body)[x].id
-              this.tankInfo.bright = (batchResponse.body)[x].bright
-              this.tankInfo.generation = (batchResponse.body)[x].generation
-              this.tankInfo.volume = (batchResponse.body)[x].volume
-              this.tankInfo.recipe_id = (batchResponse.body)[x].recipe_id
-              console.log((batchResponse.body)[x]);
-              console.log(this.tankInfo);
+        this.$http.get(base + '/batch_contents_versions').then(batchContentsResponse => {
+          // Get batches information
+          for (let batch of batchResponse.body) {
+            // if our batch tankID is the tankID we are looking for
+            // set some data
+            if(batch.tank_id === this.tankInfo.tank_id) {
+              this.tankInfo.batch_id   = batch.id
+              this.tankInfo.bright     = batch.bright
+              this.tankInfo.generation = batch.generation
+              this.tankInfo.volume     = batch.volume
+              this.tankInfo.recipe_id  = batch.recipe_id
             }
           }
 
-          //Find most recent batch in batch contents and pull that info
+          // Find most recent batch in batch contents and pull that info
           var max = 0
-          for(var y in batchContentsResponse.body){
-            if((batchContentsResponse.body)[y].batch_id === this.tankInfo.batch_id && (batchContentsResponse.body)[y].version_number > max)
-              max = (batchContentsResponse.body)[y].version_number
-              this.tankInfo.aBV = (batchContentsResponse.body)[y].ABV
-              this.tankInfo.pH = (batchContentsResponse.body)[y].ph
-              this.tankInfo.temp = (batchContentsResponse.body)[y].temp
-              this.tankInfo.sG = (batchContentsResponse.body)[y].SG
-              this.tankInfo.time = (batchContentsResponse.body)[y].date_time_reading
+          var date
+          for(let batchContents of batchContentsResponse.body){
+            if(batchContents.batch_id === this.tankInfo.batch_id) {
+              // format the date to include the month, day, year, hour and minute
+              date = moment(batchContents.updated_at).format('MM/DD/YY H:m')
+              this.history.date.push(date)
+              this.history.temp.push(batchContents.temp)
+              this.history.abv.push(batchContents.ABV)
+              this.history.sg.push(batchContents.SG)
+              this.history.ph.push(batchContents.pH)
+            }
+
+            if(batchContents.batch_id === this.tankInfo.batch_id && batchContents.version_number > max) {
+              max = batchContents.version_number
+              this.tankInfo.aBV  = batchContents.ABV
+              this.tankInfo.pH   = batchContents.ph
+              this.tankInfo.temp = batchContents.temp
+              this.tankInfo.sG   = batchContents.SG
+              this.tankInfo.time = batchContents.date_time_reading
+            }
           }
 
           }, batchContentsResponse => {
