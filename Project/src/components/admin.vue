@@ -16,6 +16,10 @@
                <option v-for="tankStatus in tankStatuses" :value="tankStatus">{{tankStatus}}</option>
              </select>
 
+            <input type="checkbox" id="checkbox" v-model="in_use">
+            <br>In Use?
+            <label for="in_use"></label>
+
              <button v-on:click="tank_submit">Submit</button>
          </div>
          <!-- Create new user with username, first, last name, and password and password check -->
@@ -235,14 +239,13 @@ export default {
       },
       tank_submit: function(){
         var formData = new FormData();
-        //TODO: if we are specifying tank number and not just letting database generate it, we will need to chekc they aren't entering duplicates
-      //  formData.append('id', this.id);
+        formData.append('tank_id', this.tank_id);
         formData.append('status', this.status);
-        if (this.status === "brewing") {
-          formData.append('in_use', true);
-        } else {
+        console.log(formData);
           formData.append('in_use', false);
-        }
+        else
+          formData.append('in_use', true);
+        if(this.in_use)
         this.$http.post('https://ninkasi-server.herokuapp.com/tanks', formData)
       },
       logout: function() {
