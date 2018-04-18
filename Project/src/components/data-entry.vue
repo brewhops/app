@@ -25,7 +25,9 @@
         <input v-model="ABV" type="number" placeholder="ABV">
         <input v-model="temp" type="number" placeholder="Temperature">
       </div>
+      <input v-model="pressure" type="number" placeholder="Pressure">
       <input v-model="volume" type="number" placeholder="Volume">
+      <input v-model="bright" type="number" placeholder="Bright">
       <input v-model="generation" type="number" placeholder="Generation">
       <input type="datetime-local" placeholder="Time Measured">
       <input v-model="recipe_id" placeholder="Recipe ID">
@@ -65,6 +67,8 @@
 import router from "../router/index.js"
 import Cookie from "js-cookie"
 
+import moment from 'moment'
+
 export default {
   name: 'data-entry',
   data() {
@@ -79,6 +83,8 @@ export default {
       generation: '',
       recipe_id: '',
       batch_id: '',
+      bright: '',
+      pressure: '',
       action: '',
       mobile: false,
       obj: {},
@@ -151,24 +157,28 @@ export default {
                     //if our batch is in the specified tank
                     if ((batchResponse.body)[x].tank_id === this.tank_id) {
                       //save batch_id, generation, volume, recipe_id
-                      this.batch_id = (batchResponse.body)[x].batch_id
+                      this.batch_id = (batchResponse.body)[x].id
                       this.batch_name = (batchResponse.body)[x].batch_name
                       this.generation = (batchResponse.body)[x].generation
                       this.volume = (batchResponse.body)[x].volume
+                      this.bright = (batchResponse.body)[x].bright
                       this.recipe_id = (batchResponse.body)[x].recipe_id
                     }
                   }
                   //Find most recent batch in batch contents and pull that info
                   //var max is to keep track of most recent date
-                  var max = 0;
+                var max = moment("1995-07-29");
+
                   for (var y in batchContentsResponse.body) {
-                    if ((batchContentsResponse.body)[y].batch_id === this.batch_id && (batchContentsResponse.body)[y].date > max){
-                      //update max date
-                      max = (batchContentsResponse.body)[y].updated_at
+                    var batchTime = moment((batchContentsResponse.body)[y].updated_at);
+                    if ((batchContentsResponse.body)[y].batch_id === this.batch_id && batchTime > max ){
+                      max = moment((batchContentsResponse.body)[y].updated_at)
+
                       //save ABV, pH, temperature, and SG
                       this.ABV = (batchContentsResponse.body)[y].ABV
                       this.pH = (batchContentsResponse.body)[y].pH
                       this.temp = (batchContentsResponse.body)[y].temp
+                      this.pressure = (batchContentsResponse.body)[y].pressure
                       this.SG = (batchContentsResponse.body)[y].SG
                     }
                   }
@@ -190,6 +200,7 @@ export default {
       batchesData.append('recipe_id', this.recipe_id)
       batchesData.append('tank_id', this.tank_id)
       batchesData.append('volume', this.volume)
+      batchesData.append('bright', this.bright)
       batchesData.append('generation', this.generation)
       this.$http.post('https://ninkasi-server.herokuapp.com/batches', batchesData).then(response => {
         id = response.body.id;
@@ -206,10 +217,11 @@ export default {
 
         var batchHistory = new FormData();
         batchHistory.append('batch_id', id)
-        batchHistory.append('ph', this.pH)
-        batchHistory.append('abv', this.ABV)
+        batchHistory.append('pH', this.pH)
+        batchHistory.append('ABV', this.ABV)
         batchHistory.append('pressure', this.pressure)
         batchHistory.append('temp', this.temp)
+        batchHistory.append('SG', this.SG)
         this.$http.post('https://ninkasi-server.herokuapp.com/batch_contents_versions', batchHistory).then(response2 => {
         }, response2 => {
           this.debugging = 'Debugging Flag: Response error, cant access batch contentes page';

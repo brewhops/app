@@ -32,7 +32,7 @@
 
 import router from "../router/index.js"
 import Cookie from "js-cookie"
-
+import moment from 'moment'
 export default {
   name: 'tank-monitoring',
   data() {
@@ -87,14 +87,15 @@ export default {
                 }
               }
 
-              //keep track of most recent date
-              var max = 0;
+              //keep track of most recent date with a starting low value
+              var max = moment("1995-07-29");
               //for every data point we have in a batch
               for(var y in batchesContents){
+                var batchTime = moment((batchContentsResponse.body)[y].updated_at);
                 //if the batchID of our data point matches the batchID we are looking for
                 if(batchesContents[y].batch_id === tank.batch_id){
                   //if the date is the largest, it is the most recent one
-                  if(batchesContents[y].updated_at > max ){
+                  if(batchTime > max){
                      max = batchesContents[y].updated_at
                      tank.pressure = batchesContents[y].pressure;
                      tank.temperature = batchesContents[y].temp;

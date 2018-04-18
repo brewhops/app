@@ -39,6 +39,10 @@
           <td>{{ tankInfo.volume }}</td>
         </tr>
         <tr>
+          <td>Bright</td>
+          <td>{{ tankInfo.bright }}</td>
+        </tr>
+        <tr>
           <td>Temperature</td>
           <td>{{ tankInfo.temp }}º F</td>
         </tr>
@@ -49,6 +53,10 @@
         <tr>
           <td>pH</td>
           <td>{{ tankInfo.pH }}</td>
+        </tr>
+        <tr>
+          <td>Pressure</td>
+          <td>{{ tankInfo.pressure }}</td>
         </tr>
         <tr>
           <td>ABV</td>
@@ -159,9 +167,11 @@ default {
           }
 
           // Find most recent batch in batch contents and pull that info
-          var max = 0
+          var max = moment("1995-07-29");
+
           var date
           for(let batchContents of batchContentsResponse.body){
+            var batchTime = moment(batchContents.updated_at);
             if(batchContents.batch_id === this.tankInfo.batch_id) {
               // format the date to include the month, day, year, hour and minute
               date = moment(batchContents.updated_at).format('MM/DD/YY H:m')
@@ -172,12 +182,13 @@ default {
               this.history.ph.push(batchContents.pH)
             }
 
-            if(batchContents.batch_id === this.tankInfo.batch_id && batchContents.updated_at > max) {
+            if(batchContents.batch_id === this.tankInfo.batch_id && batchTime > max) {
               max = batchContents.updated_at
               this.tankInfo.ABV  = batchContents.ABV
               this.tankInfo.pH   = batchContents.pH
               this.tankInfo.temp = batchContents.temp
               this.tankInfo.SG   = batchContents.SG
+              this.tankInfo.pressure   = batchContents.pressure
               // use a lowercase h to change the hours from 24 to 12
               // the mm sets the minute with a leading 0
               this.tankInfo.time = moment(batchContents.updated_at).format('MM/DD/YY H:mm')
