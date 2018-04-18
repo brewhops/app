@@ -42,7 +42,6 @@
           </td>
         </tr>
       </table>
-      {{ action }}
       <!--<tr>
          <tr>
           <td>
