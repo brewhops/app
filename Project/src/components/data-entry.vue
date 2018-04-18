@@ -29,7 +29,7 @@
       <input v-model="generation" type="number" placeholder="Generation">
       <input type="datetime-local" placeholder="Time Measured">
       <input v-model="recipe_id" placeholder="Recipe ID">
-      <input v-model="batch_id" placeholder="Batch Number">
+      <input v-model="batch_id" placeholder="Batch Name">
       <table>
         <tr>
           <td>
@@ -119,6 +119,7 @@ export default {
       this.debugging = 'Debugging Flag: Response error, cant access employees page';
       console.log(response);
     });
+
   },
   methods: {
     tankChoose: function() {
@@ -141,6 +142,7 @@ export default {
                     if ((batchResponse.body)[x].tank_id === this.tank_id) {
                       //save batch_id, generation, volume, recipe_id
                       this.batch_id = (batchResponse.body)[x].batch_id
+                      this.batch_name = (batchResponse.body)[x].batch_name
                       this.generation = (batchResponse.body)[x].generation
                       this.volume = (batchResponse.body)[x].volume
                       this.recipe_id = (batchResponse.body)[x].recipe_id
@@ -181,6 +183,17 @@ export default {
       batchesData.append('generation', this.generation)
       this.$http.post('https://ninkasi-server.herokuapp.com/batches', batchesData).then(response => {
         id = response.body.id;
+        var taskData = new FormData()
+        if(this.action != ''){
+          taskData.append('action_id', this.action)
+          taskData.append('batch_id', id)
+          console.log(taskData);
+          this.$http.post('https://ninkasi-server.herokuapp.com/tasks', taskData).then(response3 => {
+          }, response3 => {
+            this.debugging = 'Debugging Flag: Response error, cant access tasks page';
+          });
+        }
+
         var batchHistory = new FormData();
         batchHistory.append('batch_id', id)
         batchHistory.append('ph', this.pH)
@@ -189,11 +202,17 @@ export default {
         batchHistory.append('temp', this.temp)
         this.$http.post('https://ninkasi-server.herokuapp.com/batch_contents_versions', batchHistory).then(response2 => {
         }, response2 => {
-          this.debugging = 'Debugging Flag: Response error, cant access employees page';
+          this.debugging = 'Debugging Flag: Response error, cant access batch contentes page';
         });
+
+
+
       }, response => {
-        this.debugging = 'Debugging Flag: Response error, cant access employees page';
+        this.debugging = 'Debugging Flag: Response error, cant access batches page';
       });
+
+
+  //  taskData.append('employee_id', employee)
     },
     sortTanks: function(a, b) {
       return a.id - b.id
