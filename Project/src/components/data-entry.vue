@@ -13,34 +13,48 @@
             <h4>Tank</h4>
           </td>
           <td>
-            <select v-model='tank_id' v-bind:value='tank_id' v-on:change="tankChoose">
-              <option v-for='tank in tanks'>{{ tank.id }}</option>
-            </select>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <h4>Status</h4>
-          </td>
-          <td>
-            <select v-model='status' placeholder="Tank Status">
-              <option v-for='option in options' v-bind:value='status'> {{ option }}</option>
+            <select v-model='tank_id' v-on:change="tankChoose">
+              <option v-for='tank in tanks' v-bind:value='tank.id '>{{ tank.tank_id }}</option>
             </select>
           </td>
         </tr>
       </table>
       <input v-model="SG" type="number" placeholder="Specific Gravity">
       <div class="inline">
-        <input v-model="ph" type="number" placeholder="pH">
-        <input v-model="abv" type="number" placeholder="ABV">
+        <input v-model="pH" type="number" placeholder="pH">
+        <input v-model="ABV" type="number" placeholder="ABV">
         <input v-model="temp" type="number" placeholder="Temperature">
       </div>
       <input v-model="volume" type="number" placeholder="Volume">
       <input v-model="generation" type="number" placeholder="Generation">
       <input type="datetime-local" placeholder="Time Measured">
-      <input v-model="recipe_id" placeholder="Brand ID">
+      <input v-model="recipe_id" placeholder="Recipe ID">
       <input v-model="batch_id" placeholder="Batch Number">
-      <input v-model="action" placeholder="Action Needed">
+      <table>
+        <tr>
+          <td>
+            <h4>Action</h4>
+          </td>
+          <td>
+            <select v-model='action'>
+              <option v-for='action_option in action_choice' v-bind:value='action_option.id'> {{ action_option.name }}</option>
+            </select>
+          </td>
+        </tr>
+      </table>
+      {{ action }}
+      <!--<tr>
+         <tr>
+          <td>
+            <h4>Assign Employee</h4>
+          </td>
+          <td>
+            <select v-model='action' placeholder="Action">
+              <option v-for='option in action_choice' v-bind:value='action'> {{ option.name }}</option>
+            </select>
+          </td>
+        </tr> -->
+
     </div>
     <button v-on:click="submit">Submit</button>
   </div>
@@ -68,10 +82,9 @@ export default {
       action: '',
       mobile: false,
       obj: {},
-      tanks: [],
-      options: [
-        "OK", "CRASH", "DRYHOP"
-      ],
+      tanks: [], //to save info from all tank info pulled from db
+      action_choice: [], //save all info on all possible actions
+      //removed "status"
     };
   },
   beforeMount() {
@@ -96,6 +109,17 @@ export default {
       this.debugging = 'Debugging Flag: Response error, cant access employees page';
       console.log(response);
     });
+
+    this.$http.get('https://ninkasi-server.herokuapp.com/actions').then(response => {
+      for (var action of response.body) {
+        this.action_choice.push(action)
+      }
+      this.action_choice.sort(this.sortActions)
+
+    }, response => {
+      this.debugging = 'Debugging Flag: Response error, cant access employees page';
+      console.log(response);
+    });
   },
   methods: {
     tankChoose: function() {
@@ -103,7 +127,8 @@ export default {
       var tankUrl = 'https://ninkasi-server.herokuapp.com/tanks/' + this.tank_id;
       this.$http.get(tankUrl)
         .then(tanksResponse => {
-          this.tank_id = tanksResponse.body.id; //get tank id
+          this.tank_id = tanksResponse.body.id; //get tank database id
+          this.tank_name = tanksResponse.body.tank_id //get tank given name
           /********** query batches ********************/
           this.$http.get('https://ninkasi-server.herokuapp.com/batches')
             .then(batchResponse => {
@@ -173,7 +198,14 @@ export default {
     },
     sortTanks: function(a, b) {
       return a.id - b.id
-    }
+    },
+    // sortActions:function(a, b){
+    //   if(a.name == "OK")
+    //     return -100
+    //   else {
+    //     return a.id - b.id
+    //   }
+    //}
   }
 };
 </script>
