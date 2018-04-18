@@ -242,10 +242,11 @@ export default {
         formData.append('tank_id', this.tank_id);
         formData.append('status', this.status);
         console.log(formData);
+        if(this.in_use)
           formData.append('in_use', false);
         else
           formData.append('in_use', true);
-        if(this.in_use)
+
         this.$http.post('https://ninkasi-server.herokuapp.com/tanks', formData)
       },
       logout: function() {
