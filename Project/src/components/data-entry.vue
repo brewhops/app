@@ -29,7 +29,7 @@
           </td>
         </tr>
       </table>
-      <input v-model="specificGravity" type="number" placeholder="Specific Gravity">
+      <input v-model="SG" type="number" placeholder="Specific Gravity">
       <div class="inline">
         <input v-model="ph" type="number" placeholder="pH">
         <input v-model="abv" type="number" placeholder="ABV">
@@ -55,11 +55,11 @@ export default {
   name: 'data-entry',
   data() {
     return {
-      specificGravity: '',
+      SG: '',
       tank_id: '',
       status: '',
-      ph: '',
-      abv: '',
+      pH: '',
+      ABV: '',
       temp: '',
       volume: '',
       generation: '',
@@ -110,24 +110,31 @@ export default {
               /********** query batch_contents_versions ********************/
               this.$http.get('https://ninkasi-server.herokuapp.com/batch_contents_versions')
                 .then(batchContentsResponse => {
-                  //Get batches information
+
+                  // Iterate through batches information
                   for (var x in (batchResponse.body)) {
+                    //if our batch is in the specified tank
                     if ((batchResponse.body)[x].tank_id === this.tank_id) {
-                      this.batch_id = (batchResponse.body)[x].id
+                      //save batch_id, generation, volume, recipe_id
+                      this.batch_id = (batchResponse.body)[x].batch_id
                       this.generation = (batchResponse.body)[x].generation
                       this.volume = (batchResponse.body)[x].volume
                       this.recipe_id = (batchResponse.body)[x].recipe_id
                     }
                   }
                   //Find most recent batch in batch contents and pull that info
-                  var max = 0
+                  //var max is to keep track of most recent date
+                  var max = 0;
                   for (var y in batchContentsResponse.body) {
-                    if ((batchContentsResponse.body)[y].batch_id === this.batch_id && (batchContentsResponse.body)[y].version_number > max)
-                      max = (batchContentsResponse.body)[y].version_number
-                    this.aBV = (batchContentsResponse.body)[y].ABV
-                    this.pH = (batchContentsResponse.body)[y].ph
-                    this.temp = (batchContentsResponse.body)[y].temp
-                    this.specificGravity = (batchContentsResponse.body)[y].SG
+                    if ((batchContentsResponse.body)[y].batch_id === this.batch_id && (batchContentsResponse.body)[y].date > max){
+                      //update max date
+                      max = (batchContentsResponse.body)[y].updated_at
+                      //save ABV, pH, temperature, and SG
+                      this.ABV = (batchContentsResponse.body)[y].ABV
+                      this.pH = (batchContentsResponse.body)[y].pH
+                      this.temp = (batchContentsResponse.body)[y].temp
+                      this.SG = (batchContentsResponse.body)[y].SG
+                    }
                   }
                 }, batchContentsResponse => {
                   this.debugging = 'Debugging Flag: Response error, cant access batches contents page';
@@ -152,8 +159,8 @@ export default {
         id = response.body.id;
         var batchHistory = new FormData();
         batchHistory.append('batch_id', id)
-        batchHistory.append('ph', this.ph)
-        batchHistory.append('abv', this.abv)
+        batchHistory.append('ph', this.pH)
+        batchHistory.append('abv', this.ABV)
         batchHistory.append('pressure', this.pressure)
         batchHistory.append('temp', this.temp)
         this.$http.post('https://ninkasi-server.herokuapp.com/batch_contents_versions', batchHistory).then(response2 => {

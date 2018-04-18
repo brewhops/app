@@ -16,7 +16,7 @@
     </div>
     <div id="tank">
       <h2>Tank ID</h2>
-      <h3>{{ $route.params.tankID }}</h3>
+      <h3>{{ tankInfo.tank_name }}</h3>
       <table>
         <tr>
           <td>Status</td>
@@ -27,8 +27,8 @@
           <td>{{ tankInfo.recipe_id }}</td>
         </tr>
         <tr>
-          <td>Batch Number</td>
-          <td>{{ tankInfo.batch_id }}</td>
+          <td>Batch Name</td>
+          <td>{{ tankInfo.batch_name }}</td>
         </tr>
         <tr>
           <td>Generation</td>
@@ -44,7 +44,7 @@
         </tr>
         <tr>
           <td>Specific Gravity</td>
-          <td>{{ tankInfo.sG }}</td>
+          <td>{{ tankInfo.SG }}</td>
         </tr>
         <tr>
           <td>pH</td>
@@ -52,7 +52,7 @@
         </tr>
         <tr>
           <td>ABV</td>
-          <td>{{ tankInfo.aBV }}%</td>
+          <td>{{ tankInfo.ABV }}%</td>
         </tr>
         <tr>
           <td>Time Last Updated</td>
@@ -91,15 +91,17 @@ default {
         "tank_id": '',
         "recipe_id": '',
         "batch_id": '',
+        "batch_name": '',
         "volume": '',
         "bright": '',
         "generation": '',
-        "sG": '',
+        "SG": '',
         "pH": '',
-        "aBV": '',
+        "ABV": '',
         "temp": '',
         "status": '',
         "time": '',
+        "tank_name": '',
       },
       history: {
         date: ['Date'],
@@ -136,6 +138,8 @@ default {
     this.$http.get(tankUrl).then(tanksResponse => {
       // set the tank stat]us
       this.tankInfo.tank_id = tanksResponse.body.id
+      //HEADS UP: tank_id will be changed to tank_name in db soon, for now id is tank id and tank_id is the name we call it
+      this.tankInfo.tank_name = tanksResponse.body.tank_id
       this.tankInfo.status = tanksResponse.body.status
       /********** query batches ********************/
       this.$http.get(base + '/batches').then(batchResponse => {
@@ -146,6 +150,7 @@ default {
             // if our batch tankID is the tankID we are looking for set some data
             if(batch.tank_id === this.tankInfo.tank_id) {
               this.tankInfo.batch_id   = batch.id
+              this.tankInfo.batch_name = batch.batch_name
               this.tankInfo.bright     = batch.bright
               this.tankInfo.generation = batch.generation
               this.tankInfo.volume     = batch.volume
@@ -167,12 +172,12 @@ default {
               this.history.ph.push(batchContents.pH)
             }
 
-            if(batchContents.batch_id === this.tankInfo.batch_id && batchContents.version_number > max) {
+            if(batchContents.batch_id === this.tankInfo.batch_id && batchContents.updated_at > max) {
               max = batchContents.version_number
-              this.tankInfo.aBV  = batchContents.ABV
+              this.tankInfo.ABV  = batchContents.ABV
               this.tankInfo.pH   = batchContents.pH
               this.tankInfo.temp = batchContents.temp
-              this.tankInfo.sG   = batchContents.SG
+              this.tankInfo.SG   = batchContents.SG
               // use a lowercase h to change the hours from 24 to 12
               // the mm sets the minute with a leading 0
               this.tankInfo.time = moment(batchContents.updated_at).format('MM/DD/YY H:mm')

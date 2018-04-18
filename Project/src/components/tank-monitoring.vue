@@ -10,7 +10,7 @@
     <a v-on:click="showTankInfo(tank.tank_id)" v-for="tank in tanks">
       <table class="tank" v-bind:class="tank.status">
         <tr>
-          <td>{{tank.tank_id}}</td>
+          <td>{{tank.tank_name}}</td>
           <td v-if='tank.pressure'>{{tank.pressure}} psi</td>
         </tr>
         <tr>
@@ -18,7 +18,7 @@
           <td v-if='tank.temperature'>{{tank.temperature}}ºF</td>
         </tr>
         <tr>
-          <td>{{tank.batch_id}}</td>
+          <td>{{tank.batch_name}}</td>
           <td>{{tank.status}}</td>
         </tr>
       </table>
@@ -69,7 +69,10 @@ export default {
             for(var x in tanks) {
               //create a temporary tank for us to fill with data
               var tank = {
+                //keep track of tank id for searching
                 tank_id: tanks[x].id,
+                //keep track of tank id name for displaying
+                tank_name: tanks[x].tank_id,
                 status: tanks[x].status,
               }
 
@@ -78,17 +81,21 @@ export default {
                 if (batches[z].tank_id === tank.tank_id) {
                   //add in our batchesID to the tank info box
                   tank.batch_id = batches[z].id
+                  tank.batch_name = batches[z].batch_name
                   //add the recipeID to the tank info box
                   tank.recipe_id = batches[z].recipe_id
                 }
               }
 
+              //keep track of most recent date
+              var max = 0;
               //for every data point we have in a batch
               for(var y in batchesContents){
                 //if the batchID of our data point matches the batchID we are looking for
                 if(batchesContents[y].batch_id === tank.batch_id){
-                  //if the version number is 0, it is the most recent one
-                  if(batchesContents[y].version_number === 0){
+                  //if the date is the largest, it is the most recent one
+                  if(batchesContents[y].updated_at > max ){
+                     max = batchesContents[y].updated_at
                      tank.pressure = batchesContents[y].pressure;
                      tank.temperature = batchesContents[y].temp;
                   }
