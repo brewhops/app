@@ -37,6 +37,7 @@
           </td>
           <td>
             <select v-model='action'>
+              <option disabled value="">No Action</option>
               <option v-for='action_option in action_choice' v-bind:value='action_option.id'> {{ action_option.name }}</option>
             </select>
           </td>
@@ -123,6 +124,15 @@ export default {
   },
   methods: {
     tankChoose: function() {
+      this.batch_id = ''
+      this.batch_name = ''
+      this.generation = ''
+      this.volume = ''
+      this.recipe_id = ''
+      this.ABV = ''
+      this.pH = ''
+      this.temp = ''
+      this.SG = ''
       //create url to get tank:
       var tankUrl = 'https://ninkasi-server.herokuapp.com/tanks/' + this.tank_id;
       this.$http.get(tankUrl)

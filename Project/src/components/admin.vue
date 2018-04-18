@@ -3,6 +3,7 @@
       <div class="header">
          <a v-on:click="logout">Logout</a>
          <h2>Ninkasi Admin</h2>
+
      </div>
      <div id="content">
          <div id="misc">
@@ -21,6 +22,20 @@
             <label for="in_use"></label>
 
              <button v-on:click="tank_submit">Submit</button>
+
+             <!-- update tank status! -->
+             <h2>Update Tank Status {{ tank_id }}</h2>
+             <select v-model="tank_id" class="dropdown">
+               <option disabled value="">Tank Number</option>
+               <option v-for="tank in tanks" :value="tank.id">{{tank.tank_id}}</option>
+             </select>
+
+             <select v-model="status" class="dropdown">
+               <option disabled value="">Status on Tank</option>
+               <option v-for="tankStatus in tankStatuses" :value="tankStatus">{{tankStatus}}</option>
+             </select>
+
+             <button v-on:click="tank_update">Submit</button>
          </div>
          <!-- Create new user with username, first, last name, and password and password check -->
          <div id="user">
@@ -67,7 +82,8 @@ export default {
   name: 'admin',
   data() {
     return {
-      database: {},
+      employees: {},
+      tanks:{},
 
       tankStatuses: [
         "busy",
@@ -80,6 +96,7 @@ export default {
 
       tank_id: '',
       status: '',
+      in_use: false,
 
       first_name: '',
       last_name: '',
@@ -131,10 +148,10 @@ export default {
     username: function() {
       const username = this.username;
 
-      // if the username is already in the database,
+      // if the username is already in the  database,
       // give feedback and exit the function
-      for(var x in this.database) {
-        if(this.database[x].username === username) {
+      for(var x in this.employees) {
+        if(this.employees[x].username === username) {
           this.feedback.username = 'Username taken'
           return;
         }
@@ -191,11 +208,21 @@ export default {
     //get users from heroku
     this.$http.get('https://ninkasi-server.herokuapp.com/employees').then(response => {
       // get body data
-      this.database = response.body
+      this.employees = response.body
     }, response => {
       this.debugging = 'Debugging Flag: Response error, cant access employees page'
-      console.log(this.database)
+      console.log(this.employees)
     });
+
+    //get tank numebrs
+    this.$http.get('https://ninkasi-server.herokuapp.com/tanks').then(response => {
+      // get body data
+      this.tanks = response.body
+    }, response => {
+      this.debugging = 'Debugging Flag: Response error, cant access tanks page'
+      console.log(this.tanks)
+    });
+
   },
   methods: {
       login_submit: function () {
@@ -248,6 +275,13 @@ export default {
           formData.append('in_use', true);
 
         this.$http.post('https://ninkasi-server.herokuapp.com/tanks', formData)
+      },
+      tank_update: function (){
+        var formData = new FormData();
+        formData.append('status', this.status);
+        var url = "https://ninkasi-server.herokuapp.com/tanks/" + this.tank_id
+        console.log(url);
+        this.$http.patch(url, formData)
       },
       logout: function() {
         if (Cookie.get('loggedIn')) {

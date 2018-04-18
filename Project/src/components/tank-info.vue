@@ -173,7 +173,7 @@ default {
             }
 
             if(batchContents.batch_id === this.tankInfo.batch_id && batchContents.updated_at > max) {
-              max = batchContents.version_number
+              max = batchContents.updated_at
               this.tankInfo.ABV  = batchContents.ABV
               this.tankInfo.pH   = batchContents.pH
               this.tankInfo.temp = batchContents.temp
