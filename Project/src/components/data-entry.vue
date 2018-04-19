@@ -191,56 +191,55 @@ export default {
       var batchesData = new FormData()
       var id
 
+      function error(error) {
+        console.warn(error)
+      }
+
       batchesData.append('recipe_id', this.recipe_id)
       batchesData.append('tank_id', this.tank_id)
       batchesData.append('volume', this.volume)
       batchesData.append('bright', this.bright)
       batchesData.append('generation', this.generation)
 
-      if(this.update){
+      // if we are going to update a batch element
+      if(this.update) {
+        // get our batch url
         var url = process.env.API + '/batches/' + this.batch_id
-        this.$http.patch(url, batchesData).then(response => {
-        }, response => {
-          this.debugging = 'Debugging Flag: Response error, cant access batch contentes page';
-        });
+        // patch the contents on that batch
+        this.$http.patch(url, batchesData).then(success => {}, error());
+        // change the id to the batchID
         id = this.batch_id
       }
-      else{
-        this.$http.post(process.env.API + '/batches', batchesData).then(response => {
+      else {
+        // create a new batch element
+        this.$http.post(process.env.API + '/batches', batchesData).then(success => {
+          // set our id to the id of the batch that we are getting back
           id = response.body.id;
-        }, response => {
-          this.debugging = 'Debugging Flag: Response error, cant access batch contentes page';
-        });
+        }, error());
       }
-      console.log(id);
-
 
       var taskData = new FormData()
-      if(this.action != ''){
+
+      // if our action does not exist
+      if(this.action != '') {
         taskData.append('action_id', this.action)
         taskData.append('batch_id', id)
-        console.log(taskData);
-        this.$http.post(process.env.API + '/tasks', taskData).then(response3 => {
-        }, response3 => {
-          this.debugging = 'Debugging Flag: Response error, cant access tasks page';
-        });
+
+        // create our new task
+        this.$http.post(process.env.API + '/tasks', taskData).then(success => {}, error());
       }
-        var batchHistory = new FormData();
-        batchHistory.append('batch_id', id)
-        batchHistory.append('pH', this.pH)
-        batchHistory.append('ABV', this.ABV)
-        batchHistory.append('pressure', this.pressure)
-        batchHistory.append('temp', this.temp)
-        batchHistory.append('SG', this.SG)
 
-        this.$http.post(process.env.API + '/batch_contents_versions', batchHistory).then(response2 => {
-          }, response2 => {
-            this.debugging = 'Debugging Flag: Response error, cant access batch contentes page';
-          });
+      // post the batch history
+      var batchHistory = new FormData();
+      batchHistory.append('batch_id', id)
+      batchHistory.append('pH', this.pH)
+      batchHistory.append('ABV', this.ABV)
+      batchHistory.append('pressure', this.pressure)
+      batchHistory.append('temp', this.temp)
+      batchHistory.append('SG', this.SG)
 
-
-
-  //  taskData.append('employee_id', employee)
+      // create a new batch history point
+      this.$http.post(process.env.API + '/batch_contents_versions', batchHistory).then(success => {}, error());
     },
     sortTanks: function(a, b) {
       return a.id - b.id
