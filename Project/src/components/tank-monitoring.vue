@@ -7,10 +7,10 @@
 <div id="tankInfo">
   <h2>Tank Info</h2>
   <div id="tankContents">
-    <a v-on:click="showTankInfo(tank.tank_id)" v-for="tank in tanks">
+    <a v-on:click="showTankInfo(tank.id)" v-for="tank in tanks">
       <table class="tank" v-bind:class="tank.status">
         <tr>
-          <td>{{tank.tank_name}}</td>
+          <td>{{tank.name}}</td>
           <td v-if='tank.pressure'>{{tank.pressure}} psi</td>
         </tr>
         <tr>
@@ -18,7 +18,7 @@
           <td v-if='tank.temperature'>{{tank.temperature}}ºF</td>
         </tr>
         <tr>
-          <td>{{tank.batch_name}}</td>
+          <td>{{tank.batch.name}}</td>
           <td>{{tank.status}}</td>
         </tr>
       </table>
@@ -39,70 +39,71 @@ export default {
     return {
       mobile: false,
       tanks: [],
-        //tankNumber, pressure, recipe_id, temperature, batchNumber, Status
+      // contents of a square is tankName, pressure, recipeName, temperature, batchNumber, Status
     };
   },
   beforeMount() {
     if (!Cookie.get('loggedIn')) {
-        router.push("/")
+      router.push("/")
     }
     if (/iPhone|iPad|iPod|Android|webOS|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
       this.mobile = true
     }
 
+    const base = 'https://ninkasi-server.herokuapp.com'
+
     //get our batches
-    this.$http.get('https://ninkasi-server.herokuapp.com/batches')
+    this.$http.get(base + '/batches')
       .then(batchResponse => {
-      var batches = batchResponse.body;
 
       //get the history of our batches to find most recent measurements
-      this.$http.get('https://ninkasi-server.herokuapp.com/batch_contents_versions')
+      this.$http.get(base + '/batch_contents_versions')
         .then(batchContentsResponse => {
-        //fill batch contentes with database
-        var batchesContents = batchContentsResponse.body;
 
         //get tanks to find status
-        this.$http.get('https://ninkasi-server.herokuapp.com/tanks')
+        this.$http.get(base + '/tanks')
           .then(tanksResponse => {
-            var tanks = tanksResponse.body
 
-            for(var x in tanks) {
-              //create a temporary tank for us to fill with data
-              var tank = {
-                //keep track of tank id for searching
-                tank_id: tanks[x].id,
-                //keep track of tank id name for displaying
-                tank_name: tanks[x].tank_id,
-                status: tanks[x].status,
+            for(let tankInfo of tanksResponse.body) {
+
+              // create a temporary tank for us to fill with data
+              let tank = {
+                // keep track of tank id for searching
+                id: tankInfo.id,
+                // keep track of tank name for displaying
+                name: tankInfo.tank_id,
+                status: tankInfo.status,
+                batch: {},
               }
 
-              for(var z in batches) {
-                //if our batches tankID matches our tankID
-                if (batches[z].tank_id === tank.tank_id) {
-                  //add in our batchesID to the tank info box
-                  tank.batch_id = batches[z].id
-                  tank.batch_name = batches[z].batch_name
-                  //add the recipeID to the tank info box
-                  tank.recipe_id = batches[z].recipe_id
+              for(let batch of batchResponse.body) {
+                // if our batches tankID matches our tankID
+                if (batch.tank_id === tank.id) {
+                  // add in our batchesID to the tank info box
+                  tank.batch.id   = batch.id
+                  tank.batch.name = batch.batch_name
+                  // add the recipeID to the tank info box
+                  tank.recipe_id  = batch.recipe_id
                 }
               }
 
               //keep track of most recent date with a starting low value
               var max = moment("1995-07-29");
+
               //for every data point we have in a batch
-              for(var y in batchesContents){
-                var batchTime = moment((batchContentsResponse.body)[y].updated_at);
+              for(let batchHistory of batchContentsResponse.body) {
+
                 //if the batchID of our data point matches the batchID we are looking for
-                if(batchesContents[y].batch_id === tank.batch_id){
+                if(batchHistory.batch_id === tank.batch.id) {
+
                   //if the date is the largest, it is the most recent one
-                  if(batchTime > max){
-                     max = batchesContents[y].updated_at
-                     tank.pressure = batchesContents[y].pressure;
-                     tank.temperature = batchesContents[y].temp;
+                  if(moment(batchHistory.updated_at) > max){
+                     max = moment(batchHistory.updated_at)
+                     tank.pressure = batchHistory.pressure;
+                     tank.temperature = batchHistory.temp;
                   }
                 }
               }
-
               //push data holder to the tanks array
               this.tanks.push(tank);
            }
