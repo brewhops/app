@@ -41,7 +41,7 @@
       <input v-model="volume" type="number" placeholder="Volume">
       <input v-model="bright" type="number" placeholder="Bright">
       <input v-model="generation" type="number" placeholder="Generation">
-      <input type="datetime-local" placeholder="Time Measured">
+      <input v-model="time" type="datetime-local" placeholder="Time Measured">
       <input v-model="recipe_id" placeholder="Recipe ID">
       <input v-model="batch_id" placeholder="Batch Name">
     </div>
@@ -125,6 +125,8 @@ export default {
       this.SG = ''
       this.bright = ''
       this.pressure = ''
+      // set the time with the required dateime format eg "2018-05-10T15:08"
+      this.time = moment().format("YYYY-MM-DDTH:mm")
 
       //create url to get tank:
       const tankUrl = 'https://ninkasi-server.herokuapp.com/tanks/' + this.tank_id;
