@@ -88,7 +88,7 @@ export default {
       this.mobile = true
     }
 
-    this.$http.get('https://ninkasi-server.herokuapp.com/tanks').then(response => {
+    this.$http.get(process.env.API + '/tanks').then(response => {
       // get available tanks
       for (let tank of response.body) {
         // if the tank is not broken, transferring or completed, add the tank
@@ -103,7 +103,7 @@ export default {
       console.warn("Error with the tanks route", response);
     });
 
-    this.$http.get('https://ninkasi-server.herokuapp.com/actions').then(response => {
+    this.$http.get(process.env.API + '/actions').then(response => {
       // get all our actions so we can put it in a dropdown selection
       this.action_choice = response.body
     }, response => {
@@ -130,16 +130,16 @@ export default {
       this.time = moment().format("YYYY-MM-DDTH:mm")
 
       //create url to get tank:
-      const tankUrl = 'https://ninkasi-server.herokuapp.com/tanks/' + this.tank_id;
+      const tankUrl = process.env.API + '/tanks/' + this.tank_id;
       this.$http.get(tankUrl)
         .then(tanksResponse => {
           this.tank_id = tanksResponse.body.id; //get tank database id
           this.tank_name = tanksResponse.body.tank_id //get tank given name
           /********** query batches ********************/
-          this.$http.get('https://ninkasi-server.herokuapp.com/batches')
+          this.$http.get(process.env.API + '/batches')
             .then(batchResponse => {
               /********** query batch_contents_versions ********************/
-              this.$http.get('https://ninkasi-server.herokuapp.com/batch_contents_versions')
+              this.$http.get(process.env.API + '/batch_contents_versions')
                 .then(batchContentsResponse => {
 
                   // Iterate through batches information
@@ -198,7 +198,7 @@ export default {
       batchesData.append('generation', this.generation)
 
       if(this.update){
-        var url = 'https://ninkasi-server.herokuapp.com/batches/' + this.batch_id
+        var url = process.env.API + '/batches/' + this.batch_id
         this.$http.patch(url, batchesData).then(response => {
         }, response => {
           this.debugging = 'Debugging Flag: Response error, cant access batch contentes page';
@@ -206,7 +206,7 @@ export default {
         id = this.batch_id
       }
       else{
-        this.$http.post('https://ninkasi-server.herokuapp.com/batches', batchesData).then(response => {
+        this.$http.post(process.env.API + '/batches', batchesData).then(response => {
           id = response.body.id;
         }, response => {
           this.debugging = 'Debugging Flag: Response error, cant access batch contentes page';
@@ -220,7 +220,7 @@ export default {
         taskData.append('action_id', this.action)
         taskData.append('batch_id', id)
         console.log(taskData);
-        this.$http.post('https://ninkasi-server.herokuapp.com/tasks', taskData).then(response3 => {
+        this.$http.post(process.env.API + '/tasks', taskData).then(response3 => {
         }, response3 => {
           this.debugging = 'Debugging Flag: Response error, cant access tasks page';
         });
@@ -233,7 +233,7 @@ export default {
         batchHistory.append('temp', this.temp)
         batchHistory.append('SG', this.SG)
 
-        this.$http.post('https://ninkasi-server.herokuapp.com/batch_contents_versions', batchHistory).then(response2 => {
+        this.$http.post(process.env.API + '/batch_contents_versions', batchHistory).then(response2 => {
           }, response2 => {
             this.debugging = 'Debugging Flag: Response error, cant access batch contentes page';
           });
