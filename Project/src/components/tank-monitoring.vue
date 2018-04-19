@@ -8,7 +8,7 @@
   <h2>Tank Info</h2>
   <div id="tankContents">
     <a v-on:click="showTankInfo(tank.id)" v-for="tank in tanks">
-      <table class="tank" v-bind:class="tank.status">
+      <table class="tank" v-bind:class="tank.action">
         <tr>
           <td>{{tank.name}}</td>
           <td v-if='tank.pressure'>{{tank.pressure}} psi</td>
@@ -64,57 +64,85 @@ export default {
         this.$http.get(base + '/tanks')
           .then(tanksResponse => {
 
-            for(let tankInfo of tanksResponse.body) {
+            //get tanks to find tasks
+            this.$http.get(base + '/tasks')
+              .then(tasksResponse => {
 
-              // create a temporary tank for us to fill with data
-              let tank = {
-                // keep track of tank id for searching
-                id: tankInfo.id,
-                // keep track of tank name for displaying
-                name: tankInfo.tank_id,
-                status: tankInfo.status,
-                batch: {},
-              }
+                //get tanks to find actions
+                this.$http.get(base + '/actions')
+                  .then(actionsResponse => {
 
-              for(let batch of batchResponse.body) {
-                // if our batches tankID matches our tankID
-                if (batch.tank_id === tank.id) {
-                  // add in our batchesID to the tank info box
-                  tank.batch.id   = batch.id
-                  tank.batch.name = batch.batch_name
-                  // add the recipeID to the tank info box
-                  tank.recipe_id  = batch.recipe_id
-                }
-              }
+                for(let tankInfo of tanksResponse.body) {
 
-              //keep track of most recent date with a starting low value
-              var max = moment("1995-07-29");
-
-              //for every data point we have in a batch
-              for(let batchHistory of batchContentsResponse.body) {
-
-                //if the batchID of our data point matches the batchID we are looking for
-                if(batchHistory.batch_id === tank.batch.id) {
-
-                  //if the date is the largest, it is the most recent one
-                  if(moment(batchHistory.updated_at) > max){
-                     max = moment(batchHistory.updated_at)
-                     tank.pressure = batchHistory.pressure;
-                     tank.temperature = batchHistory.temp;
+                  // create a temporary tank for us to fill with data
+                  let tank = {
+                    // keep track of tank id for searching
+                    id: tankInfo.id,
+                    // keep track of tank name for displaying
+                    name: tankInfo.tank_id,
+                    status: tankInfo.status,
+                    batch: {},
                   }
-                }
-              }
-              //push data holder to the tanks array
-              this.tanks.push(tank);
-           }
 
-           this.tanks.sort(this.sortTanks)
+                  for(let batch of batchResponse.body) {
+                    // if our batches tankID matches our tankID
+                    if (batch.tank_id === tank.id) {
+                      // add in our batchesID to the tank info box
+                      tank.batch.id   = batch.id
+                      tank.batch.name = batch.batch_name
+                      // add the recipeID to the tank info box
+                      tank.recipe_id  = batch.recipe_id
+                    }
+                  }
+
+                  //keep track of most recent date with a starting low value
+                  var max = moment("1995-07-29");
+
+                  //for every data point we have in a batch
+                  for(let batchHistory of batchContentsResponse.body) {
+
+                    //if the batchID of our data point matches the batchID we are looking for
+                    if(batchHistory.batch_id === tank.batch.id) {
+
+                      //if the date is the largest, it is the most recent one
+                      if(moment(batchHistory.updated_at) > max){
+                         max = moment(batchHistory.updated_at)
+                         tank.pressure = batchHistory.pressure;
+                         tank.temperature = batchHistory.temp;
+                      }
+                    }
+                  }
+
+                  //find task associated with tank
+                  for(let task of tasksResponse.body){
+                    if(task.batch_id === this.batch_id){
+                      tank.action_id = task.action_id
+                    }
+                  }
+                  //find action associated with task
+                  for(let action of actionsResponse.body){
+                      if(action.action_id === tank.action_id){
+                        tank.action = action.name
+                      }
+                  }
+                  //push data holder to the tanks array
+                  console.log(tank);
+                  this.tanks.push(tank);
+               }
+
+                this.tanks.sort(this.sortTanks)
+              }, actionsResponse => {
+                console.log('Response error, cant access actions page', response);
+              });
+            }, tasksResponse => {
+             console.log('Response error, cant access tasks page', response);
+           });
           }, tanksResponse => {
-           console.log('Response error, cant access employees page', response);
+           console.log('Response error, cant access tanks page', response);
          });
          /*************************************/
       }, batchContentsResponse => {
-        this.debugging = 'Debugging Flag: Response error, cant access batches page';
+        this.debugging = 'Debugging Flag: Response error, cant access batches contents page';
       });
     }, batchResponse => {
       this.debugging = 'Debugging Flag: Response error, cant access batches page';

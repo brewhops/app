@@ -183,7 +183,7 @@ default {
             }
 
             if(batchContents.batch_id === this.tankInfo.batch_id && batchTime > max) {
-              max = batchContents.updated_at
+              max = moment(batchContents.updated_at)
               this.tankInfo.ABV  = batchContents.ABV
               this.tankInfo.pH   = batchContents.pH
               this.tankInfo.temp = batchContents.temp

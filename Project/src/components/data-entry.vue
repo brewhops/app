@@ -74,6 +74,7 @@ export default {
       pressure: '',
       action: '',
       time: '',
+      update: true,
       mobile: false,
       tanks: [], //to save info from all tank info pulled from db
       action_choice: [], //save all info on all possible actions
@@ -154,6 +155,11 @@ export default {
                       this.recipe_id  = batch.recipe_id
                     }
                   }
+                  //check and see if we are pulling info, if we pulled nothing, its a new batch!
+                  this.update = true;
+                  if(this.batch_id === ''){
+                    this.update = false
+                  }
 
                   // our max date will hold the most recent batch date
                   var maxDate = moment("1995-07-29")
@@ -184,24 +190,41 @@ export default {
     submit: function() {
       var batchesData = new FormData()
       var id
+
       batchesData.append('recipe_id', this.recipe_id)
       batchesData.append('tank_id', this.tank_id)
       batchesData.append('volume', this.volume)
       batchesData.append('bright', this.bright)
       batchesData.append('generation', this.generation)
-      this.$http.post('https://ninkasi-server.herokuapp.com/batches', batchesData).then(response => {
-        id = response.body.id;
-        var taskData = new FormData()
-        if(this.action != ''){
-          taskData.append('action_id', this.action)
-          taskData.append('batch_id', id)
-          console.log(taskData);
-          this.$http.post('https://ninkasi-server.herokuapp.com/tasks', taskData).then(response3 => {
-          }, response3 => {
-            this.debugging = 'Debugging Flag: Response error, cant access tasks page';
-          });
-        }
 
+      if(this.update){
+        var url = 'https://ninkasi-server.herokuapp.com/batches/' + this.batch_id
+        this.$http.patch(url, batchesData).then(response => {
+        }, response => {
+          this.debugging = 'Debugging Flag: Response error, cant access batch contentes page';
+        });
+        id = this.batch_id
+      }
+      else{
+        this.$http.post('https://ninkasi-server.herokuapp.com/batches', batchesData).then(response => {
+          id = response.body.id;
+        }, response => {
+          this.debugging = 'Debugging Flag: Response error, cant access batch contentes page';
+        });
+      }
+      console.log(id);
+
+
+      var taskData = new FormData()
+      if(this.action != ''){
+        taskData.append('action_id', this.action)
+        taskData.append('batch_id', id)
+        console.log(taskData);
+        this.$http.post('https://ninkasi-server.herokuapp.com/tasks', taskData).then(response3 => {
+        }, response3 => {
+          this.debugging = 'Debugging Flag: Response error, cant access tasks page';
+        });
+      }
         var batchHistory = new FormData();
         batchHistory.append('batch_id', id)
         batchHistory.append('pH', this.pH)
@@ -209,13 +232,12 @@ export default {
         batchHistory.append('pressure', this.pressure)
         batchHistory.append('temp', this.temp)
         batchHistory.append('SG', this.SG)
+
         this.$http.post('https://ninkasi-server.herokuapp.com/batch_contents_versions', batchHistory).then(response2 => {
-        }, response2 => {
-          this.debugging = 'Debugging Flag: Response error, cant access batch contentes page';
-        });
-      }, response => {
-        this.debugging = 'Debugging Flag: Response error, cant access batches page';
-      });
+          }, response2 => {
+            this.debugging = 'Debugging Flag: Response error, cant access batch contentes page';
+          });
+
 
 
   //  taskData.append('employee_id', employee)
