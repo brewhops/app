@@ -188,6 +188,12 @@ export default {
         });
     },
     submit: function() {
+
+      // this is where all the http requests will be monitored
+      // when they are all fufilled, then send the user over to the
+      // subbmision page.
+      let promiseArray = []
+
       var batchesData = new FormData()
       var id
 
@@ -206,16 +212,18 @@ export default {
         // get our batch url
         var url = process.env.API + '/batches/' + this.batch_id
         // patch the contents on that batch
-        this.$http.patch(url, batchesData).then(success => {}, error());
+        promiseArray.push(this.$http.patch(url, batchesData).then(success => {}, error()))
         // change the id to the batchID
         id = this.batch_id
       }
       else {
         // create a new batch element
-        this.$http.post(process.env.API + '/batches', batchesData).then(success => {
-          // set our id to the id of the batch that we are getting back
-          id = response.body.id;
-        }, error());
+        promiseArray.push(
+          this.$http.post(process.env.API + '/batches', batchesData).then(success => {
+            // set our id to the id of the batch that we are getting back
+            id = response.body.id;
+          }, error())
+        )
       }
 
       var taskData = new FormData()
@@ -226,7 +234,7 @@ export default {
         taskData.append('batch_id', id)
 
         // create our new task
-        this.$http.post(process.env.API + '/tasks', taskData).then(success => {}, error());
+        promiseArray.push(this.$http.post(process.env.API + '/tasks', taskData).then(success => {}, error()))
       }
 
       // post the batch history
@@ -239,7 +247,25 @@ export default {
       batchHistory.append('SG', this.SG)
 
       // create a new batch history point
-      this.$http.post(process.env.API + '/batch_contents_versions', batchHistory).then(success => {}, error());
+      promiseArray.push(this.$http.post(process.env.API + '/batch_contents_versions', batchHistory).then(success => {}, error()))
+
+      Promise.all(promiseArray).then(success => {
+        router.push({ name: 'data-submission', params: {
+          data: {
+            id: id,
+            ph: this.pH,
+            abv: this.ABV,
+            pressure: this.pressure,
+            temp: this.temp,
+            sg: this.SG,
+            recipe_id: this.recipe_id,
+            tank_id: this.tank_id,
+            volume: this.volume,
+            bright: this.bright,
+            generation: this.generation,
+          }
+        }})
+      })
     },
     sortTanks: function(a, b) {
       return a.id - b.id

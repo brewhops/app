@@ -6,15 +6,11 @@
   </div>
   <div id="dataSubmission">
     <div>
-      <h2>New Data Submitted</h2>
+      <h2>Data Submitted</h2>
       <table>
-        <tr>
-          <td>Volume</td>
-          <td>133.2</td>
-        </tr>
-        <tr>
-          <td>pH</td>
-          <td>4.3</td>
+        <tr v-for="(value, key) in lastSubmission">
+          <td>{{ key }}</td>
+          <td>{{ value}}</td>
         </tr>
       </table>
       <router-link to="/home"> <button type="button" name="button">Edit</button> </router-link>
@@ -32,12 +28,13 @@ export default {
   name: 'data-submission',
   data() {
     return {
-      doneLink: ''
+      doneLink: '',
+      lastSubmission: {}
     };
   },
   beforeMount() {
     if (!Cookie.get('loggedIn')) {
-        router.push("/")
+      router.push("/")
     }
 
     if (/iPhone|iPad|iPod|Android|webOS|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
@@ -45,6 +42,9 @@ export default {
     } else {
       this.doneLink = '/home'
     }
+  },
+  mounted() {
+    this.lastSubmission = this.$route.params.data
   }
 };
 </script>
