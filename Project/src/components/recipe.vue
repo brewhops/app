@@ -7,7 +7,7 @@
   <div id="recipe">
     <h2>{{name}}</h2>
     <table>
-      <tr v-for="(ingredient, ratio) in ingredients">
+      <tr v-for="(ratio, ingredient) in ingredients">
         <td>{{ingredient}}</td>
         <td>{{ratio}}</td>
       </tr>
@@ -43,14 +43,17 @@ export default {
     if (/iPhone|iPad|iPod|Android|webOS|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
       this.mobile = true
     }
-
-    this.$http.get(process.env.API + '/recipes/' + this.recipeID).then(recipeResponse => {
-      const recipe = recipeResponse.body
-      this.name = recipe.recipe_name
-      this.ingredients = JSON.parse(recipe.instructions)
-    }).then(error => {
-      console.warn("Failed to get recipe", error)
-    })
+  },
+  watch: {
+    recipeID() {
+      this.$http.get(process.env.API + '/recipes/' + this.recipeID).then(recipeResponse => {
+        const recipe = recipeResponse.body
+        this.name = recipe.recipe_name
+        this.ingredients = JSON.parse(recipe.instructions)
+      }, error => {
+        console.warn("Failed to get recipe", error)
+      })
+    }
   }
 };
 </script>
