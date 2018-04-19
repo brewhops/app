@@ -15,8 +15,7 @@
       </div>
     </div>
     <div id="tank">
-      <h2>Tank ID</h2>
-      <h3>{{ tankInfo.tank_name }}</h3>
+      <h2>Tank {{ tankInfo.tank_name }}</h2>
       <table>
         <tr>
           <td>Status</td>
@@ -71,7 +70,7 @@
       <router-link v-bind:to="doneLink"><button type="button" name="button">Add Data</button> </router-link>
       <router-link to="/recipe" v-if="mobile"><button type="button" name="button">Recipe</button></router-link>
     </div>
-    <recipe v-if="!mobile"></recipe>
+    <recipe v-if="!mobile" v-bind:recipeID="tankInfo.recipe_id"></recipe>
   </div>
 </div>
 </template>
