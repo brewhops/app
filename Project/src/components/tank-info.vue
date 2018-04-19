@@ -140,8 +140,7 @@ default {
     }
 
     //create url to get tank:
-    var base = 'https://ninkasi-server.herokuapp.com'
-    var tankUrl = base + '/tanks/' + this.$route.params.tankID
+    var tankUrl = process.env.API + '/tanks/' + this.$route.params.tankID
 
     this.$http.get(tankUrl).then(tanksResponse => {
       // set the tank stat]us
@@ -150,9 +149,9 @@ default {
       this.tankInfo.tank_name = tanksResponse.body.tank_id
       this.tankInfo.status = tanksResponse.body.status
       /********** query batches ********************/
-      this.$http.get(base + '/batches').then(batchResponse => {
+      this.$http.get(process.env.API + '/batches').then(batchResponse => {
         /********** query batch_contents_versions ********************/
-        this.$http.get(base + '/batch_contents_versions').then(batchContentsResponse => {
+        this.$http.get(process.env.API + '/batch_contents_versions').then(batchContentsResponse => {
           // Get batches information
           for (let batch of batchResponse.body) {
             // if our batch tankID is the tankID we are looking for set some data

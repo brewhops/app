@@ -206,7 +206,7 @@ export default {
     }
 
     //get users from heroku
-    this.$http.get('https://ninkasi-server.herokuapp.com/employees').then(response => {
+    this.$http.get(process.env.API + '/employees').then(response => {
       // get body data
       this.employees = response.body
     }, response => {
@@ -215,7 +215,7 @@ export default {
     });
 
     //get tank numebrs
-    this.$http.get('https://ninkasi-server.herokuapp.com/tanks').then(response => {
+    this.$http.get(process.env.API + '/tanks').then(response => {
       // get body data
       this.tanks = response.body
     }, response => {
@@ -232,7 +232,7 @@ export default {
         newUser.append('username', this.username)
         var encryptedPassword = CryptoJS.AES.encrypt(this.password, this.username).toString()
         newUser.append('password', encryptedPassword)
-        this.$http.post('https://ninkasi-server.herokuapp.com/employees', newUser).then(response => {
+        this.$http.post(process.env.API + '/employees', newUser).then(response => {
           if (response.ok === true) {
             this.feedback.submissionResults = "New user succesfully created"
           }
@@ -262,7 +262,7 @@ export default {
         formData.append('instructions', stringrecipe)
         formData.append('recipe_name', this.brandID)
         console.log(formData)
-        this.$http.post('https://ninkasi-server.herokuapp.com/recipes', formData)
+        this.$http.post(process.env.API + '/recipes', formData)
       },
       tank_submit: function(){
         var formData = new FormData();
@@ -274,12 +274,12 @@ export default {
         else
           formData.append('in_use', true);
 
-        this.$http.post('https://ninkasi-server.herokuapp.com/tanks', formData)
+        this.$http.post(process.env.API + '/tanks', formData)
       },
       tank_update: function (){
         var formData = new FormData();
         formData.append('status', this.status);
-        var url = "https://ninkasi-server.herokuapp.com/tanks/" + this.tank_id
+        var url = process.env.API + "/tanks/" + this.tank_id
         console.log(url);
         this.$http.patch(url, formData)
       },

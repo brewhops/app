@@ -50,26 +50,24 @@ export default {
       this.mobile = true
     }
 
-    const base = 'https://ninkasi-server.herokuapp.com'
-
     //get our batches
-    this.$http.get(base + '/batches')
+    this.$http.get(process.env.API + '/batches')
       .then(batchResponse => {
 
       //get the history of our batches to find most recent measurements
-      this.$http.get(base + '/batch_contents_versions')
+      this.$http.get(process.env.API + '/batch_contents_versions')
         .then(batchContentsResponse => {
 
         //get tanks to find status
-        this.$http.get(base + '/tanks')
+        this.$http.get(process.env.API + '/tanks')
           .then(tanksResponse => {
 
             //get tanks to find tasks
-            this.$http.get(base + '/tasks')
+            this.$http.get(process.env.API + '/tasks')
               .then(tasksResponse => {
 
                 //get tanks to find actions
-                this.$http.get(base + '/actions')
+                this.$http.get(process.env.API + '/actions')
                   .then(actionsResponse => {
 
                 for(let tankInfo of tanksResponse.body) {
@@ -126,7 +124,6 @@ export default {
                       }
                   }
                   //push data holder to the tanks array
-                  console.log(tank);
                   this.tanks.push(tank);
                }
 

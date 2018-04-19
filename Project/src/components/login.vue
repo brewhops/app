@@ -105,7 +105,7 @@ default {
     }
 
     //get users from heroku
-    this.$http.get('https://ninkasi-server.herokuapp.com/employees').then(response => {
+    this.$http.get(process.env.API + '/employees').then(response => {
       // get body data
       this.employees = response.body;
     }, response => {
