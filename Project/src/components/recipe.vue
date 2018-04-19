@@ -5,35 +5,11 @@
       <h2>Recipe</h2>
     </div>
   <div id="recipe">
-    <h2>Pacific Rain Recipe</h2>
+    <h2>{{name}}</h2>
     <table>
-      <tr>
-        <td>Hop 1</td>
-        <td>13.23</td>
-      </tr>
-      <tr>
-        <td>Hop 2</td>
-        <td>13.23</td>
-      </tr>
-      <tr>
-        <td>Hop 3</td>
-        <td>13.23</td>
-      </tr>
-      <tr>
-        <td>Hop 4</td>
-        <td>13.23</td>
-      </tr>
-      <tr>
-        <td>Hop 5</td>
-        <td>13.23</td>
-      </tr>
-      <tr>
-        <td>Hop 6</td>
-        <td>13.23</td>
-      </tr>
-      <tr>
-        <td>Hop 7</td>
-        <td>13.23</td>
+      <tr v-for="(ingredient, ratio) in ingredients">
+        <td>{{ingredient}}</td>
+        <td>{{ratio}}</td>
       </tr>
     </table>
     <router-link to="/tank-info" v-if="mobile">
@@ -50,9 +26,12 @@ import Cookie from "js-cookie"
 
 export default {
   name: 'recipe',
+  props: ['recipeID'],
   data() {
     return {
-      mobile: false
+      mobile: false,
+      name: '',
+      ingredients: {}
     };
   },
   beforeMount() {
@@ -64,6 +43,15 @@ export default {
     if (/iPhone|iPad|iPod|Android|webOS|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
       this.mobile = true
     }
+
+    const base = 'https://ninkasi-server.herokuapp.com'
+    this.$http.get(base + '/recipes/' + this.recipeID).then(recipeResponse => {
+      const recipe = recipeResponse.body
+      this.name = recipe.recipe_name
+      this.ingredients = JSON.parse(recipe.instructions)
+    }).then(error => {
+      console.warn("Failed to get recipe", error)
+    })
   }
 };
 </script>
