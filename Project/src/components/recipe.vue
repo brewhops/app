@@ -44,8 +44,7 @@ export default {
       this.mobile = true
     }
 
-    const base = 'https://ninkasi-server.herokuapp.com'
-    this.$http.get(base + '/recipes/' + this.recipeID).then(recipeResponse => {
+    this.$http.get(process.env.API + '/recipes/' + this.recipeID).then(recipeResponse => {
       const recipe = recipeResponse.body
       this.name = recipe.recipe_name
       this.ingredients = JSON.parse(recipe.instructions)
