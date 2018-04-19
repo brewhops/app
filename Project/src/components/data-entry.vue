@@ -127,7 +127,7 @@ export default {
       this.bright = ''
       this.pressure = ''
       // set the time with the required dateime format eg "2018-05-10T15:08"
-      this.time = moment().format("YYYY-MM-DDTH:mm")
+      this.time = moment().format("YYYY-MM-DDTHH:mm")
 
       //create url to get tank:
       const tankUrl = process.env.API + '/tanks/' + this.tank_id;
