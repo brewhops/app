@@ -14,7 +14,19 @@
           </td>
           <td>
             <select v-model='tank_id' v-on:change="tankChoose">
+              <option disabled value="">Tank</option>
               <option v-for='tank in tanks' v-bind:value='tank.id '>{{ tank.tank_id }}</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <h4>Action</h4>
+          </td>
+          <td>
+            <select v-model='action'>
+              <option disabled value="">No Action</option>
+              <option v-for='action_option in action_choice' v-bind:value='action_option.id'> {{ action_option.name }}</option>
             </select>
           </td>
         </tr>
@@ -29,34 +41,9 @@
       <input v-model="volume" type="number" placeholder="Volume">
       <input v-model="bright" type="number" placeholder="Bright">
       <input v-model="generation" type="number" placeholder="Generation">
-      <input type="datetime-local" placeholder="Time Measured">
+      <input v-model="time" type="datetime-local" placeholder="Time Measured">
       <input v-model="recipe_id" placeholder="Recipe ID">
       <input v-model="batch_id" placeholder="Batch Name">
-      <table>
-        <tr>
-          <td>
-            <h4>Action</h4>
-          </td>
-          <td>
-            <select v-model='action'>
-              <option disabled value="">No Action</option>
-              <option v-for='action_option in action_choice' v-bind:value='action_option.id'> {{ action_option.name }}</option>
-            </select>
-          </td>
-        </tr>
-      </table>
-      <!--<tr>
-         <tr>
-          <td>
-            <h4>Assign Employee</h4>
-          </td>
-          <td>
-            <select v-model='action' placeholder="Action">
-              <option v-for='option in action_choice' v-bind:value='action'> {{ option.name }}</option>
-            </select>
-          </td>
-        </tr> -->
-
     </div>
     <button v-on:click="submit">Submit</button>
   </div>
@@ -86,16 +73,15 @@ export default {
       bright: '',
       pressure: '',
       action: '',
+      time: '',
       mobile: false,
-      obj: {},
       tanks: [], //to save info from all tank info pulled from db
       action_choice: [], //save all info on all possible actions
-      //removed "status"
     };
   },
   beforeMount() {
     if (!Cookie.get('loggedIn')) {
-        router.push("/")
+      router.push("/")
     }
     if (/iPhone|iPad|iPod|Android|webOS|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
       this.mobile = true
@@ -103,33 +89,31 @@ export default {
 
     this.$http.get('https://ninkasi-server.herokuapp.com/tanks').then(response => {
       // get available tanks
-      var x;
-      for (x in response.body) {
-        if (response.body[x].status != "broken" && response.body[x].status != "transferring" && response.body[x].status != "completed") {
-          this.tanks.push(response.body[x])
+      for (let tank of response.body) {
+        // if the tank is not broken, transferring or completed, add the tank
+        if (tank.status != "broken" && tank.status != "transferring" && tank.status != "completed") {
+          this.tanks.push(tank)
         }
       }
+      // sort our tanks by the tankID
       this.tanks.sort(this.sortTanks)
 
     }, response => {
-      this.debugging = 'Debugging Flag: Response error, cant access employees page';
-      console.log(response);
+      console.warn("Error with the tanks route", response);
     });
 
     this.$http.get('https://ninkasi-server.herokuapp.com/actions').then(response => {
-      for (var action of response.body) {
-        this.action_choice.push(action)
-      }
-      this.action_choice.sort(this.sortActions)
-
+      // get all our actions so we can put it in a dropdown selection
+      this.action_choice = response.body
     }, response => {
       this.debugging = 'Debugging Flag: Response error, cant access employees page';
-      console.log(response);
+      console.warn("Error with the actions route", response);
     });
 
   },
   methods: {
     tankChoose: function() {
+      // clear all our values each time we choose a new tank
       this.batch_id = ''
       this.batch_name = ''
       this.generation = ''
@@ -139,8 +123,13 @@ export default {
       this.pH = ''
       this.temp = ''
       this.SG = ''
+      this.bright = ''
+      this.pressure = ''
+      // set the time with the required dateime format eg "2018-05-10T15:08"
+      this.time = moment().format("YYYY-MM-DDTH:mm")
+
       //create url to get tank:
-      var tankUrl = 'https://ninkasi-server.herokuapp.com/tanks/' + this.tank_id;
+      const tankUrl = 'https://ninkasi-server.herokuapp.com/tanks/' + this.tank_id;
       this.$http.get(tankUrl)
         .then(tanksResponse => {
           this.tank_id = tanksResponse.body.id; //get tank database id
@@ -153,33 +142,31 @@ export default {
                 .then(batchContentsResponse => {
 
                   // Iterate through batches information
-                  for (var x in (batchResponse.body)) {
+                  for (let batch of batchResponse.body) {
                     //if our batch is in the specified tank
-                    if ((batchResponse.body)[x].tank_id === this.tank_id) {
+                    if (batch.tank_id === this.tank_id) {
                       //save batch_id, generation, volume, recipe_id
-                      this.batch_id = (batchResponse.body)[x].id
-                      this.batch_name = (batchResponse.body)[x].batch_name
-                      this.generation = (batchResponse.body)[x].generation
-                      this.volume = (batchResponse.body)[x].volume
-                      this.bright = (batchResponse.body)[x].bright
-                      this.recipe_id = (batchResponse.body)[x].recipe_id
+                      this.batch_id   = batch.id
+                      this.batch_name = batch.batch_name
+                      this.generation = batch.generation
+                      this.volume     = batch.volume
+                      this.bright     = batch.bright
+                      this.recipe_id  = batch.recipe_id
                     }
                   }
-                  //Find most recent batch in batch contents and pull that info
-                  //var max is to keep track of most recent date
-                var max = moment("1995-07-29");
 
-                  for (var y in batchContentsResponse.body) {
-                    var batchTime = moment((batchContentsResponse.body)[y].updated_at);
-                    if ((batchContentsResponse.body)[y].batch_id === this.batch_id && batchTime > max ){
-                      max = moment((batchContentsResponse.body)[y].updated_at)
-
-                      //save ABV, pH, temperature, and SG
-                      this.ABV = (batchContentsResponse.body)[y].ABV
-                      this.pH = (batchContentsResponse.body)[y].pH
-                      this.temp = (batchContentsResponse.body)[y].temp
-                      this.pressure = (batchContentsResponse.body)[y].pressure
-                      this.SG = (batchContentsResponse.body)[y].SG
+                  // our max date will hold the most recent batch date
+                  var maxDate = moment("1995-07-29")
+                  for (let batchHistory of batchContentsResponse.body) {
+                    // if this the batchID that we are looking for and the time is more recent
+                    if (batchHistory.batch_id === this.batch_id && moment(batchHistory.updated_at) > maxDate ){
+                      // set our new max date
+                      maxDate = moment(batchHistory.updated_at)
+                      this.ABV      = batchHistory.ABV
+                      this.pH       = batchHistory.pH
+                      this.temp     = batchHistory.temp
+                      this.pressure = batchHistory.pressure
+                      this.SG       = batchHistory.SG
                     }
                   }
                 }, batchContentsResponse => {
@@ -226,9 +213,6 @@ export default {
         }, response2 => {
           this.debugging = 'Debugging Flag: Response error, cant access batch contentes page';
         });
-
-
-
       }, response => {
         this.debugging = 'Debugging Flag: Response error, cant access batches page';
       });
@@ -238,14 +222,7 @@ export default {
     },
     sortTanks: function(a, b) {
       return a.id - b.id
-    },
-    // sortActions:function(a, b){
-    //   if(a.name == "OK")
-    //     return -100
-    //   else {
-    //     return a.id - b.id
-    //   }
-    //}
+    }
   }
 };
 </script>
