@@ -31,19 +31,33 @@
           </td>
         </tr>
       </table>
+      <h3>Specific Gravity</h3>
       <input v-model="SG" type="number" placeholder="Specific Gravity">
+      <div class="inline">
+        <h3 class="titles">pH</h3>
+        <h3 class="titles">ABV</h3>
+        <h3 class="titles">Temperature</h3>
+      </div>
+
       <div class="inline">
         <input v-model="pH" type="number" placeholder="pH">
         <input v-model="ABV" type="number" placeholder="ABV">
         <input v-model="temp" type="number" placeholder="Temperature">
       </div>
+      <h3 class="titles">Pressure</h3>
       <input v-model="pressure" type="number" placeholder="Pressure">
+      <h3 class="titles">Volume</h3>
       <input v-model="volume" type="number" placeholder="Volume">
+      <h3 class="titles">Bright</h3>
       <input v-model="bright" type="number" placeholder="Bright">
+      <h3 class="titles">Generation</h3>
       <input v-model="generation" type="number" placeholder="Generation">
+      <h3 class="titles">Time Measured</h3>
       <input v-model="time" type="datetime-local" placeholder="Time Measured">
+      <h3 class="titles">Recipe ID</h3>
       <input v-model="recipe_id" placeholder="Recipe ID">
-      <input v-model="batch_id" placeholder="Batch Name">
+      <h3 class="titles">Batch Name</h3>
+      <input v-model="batch_name" placeholder="Batch Name">
     </div>
     <button v-on:click="submit">Submit</button>
   </div>
