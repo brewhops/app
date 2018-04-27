@@ -74,18 +74,23 @@ export default {
       router.push("/")
     },
     batchChoose: function() {
+      // when the user chooses a batch, get the info on that batch
       this.$http.get(process.env.API + '/batches/' + this.batch_id + '/batch_contents_versions')
         .then(historyResponse => {
           this.histories = historyResponse.body
+          // for every batch history, format the date so its easy to read
           for (let history of this.histories) {
             history.updated_at = moment(history.updated_at).format("YY-MM-DD HH:mm")
           }
-        })
-    },
-    download: function() {
+        }
+      )
+
+      // create our header
       let rows = [["Date", "SG", "pH", "ABV", "temp", "pressure"]]
 
+      // for each history element
       for (let history of this.histories) {
+        // add in that history row
         rows.push(
           [
             history.updated_at,
@@ -98,11 +103,18 @@ export default {
         )
       }
 
+      // create the header for the csv that we will download
       let csvContent = "data:text/csv;charset=utf-8,"
-      rows.forEach(function(rowArray){
-         let row = rowArray.join(",")
-         csvContent += row + "\r\n"
-      });
+      // rows.forEach(function(rowArray){
+      //    let row = rowArray.join(",")
+      //    csvContent += row + "\r\n"
+      // });
+
+      // for every row, add a comma to the end and some new line chars
+      for (let row of rows) {
+        csvContent += row.join(',') + "\r\n"
+      }
+      // redirect to the download link
       window.location = csvContent
     }
   }
