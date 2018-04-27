@@ -98,45 +98,45 @@ export default {
       // when the user chooses a batch, get the info on that batch
       this.$http.get(process.env.API + '/batches/' + this.batch_id + '/batch_contents_versions')
         .then(historyResponse => {
+          
           this.histories = historyResponse.body
           // for every batch history, format the date so its easy to read
           for (let history of this.histories) {
             history.updated_at = moment(history.updated_at).format("MM-DD-YY HH:mm")
           }
-        }
-      )
+          // create our header
+          let rows = [["Date", "SG", "pH", "ABV", "temp", "pressure"]]
 
-      // create our header
-      let rows = [["Date", "SG", "pH", "ABV", "temp", "pressure"]]
+          // for each history element
+          for (let history of this.histories) {
+            // add in that history row
+            rows.push(
+              [
+                history.updated_at,
+                history.SG,
+                history.pH,
+                history.ABV,
+                history.temp,
+                history.pressure
+              ]
+            )
+          }
 
-      // for each history element
-      for (let history of this.histories) {
-        // add in that history row
-        rows.push(
-          [
-            history.updated_at,
-            history.SG,
-            history.pH,
-            history.ABV,
-            history.temp,
-            history.pressure
-          ]
+          // create the header for the csv that we will download
+          let csvContent = "data:text/csv;charset=utf-8,"
+
+          // for every row, add a comma to the end and some new line chars
+          for (let row of rows) {
+            csvContent += row.join(',') + "\r\n"
+          }
+
+          // find the csvDownload link and set some info about what it links to
+          // and what the download file should be called
+          let link = document.getElementById('csvDownload')
+          link.setAttribute("href", encodeURI(csvContent));
+          link.setAttribute("download", "batch_history_" + this.batch_id + "_(" + moment().format("MM-DD-YYYY") + ").csv")
+          }
         )
-      }
-
-      // create the header for the csv that we will download
-      let csvContent = "data:text/csv;charset=utf-8,"
-
-      // for every row, add a comma to the end and some new line chars
-      for (let row of rows) {
-        csvContent += row.join(',') + "\r\n"
-      }
-
-      // find the csvDownload link and set some info about what it links to
-      // and what the download file should be called
-      let link = document.getElementById('csvDownload')
-      link.setAttribute("href", encodeURI(csvContent));
-      link.setAttribute("download", "batch_history_" + this.batch_id + "_(" + moment().format("MM-DD-YYYY") + ").csv");
     }
   }
 }
