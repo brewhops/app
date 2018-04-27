@@ -98,14 +98,14 @@ export default {
       // when the user chooses a batch, get the info on that batch
       this.$http.get(process.env.API + '/batches/' + this.batch_id + '/batch_contents_versions')
         .then(historyResponse => {
-          
+
           this.histories = historyResponse.body
           // for every batch history, format the date so its easy to read
           for (let history of this.histories) {
             history.updated_at = moment(history.updated_at).format("MM-DD-YY HH:mm")
           }
           // create our header
-          let rows = [["Date", "SG", "pH", "ABV", "temp", "pressure"]]
+          let rows = [["Date", "SG", "pH", "ABV", "temp", "pressure", "Volume", "Bright", "Generation", "Date Started", "Date Completed"]]
 
           // for each history element
           for (let history of this.histories) {
@@ -117,7 +117,12 @@ export default {
                 history.pH,
                 history.ABV,
                 history.temp,
-                history.pressure
+                history.pressure,
+                this.batch.volume,
+                this.batch.bright,
+                this.batch.generation,
+                this.batch.date_started,
+                this.batch.date_completed
               ]
             )
           }
