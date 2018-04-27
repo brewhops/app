@@ -9,6 +9,7 @@ import homeMobile from '@/components/home-mobile'
 import dataEntry from '@/components/data-entry'
 import dataSubmission from '@/components/data-submission'
 import recipe from '@/components/recipe'
+import history from '@/components/history'
 
 Vue.use(Router)
 
@@ -58,6 +59,11 @@ export default new Router({
       path: '/recipe',
       name: 'recipe',
       component: recipe
+    },
+    {
+      path: '/history',
+      name: 'batch-history',
+      component: history
     }
   ]
 })
