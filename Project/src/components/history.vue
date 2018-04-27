@@ -30,6 +30,9 @@
           <td>{{ history.pressure }}</td>
         </tr>
       </table>
+      <button v-if="batch_id" type="button" name="button" v-on:click="download">
+        Download
+      </button>
     </div>
   </div>
 </template>
@@ -78,6 +81,29 @@ export default {
             history.updated_at = moment(history.updated_at).format("YY-MM-DD HH:mm")
           }
         })
+    },
+    download: function() {
+      let rows = [["Date", "SG", "pH", "ABV", "temp", "pressure"]]
+
+      for (let history of this.histories) {
+        rows.push(
+          [
+            history.updated_at,
+            history.SG,
+            history.pH,
+            history.ABV,
+            history.temp,
+            history.pressure
+          ]
+        )
+      }
+
+      let csvContent = "data:text/csv;charset=utf-8,"
+      rows.forEach(function(rowArray){
+         let row = rowArray.join(",")
+         csvContent += row + "\r\n"
+      });
+      window.location = csvContent
     }
   }
 }
