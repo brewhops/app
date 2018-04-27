@@ -206,6 +206,7 @@ export default {
       batchesData.append('volume', this.volume)
       batchesData.append('bright', this.bright)
       batchesData.append('generation', this.generation)
+      batchesData.append('batch_name', this.batch_name)
 
       // if we are going to update a batch element
       if(this.update) {
