@@ -12,7 +12,7 @@
           <option v-for='batch in batches' v-bind:value='batch.id'>{{ batch.id }}</option>
         </select>
       </div>
-      <table>
+      <table v-if="batch_id && histories && batch">
         <tr>
           <th>Date</th>
           <th>SG</th>
@@ -28,6 +28,20 @@
           <td>{{ history.ABV }}</td>
           <td>{{ history.temp }}</td>
           <td>{{ history.pressure }}</td>
+        </tr>
+        <tr>
+          <th>Volume</th>
+          <th>Bright</th>
+          <th>Generation</th>
+          <th>Date Started</th>
+          <th>Date Completed</th>
+        </tr>
+        <tr>
+          <td>{{ batch.volume }}</td>
+          <td>{{ batch.bright }}</td>
+          <td>{{ batch.generation }}</td>
+          <td>{{ batch.date_started }}</td>
+          <td>{{ batch.date_completed }}</td>
         </tr>
       </table>
       <a id="csvDownload">
@@ -51,6 +65,7 @@ export default {
       mobile: false,
       batch_id: '',
       batches: [],
+      batch: {},
       histories: [],
     }
   },
@@ -70,12 +85,16 @@ export default {
   },
   methods: {
     home: function() {
-      if (mobile) {
+      if (this.mobile) {
         router.push("/home-mobile")
       }
       router.push("/")
     },
     batchChoose: function() {
+      // filter out all the batches that aren't ours, and set that one element
+      // to our batch object
+      this.batch = this.batches.filter(e => e.id === this.batch_id)[0]
+
       // when the user chooses a batch, get the info on that batch
       this.$http.get(process.env.API + '/batches/' + this.batch_id + '/batch_contents_versions')
         .then(historyResponse => {
