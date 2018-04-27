@@ -68,9 +68,8 @@
       </table>
       <button>I'm On It</button>
       <router-link v-bind:to="doneLink"><button type="button" name="button">Add Data</button> </router-link>
-      <router-link to="/recipe" v-if="mobile"><button type="button" name="button">Recipe</button></router-link>
     </div>
-    <recipe v-if="!mobile" v-bind:recipeID="tankInfo.recipe_id"></recipe>
+    <recipe  v-bind:recipeID="tankInfo.recipe_id"></recipe>
   </div>
 </div>
 </template>

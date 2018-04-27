@@ -1,9 +1,4 @@
 <template>
-  <div>
-    <div class="header" v-if="mobile">
-       <router-link to="/home-mobile">Home</router-link>
-      <h2>Recipe</h2>
-    </div>
   <div id="recipe">
     <h2>{{name}}</h2>
     <table>
@@ -12,11 +7,7 @@
         <td>{{ratio}}</td>
       </tr>
     </table>
-    <router-link to="/tank-info" v-if="mobile">
-      <button type="button" name="button">Back to Tank</button>
-    </router-link>
   </div>
-</div>
 </template>
 
 <script>
@@ -37,7 +28,7 @@ export default {
   beforeMount() {
     // if the user is not logged in send them to the login page
     if (!Cookie.get('loggedIn')) {
-        router.push("/")
+      router.push("/")
     }
 
     if (/iPhone|iPad|iPod|Android|webOS|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
