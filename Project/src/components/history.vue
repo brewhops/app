@@ -30,9 +30,11 @@
           <td>{{ history.pressure }}</td>
         </tr>
       </table>
-      <button v-if="batch_id" type="button" name="button" v-on:click="download">
-        Download
-      </button>
+      <a id="csvDownload">
+        <button v-if="batch_id" type="button" name="button">
+          Download
+        </button>
+      </a>
     </div>
   </div>
 </template>
@@ -80,7 +82,7 @@ export default {
           this.histories = historyResponse.body
           // for every batch history, format the date so its easy to read
           for (let history of this.histories) {
-            history.updated_at = moment(history.updated_at).format("YY-MM-DD HH:mm")
+            history.updated_at = moment(history.updated_at).format("MM-DD-YY HH:mm")
           }
         }
       )
@@ -105,17 +107,17 @@ export default {
 
       // create the header for the csv that we will download
       let csvContent = "data:text/csv;charset=utf-8,"
-      // rows.forEach(function(rowArray){
-      //    let row = rowArray.join(",")
-      //    csvContent += row + "\r\n"
-      // });
 
       // for every row, add a comma to the end and some new line chars
       for (let row of rows) {
         csvContent += row.join(',') + "\r\n"
       }
-      // redirect to the download link
-      window.location = csvContent
+
+      // find the csvDownload link and set some info about what it links to
+      // and what the download file should be called
+      let link = document.getElementById('csvDownload')
+      link.setAttribute("href", encodeURI(csvContent));
+      link.setAttribute("download", "batch_history_" + this.batch_id + "_(" + moment().format("MM-DD-YYYY") + ").csv");
     }
   }
 }
