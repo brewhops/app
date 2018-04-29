@@ -9,7 +9,7 @@
         <h2>Batch</h2>
         <select v-model="batch_id" v-on:change="batchChoose">
           <option disabled value="">Batch</option>
-          <option v-for='batch in batches' v-bind:value='batch.id'>{{ batch.id }}</option>
+          <option v-for='batch in batches' v-bind:value='batch.id'>{{ batch.batch_name }}</option>
         </select>
       </div>
       <table v-if="batch_id && histories && batch">
@@ -139,7 +139,7 @@ export default {
           // and what the download file should be called
           let link = document.getElementById('csvDownload')
           link.setAttribute("href", encodeURI(csvContent));
-          link.setAttribute("download", "batch_history_" + this.batch_id + "_(" + moment().format("MM-DD-YYYY") + ").csv")
+          link.setAttribute("download", "batch_history_" + this.batch.batch_name + "_(" + moment().format("MM-DD-YYYY") + ").csv")
           }
         )
     }

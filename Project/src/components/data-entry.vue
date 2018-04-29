@@ -46,6 +46,9 @@
       <input v-model="batch_id" placeholder="Batch Name">
     </div>
     <button v-on:click="submit">Submit</button>
+    <router-link to="/history">
+      <button type="button" name="button">Batch Histories</button>
+    </router-link>
   </div>
 </div>
 </template>
