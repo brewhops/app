@@ -60,8 +60,9 @@
          </div>
          <div id="brand">
              <h2>Create New Brand</h2>
-             <input v-model.lazy="brandID" placeholder="Brand ID">
+             <input v-model.lazy="recipe_name" placeholder="Brand Name">
              <span>{{ feedback.brandID }}</span>
+             <input v-model.lazy="airplane_code" placeholder="Airport Code">
              <input v-model="yeast" placeholder="Yeast"> <!-- TODO: Validate Yeast?? maybe-->
              <span>{{ feedback.yeast }}</span>
              <div class="inline" v-for="x in hopNumbers">
@@ -111,7 +112,8 @@ export default {
       hopNumbers: 4,
       dryHopAdjunct: [],
       rate: [],
-      brandID: '',
+      airplane_code: '',
+      recipe_name: '',
       yeast: '',
 
       feedback: {
@@ -197,35 +199,35 @@ export default {
         this.feedback.brandID = ''
       }
       else {
-        this.feedback.brandID = 'Brand ID can only be letters and numbers I think???' //TODO: CHECK IF THIS IS A TRUE STATAMENT
+        this.feedback.brandID = 'Brand ID can only be numbers and dashes'
       }
     }
   },
   beforeMount() {
     // if the user is not logged, or they are logged in but not an admin
-    // send them to the login page
-    if (!Cookie.get('loggedIn') || !JSON.parse(Cookie.get('loggedIn')).admin) {
-        console.log(Cookie.get('loggedIn'));
-        router.push("/")
-    }
+      // send them to the login page
+      if (!Cookie.get('loggedIn') || !JSON.parse(Cookie.get('loggedIn')).admin) {
+          console.log(Cookie.get('loggedIn'));
+          router.push("/")
+      }
 
-    //get users from heroku
-    this.$http.get(process.env.API + '/employees').then(response => {
-      // get body data
-      this.employees = response.body
-    }, response => {
-      this.debugging = 'Debugging Flag: Response error, cant access employees page'
-      console.log(this.employees)
-    });
+      //get users from heroku
+      this.$http.get(process.env.API + '/employees').then(response => {
+        // get body data
+        this.employees = response.body
+      }, response => {
+        this.debugging = 'Debugging Flag: Response error, cant access employees page'
+        console.log(this.employees)
+      });
 
-    //get tank numebrs
-    this.$http.get(process.env.API + '/tanks').then(response => {
-      // get body data
-      this.tanks = response.body
-    }, response => {
-      this.debugging = 'Debugging Flag: Response error, cant access tanks page'
-      console.log(this.tanks)
-    });
+      //get tank numebrs
+      this.$http.get(process.env.API + '/tanks').then(response => {
+        // get body data
+        this.tanks = response.body
+      }, response => {
+        this.debugging = 'Debugging Flag: Response error, cant access tanks page'
+        console.log(this.tanks)
+      });
 
   },
   methods: {
@@ -251,24 +253,21 @@ export default {
       recipe_submit: function(){
         var formData = new FormData()
         //Now only add to recipe the values that aren't empty or null
-        var recipe = []
-        var rates = []
-        var x;
-        for(x in this.dryhopadjunct){
-          if(this.dryhopadjunct[x] != '' || this.dryhopadjunct[x] != null){
-            recipe.push(this.dryhopadjunct[x])
-            rates.push(this.rate[x])
-          }
-        }
-        //append recipe, submit to database
-        var stringrecipe = ""
-        var stringrates = ""
-        for(x in recipe){
-          stringrecipe += recipe[x]
-          stringrecipe =  stringrecipe + " rate: " + rates[x]
-        }
+        // var instructions = {};
+        // for(x in this.dryhopadjunct){
+        //   if(this.dryhopadjunct[x] != '' || this.dryhopadjunct[x] != null){
+        //     instructions.append('ingredient '+x, this.dryHopAdjunct[x])
+        //     instructions.append('rate ' +x, this.rate[x])
+        //   }
+        // }
+        // console.log("INSTRUCTIONS: " + instructions)
+        //append recipe, submit to databas
+
+        var stringrecipe = JSON.stringify(this.dryHopAdjunct)
+        console.log(stringrecipe);
+        formData.append('airplane_code', this.airplane_code)
         formData.append('instructions', stringrecipe)
-        formData.append('recipe_name', this.brandID)
+        formData.append('recipe_name', this.recipe_name)
         console.log(formData)
         this.$http.post(process.env.API + '/recipes', formData)
       },
