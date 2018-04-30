@@ -19,7 +19,7 @@
         </tr>
         <tr>
           <td>{{tank.batch.name}}</td>
-          <td>{{tank.status}}</td>
+          <td>{{tank.action}}</td>
         </tr>
       </table>
     </a>
@@ -120,13 +120,14 @@ export default {
 
                         //find task associated with tank
                         for(let task of tasksResponse.body){
-                          if(task.batch_id === this.batch_id){
-                            tank.action_id = task.action_id
+                          if(tank.batch.id === task.batch_id){ //if task has our batch id
+                            tank.action_id = task.action_id     //save the asscoiated action
                           }
                         }
+
                         //find action associated with task
                         for(let action of actionsResponse.body){
-                            if(action.action_id === tank.action_id){
+                            if(tank.action_id === action.id){
                               tank.action = action.name
                             }
                         }
@@ -205,11 +206,11 @@ export default {
           text-align right
       td
           padding 5px
-    .cap
+    .CAP
         background Orange
-    .cool
+    .COOL
         background Brown
-    .crash
+    .CRASH
         background green
     .broken
         background Red
