@@ -14,7 +14,7 @@
           <td v-if='tank.pressure'>{{tank.pressure}} psi</td>
         </tr>
         <tr>
-          <td>{{tank.recipe_id}}</td>
+          <td>{{tank.airplane_code}}</td>
           <td v-if='tank.temperature'>{{tank.temperature}}ºF</td>
         </tr>
         <tr>
@@ -70,72 +70,82 @@ export default {
                 this.$http.get(process.env.API + '/actions')
                   .then(actionsResponse => {
 
-                for(let tankInfo of tanksResponse.body) {
+                    //get tanks to find actions
+                    this.$http.get(process.env.API + '/recipes')
+                      .then(recipeResponse => {
+                      for(let tankInfo of tanksResponse.body) {
 
-                  // create a temporary tank for us to fill with data
-                  let tank = {
-                    // keep track of tank id for searching
-                    id: tankInfo.id,
-                    // keep track of tank name for displaying
-                    name: tankInfo.tank_id,
-                    status: tankInfo.status,
-                    batch: {},
-                  }
+                        // create a temporary tank for us to fill with data
+                        let tank = {
+                          // keep track of tank id for searching
+                          id: tankInfo.id,
+                          // keep track of tank name for displaying
+                          name: tankInfo.tank_id,
+                          status: tankInfo.status,
+                          batch: {},
+                        }
 
-                  for(let batch of batchResponse.body) {
-                    // if our batches tankID matches our tankID
-                    if (batch.tank_id === tank.id) {
-                      // add in our batchesID to the tank info box
-                      tank.batch.id   = batch.id
-                      tank.batch.name = batch.batch_name
-                      // add the recipeID to the tank info box
-                      tank.recipe_id  = batch.recipe_id
-                    }
-                  }
+                        for(let batch of batchResponse.body) {
+                          // if our batches tankID matches our tankID
+                          if (batch.tank_id === tank.id) {
+                            // add in our batchesID to the tank info box
+                            tank.batch.id   = batch.id
+                            tank.batch.name = batch.batch_name
+                            // add the recipeID to the tank info box
+                            tank.recipe_id  = batch.recipe_id
+                          }
+                        }
+                        for(let recipeHistory of recipeResponse.body){
+                          if(tank.recipe_id === recipeHistory.id)
+                            tank.airplane_code = recipeHistory.airplane_code
+                        }
 
-                  //keep track of most recent date with a starting low value
-                  var max = moment("1995-07-29");
+                        //keep track of most recent date with a starting low value
+                        var max = moment("1995-07-29");
 
-                  //for every data point we have in a batch
-                  for(let batchHistory of batchContentsResponse.body) {
+                        //for every data point we have in a batch
+                        for(let batchHistory of batchContentsResponse.body) {
 
-                    //if the batchID of our data point matches the batchID we are looking for
-                    if(batchHistory.batch_id === tank.batch.id) {
+                          //if the batchID of our data point matches the batchID we are looking for
+                          if(batchHistory.batch_id === tank.batch.id) {
 
-                      //if the date is the largest, it is the most recent one
-                      if(moment(batchHistory.updated_at) > max){
-                         max = moment(batchHistory.updated_at)
-                         tank.pressure = batchHistory.pressure;
-                         tank.temperature = batchHistory.temp;
-                      }
-                    }
-                  }
+                            //if the date is the largest, it is the most recent one
+                            if(moment(batchHistory.updated_at) > max){
+                               max = moment(batchHistory.updated_at)
+                               tank.pressure = batchHistory.pressure;
+                               tank.temperature = batchHistory.temp;
+                            }
+                          }
+                        }
 
-                  //find task associated with tank
-                  for(let task of tasksResponse.body){
-                    if(task.batch_id === this.batch_id){
-                      tank.action_id = task.action_id
-                    }
-                  }
-                  //find action associated with task
-                  for(let action of actionsResponse.body){
-                      if(action.action_id === tank.action_id){
-                        tank.action = action.name
-                      }
-                  }
-                  //push data holder to the tanks array
-                  this.tanks.push(tank);
-               }
+                        //find task associated with tank
+                        for(let task of tasksResponse.body){
+                          if(task.batch_id === this.batch_id){
+                            tank.action_id = task.action_id
+                          }
+                        }
+                        //find action associated with task
+                        for(let action of actionsResponse.body){
+                            if(action.action_id === tank.action_id){
+                              tank.action = action.name
+                            }
+                        }
+                        //push data holder to the tanks array
+                        this.tanks.push(tank);
+                     }
 
-                this.tanks.sort(this.sortTanks)
+                    this.tanks.sort(this.sortTanks)
+                  }, recipeResponse => {
+                    console.log('Response error, cant access recipes page', recipesResponse);
+                  });
               }, actionsResponse => {
-                console.log('Response error, cant access actions page', response);
+                console.log('Response error, cant access actions page', actionsResponse);
               });
             }, tasksResponse => {
-             console.log('Response error, cant access tasks page', response);
+             console.log('Response error, cant access tasks page', tasksResponse);
            });
           }, tanksResponse => {
-           console.log('Response error, cant access tanks page', response);
+           console.log('Response error, cant access tanks page', tanksResponse);
          });
          /*************************************/
       }, batchContentsResponse => {
