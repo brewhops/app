@@ -253,22 +253,16 @@ export default {
       recipe_submit: function(){
         var formData = new FormData()
         //Now only add to recipe the values that aren't empty or null
-        // var instructions = {};
-        // for(x in this.dryhopadjunct){
-        //   if(this.dryhopadjunct[x] != '' || this.dryhopadjunct[x] != null){
-        //     instructions.append('ingredient '+x, this.dryHopAdjunct[x])
-        //     instructions.append('rate ' +x, this.rate[x])
-        //   }
-        // }
-        // console.log("INSTRUCTIONS: " + instructions)
-        //append recipe, submit to databas
-
-        var stringrecipe = JSON.stringify(this.dryHopAdjunct)
-        console.log(stringrecipe);
+        let instructions = {};
+        for (let x in this.dryHopAdjunct) {
+          if ( !(this.dryHopAdjunct[x] === '' || this.dryHopAdjunct === null) ) {
+            instructions[this.dryHopAdjunct[x]] = this.rate[x]
+          }
+        }
+        //append recipe, submit to database
         formData.append('airplane_code', this.airplane_code)
-        formData.append('instructions', stringrecipe)
+        formData.append('instructions', JSON.stringify(instructions))
         formData.append('recipe_name', this.recipe_name)
-        console.log(formData)
         this.$http.post(process.env.API + '/recipes', formData)
       },
       tank_submit: function(){
