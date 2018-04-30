@@ -50,6 +50,9 @@
              <span>{{ feedback.password }}</span>
              <input v-model.lazy="passwordcheck" placeholder="Re-enter password" type="password">
              <span>{{ feedback.passwordcheck }}</span>
+             <input type="checkbox" id="checkbox" v-model="admin">
+             <br>Admin Status?
+             <label for="admin"></label>
 
              <button v-on:click="login_submit">Submit</button>
              <span>{{ feedback.submissionResults }}</span>
@@ -97,6 +100,7 @@ export default {
       tank_id: '',
       status: '',
       in_use: false,
+      admin: false,
 
       first_name: '',
       last_name: '',
@@ -230,6 +234,10 @@ export default {
         newUser.append('first_name', this.first_name)
         newUser.append('last_name', this.last_name)
         newUser.append('username', this.username)
+        if(this.admin)
+          newUser.append('admin', true)
+        else
+          newUser.append('admin', false)
         var encryptedPassword = CryptoJS.AES.encrypt(this.password, this.username).toString()
         newUser.append('password', encryptedPassword)
         this.$http.post(process.env.API + '/employees', newUser).then(response => {
@@ -270,9 +278,9 @@ export default {
         formData.append('status', this.status);
         console.log(formData);
         if(this.in_use)
-          formData.append('in_use', false);
-        else
           formData.append('in_use', true);
+        else
+          formData.append('in_use', false);
 
         this.$http.post(process.env.API + '/tanks', formData)
       },
