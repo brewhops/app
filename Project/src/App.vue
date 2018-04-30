@@ -96,7 +96,7 @@ button
 
 //************* inputs *************//
 input, .dropdown
-  padding 10px
+  padding 10px 0
   box-sizing border-box
   font-size 1em
   display block
@@ -105,15 +105,30 @@ input, .dropdown
   color Teal
   font-weight bold
   outline none
-  border 1px solid #cccccc
-  BackgroundColorTransition(focus, 0.3s, white, darken(white, 5%))
+  border none
+  border-bottom 1px solid #cccccc
+  &:focus
+    border-bottom 2px solid Teal
+
+.inputGroup
+  position relative
+
+label
+  font-size 18px
+  font-weight normal
+  position absolute
+  pointer-events none
+  transition 0.2s ease all
+  color rgb(98, 98, 98)
+  bottom -15px
+  left 0
 
 .dropdown
   min-height 30px
 
 .inline
   display flex
-  justify-content space-between
+  justify-content space-around
 
 .logo-med
   height 150px

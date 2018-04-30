@@ -7,57 +7,64 @@
   <div id="dataEntry">
     <h2 v-if="!mobile">Data Entry</h2>
     <div id="formFields">
-      <table>
-        <tr>
-          <td>
-            <h4>Tank</h4>
-          </td>
-          <td>
-            <select v-model='tank_id' v-on:change="tankChoose">
-              <option disabled value="">Tank</option>
-              <option v-for='tank in tanks' v-bind:value='tank.id '>{{ tank.tank_id }}</option>
-            </select>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <h4>Action</h4>
-          </td>
-          <td>
-            <select v-model='action'>
-              <option disabled value="">No Action</option>
-              <option v-for='action_option in action_choice' v-bind:value='action_option.id'> {{ action_option.name }}</option>
-            </select>
-          </td>
-        </tr>
-      </table>
-      <h3>Specific Gravity</h3>
-      <input v-model="SG" type="number" placeholder="Specific Gravity">
-      <div class="inline">
-        <h3 class="titles">pH</h3>
-        <h3 class="titles">ABV</h3>
-        <h3 class="titles">Temperature</h3>
+      <div class="col-2">
+        <h4>Tank</h4>
+        <select v-model='tank_id' v-on:change="tankChoose">
+          <option disabled value="">Tank</option>
+          <option v-for='tank in tanks' v-bind:value='tank.id '>{{ tank.tank_id }}</option>
+        </select>
       </div>
-
-      <div class="inline">
-        <input v-model="pH" type="number" placeholder="pH">
-        <input v-model="ABV" type="number" placeholder="ABV">
-        <input v-model="temp" type="number" placeholder="Temperature">
+      <div class="col-2">
+        <h4>Action</h4>
+        <select v-model='action'>
+          <option disabled value="">No Action</option>
+          <option v-for='action_option in action_choice' v-bind:value='action_option.id'> {{ action_option.name }}</option>
+        </select>
       </div>
-      <h3 class="titles">Pressure</h3>
-      <input v-model="pressure" type="number" placeholder="Pressure">
-      <h3 class="titles">Volume</h3>
-      <input v-model="volume" type="number" placeholder="Volume">
-      <h3 class="titles">Bright</h3>
-      <input v-model="bright" type="number" placeholder="Bright">
-      <h3 class="titles">Generation</h3>
-      <input v-model="generation" type="number" placeholder="Generation">
-      <h3 class="titles">Time Measured</h3>
-      <input v-model="time" type="datetime-local" placeholder="Time Measured">
-      <h3 class="titles">Recipe ID</h3>
-      <input v-model="recipe_id" placeholder="Recipe ID">
-      <h3 class="titles">Batch Name</h3>
-      <input v-model="batch_name" placeholder="Batch Name">
+      <div class="col-3 inputGroup">
+        <input v-model="pH" type="number">
+        <label>pH</label>
+      </div>
+      <div class="col-3 inputGroup">
+        <input v-model="ABV" type="number">
+        <label>ABV</label>
+      </div>
+      <div class="col-3 inputGroup">
+        <input v-model="bright" type="number">
+        <label>Bright</label>
+      </div>
+      <div class="col-3 inputGroup">
+        <input v-model="pressure" type="number">
+        <label>Pressure</label>
+      </div>
+      <div class="col-3 inputGroup">
+        <input v-model="generation" type="number">
+        <label>Generation</label>
+      </div>
+      <div class="col-3 inputGroup">
+        <input v-model="volume" type="number">
+        <label>Volume</label>
+      </div>
+      <div class="col-2 inputGroup">
+        <input v-model="SG" type="number">
+        <label>SG</label>
+      </div>
+      <div class="col-2 inputGroup">
+        <input v-model="temp" type="number">
+        <label>Temperature</label>
+      </div>
+      <div class="col-1 time inputGroup">
+        <input v-model="time" type="datetime-local">
+        <label>Time Measured</label>
+      </div>
+      <div class="col-2 inputGroup">
+        <input v-model="recipe_id">
+        <label>Recipe ID</label>
+      </div>
+      <div class="col-2 inputGroup">
+        <input v-model="batch_name">
+        <label>Batch Name</label>
+      </div>
     </div>
     <button v-on:click="submit">Submit</button>
     <router-link to="/history">
@@ -87,6 +94,7 @@ export default {
       generation: '',
       recipe_id: '',
       batch_id: '',
+      batch_name: '',
       bright: '',
       pressure: '',
       action: '',
@@ -306,7 +314,21 @@ export default {
   margin auto
   min-width 350px
   max-width 500px
-  .inline
-    input
-      width 32%
+  button
+    margin-top 30px
+
+  #formFields
+    .time
+      display block
+    display grid
+    grid-gap 25px 10px
+    text-align center
+    +greater-than(mobile)
+      grid-template-columns repeat(12, 1fr)
+      .col-1
+        grid-column span 12
+      .col-2
+        grid-column span 6
+      .col-3
+        grid-column span 4
 </style>
