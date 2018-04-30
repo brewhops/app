@@ -278,7 +278,7 @@ export default {
       Promise.all(promiseArray).then(success => {
         router.push({ name: 'data-submission', params: {
           data: {
-            id: id,
+            batch_id: id,
             ph: this.pH,
             abv: this.ABV,
             pressure: this.pressure,
