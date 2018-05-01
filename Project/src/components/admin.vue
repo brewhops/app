@@ -17,9 +17,10 @@
                <option v-for="tankStatus in tankStatuses" :value="tankStatus">{{tankStatus}}</option>
              </select>
 
-            <input type="checkbox" id="checkbox" v-model="in_use">
-            <br>In Use?
-            <label for="in_use"></label>
+            <div class="checkbox">
+              <input type="checkbox" id="checkbox" v-model="in_use">
+              <p>Tank is in use</p>
+            </div>
 
              <button v-on:click="tank_submit">Submit</button>
 
@@ -50,9 +51,11 @@
              <span>{{ feedback.password }}</span>
              <input v-model.lazy="passwordcheck" placeholder="Re-enter password" type="password">
              <span>{{ feedback.passwordcheck }}</span>
-             <input type="checkbox" id="checkbox" v-model="admin">
-             <br>Admin Status?
-             <label for="admin"></label>
+
+             <div class="checkbox">
+               <input type="checkbox" id="checkbox" v-model="admin">
+               <p>User is admin</p>
+             </div>
 
              <button v-on:click="login_submit">Submit</button>
              <span>{{ feedback.submissionResults }}</span>
@@ -311,6 +314,14 @@ export default {
     grid-template-rows auto
     grid-template-columns auto
     grid-template-areas "brand" "misc" "user"
+  .checkbox
+    display flex
+    align-items center
+    justify-content center
+    & input, & p
+      width auto
+      padding 0 10px
+
 
 
 #misc, #user, #brand

@@ -110,6 +110,14 @@ input, .dropdown
   &:focus
     border-bottom 2px solid Teal
 
+.checkbox
+  display flex
+  align-items center
+  justify-content center
+  & input, & p
+    width auto
+    padding 0 10px
+
 .inputGroup
   position relative
 
