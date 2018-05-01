@@ -907,11 +907,12 @@
 		        \noindent \textbf{Pros:}
 		            The major benefit of using WebPack is its ability to reduce software size through its consolidation method of individual modules.
 		            Another benefit of WebPack is using hot-reloading to more efficiently develop the frontend of an application\cite{TaskRunners}.
+                The biggest pro is that Vue.js has a command line interface designed to ease development with Vue components.
+                This command line interface uses Webpack as the task runner.
 
 		        \noindent \textbf{Cons:}
 		            Finally, the main difficulty with WebPack is it can be difficult to configure at first and there exists a learning curve to its technology\cite{TaskRunners}.
 		            WebPack is a technology that is extremely useful for major enterprise level applications, but tends to be over-powered for small applications.
-		            WebPack would likely increase development time for the BrewHops team instead of aid in the development of our software.
 
 		    \subsection{Conclusion}
 		        Listed below are the various criteria needed in a task runner and module bundling system.
@@ -928,7 +929,7 @@
 		                    Automatable for deployment & X & X & X \\
 
 		                \hline
-		                    Easy to learn & X &  &  \\
+		                    Easy to learn &  & X &  \\
 
 		                \hline
 		                    Strong community & X & X & X \\
@@ -940,10 +941,13 @@
 		                    Free to use & X & X & X \\
 
 		                \hline
+                        Integrates well with Vue.js &  &  & X \\
+
+                    \hline
 		            \end{tabular}
 		        \end{center}
 
-		        Based on the criteria, we will be using Grunt to automate repetitive tasks.
+		        Based on the criteria, we will be using Webpack to automate repetitive tasks.
 
 					\clearpage
 
