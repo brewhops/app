@@ -2,15 +2,17 @@
 
 A project for Ninkasi Brewery to modernize data storage methods for brewery operations.
 
-## Structure
+# Structure
 * Documents
+    * ProblemStatement
+
+
+## Structure
     * ProblemStatement
     * SoftwareRequirements
     * TechReview
     * DesignDocument
     * ProgressReport
-
-
 ### Overview of Files
 * ProblemStatement
     * Defines the problem that the project aims to solve
