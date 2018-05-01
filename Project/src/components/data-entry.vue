@@ -22,35 +22,35 @@
         </select>
       </div>
       <div class="col-3 inputGroup">
-        <input v-model="pH" type="number">
+        <input v-model="pH" type="number" step="0.01" required>
         <label>pH</label>
       </div>
       <div class="col-3 inputGroup">
-        <input v-model="ABV" type="number">
+        <input v-model="ABV" type="number" step="0.01" required>
         <label>ABV</label>
       </div>
       <div class="col-3 inputGroup">
-        <input v-model="bright" type="number">
+        <input v-model="bright" type="number" required>
         <label>Bright</label>
       </div>
       <div class="col-3 inputGroup">
-        <input v-model="pressure" type="number">
+        <input v-model="pressure" type="number" required>
         <label>Pressure</label>
       </div>
       <div class="col-3 inputGroup">
-        <input v-model="generation" type="number">
+        <input v-model="generation" type="number" required>
         <label>Generation</label>
       </div>
       <div class="col-3 inputGroup">
-        <input v-model="volume" type="number">
+        <input v-model="volume" type="number" step="0.01" required>
         <label>Volume</label>
       </div>
       <div class="col-2 inputGroup">
-        <input v-model="SG" type="number">
-        <label>SG</label>
+        <input v-model="SG" type="number" step="0.000001" required>
+        <label>Specific Gravity</label>
       </div>
       <div class="col-2 inputGroup">
-        <input v-model="temp" type="number">
+        <input v-model="temp" type="number" step="0.1" required>
         <label>Temperature</label>
       </div>
       <div class="col-1 time inputGroup">
@@ -58,11 +58,11 @@
         <label>Time Measured</label>
       </div>
       <div class="col-2 inputGroup">
-        <input v-model="recipe_id">
+        <input v-model="recipe_id" required>
         <label>Recipe</label>
       </div>
       <div class="col-2 inputGroup">
-        <input v-model="batch_name">
+        <input v-model="batch_name" required>
         <label>Batch Name</label>
       </div>
     </div>

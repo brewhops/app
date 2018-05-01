@@ -120,16 +120,21 @@ input, .dropdown
 
 .inputGroup
   position relative
+  label
+    font-size 18px
+    font-weight normal
+    position absolute
+    pointer-events none
+    left 0
+    bottom 15px
+    transition 0.2s ease all;
+    -moz-transition 0.2s ease all;
+    -webkit-transition 0.2s ease all
 
-label
-  font-size 18px
-  font-weight normal
-  position absolute
-  pointer-events none
-  transition 0.2s ease all
-  color rgb(98, 98, 98)
-  bottom -15px
-  left 0
+  input:focus ~ label, input:valid ~ label
+    bottom -10px
+    color #999
+    font-size 14px
 
 .dropdown
   min-height 30px

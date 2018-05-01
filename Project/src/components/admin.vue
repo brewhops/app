@@ -314,14 +314,6 @@ export default {
     grid-template-rows auto
     grid-template-columns auto
     grid-template-areas "brand" "misc" "user"
-  .checkbox
-    display flex
-    align-items center
-    justify-content center
-    & input, & p
-      width auto
-      padding 0 10px
-
 
 
 #misc, #user, #brand
