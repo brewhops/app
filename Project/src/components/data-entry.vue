@@ -59,7 +59,7 @@
       </div>
       <div class="col-2 inputGroup">
         <input v-model="recipe_id">
-        <label>Recipe ID</label>
+        <label>Recipe</label>
       </div>
       <div class="col-2 inputGroup">
         <input v-model="batch_name">
@@ -67,7 +67,7 @@
       </div>
     </div>
     <button v-on:click="submit">Submit</button>
-    <router-link to="/history">
+    <router-link to="/history" v-if="!mobile">
       <button type="button" name="button">Batch Histories</button>
     </router-link>
   </div>
