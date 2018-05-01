@@ -40,40 +40,60 @@
 \begin{titlingpage}
     \maketitle
     \begin{abstract}
-					Ninkasi Brewing Company is based in Eugene, Oregon, producing and distributing tens of thousands of barrels of beer each year across the United States and Canada. Maintaining a consistently high quality product is vital to the longevity of Ninkasi. Scalable brewing is a detail-oriented and organized process; companies require unique data tracking methods to fit the needs of their brewing process. Ninkasi currently tracks brewery data using Microsoft Excel spreadsheets. This process is laborious, time consuming, and error prone. The goal of this project is to create a brewing operations management system to add and monitor brewery data. The brewing and cellar team members will utilize the system to access up-to-date information.
-
+			Ninkasi Brewing Company is based in Eugene, Oregon, producing and distributing tens of thousands of barrels of beer each year across the United States and Canada.
+			Maintaining a consistently high quality product is vital to the longevity of Ninkasi.
+			Scalable brewing is a detail-oriented and organized process; companies require unique data tracking methods to fit the needs of their brewing process.
+			Ninkasi tracks brewery data using Microsoft Excel spreadsheets.
+			This process is laborious, time consuming, and error prone.
+			The goal of this project is to create a brewing operations management system to add and monitor brewery data.
+			The brewing and cellar team members will utilize the system to access up-to-date information.
     \end{abstract}
 		\pagebreak
 		\tableofcontents
 \end{titlingpage}
 
-\section{\textbf{Problems}}
+\section{Problems}
 
 \begin{itemize}
-
     \item {Ninkasi may run out of columns available in their master data-tracking spreadsheet}
       \begin{itemize}
-      \item {Ninkasi deals with data sets that are updated daily. Each time data is updated, it uses an additional column in the master spreadsheet. This problem will persist as their brewing operations grow and may become unmanageable.}
-      	\end{itemize}
+      \item {
+				Ninkasi deals with data sets that are updated daily.
+				Each time data is updated, it uses an additional column in the master spreadsheet.
+				This problem will persist as their brewing operations grow and may become unmanageable.
+			}
+  	\end{itemize}
 
 	\item {Relying on "paper logs" and "manual data entry into ... digital spreadsheet"}
 	    \begin{itemize}
 			\item {Paper logs are fragile and bound to a single location in space. Entering paper logs into a digital spreadsheet is redundant labor.}
-      	    \end{itemize}
+	    \end{itemize}
 
 	\item {Data logging process is "time consuming" and "prone to errors"}
       		\begin{itemize}
-			\item {Paper logs require manual entry and retrieval, likely increasing error in the data. Inconsistencies in data provides a murky view of the brewing process. This ambiguity leads to employee hours spent error correcting and attempting to read through bad data. Beer is brewed in large batches; small mistake can affect thousands of gallons of beer. Without accurate measurements and systems in place to handle issues, batches of product may unintentionally vary in consistency.}
+			\item {Paper logs require manual entry and retrieval, increasing error in the data.
+				Inconsistencies in data provides a murky view of the brewing process.
+				This ambiguity leads to employee hours spent error correcting and attempting to read through bad data.
+				Beer is brewed in large batches; small mistake can affect thousands of gallons of beer.
+				Without accurate measurements and systems in place to handle issues, batches of product may unintentionally vary in consistency.
+			}
       		\end{itemize}
 
 	\item {"Confusion and delays in receiving ... time sensitive information"}
       		\begin{itemize}
-			\item {Breweries require constant monitoring of processes and quick feedback. Batches of product need to continue processing until they hit temperature and density benchmarks \footnote{temperature and density levels vary based on product that is being brewed}, after which the product moves to the next stage of brewing. Missing these critical points can cost \footnote{cost depends on size of batch, but cost may be several thousand dollars} breweries time \footnote{brewing a batch of beer can take two weeks} and money. Automating these system checks and pipelining information from process to process will reduce errors and provide a smoother brewing process.}
+			\item {Breweries require constant monitoring of processes and quick feedback.
+				Batches of product need to continue processing until they hit temperature and density benchmarks \footnote{temperature and density levels vary based on the product}, after which the product moves to the next stage of brewing.
+				Missing these critical points can cost \footnote{cost depends on size of batch, but cost may be several thousand dollars} breweries time \footnote{brewing a batch of beer can take two weeks} and money.
+				Automating these system checks and pipelining information from process to process will reduce errors and provide a smoother brewing process.
+			}
       		\end{itemize}
 
 	\item {Data points are missed or incorrectly collected}
       		\begin{itemize}
-			\item {Automating data collection will allow Ninkasi to specify information pipelines to properly handle all data \footnote{properly handle data is a loose term}. This will prevent missed data points and reduce error within the data \footnote{error reduction can be used as a measurement of success, but a measurement of how much error exists needs to first be measured to know what improvement looks like}. Since data is routinely run through their statistical analysis unit, it is vital that the information is correct so that accurate conclusions may be created.}
+			\item {Design the system with error handling in place to ensure that data entered in the database is within reasonable limits.
+				This will prevent missed data points and reduce error within the data \footnote{error reduction can be used as a measurement of success, but a measurement of how much error exists needs to first be measured to know what improvement looks like}.
+				Since data is routinely run through their statistical analysis unit, it is vital that the information is correct so that accurate conclusions may be created.
+			}
       		\end{itemize}
 
 	\item {Process and production delays are not communicated "until it is too late"}
@@ -94,44 +114,44 @@
 	\end{itemize}
 
 
-\section{\textbf{System Objectives}}
+\section{System Objectives}
 
 \begin{itemize}
 
 	\item {Reduce manual data entry to one entry per data point}
 		\begin{itemize}
-			\item {Our system will allow brewers to monitor the brewing process from both smartphones and desktops via a web application. We will take the Tanknet \footnote{Tanknet is the system that provides the physical measure of various data points and provides APIs to that data} data feeds and pipeline information into the database. This will allow us to develop application programming interfaces to retrieve and update information in the database. This will ensure brewers interact with data through one entry point.}
+			\item {Our system will allow brewers to monitor the brewing process from both smartphones and desktops via a web application.
+			This will allow us to develop application programming interfaces to retrieve and update information in the database.
+			This will ensure brewers interact with data through one entry point.}
 		\end{itemize}
 
 
 	\item {Eliminate sharing of production data and reports via excel and email}
 	    \begin{itemize}
-			\item {Instead of requiring brewers to email reports, our system will provide a shared interface that each person can log in to. Creating a shared drive of information and developing a user interface to present this information will eliminate the need to email production data and reports.}
+			\item {
+			Instead of requiring brewers to email reports, our system will provide a shared interface that each person can log in to.
+			Creating a shared drive of information and developing a user interface to present this information will eliminate the need to email production data and reports.}
 			\end{itemize}
-
-
-	\item {Eliminate paper tracking logs with updates that can accessed from any device}
-	    \begin{itemize}
-			\item {Pipelining physical measurements from tanknet instruments to the database will eliminate brewers need to copy data to the master spreadsheet manually. The web application will allow access to this information.}
-		\end{itemize}
 \end{itemize}
 
-\section{\textbf{Proposed Solution}}
-Our comprehensive solution will include a web application to serve as an interface for the brewing operations management system. We will deploy this application on the Ninkasi network. The application will use database information to generate reports and monitor brewing processes. Behind the scene, our system will interface with brewing sensors to pipeline data from collection to proper database locations, allowing for timely information \footnote{Information that is updated hourly}. Overall, this system will reduce manual data entry to a single interface, eliminate sharing of daily production data and reports via excel and email, eliminate manual entry and transfer of data, and eliminate paper tracking logs to ensure important information is always up-to-date.
+\section{Proposed Solution}
+Our comprehensive solution will include a web application to serve as an interface for the brewing operations management system.
+We will deploy this application on the Ninkasi network or a third party hosting system.
+The application will use database information to generate reports and monitor brewing processes.
+Behind the scene, our system will interface with brewing sensors to pipeline data from collection to proper database locations, allowing for timely information \footnote{Information that is updated hourly}.
+Overall, this system will reduce manual data entry to a single interface, eliminate sharing of daily production data and reports via excel and email, eliminate manual entry and transfer of data, and eliminate paper tracking logs to ensure important information is always up-to-date.
 
+\section{Metrics}
 
-\section{\textbf{Metrics}}
 \begin{itemize}
 \item {Database}
 \begin{itemize}
 \item {Provide recommendation for internal/external data storage}
-\item {Create database to store temperature, gravity, timelines, and hop amounts}
-\item {Insert 3 months of cellar data from existing master spreadsheet into database}
+\item {Create database to store brewing data}
 \end{itemize}
 \item{Web Application}
 \begin{itemize}
 \item {Build website that scales based on screen size}
-\item {Backend will transfer Tanknet data into database}
 \item {Brewers will input data via web application running on smartphone or desktop computer}
 \end{itemize}
 \end{itemize}
