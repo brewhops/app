@@ -6,8 +6,7 @@
 
      </div>
      <div id="content">
-         <div id="misc">
-           <!-- Create a new tank, add status and whether or not it is in use -->
+         <div class="element">
              <h2>Create New Tank</h2>
              <input v-model.lazy="tank_id" placeholder="New Tank Number">
              <span>{{ feedback.tank_id }}</span>
@@ -23,8 +22,8 @@
             </div>
 
              <button v-on:click="tank_submit">Submit</button>
-
-             <!-- update tank status! -->
+        </div>
+        <div class="element">
              <h2>Update Tank Status {{ tank_id }}</h2>
              <select v-model="tank_id" class="dropdown">
                <option disabled value="">Tank Number</option>
@@ -38,8 +37,7 @@
 
              <button v-on:click="tank_update">Submit</button>
          </div>
-         <!-- Create new user with username, first, last name, and password and password check -->
-         <div id="user">
+         <div class="element">
              <h2>Create New User</h2>
              <input v-model.lazy="first_name" placeholder="First Name">
              <span>{{ feedback.first_name }}</span>
@@ -61,7 +59,7 @@
              <span>{{ feedback.submissionResults }}</span>
 
          </div>
-         <div id="brand">
+         <div class="element">
              <h2>Create New Brand</h2>
              <input v-model.lazy="recipe_name" placeholder="Brand Name">
              <span>{{ feedback.brandID }}</span>
@@ -307,9 +305,7 @@ export default {
 
 #content
   display grid
-  grid-template-rows 1fr 1fr
   grid-template-columns 1fr 1fr
-  grid-template-areas "misc brand" "user brand"
   grid-gap 3vw
   width 80%
   margin auto
@@ -318,21 +314,13 @@ export default {
     width 98%
     grid-template-rows auto
     grid-template-columns auto
-    grid-template-areas "brand" "misc" "user"
 
 
-#misc, #user, #brand
+.element
   padding 20px
   text-align center
 
-#misc
-  grid-area misc
-
-#user
-  grid-area user
-
 #brand
-  grid-area brand
   .inline
     input
       width 49%

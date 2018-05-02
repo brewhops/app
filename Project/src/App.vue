@@ -110,6 +110,9 @@ input, .dropdown
   &:focus
     border-bottom 2px solid Teal
 
+select
+  margin 10px 0
+
 .checkbox
   display flex
   align-items center
