@@ -7,18 +7,25 @@
   <div id="dataEntry">
     <h2 v-if="!mobile">Data Entry</h2>
     <div id="formFields" class="grid">
-      <div class="col-2">
+      <div class="col-3">
         <h4>Tank</h4>
         <select v-model='tank_id' v-on:change="tankChoose">
           <option disabled value="">Tank</option>
           <option v-for='tank in tanks' v-bind:value='tank.id '>{{ tank.tank_id }}</option>
         </select>
       </div>
-      <div class="col-2">
+      <div class="col-3">
         <h4>Action</h4>
         <select v-model='action'>
           <option disabled value="">No Action</option>
           <option v-for='action_option in action_choice' v-bind:value='action_option.id'> {{ action_option.name }}</option>
+        </select>
+      </div>
+      <div class="col-3">
+        <h4>Recipe</h4>
+        <select v-model='recipe_id' required>
+          <option disabled value="">Recipe</option>
+          <option v-for='recipe in recipes' v-bind:value='recipe.id'>{{ recipe.airplane_code }}</option>
         </select>
       </div>
       <div class="col-3 inputGroup">
@@ -57,11 +64,7 @@
         <input v-model="time" type="datetime-local">
         <label>Time Measured</label>
       </div>
-      <div class="col-2 inputGroup">
-        <input v-model="recipe_id" required>
-        <label>Recipe</label>
-      </div>
-      <div class="col-2 inputGroup">
+      <div class="col-1 inputGroup">
         <input v-model="batch_name" required>
         <label>Batch Name</label>
       </div>
@@ -99,6 +102,7 @@ export default {
       pressure: '',
       action: '',
       time: '',
+      recipes: {},
       update: true,
       mobile: false,
       tanks: [], //to save info from all tank info pulled from db
@@ -135,6 +139,10 @@ export default {
       this.debugging = 'Debugging Flag: Response error, cant access employees page';
       console.warn("Error with the actions route", response);
     });
+
+    this.$http.get(process.env.API + '/recipes').then(response => {
+      this.recipes = response.body
+    })
 
   },
   methods: {
@@ -213,18 +221,13 @@ export default {
         });
     },
     submit: function() {
-
       // this is where all the http requests will be monitored
       // when they are all fufilled, then send the user over to the
-      // subbmision page.
+      // submision page.
       let promiseArray = []
 
+      // create a new batch data element
       var batchesData = new FormData()
-      var id
-
-      function error(error) {
-        console.warn(error)
-      }
 
       batchesData.append('recipe_id', this.recipe_id)
       batchesData.append('tank_id', this.tank_id)
@@ -233,65 +236,99 @@ export default {
       batchesData.append('generation', this.generation)
       batchesData.append('batch_name', this.batch_name)
 
-      // if we are going to update a batch element
-      if(this.update) {
+      // We have two different paths we can take. Either the batch already
+      // exists and we are just adding a new data point in the history,
+      // or we are creating a new batch and all it's associated information
+
+      // if we are updating, we don't need to know any information about each
+      // process unless it failed. So we can put this all in a promise array
+      // and fufil them one by one.
+
+      // if we are making new stuff, we need to get information back from the
+      // data base before we continue. As such, it is best that we do a promise
+      // chain where we can pass information from the response of one event
+      // into the next event.
+
+      let id
+
+      // if we are going to make a new batch element
+      if(!this.update) {
+        // create a new batch element
+        this.$http.post(process.env.API + '/batches', batchesData)
+          .then(success => {
+            // set our id to the id of the batch that we are getting back
+            id = success.body.id;
+          }).then(success => {
+            // post the batch history
+            let batchHistory = new FormData();
+            batchHistory.append('batch_id', id)
+            batchHistory.append('pH', this.pH)
+            batchHistory.append('ABV', this.ABV)
+            batchHistory.append('pressure', this.pressure)
+            batchHistory.append('temp', this.temp)
+            batchHistory.append('SG', this.SG)
+
+            // create a new batch history point
+            this.$http.post(process.env.API + '/batch_contents_versions', batchHistory)
+              .then(success => {})
+              .catch(error => { console.warn(error) })
+          }).then(success => {
+            router.push({ name: 'data-submission', params: {
+              data: {
+                batch_id: id,
+                ph: this.pH,
+                abv: this.ABV,
+                pressure: this.pressure,
+                temp: this.temp,
+                sg: this.SG,
+                recipe_id: this.recipe_id,
+                tank_id: this.tank_id,
+                volume: this.volume,
+                bright: this.bright,
+                generation: this.generation,
+              }
+            }})
+          }).catch(error => { console.warn(error) })
+
+      } else {
         // get our batch url
         var url = process.env.API + '/batches/' + this.batch_id
         // patch the contents on that batch
-        promiseArray.push(this.$http.patch(url, batchesData).then(success => {}, error()))
+        promiseArray.push(this.$http.patch(url, batchesData))
         // change the id to the batchID
         id = this.batch_id
+
+        // post the batch history
+        var batchHistory = new FormData();
+        batchHistory.append('batch_id', id)
+        batchHistory.append('pH', this.pH)
+        batchHistory.append('ABV', this.ABV)
+        batchHistory.append('pressure', this.pressure)
+        batchHistory.append('temp', this.temp)
+        batchHistory.append('SG', this.SG)
+
+        // create a new batch history point
+        promiseArray.push(this.$http.post(process.env.API + '/batch_contents_versions', batchHistory))
+
+        Promise.all(promiseArray)
+          .then(success => {
+            router.push({ name: 'data-submission', params: {
+              data: {
+                batch_id: id,
+                ph: this.pH,
+                abv: this.ABV,
+                pressure: this.pressure,
+                temp: this.temp,
+                sg: this.SG,
+                recipe_id: this.recipe_id,
+                tank_id: this.tank_id,
+                volume: this.volume,
+                bright: this.bright,
+                generation: this.generation,
+              }
+            }})
+          }).catch(error => { console.warn(error) })
       }
-      else {
-        // create a new batch element
-        promiseArray.push(
-          this.$http.post(process.env.API + '/batches', batchesData).then(success => {
-            // set our id to the id of the batch that we are getting back
-            id = response.body.id;
-          }, error())
-        )
-      }
-
-      var taskData = new FormData()
-
-      // if our action does not exist
-      if(this.action != '') {
-        taskData.append('action_id', this.action)
-        taskData.append('batch_id', id)
-
-        // create our new task
-        promiseArray.push(this.$http.post(process.env.API + '/tasks', taskData).then(success => {}, error()))
-      }
-
-      // post the batch history
-      var batchHistory = new FormData();
-      batchHistory.append('batch_id', id)
-      batchHistory.append('pH', this.pH)
-      batchHistory.append('ABV', this.ABV)
-      batchHistory.append('pressure', this.pressure)
-      batchHistory.append('temp', this.temp)
-      batchHistory.append('SG', this.SG)
-
-      // create a new batch history point
-      promiseArray.push(this.$http.post(process.env.API + '/batch_contents_versions', batchHistory).then(success => {}, error()))
-
-      Promise.all(promiseArray).then(success => {
-        router.push({ name: 'data-submission', params: {
-          data: {
-            batch_id: id,
-            ph: this.pH,
-            abv: this.ABV,
-            pressure: this.pressure,
-            temp: this.temp,
-            sg: this.SG,
-            recipe_id: this.recipe_id,
-            tank_id: this.tank_id,
-            volume: this.volume,
-            bright: this.bright,
-            generation: this.generation,
-          }
-        }})
-      })
     },
     sortTanks: function(a, b) {
       return a.id - b.id
