@@ -74,6 +74,7 @@
              </div>
              <button type="button" v-on:click="hopNumbers+=1">Add Another Row</button>
              <button v-on:click="recipe_submit">Submit</button>
+             <span>{{ feedback.submissionResults }}</span>
          </div>
      </div>
     </div>
@@ -266,7 +267,11 @@ export default {
         formData.append('airplane_code', this.airplane_code)
         formData.append('instructions', JSON.stringify(instructions))
         formData.append('recipe_name', this.recipe_name)
-        this.$http.post(process.env.API + '/recipes', formData)
+        this.$http.post(process.env.API + '/recipes', formData).then(response => {
+          if (response.ok) {
+            this.feedback.submissionResults = "Created a new brand"
+          }
+        })
       },
       tank_submit: function(){
         var formData = new FormData();

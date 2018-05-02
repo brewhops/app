@@ -6,7 +6,7 @@
   </div>
   <div id="dataEntry">
     <h2 v-if="!mobile">Data Entry</h2>
-    <div id="formFields">
+    <div id="formFields" class="grid">
       <div class="col-2">
         <h4>Tank</h4>
         <select v-model='tank_id' v-on:change="tankChoose">
@@ -320,15 +320,6 @@ export default {
   #formFields
     .time
       display block
-    display grid
-    grid-gap 25px 10px
     text-align center
-    +greater-than(mobile)
-      grid-template-columns repeat(12, 1fr)
-      .col-1
-        grid-column span 12
-      .col-2
-        grid-column span 6
-      .col-3
-        grid-column span 4
+
 </style>

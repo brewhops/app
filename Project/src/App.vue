@@ -100,13 +100,13 @@ input, .dropdown
   box-sizing border-box
   font-size 1em
   display block
-  margin 1vh 0
   width 100%
   color Teal
   font-weight bold
   outline none
   border none
   border-bottom 1px solid #cccccc
+  background none
   &:focus
     border-bottom 2px solid Teal
 
@@ -120,19 +120,20 @@ input, .dropdown
 
 .inputGroup
   position relative
+  margin 10px 0
   label
     font-size 18px
     font-weight normal
     position absolute
     pointer-events none
     left 0
-    bottom 15px
+    bottom 0
     transition 0.2s ease all;
     -moz-transition 0.2s ease all;
     -webkit-transition 0.2s ease all
 
   input:focus ~ label, input:valid ~ label
-    bottom -10px
+    bottom -20px
     color #999
     font-size 14px
 
@@ -166,5 +167,22 @@ input, .dropdown
 //************** tables *************//
 table
   margin auto
+
+//************** grids *************//
+.grid
+  display grid
+  grid-gap 25px 10px
+  +greater-than(mobile)
+    grid-template-columns repeat(12, 1fr)
+    .col-1
+      grid-column span 12
+    .col-2
+      grid-column span 6
+    .col-3
+      grid-column span 4
+    .col-4
+      grid-column span 3
+    .col-span-8
+      grid-column span 8
 
 </style>
