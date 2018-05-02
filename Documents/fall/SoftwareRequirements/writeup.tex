@@ -70,31 +70,31 @@
 		This project is to develop a web application and relational database model to manage Ninkasi's data.
 		We will perform a cost-benefit analysis to recommend hosting the system with web service provider versus hosting on Ninkasi servers.
 		The database\footnote{Details on database information are outlined in section 3.4} will store all information that is required during the brewing process.
-        This information is pulled directly from the Master Excel Spreadsheet that Ninkasi uses to track brewing process data.
-        \\
-        \\
+    This information is based off of the Master Excel Spreadsheet that Ninkasi uses to track brewing process data.
+    \\
+    \\
 		The provided interface will allow brewers to manually insert new batch records, update incorrect data, and view existing data.
 		The web application interface will allow Ninkasi personnel to view basic status information on tanks at a glance.
 		We will gage adequacy of interface based on a minimum 60\% approval from Ninkasi personnel, of which Daniel Sharp must approve.
 		The goal of these requirements is to stop use of Excel as primary data storage.
 		\\
 		\\
-		Stretch goals are outlined in section 3.2.
+		Stretch goals are outlined in the Functions section.
 		\\
 		\\
 		We are not be responsible for advanced application security or direct control of any brewing process.
 
 	\subsection{Definitions, Acronyms and Abbreviations}
         Database - area in system where collected information will be stored
-        
+
         Cellaring data - data collected by our database; data collected while cellaring beers
-    
+
 		Data points - information to be stored in our database\footnote{Breakdown of all data points found in section 3.4}
 
 		BrewHops - The name of our team
 
 		BOMS - Brewery Operations Management System
-        
+
         Master Excel Spreadsheet - Ninkasi currently tracks all data using a spreadsheet, referred to as the "Master Excel Spreadsheet"
 
 	\subsection{Overview}
@@ -142,13 +142,10 @@
 			The data display interface will involve giving basic information about the status of the tanks in the facility, and which actions the brewers should take to make sure that the product will be developed properly.
 			Streatch goals include more advanced data display such as the ability to show simple graphs of data over time for any tank.
 
-		\subsubsection{Communications interfaces}
-			Web application will not implement other interfaces.
-
 		\subsubsection{Memory constraints}
 			Currently Ninkasi has space on a single server in a back room.
 			If Ninkasi's storage requirements grow quickly, a single server may not meet the needs of our system.
-			If Ninkasi decides to host our database on a 3rd party cloud hosting site, the memory constraints will be those of how much space they buy.
+			If Ninkasi decides to host our database on a 3rd party cloud hosting site, the memory will be constrained by how much space they buy.
 
 		\subsubsection{Site adaptation requirements}
 			Brewers will adapt to using our web form rather than continue implementing the system they previously used.
@@ -171,28 +168,14 @@
 		If we decide not to use a third party hosting site, then the small server means there will only be the amount of free space on the server available.
 		This is a not a limitation for our project so much as a limitation for any possible continuation of our project from Ninkasi.
 
-		\subsubsection{Interfaces to other applications}
-		BrewHops’ application will integrate with Tanknet.
-		\footnote{Tanknet is a a hardware and software system that performs physical measurements of brewing vats and automatically collects the data and exports it digitally}
-		The web application will automatically collect temperature information from Tanknet and store it in our database.
-
 		\subsubsection{Parallel operation}
         Our web application will allow concurrent read access and use transactions for insertions and updates.
 
 		\subsubsection{Audit functions}
         The system will store past data\footnote{Past data stored as far back as deemed necessary by Daniel Sharp, or within limitations of server space.} to be used for audit functionality.
 
-		\subsubsection{Control functions}
-        Not applicable for BrewHops team.
-
-		\subsubsection{Higher-order language requirements}
-        Objects and callback functionality may be necessary.
-
-		\subsubsection{Signal handshake protocols (e.g., XON-XOFF, ACK-NACK)}
-        BrewHops team will not work directly with handshake protocols, these protocols will be abstracted by the technologies used.
-
 		\subsubsection{Reliability requirements}
-		The web application will ensure data integrity for automated data collection.
+		The web application will ensure data integrity for collected data.
 		The web application will validate data entered manually.
 		Our site will be accessible without wait time longer than 5 seconds 90\% of the time\footnote{This may vary depending on the hardware capabilities of Ninkasi servers.}.
 
@@ -240,9 +223,9 @@
 		Stretch goals include:
 		\begin{itemize}
 			\item{Adding a login interface to verify the users before they begin using the system.}
-            
+
             \item{Implement profile levels to differentiate permissions (admin, operator, supervisor, cellar, etc.).}
-            
+
             \item{Track authenticated user levels in database.}
 
 			\item{Including a time and ID stamp on the data entered in case the company needs to trace back an error to a particular time or person.}
@@ -289,12 +272,12 @@
                     minimally measured daily.
                 }
                 \begin{itemize}
-                    \item{\textbf{Specific Gravity}: 
-                        A measure that represents the amount of sugar left in the beer. 
-                        This number starts high and decreases throughtout fermentation. 
+                    \item{\textbf{Specific Gravity}:
+                        A measure that represents the amount of sugar left in the beer.
+                        This number starts high and decreases throughtout fermentation.
                         When it stops we move on to the next process step
                     }
-                    \item{\textbf{pH}: 
+                    \item{\textbf{pH}:
                         pH level of batch in brewing vat.
                     }
                     \item{\textbf{ABV}: Alcohol By Volumne of batch.}
@@ -365,9 +348,9 @@
         In order for the system to function properly, the hosting server must have the technologies used in the system, installed.
 
 	\subsection{Organizing the specific requirements}
-		We will build a user class based system. 
-        This will allow us to separate responsibilities and functionality so individuals only have access to their required tasks. 
-        In this system, we can design it hierarchically so that managers have access to all data manipulation privileges while brewers only have read or write privileges through structured forms. 
+		We will build a user class based system.
+        This will allow us to separate responsibilities and functionality so individuals only have access to their required tasks.
+        In this system, we can design it hierarchically so that managers have access to all data manipulation privileges while brewers only have read or write privileges through structured forms.
         As a stretch goal, manager level individuals will be able to modify user permissions as needed.
 	\subsection{Comments}
 \section{Appendixes}

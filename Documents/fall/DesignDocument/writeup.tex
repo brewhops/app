@@ -61,6 +61,8 @@
 			\\
 			\textbf{Keywords} Brewing, Operations, Management
     \end{abstract}
+		\pagebreak
+		\tableofcontents
 \end{titlingpage}
 
 \section{Overview}
@@ -159,22 +161,22 @@
 
 		The database system is based off of the excel spreadsheet currently in use by Ninkasi for storing data.
 		Each beer is connected to a predefined recipe, and each beer currently in the cellar is associated with data collected each day, along with the alerts in place for that day.
-		Our database design has 5 tables: VatActions, VatContents, VatInfo, BrandInfo, and Employees.
+		Our database design has 5 tables: TankActions, TankContents, TankInfo, BrandInfo, and Employees.
 		Employees contains login usernames, passwords, and ID numbers for the employees.
-		This is used for the login system and also for keeping track of who entered the VatContents information.
+		This is used for the login system and also for keeping track of who entered the TankContents information.
 		The BrandInfo table keeps track of a brand’s recipe and the ranges associated with correct values.
 		This is so that we can alert the brewers if temperature, gravity or pH are outside of the typical or safe levels.
-		The last three tables are associated with the vats, what’s inside of them, and the measurements of the beer in each vat.
-		The VatInfo table contains VatID, beer name, batch number, generation, and volume to ferment.
-		Each vat can have 1 or more VatContents, as each VatContent data set is taken on a different day and a batch can be in a vat for multiple weeks.
-		VatContents contain the date on which the measurements took place, specific gravity, pH, ABV, temperature, and the EmployeeID who entered the data.
-		VatActions hold actions that need to happen, the date, the VatID they are associated with, and the EmployeeID who satisfied the action, if they have fixed the problem.
+		The last three tables are associated with the tanks, what’s inside of them, and the measurements of the beer in each tank.
+		The TankInfo table contains TankID, beer name, batch number, generation, and volume to ferment.
+		Each tank can have 1 or more TankContents, as each TankContent data set is taken on a different day and a batch can be in a tank for multiple weeks.
+		TankContents contain the date on which the measurements took place, specific gravity, pH, ABV, temperature, and the EmployeeID who entered the data.
+		TankActions hold actions that need to happen, the date, the TankID they are associated with, and the EmployeeID who satisfied the action, if they have fixed the problem.
 
 		This system works for our project because it allows us to keep track of:
 
 		\begin{itemize}
-			\item What brand and batch are in each vat
-			\item What is happening in that vat every day
+			\item What brand and batch are in each tank
+			\item What is happening in that tank every day
 			\item What actions need to be taken, and if they have been taken care of
 			\item Who entered the data
 			\item What the correct measurement ranges and ingredients are for each brand
@@ -183,8 +185,7 @@
 		\begin{itemize}
 			\item Issues brought up:
 			\item Inefficient query system if you want batch information over long periods of time
-			\item BRITE isn’t anywhere in our diagram and I’m not sure where it fits
-			\item Date should be a time
+			\item BRITE is not anywhere in our diagram and the team is unsure where it belongs in the data structure
 			\item Recipie is not a long varchar in the database
 		\end{itemize}
 
@@ -192,8 +193,6 @@
 
 		Ninkasi needs all CRUD operations available to their user interfaces.
 		To adhere with these standards, the API must be fully RESTful and expose the necessary GET, POST, PUT, PATCH, and DELETE routes.
-
-
 		The API will have direct access into the database and will need to be secured per user so that only individuals with adequate permissions have access to certain API routing features.
 		Other security concerns are that individuals outside of Ninkasi do not have access to the API.
 		This will not be the BrewHops team’s primary concern as Ninkasi network security should handle these concerns when application is deployed.
@@ -203,32 +202,30 @@
 		The interfaces need to be able to get the data, insert new data, update old data, and delete incorrect data.
 		Each route of the REST API will give access to these operations based on the type of operation performed on the url.
 
+		Interfaces will need access to all information in the TankInfo table.
+		To allow this, the routes on the /tanks url will handle retrieving all Tanks data, inserting and updating Tanks data, and retrieving batch information for each tank.
 
-		Follows are each route and their purpose in the API:
+		What follows are each route and their purpose in the API:
 
-
-		Interfaces will need access to all information in the VatInfo table.
-		To allow this, the routes on the /vats url will handle retrieving all Vats data, inserting and updating Vats data, and retrieving batch information for each vat.
-
-		/api/vats:
+		/api/tanks:
 		\begin{itemize}
-			\item GET: (queries VatInfo database table to get)
+			\item GET: (queries TankInfo database table to get)
 			\begin{itemize}
-				\item VatID
+				\item TankID
 				\item BrandID
 				\item BATCH
 				\item Yeast Generation
 				\item Ferm\_To\_Vol
 			\end{itemize}
-			\item POST: (add a new Fermentation Vat to the database)
+			\item POST: (add a new Fermentation Tank to the database)
 			\item /:id:
 			\begin{itemize}
-				\item GET: Query VatInfo for all batches produced in Vat
-				\item POST: Add new batch to vat
+				\item GET: Query TankInfo for all batches produced in Tank
+				\item POST: Add new batch to tank
 				\item :id/:id\_batch: \\
 					GET:
 					\begin{itemize}
-						\item Gets all rows of VatContent for BatchID
+						\item Gets all rows of TankContent for BatchID
 						\item PUT: update entire batch resource
 						\item PATCH: update part of a batch resource
 						\item DELETE: destroy a batch resource
@@ -278,7 +275,7 @@
 
 		A RESTful API is important because it improves application maintainability and testability.
 		Maintainability is a primary concern and requirement of this project.
-		Ease of testing ensures the integrity of our final product and gives us further metrics to gage success against.
+		Ease of testing ensures the integrity of our final product and gives us further metrics to gage success.
 		A REST API allows the BrewHops team to fully decouple\footnote{“decouple” means separate user interface concerns from server-side processing concerns} user interfaces from the backend processes.
 		This is important because development on the user interface and the server-side support can work in parallel; the only dependency is how data is structured.
 		Once data structure is determined for each route, our frontend developer can mock data\footnote{mocking data means to create a static data source for testing purposes} to test the interface while our backend developer builds out each route to the specifications.
@@ -288,7 +285,7 @@
 
 		The user interface needs to be designed in a way that is easily usable by the brewers.
 		The UI design decisions will first be made by the BrewHops team.
-		A prototype of the UI w ill be developed by the team based on the goals outlined by the client.
+		A prototype of the UI will be developed by the team based on the goals outlined by the client.
 		The user interface will then go through an iterative feedback process where the client will provide changes, the team will revise the document and make new suggestions, which will then be returned to the client.
 		This process will continue until both parties have verified that the design is both achievable by the development team and meets the goals of the client.
 		Iterative design ensures that there is a balance of input, with multiple opportunities for everyone to contribute to the project.
@@ -317,17 +314,29 @@
 		Open source projects have been struggling with ensuing that contributors know how to read the code that exists in the project, and write changes that are useful to the project.
 		There has been a development of general design strategies used in the open source community to ensure a maintainable project, and utilizing these strategies will create a project that will be maintainable for whoever works on the project after the BrewHops team is done.
 
-		\clearpage
 
 		\section{Appendix}
+		\subsection{Mobile Design}
 		\centering
 		\begin{tabular}{ll}
 				Home & Menu \\
 				\includegraphics[scale=.3]{images/mobile/home} & \includegraphics[scale=.3]{images/mobile/menu} \\
 				Data Entry & Confirmation Page \\
 				\includegraphics[scale=.3]{images/mobile/data_entry} & \includegraphics[scale=.3]{images/mobile/confirmation_page} \\
-				Vat Monitoring & Vat Info \\
-				\includegraphics[scale=.3]{images/mobile/vat_monitoring} & \includegraphics[scale=.3]{images/mobile/vat_info} \\
+				Tank Monitoring & Tank Info \\
+				\includegraphics[scale=.3]{images/mobile/tank_monitoring} & \includegraphics[scale=.3]{images/mobile/tank_info} \\
+		\end{tabular}
+
+		\subsection{Desktop Design}
+		\begin{tabular}{l}
+				Admin \\
+				\includegraphics[scale=.15]{images/web/admin} \\
+				Home \\
+				\includegraphics[scale=.15]{images/web/home} \\
+				Login \\
+				\includegraphics[scale=.15]{images/web/login} \\
+				Tank Info \\
+				\includegraphics[scale=.15]{images/web/tank_info} \\
 		\end{tabular}
 
 \end{document}
