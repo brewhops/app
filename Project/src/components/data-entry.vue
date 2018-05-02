@@ -272,6 +272,16 @@ export default {
             this.$http.post(process.env.API + '/batch_contents_versions', batchHistory)
               .then(success => {})
               .catch(error => { console.warn(error) })
+
+            let taskData = new FormData()
+            // if the user wants to set an action
+            if(this.action !== '') {
+              taskData.append('action_id', this.action)
+              taskData.append('batch_id', id)
+              // create our new task
+              this.$http.post(process.env.API + '/tasks', taskData)
+                .catch(error => { console.warn(error) })
+            }
           }).then(success => {
             router.push({ name: 'data-submission', params: {
               data: {
@@ -309,6 +319,16 @@ export default {
 
         // create a new batch history point
         promiseArray.push(this.$http.post(process.env.API + '/batch_contents_versions', batchHistory))
+
+
+        let taskData = new FormData()
+        // if the user wants to set an action
+        if(this.action !== '') {
+          taskData.append('action_id', this.action)
+          taskData.append('batch_id', id)
+          // create our new task
+          promiseArray.push(this.$http.post(process.env.API + '/tasks', taskData))
+        }
 
         Promise.all(promiseArray)
           .then(success => {
