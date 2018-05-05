@@ -1,0 +1,243 @@
+% Midterm Progress Report
+% CS 463 - CS Senior Capstone
+% Spring 2018
+% Authors: Connor Christensen, Lily Shellhammer, William Buffum
+\documentclass[draftclsnofoot,onecolumn,letterpaper,10pt,compsoc]{IEEEtran}
+
+% Packaging
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{titling}
+\usepackage{color}
+\usepackage{listings}
+\usepackage{cite}
+\usepackage{pdfpages}
+\usepackage{pdflscape}
+\usepackage{url}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{subfig}
+
+\definecolor{lightgray}{rgb}{0.95,0.95,0.95}
+\definecolor{darkgray}{rgb}{0.5,0.5,0.5}
+\definecolor{softred}{rgb}{0.7,0,0}
+
+\lstdefinelanguage{JavaScript}{
+  keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywords={class, export, boolean, throw, implements, import, this},
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{
+   language=JavaScript,
+   backgroundcolor=\color{lightgray},
+   extendedchars=true,
+   basicstyle=\footnotesize\ttfamily,
+   showstringspaces=false,
+   showspaces=false,
+   numbers=left,
+   numberstyle=\footnotesize,
+   numbersep=9pt,
+   tabsize=2,
+   breaklines=true,
+   showtabs=false,
+   captionpos=b
+}
+
+\lstdefinelanguage{Stylus}{
+  keywords={@media},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywords={px},
+  ndkeywordstyle=\color{softred}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{
+   language=Stylus,
+   backgroundcolor=\color{lightgray},
+   extendedchars=true,
+   basicstyle=\footnotesize\ttfamily,
+   showstringspaces=false,
+   showspaces=false,
+   numbers=left,
+   numberstyle=\footnotesize,
+   numbersep=9pt,
+   tabsize=2,
+   breaklines=true,
+   showtabs=false,
+   captionpos=b
+}
+
+% Paper type
+\geometry{letterpaper, margin=.75in}
+
+% Title page
+\title{CS 463 - CS Senior Capstone
+	\\Spring 2017
+	\\Midterm Progress Report
+}
+
+\author{
+	Connor I. Christensen \\
+	\texttt{chriconn@oregonstate.edu}
+	\\
+	Lily M. Shellhammer \\
+	\texttt{shellhal@oregonstate.edu}
+	\\
+	William B. Buffum \\
+	\texttt{buffumw@oregonstate.edu}
+}
+
+\begin{document}
+\begin{titlingpage}
+    \maketitle
+    \begin{abstract}
+			Ninkasi Brewing Company is based in Eugene, Oregon, producing and distributing nearly 100,000 barrels of beer each year across the United States and Canada.
+			Ninkasi currently tracks brewery data using digital spreadsheets, a laborious, time consuming, and error prone process.
+			Quality brewing requires the company to be detail-oriented, organize its data and provide timely actions in the brewing process.
+			In order to maintain good quality control in their product and give the company room to scale in its production, our team has been tasked with creating software that will improve the process of entering, storing and accessing data related to the brewing process.
+			This document examines work completed on the project to this date.
+			At this point in the middle of the winter term, our product has reached an alpha state and has a working interface with no database connections.
+			//TODO : ABOUT THIS REPORT
+			\\
+			\textbf{Keywords:} Brewing, Operations Management, Web App
+    \end{abstract}
+		\pagebreak
+		\tableofcontents
+\end{titlingpage}
+
+% briefly recaps the project purposes and goals
+% describes where you are currently on the project
+% describes what you have left to do
+% describes any problems that have impeded your progress, with any solutions you have
+% includes particularly interesting pieces of code (if coding is involved)
+    % Example set language to javascript
+    % \lstset{language=JavaScript}
+    % Example include a file with code in it
+    % \lstinputlisting{mobile.js}
+% includes images of your project -- screen shots, photos, whatever is appropriate
+    % Example include an image
+    % \centerline{\includegraphics[height=5cm]{screenshots/stylus.png}}
+
+\section{Introduction}
+
+\subsection{Purpose}
+
+\subsection{Scope}
+
+\subsection{Overview}
+
+\section{Connor Christensen}
+\subsection{Current position in the project timeline}
+\subsection{What is left to do}
+\subsection{Problems encountered and solutions to those problems}
+\subsection{Particularly interesting pieces of code}
+
+
+\section{Lily Shellhammer}
+\subsection{Describe where you are currently on the project}
+\subsection{Describe what you have left to do}
+\subsection{Describe any problems that have impeded your progress, with any solutions}
+\subsection{Include particularly interesting pieces of code}
+
+
+\section{William Buffum}
+\subsection{Current position in the project timeline}
+\subsection{What is left to do}
+\subsection{Problems encountered and solutions to those problems}
+\subsection{Particularly interesting pieces of code}
+
+\section{Conclusion}
+
+\subsection{Images of the product}
+
+\begin{figure}
+  \centering
+  \includegraphics[height=10cm]{screenshots/desktop/login.png}
+  \caption{Login page on desktop}
+\end{figure}
+\begin{figure}
+  \centering
+  \centerline{\includegraphics[height=10cm]{screenshots/desktop/admin.png}}
+  \caption{Admin page on desktop}
+\end{figure}
+\begin{figure}
+  \centering
+  \centerline{\includegraphics[height=10cm]{screenshots/desktop/home.png}}
+  \caption{Home page on desktop}
+\end{figure}
+\begin{figure}
+  \centering
+  \centerline{\includegraphics[height=10cm]{screenshots/desktop/home_filled.png}}
+  \caption{Home page on desktop with filled content in the data entry component}
+\end{figure}
+\begin{figure}
+  \centering
+  \centerline{\includegraphics[height=10cm]{screenshots/desktop/tank_info.png}}
+  \caption{Tank info page on desktop}
+\end{figure}
+\begin{figure}
+  \centering
+  \centerline{\includegraphics[height=10cm]{screenshots/desktop/data_submission.png}}
+  \caption{Data submission page on desktop}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \centerline{\includegraphics[height=10cm]{screenshots/desktop/batch_history.png}}
+  \caption{Batch history page on desktop}
+\end{figure}
+\begin{figure}
+  \centering
+  \centerline{\includegraphics[height=10cm]{screenshots/desktop/csv.png}}
+  \caption{The downloaded information from the batch history page in a csv}
+\end{figure}
+
+
+\begin{figure}%
+    \centering
+    \subfloat[Login]{{\includegraphics[height=13cm]{screenshots/mobile/login.png}}}%
+    \qquad
+    \subfloat[Home]{{\includegraphics[height=13cm]{screenshots/mobile/home.png}}}%
+    \caption{Mobile - Login and Home page}%
+\end{figure}
+
+\begin{figure}%
+    \centering
+    \subfloat[Tank Monitoring]{{\includegraphics[height=13cm]{screenshots/mobile/tank_monitoring.png}}}%
+    \qquad
+    \subfloat[Tank Info]{{\includegraphics[height=13cm]{screenshots/mobile/tank_info.png}}}%
+    \caption{Mobile - Tank monitoring and more info page}%
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[height=13cm]{screenshots/mobile/admin.png}
+  \caption{Admin page on mobile}
+\end{figure}
+
+\begin{figure}%
+    \centering
+    \subfloat[Data Entry]{{\includegraphics[height=13cm]{screenshots/mobile/data_entry.png}}}%
+    \qquad
+    \subfloat[Submission]{{\includegraphics[height=13cm]{screenshots/mobile/submission.png}}}
+    \caption{Mobile - Data entry and submission pages}%
+\end{figure}
+
+\end{document}
