@@ -152,9 +152,56 @@
 
 \section{Lily Shellhammer}
 \subsection{Describe where you are currently on the project}
+I have reached beta version for the middle stack.
+With the exception of a two bugs, our project is essentially finished.
+At the end of last term, we had a few pillars of the site's javascript finished, but we were far from giving our client access to our site.
+Since then, I (with some help from my teammates) have finished the following:
+\begin{itemize}
+\item Submit a new recipe on the admin page
+\item Change tanks and actions input to drop down menus
+\item Pull most recent data from that tank and auto-populate the form
+\item Pull most recent data from tank for tank-info page
+\item Edit tank status on the admin page
+\item Show given names and airport codes instead of database ids
+\item Add new form options to submissions (pressure, bright)
+\item Have boxes display actions and colors correctly
+\item Create tasks on admin page
+\item Take out system of relying on version numbers and compare most recent values
+\item Add labels to data entry form boxes
+\end{itemize}
+The majority of the work this term has been focused on the data entry, tank monitoring, and individual tank view pages.
+These are important pages not only because they are the most used, but because they have the most complicated code.
+In all of these pages we are pulling the most recent information for a batch given a tank number.
+We have to pull the tank information, pull the batch infomration, then find the batch associated with the tank.
+Then we pull the batch contents version information, find the batch associated with the tank, and pull the reading with the most recent datestamp.
+Then we iterate through the task and actions pages to find if there are any actions needed on specific batches.
+\\
+Firstly, on the data entry page we utilize this process to pull most recent data so that the brewers don't have to retype measurements that don't often change.
+On our tank monitoring page, this process pulls the most recent measurements and actions so that we can display them on small boxes, giving the brewer and overview of measurements and batch statuses.
+And finally on our individual tank view page, the most recent readings for every data point are displayed using this process.
+\\
+
 \subsection{Describe what you have left to do}
+We have two main issues to fix. One is updating the actions of a tank.
+We currently can only set the task to a certain action and cannot change that entry.
+By adding another action we are able to change the color of the tank as it is associated with a new action, but we cannot edit an old action.
+\\
+The other issue is submitting a recipe.
+We currently submit only a JSON string with the ingredient names specified, not the rates.
+This is a difficult fix for me as I don't fully understand how to compound objects or append to them and am struggling the right information online.
 \subsection{Describe any problems that have impeded your progress, with any solutions}
+Naming was the largest bug creator for me.
+There are names in the database that were specifically chosen so as to streamline the whole system's naming, yet conflict with terminology we were originally using.
+Because the code has been evolving and changing names with the updating of our database, we often got in trouble where we hadn't updated all the names, yet the old names corresponded to new values so no errors were thrown.
 \subsection{Include particularly interesting pieces of code}
+One cool feature we implemented is on our data submission page, where we have a drop down menu for the tanks.
+When a tank is chosen, we implemented a feature that auto-populates the form with the most recent data taken on those tanks.
+This is because there are measurements that don't change much, so we let the brewer use old data and not have to retype everything.
+\begin{figure}
+  \centering
+  \includegraphics[height=10cm]{screenshots/lily/lilysCode.png}
+  \caption{The code used to auto-populate the form with the most recent data}
+\end{figure}
 
 
 \section{William Buffum}
