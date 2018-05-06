@@ -70,10 +70,9 @@
           <td>{{ tankInfo.time }}</td>
         </tr>
       </table>
-      <button>I'm On It</button>
       <router-link v-bind:to="doneLink"><button type="button" name="button">Add Data</button> </router-link>
     </div>
-    <recipe  v-bind:recipeID="tankInfo.recipe_id"></recipe>
+    <recipe v-bind:recipeID="tankInfo.recipe_id"></recipe>
   </div>
 </div>
 </template>

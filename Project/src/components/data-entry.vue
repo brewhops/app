@@ -17,7 +17,7 @@
       <div class="col-3">
         <h4>Action</h4>
         <select v-model='action'>
-          <option disabled value="">No Action</option>
+          <option value="">No Action</option>
           <option v-for='action_option in action_choice' v-bind:value='action_option.id'> {{ action_option.name }}</option>
         </select>
       </div>
