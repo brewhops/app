@@ -154,9 +154,69 @@ The functionality to check tank statuses, view batch history, enter cellaring da
 With the exception of a few bugs, we have met our project goals and some of our stretch goals.
 \section{Connor Christensen}
 \subsection{Current position in the project timeline}
+
+My work has been to build a user interface and assist Lily and Billy with whatever they need to get the project finished.
+The user interface is a smaller amount of work for the project, so it was agreed to that I would help out with whatever needed to be done to get the application to a functional level.
+The majority of my assistance was going to be towards the work that Lily was doing with Vue.
+js, as it is the largest amount of working project.
+Over this term I have spent roughly half of my time working on additional requests from the clients and half of the time assisting my teammates with their work.
+
+
+On April 20th, our group drove down to Ninkasi's headquarters in Eugene and did a final demonstration of the project.
+Upon a demo of our project, the client realized that there was some missing functionality that would make their use of the project difficult, as well as some additional utilities that would improve the functionality for the brewers.
+The client asked if it would not be too much of a bother to implement them.
+It seemed well within our reach, so those tasks were added to our project.
+
+
+Over the last two weeks, we have been implementing those features as well as bug fixing.
+After the demo, our client asked if we could provide them with a functional version of the application for them to test.
+I believed that that was possible within the next week.
+Unfortunately, it took us a little longer than expected, and the project was released shortly before this midterm progress report.
+We have yet to get any feedback from our client or the brewers at Ninkasi, but we look forward to what have to say.
+
+
+
 \subsection{What is left to do}
+
+Our team has met all of the minimum requirements for the project as well as several stretch goals outlined in our documentation.
+As such, there are no official requirements left for us to fulfill on the development side.
+Outlined in our documentation are a few requirements of approval from the brewers on the design and functionality for application, but we will get that from them after they have an opportunity to test our project.
+
+
+In regard to the course curriculum, the only thing we have left is to make a few revisions to the documentation written over the fall term and submit those changes to both the client and the instructors of the course.
+The changes in the documentation are somewhat minor, the biggest diversion being use of different technologies in certain aspects of the site development.
+
+
+
 \subsection{Problems encountered and solutions to those problems}
+
+This problem that our team faced This term was dealing with our production database.
+Since we had no database for us to tester application locally, we ended up writing junk data into our production database and interfering with each other’s work on a regular basis.
+There was some data that persisted from earlier implementations of the database where he did it was not capable of being deleted by anyone other than Billy, so there were a few blocking issues where the database needed to be destroyed and rebuilt before we could properly test.
+
+
+I found a solution to this issue with configuration of web pack environments.
+Web pack has the ability to specify environment variables that are accessible throughout the entire application on compilation.
+These environment variables can be a differentiated between the production and development versions of the website.
+So, well we were developing the application, we could interact with a local version of the database, specified through the environment variables in the development environment, and when we were ready we could type a single command in the terminal to switch our environments to the production mode.
+This gives the flexibility to test the database whenever we wanted without any outside interference.
+Each person was capable of is trying and rebuilding the database at any point in time, and the site runs faster without the need to make network requests to a heroku server.
+
+
+The solution to this problem has an added benefit of not needing a network connection to be able to demo at expo in mid-May.
+Both the user interface and the server can be run locally on the computer, without a need for any network requests.
+
+
 \subsection{Particularly interesting pieces of code}
+
+The most interesting piece of code written or last few weeks has been the user interface surrounding the data entry field on the homepage.
+On our trip down to Ninkasi the client asked if it was possible to maintain the labels on the input field even after information had been entered into those fields.
+The system in place at the time, was placeholders that defines what information should go and which field.
+I was able to find a solution that required a minimal amount of coding and delivered professional looking results on the interface.
+Given HTML5’s ability to differentiate between input fields that have user focus and input fields that have been successfully filled in, a minimal amount of CSS is required to be able to make the label dynamically react to the content.
+
+\centerline{\includegraphics[height=7cm]{screenshots/inputLabel.png}}
+
 
 
 \section{Lily Shellhammer}
