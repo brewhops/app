@@ -275,11 +275,46 @@ This is because there are measurements that don't change much, so we let the bre
 
 \section{William Buffum}
 \subsection{Current position in the project timeline}
+At the moment, the server is in full beta.
+I have the database completed with each necessary table and the REST API to access the database is working.
+The server and database are hosted on Heroku so that client side applications can access a stable version.
+There are several bugs in the server code and many inefficiencies that will need to be fixed going forward.
+I'm pretty happy with the current progress of the server-side code.
+As we near the end of the term, Connor, Lily and I are beginning to consider how we want to continue working on the project in the future.
+For that, I am beginning to reevaluate our technology stack to determine if any shifts need to happen.
+Overall, I think we've made good progress and have completed all of our primary requirements for the application.
+The employees at Ninkasi will begin beta testing our system over the next two weeks before expo.
+
 \subsection{What is left to do}
+We only have bug-hunting and optimization left to complete before expo.
+We've gone over all of our requirements and ensured that each one has been met in our current stage.
+Now that we have a beta, we are tracking down components that are not working, and fixing them.
+
 \subsection{Problems encountered and solutions to those problems}
-\subsection{Particularly interesting pieces of code}
+The main issues we've faced is miscommunication between the client-side and the server-side.
+Several times, Connor and Lily have misunderstood which routes they should be querying for which pieces of data they need.
+I have also not fully understood what pieces of information they would like coming from certain routes.
+These communication issues required me to re-write portions of the backend.
+Refactoring isn't a major issue, but it's additional time spent on this project that could be more beneficial elsewhere.
+The main thing to help this has been meeting as a team in-person to work on the project.
+It's much easier to explain to each other what we need in person, than over text.
+Another issue we faced what the design of the REST API.
+After completing all of the necessary routes, Connor and Lily realized that aggregating data on the client-side was slowing the application down a lot.
+To fix this, I built additional routes to aggregate the needed information on the server before sending the data back to the client.
+Doing this helped us reduce the network load significantly because the client application can hit our endpoint once when previously it would send 3-5 requests.
 
 \section{Conclusion}
+Over the last two and a half terms, our team has worked to build Ninkasi Brewing Company a data management system.
+Through the process, we've had the opportunity to analyze the problem, select various technologies, and build a solution to satisfy the problem.
+It's been an incredible learning opportunity for all of us involved.
+From the end of last term until now, we have completed the beta of our system.
+Users are able to create accounts and work with the system on production level data.
+Like any beta, there are many bugs and optimizations to fix.
+Over the next few weeks, our team will be working with Ninkasi employees to test the system and fix these minor issues.
+Our goal is to present a viable product at expo that Ninkasi will be able to use in day-to-day operations.
+The goal of this project from the beginning was not to create a production ready system, but instead, to create a prototype of a data management system.
+This prototype will help Ninkasi determine the feasibility of investing further into this system or another system for future use.
+
 
 \subsection{Images of the product}
 
