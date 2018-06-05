@@ -55,8 +55,10 @@
                <p>User is admin</p>
              </div>
 
+             <div>
+               <p>{{ feedback.server.user }}</p>
+             </div>
              <button v-on:click="login_submit">Submit</button>
-             <span>{{ feedback.submissionResults }}</span>
 
          </div>
          <div class="element">
@@ -72,7 +74,7 @@
              </div>
              <button type="button" v-on:click="hopNumbers+=1">Add Another Row</button>
              <button v-on:click="recipe_submit">Submit</button>
-             <span>{{ feedback.submissionResults }}</span>
+             <span>{{ feedback.server.brand }}</span>
          </div>
      </div>
     </div>
@@ -124,7 +126,13 @@ export default {
         username: '',
         password: '',
         passwordcheck: '',
-        submissionResults: '',
+
+        server: {
+          user: '',
+          brand: '',
+          new_tank: '',
+          update_tank: '',
+        },
 
         dryhopadjunct: '',
         brandID: '',
@@ -246,7 +254,7 @@ export default {
         newUser.append('password', encryptedPassword)
         this.$http.post(process.env.API + '/employees', newUser).then(response => {
           if (response.ok === true) {
-            this.feedback.submissionResults = "New user succesfully created"
+            this.feedback.server.user = "New user succesfully created"
           }
         }, error => {
           console.log(error)
@@ -267,7 +275,7 @@ export default {
         formData.append('recipe_name', this.recipe_name)
         this.$http.post(process.env.API + '/recipes', formData).then(response => {
           if (response.ok) {
-            this.feedback.submissionResults = "Created a new brand"
+            this.feedback.server.brand = "Created a new brand"
           }
         })
       },
