@@ -13,7 +13,6 @@
           <td>{{ value}}</td>
         </tr>
       </table>
-      <router-link to="/home"> <button type="button" name="button">Edit</button> </router-link>
       <router-link v-bind:to="doneLink"> <button type="button" name="button">OK</button> </router-link>
     </div>
   </div>

@@ -37,11 +37,11 @@
         <label>ABV</label>
       </div>
       <div class="col-3 inputGroup">
-        <input v-model="bright" type="number" required>
+        <input v-model="bright" type="number" step="0.1" required>
         <label>Bright</label>
       </div>
       <div class="col-3 inputGroup">
-        <input v-model="pressure" type="number" required>
+        <input v-model="pressure" type="number" step="0.01" required>
         <label>Pressure</label>
       </div>
       <div class="col-3 inputGroup">
