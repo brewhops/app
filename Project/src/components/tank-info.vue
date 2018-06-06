@@ -17,9 +17,13 @@
     <div id="tank">
       <h2>Tank {{ tankInfo.tank_name }}</h2>
       <table>
+        <tr v-if='tankInfo.action !== ""' class="important">
+          <td>Action</td>
+          <td>{{ tankInfo.action }}</td>
+        </tr>
         <tr>
           <td>Status</td>
-          <td> {{ tankInfo.status }}</td>
+          <td>{{ tankInfo.status }}</td>
         </tr>
         <tr>
           <td>Brand ID</td>
@@ -66,10 +70,9 @@
           <td>{{ tankInfo.time }}</td>
         </tr>
       </table>
-      <button>I'm On It</button>
       <router-link v-bind:to="doneLink"><button type="button" name="button">Add Data</button> </router-link>
     </div>
-    <recipe  v-bind:recipeID="tankInfo.recipe_id"></recipe>
+    <recipe v-bind:recipeID="tankInfo.recipe_id"></recipe>
   </div>
 </div>
 </template>
@@ -108,6 +111,7 @@ default {
         "status": '',
         "time": '',
         "tank_name": '',
+        action: '',
       },
       history: {
         date: ['Date'],
@@ -149,23 +153,42 @@ default {
       /********** query batches ********************/
       this.$http.get(process.env.API + '/batches').then(batchResponse => {
         /********** query batch_contents_versions ********************/
-        this.$http.get(process.env.API + '/batch_contents_versions').then(batchContentsResponse => {
-          // Get batches information
-          for (let batch of batchResponse.body) {
-            // if our batch tankID is the tankID we are looking for set some data
-            if(batch.tank_id === this.tankInfo.tank_id) {
-              this.tankInfo.batch_id   = batch.id
-              this.tankInfo.batch_name = batch.batch_name
-              this.tankInfo.bright     = batch.bright
-              this.tankInfo.generation = batch.generation
-              this.tankInfo.volume     = batch.volume
-              this.tankInfo.recipe_id  = batch.recipe_id
+        // Get batches information
+        for (let batch of batchResponse.body) {
+          // if our batch tankID is the tankID we are looking for set some data
+          if(batch.tank_id === this.tankInfo.tank_id) {
+            this.tankInfo.batch_id   = batch.id
+            this.tankInfo.batch_name = batch.batch_name
+            this.tankInfo.bright     = batch.bright
+            this.tankInfo.generation = batch.generation
+            this.tankInfo.volume     = batch.volume
+            this.tankInfo.recipe_id  = batch.recipe_id
+          }
+        }
+
+        // get info on the action the tank needs
+        this.$http.get(process.env.API + '/tasks').then(tasksResponse => {
+          let actionID
+          for (let task of tasksResponse.body) {
+            // if the batch is the one we are looking for
+            if (task.batch_id === this.tankInfo.batch_id) {
+              // set our actionID and break out of the loop
+              actionID = task.action_id
+              break
             }
           }
+          // if our actionID was set
+          if (actionID >= 0) {
+            // get the action associated with that ID
+            this.$http.get(process.env.API + '/actions/' + actionID).then(actionResponse => {
+              this.tankInfo.action = actionResponse.body.name
+            })
+          }
+        })
 
+        this.$http.get(process.env.API + '/batch_contents_versions').then(batchContentsResponse => {
           // Find most recent batch in batch contents and pull that info
           var max = moment("1995-07-29");
-
           var date
           for(let batchContents of batchContentsResponse.body){
             var batchTime = moment(batchContents.updated_at);
@@ -246,4 +269,8 @@ default {
   h2, h3, h4
     text-align center
   grid-area tank
+
+.important
+  color red
+  font-weight bold
 </style>

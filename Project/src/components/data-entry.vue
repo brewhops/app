@@ -17,7 +17,7 @@
       <div class="col-3">
         <h4>Action</h4>
         <select v-model='action'>
-          <option disabled value="">No Action</option>
+          <option value="">No Action</option>
           <option v-for='action_option in action_choice' v-bind:value='action_option.id'> {{ action_option.name }}</option>
         </select>
       </div>
@@ -37,11 +37,11 @@
         <label>ABV</label>
       </div>
       <div class="col-3 inputGroup">
-        <input v-model="bright" type="number" required>
+        <input v-model="bright" type="number" step="0.1" required>
         <label>Bright</label>
       </div>
       <div class="col-3 inputGroup">
-        <input v-model="pressure" type="number" required>
+        <input v-model="pressure" type="number" step="0.01" required>
         <label>Pressure</label>
       </div>
       <div class="col-3 inputGroup">
