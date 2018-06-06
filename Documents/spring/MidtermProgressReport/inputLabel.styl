@@ -1,0 +1,18 @@
+.inputGroup
+  position relative
+  margin 10px 0
+  label
+    font-size 18px
+    font-weight normal
+    position absolute
+    pointer-events none
+    left 0
+    bottom 0
+    transition 0.2s ease all
+    -moz-transition 0.2s ease all
+    -webkit-transition 0.2s ease all
+
+  input:focus ~ label, input:valid ~ label
+    bottom -20px
+    color #999
+    font-size 14px
