@@ -18,14 +18,14 @@
 </div>
 </template>
 
-<script>
+<script lang="ts">
 
 import router from "../router/index.js"
 import CryptoJS from "crypto-js"
 import Cookie from "js-cookie"
+import Vue from 'vue';
 
-export
-default {
+export default {
   name: 'login',
   data() {
     return {
@@ -46,6 +46,7 @@ default {
     username: function() {
       // shorten our username variable for readability
       const username = this.username;
+
 
       // if the field is empty, clear the feedback
       // if the username is less than 3 or greater than 20, error
@@ -97,6 +98,9 @@ default {
     } else {
       this.submitLink = '/home'
     }
+
+    let testVariable: string = "bailey sux";
+    alert(testVariable);
 
     // if the cookie has login information in it already
     // then send us straight to the home page
