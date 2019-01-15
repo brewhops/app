@@ -24,9 +24,34 @@ import router from "../router/index.js"
 import CryptoJS from "crypto-js"
 import Cookie from "js-cookie"
 
-export default {
+interface IData {
+  mobile: any;
+  isAdmin: any;
+  username: any;
+  password: any;
+  encryptedPassword: any;
+  feedback: any;
+  submitLink: any;
+}
+
+interface ILogin {
+  name: any;
+  data: () => IData;
+  watch: any;
+  beforeMount: any;
+  methods: any;
+  mobile?: any;
+  encryptedPassword?: any;
+  feedback?: any;
+  submitLink?: any;
+  sendToHome?: any;
+  $http?: any;
+  employees?: any;
+}
+
+const login: ILogin = {
   name: 'login',
-  data() {
+  data: function() {
     return {
       employees: {},
       mobile: false,
@@ -91,14 +116,15 @@ export default {
     }
   },
   beforeMount() {
-    let bleh: string = "test string";
-    alert(bleh);
     if (/iPhone|iPad|iPod|Android|webOS|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
       this.mobile = true
       this.submitLink = '/home-mobile'
     } else {
       this.submitLink = '/home'
     }
+
+    let test: string = "test string";
+    alert(test);
 
     // if the cookie has login information in it already
     // then send us straight to the home page
@@ -170,6 +196,8 @@ export default {
       }
     }
 };
+
+export default login;
 </script>
 
 <style lang="stylus" scoped>

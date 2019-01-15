@@ -29,8 +29,9 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.tsx$/,
-        loader: 'awesome-typescript-loader',
+        test: /\.(tsx?)|(.js)$/,
+        loaders: 'ts-loader',
+        exclude: /node_modules/,
         options: {
           appendTsSuffixTo: [/\.vue$/]
         }
