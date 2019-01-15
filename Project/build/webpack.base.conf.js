@@ -11,9 +11,7 @@ function resolve (dir) {
 
 module.exports = {
   context: path.resolve(__dirname, '../'),
-  entry: {
-    app: './src/main.js'
-  },
+  entry: './src/index.ts',
   output: {
     path: config.build.assetsRoot,
     filename: '[name].js',
@@ -22,7 +20,7 @@ module.exports = {
       : config.dev.assetsPublicPath
   },
   resolve: {
-    extensions: ['.vue', '.js', '.json', '.ts', '.tsx'],
+    extensions: ['.ts', '.js', '.vue', '.json'],
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
@@ -31,14 +29,16 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.tsx$/,
+        loader: 'awesome-typescript-loader',
+        options: {
+          appendTsSuffixTo: [/\.vue$/]
+        }
+      },
+      {
         test: /\.vue$/,
-        use: [
-          {
-            loader: 'vue-loader',
-            options: vueLoaderConfig
-          },
-          { loader: 'awesome-typescript-loader' },
-        ]
+        loader: 'vue-loader',
+        options: vueLoaderConfig
       },
       {
         test: /\.js$/,
@@ -71,7 +71,6 @@ module.exports = {
       },
     ],
   },
-
   node: {
     // prevent webpack from injecting useless setImmediate polyfill because Vue
     // source contains it (although only uses it if it's native).

@@ -1,10 +1,26 @@
 {
     "compilerOptions": {
-        "outDir": "./built",
+        "outDir": "./dist",
+        "target": "es5",
+        "lib": [
+            "es5",
+            "es2015.promise",
+            "dom"
+        ],
+        "module": "es2015",
+        "moduleResolution": "node",
+        "isolatedModules": false,
+        "experimentalDecorators": true,
+        "noImplicitAny": false,
+        "noImplicitThis": true,
+        "strictNullChecks": true,
+        "removeComments": true,
+        "suppressImplicitAnyIndexErrors": true,
+        "allowSyntheticDefaultImports": true,
         "allowJs": true,
-        "target": "es5"
     },
     "include": [
-        "./src/**/*"
+        "./src/**/*.ts",
+        "./src/**/*.vue"
     ]
 }

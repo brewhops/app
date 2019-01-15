@@ -23,7 +23,6 @@
 import router from "../router/index.js"
 import CryptoJS from "crypto-js"
 import Cookie from "js-cookie"
-import Vue from 'vue';
 
 export default {
   name: 'login',
@@ -92,15 +91,14 @@ export default {
     }
   },
   beforeMount() {
+    let bleh: string = "test string";
+    alert(bleh);
     if (/iPhone|iPad|iPod|Android|webOS|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
       this.mobile = true
       this.submitLink = '/home-mobile'
     } else {
       this.submitLink = '/home'
     }
-
-    let testVariable: string = "bailey sux";
-    alert(testVariable);
 
     // if the cookie has login information in it already
     // then send us straight to the home page
