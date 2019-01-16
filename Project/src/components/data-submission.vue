@@ -19,11 +19,20 @@
 </div>
 </template>
 
-<script>
+<script lang="ts">
 import router from "../router/index.js"
 import Cookie from "js-cookie"
 
-export default {
+interface IDataSubmission {
+  name: any;
+  data: any;
+  beforeMount: any;
+  mounted: any;
+  doneLink?: any;
+  lastSubmission?: any;
+}
+
+const dataSubmission: IDataSubmission = {
   name: 'data-submission',
   data() {
     return {
@@ -46,6 +55,8 @@ export default {
     this.lastSubmission = this.$route.params.data
   }
 };
+
+export default dataSubmission;
 </script>
 
 <style lang="stylus" scoped>

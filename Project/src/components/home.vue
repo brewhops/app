@@ -11,25 +11,36 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 
 import dataEntry from './data-entry.vue'
 import tankMonitoring from './tank-monitoring.vue'
 import router from "../router/index.js"
 import Cookie from "js-cookie"
 
-export default {
+interface IHome {
+  name: any;
+  components: any;
+  data: any;
+  beforeMount: any;
+  methods: any;
+  dataEntry?: any;
+  tankMonitoring?: any;
+
+}
+
+export const home: IHome = {
   name: 'home',
   components: {
     'data-entry': dataEntry,
     'tank-monitoring': tankMonitoring
   },
-  data() {
+  data: function() {
     return {
       mobile: false
     };
   },
-  beforeMount() {
+  beforeMount: function() {
     // if the user is not logged in send them to the login page
     if (!Cookie.get('loggedIn')) {
         router.push("/")
@@ -48,6 +59,8 @@ export default {
     }
   }
 };
+
+export default home;
 </script>
 
 <style lang="stylus" scoped>

@@ -1,14 +1,33 @@
 <template>
 </template>
 
-<script>
+<script lang="ts">
 // import the c3 javascript code
 const c3 = require('c3')
 // import the c3 css code
 // if you dont specify a starting location, webpack will look in the node_modules folder
 import 'c3/c3.min.css'
 
-export default {
+interface IChart {
+  name: any;
+  props: any;
+  watch: any;
+
+  data?: any;
+  x?: any;
+  y?: any;
+  zoom?: any;
+  enabled?;
+  xFormat?: any;
+  columns?: any;
+  axis?: any;
+  type?: any;
+  tick?: any;
+  format?: any;
+
+}
+
+const chart:IChart = {
   name: 'chart',
   props: ['date', 'data'],
   data() {
@@ -52,6 +71,8 @@ export default {
     },
   }
 };
+
+export default chart;
 </script>
 
 <style lang="css" scoped>

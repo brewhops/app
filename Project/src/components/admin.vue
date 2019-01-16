@@ -80,13 +80,41 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 
 import router from "../router/index.js"
 import CryptoJS from "crypto-js"
 import Cookie from "js-cookie"
 
-export default {
+interface IAdmin {
+  name: any;
+  data: any;
+  watch: any;
+  beforeMount: any;
+  methods: any;
+
+  employees?: any;
+  tanks?: any;
+  tankStatus?: any;
+  tank_id?: '';
+  status?: '';
+  in_use?: false;
+  admin?: false;
+  first_name?: any;
+  last_name?: any;
+  username?: any;
+  password?: any;
+  passwordcheck?: any;
+  hopNumbers?: any;
+  dryHopAdjunct?: any;
+  rate?: any;
+  airplane_code?: any;
+  recipe_name?: any;
+  yeast?: any;
+  feedback?: any;
+}
+
+const admin: IAdmin = {
   name: 'admin',
   data() {
     return {
@@ -306,6 +334,8 @@ export default {
       }
     }
 };
+
+export default admin;
 </script>
 
 <style lang="stylus" scoped>

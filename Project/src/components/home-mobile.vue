@@ -13,12 +13,17 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import router from "../router/index.js"
 import Cookie from "js-cookie"
 
-export default {
-  beforeMount() {
+interface IHomeMobile {
+  beforeMount: any;
+  methods: any;
+}
+
+const homeMobile: IHomeMobile = {
+  beforeMount: function() {
     // if the user is not logged in send them to the login page
     if (!Cookie.get('loggedIn')) {
         router.push("/")
@@ -33,6 +38,8 @@ export default {
     }
   }
 }
+
+export default homeMobile;
 </script>
 
 <style lang="stylus" scoped>

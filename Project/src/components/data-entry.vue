@@ -77,13 +77,40 @@
 </div>
 </template>
 
-<script>
+<script lang="ts">
 import router from "../router/index.js"
 import Cookie from "js-cookie"
-
 import moment from 'moment'
 
-export default {
+interface IDataEntry {
+  name: any;
+  data: any;
+  beforeMount: any;
+  methods: any;
+
+  SG?: any,
+  tank_id?: any,
+  status?: any,
+  pH?: any,
+  ABV?: any,
+  temp?: any,
+  volume?: any,
+  generation?: any,
+  recipe_id?: any,
+  batch_id?: any,
+  batch_name?: any,
+  bright?: any,
+  pressure?: any,
+  action?: any,
+  time?: any,
+  recipes?: any
+  update?: any,
+  mobile?: any,
+  tanks?: any,
+  action_choice: any,
+}
+
+const dataEntry: IDataEntry = {
   name: 'data-entry',
   data() {
     return {
@@ -355,6 +382,8 @@ export default {
     }
   }
 };
+
+  export default dataEntry;
 </script>
 
 <style lang="stylus" scoped>
