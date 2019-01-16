@@ -28,12 +28,22 @@
 </div>
 </template>
 
-<script>
+<script lang="ts">
 
 import router from "../router/index.js"
 import Cookie from "js-cookie"
 import moment from 'moment'
-export default {
+
+interface ITankMonitoring {
+  name: any;
+  data: any; 
+  beforeMount: any;
+  methods: any;
+  mobile?: any;
+  tanks?: any;
+}
+
+const tankMonitoring: ITankMonitoring = {
   name: 'tank-monitoring',
   data() {
     return {
@@ -168,6 +178,8 @@ export default {
     },
   },
 };
+
+export default tankMonitoring;
 </script>
 
 <style lang="stylus" scoped>

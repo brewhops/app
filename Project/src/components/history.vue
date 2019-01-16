@@ -71,6 +71,12 @@ interface IHistory {
   data: () => IData;
   beforeMount: any;
   methods: any;
+  mobile: any;
+  batch_id: any;
+  batches: any;
+  batch: any;
+  histories: any;
+  
 }
 
 const history:IHistory = {
@@ -160,6 +166,7 @@ const history:IHistory = {
     }
   }
 }
+export default history;
 </script>
 
 <style lang="stylus" scoped>
