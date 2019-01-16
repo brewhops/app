@@ -77,7 +77,7 @@
 </div>
 </template>
 
-<script>
+<script lang='ts'>
 
 import recipe from './recipe.vue'
 import chart from './chart.vue'
@@ -87,8 +87,19 @@ import Cookie from "js-cookie"
 
 import moment from "moment"
 
-export
-default {
+interface ITankInfo {
+  name: any;
+  components: any;
+  data: any;
+  beforeMount: any;
+  tankinfo?: any;
+  doneLink?: any;
+  history?: any;
+  home?: any;
+  mobile?: any;
+}
+
+const tankInfo: ITankInfo = {
   name: 'tank-info',
   components: {
     'recipe': recipe,
@@ -228,6 +239,8 @@ default {
     });
   }
 };
+
+export default tankInfo;
 </script>
 
 <style lang="stylus" scoped>
