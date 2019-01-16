@@ -30,6 +30,7 @@ interface IDataSubmission {
   mounted: any;
   doneLink?: any;
   lastSubmission?: any;
+  $route?: any;
 }
 
 const dataSubmission: IDataSubmission = {

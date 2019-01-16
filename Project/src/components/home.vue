@@ -26,7 +26,7 @@ interface IHome {
   methods: any;
   dataEntry?: any;
   tankMonitoring?: any;
-
+  mobile?: any;
 }
 
 export const home: IHome = {

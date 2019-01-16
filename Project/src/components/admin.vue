@@ -112,6 +112,8 @@ interface IAdmin {
   recipe_name?: any;
   yeast?: any;
   feedback?: any;
+  $http?: any;
+  debugging?: any;
 }
 
 const admin: IAdmin = {

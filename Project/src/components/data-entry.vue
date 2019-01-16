@@ -88,26 +88,28 @@ interface IDataEntry {
   beforeMount: any;
   methods: any;
 
-  SG?: any,
-  tank_id?: any,
-  status?: any,
-  pH?: any,
-  ABV?: any,
-  temp?: any,
-  volume?: any,
-  generation?: any,
-  recipe_id?: any,
-  batch_id?: any,
-  batch_name?: any,
-  bright?: any,
-  pressure?: any,
-  action?: any,
-  time?: any,
-  recipes?: any
-  update?: any,
-  mobile?: any,
-  tanks?: any,
-  action_choice: any,
+  SG?: any;
+  tank_id?: any;
+  status?: any;
+  pH?: any;
+  ABV?: any;
+  temp?: any;
+  volume?: any;
+  generation?: any;
+  recipe_id?: any;
+  batch_id?: any;
+  batch_name?: any;
+  bright?: any;
+  pressure?: any;
+  action?: any;
+  time?: any;
+  recipes?: any;
+  update?: any;
+  mobile?: any;
+  tanks?: any;
+  action_choice?: any;
+  $http?: any;
+  sortTank?: any;
 }
 
 const dataEntry: IDataEntry = {
