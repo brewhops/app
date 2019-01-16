@@ -71,12 +71,11 @@ interface IHistory {
   data: () => IData;
   beforeMount: any;
   methods: any;
-  mobile: any;
-  batch_id: any;
-  batches: any;
-  batch: any;
-  histories: any;
-  
+  histories?: any;
+  mobile?: any;
+  batches?: any;
+  batch?: any;
+  batch_id?: any;
 }
 
 const history:IHistory = {
