@@ -109,7 +109,7 @@ interface IDataEntry {
   tanks?: any;
   action_choice?: any;
   $http?: any;
-  sortTank?: any;
+  sortTanks?: any;
 }
 
 const dataEntry: IDataEntry = {
@@ -312,7 +312,7 @@ const dataEntry: IDataEntry = {
                 .catch(error => { console.warn(error) })
             }
           }).then(success => {
-            router.push({ name: 'data-submission', params: {
+            router.push(/*{ name: 'data-submission', params: {
               data: {
                 batch_id: id,
                 ph: this.pH,
@@ -326,7 +326,8 @@ const dataEntry: IDataEntry = {
                 bright: this.bright,
                 generation: this.generation,
               }
-            }})
+            } */
+            {})
           }).catch(error => { console.warn(error) })
 
       } else {
@@ -361,7 +362,7 @@ const dataEntry: IDataEntry = {
 
         Promise.all(promiseArray)
           .then(success => {
-            router.push({ name: 'data-submission', params: {
+            router.push(/*{ name: 'data-submission', params: {
               data: {
                 batch_id: id,
                 ph: this.pH,
@@ -375,7 +376,7 @@ const dataEntry: IDataEntry = {
                 bright: this.bright,
                 generation: this.generation,
               }
-            }})
+            }}*/ {})
           }).catch(error => { console.warn(error) })
       }
     },
