@@ -19,10 +19,10 @@ interface IRecipe {
   name: any;
   props: any;
   data: any;
-  mobile?: any;
-  ingredients?: any;
   beforeMount: any;
   watch: any;
+  mobile?: any;
+  ingredients?: any;
 }
 
 const recipe : IRecipe = {
