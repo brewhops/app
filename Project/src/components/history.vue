@@ -53,12 +53,27 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import router from "../router/index.js"
 import Cookie from "js-cookie"
 import moment from "moment"
 
-export default {
+interface IData {
+  mobile: any;
+  batch_id: any;
+  batches: any;
+  batch: any;
+  histories: any;
+}
+
+interface IHistory {
+  name: any;
+  data: () => IData;
+  beforeMount: any;
+  methods: any;
+}
+
+const history:IHistory = {
   name: 'batch-history',
   data() {
     return {
