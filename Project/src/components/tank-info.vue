@@ -92,6 +92,8 @@ interface ITankInfo {
   components: any;
   data: any;
   beforeMount: any;
+  debugging?: any;
+  $route?: any;
   $http?: any;
   tankInfo?: any;
   doneLink?: any;
