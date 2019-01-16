@@ -160,6 +160,7 @@ const history:IHistory = {
     }
   }
 }
+export default history;
 </script>
 
 <style lang="stylus" scoped>
