@@ -10,12 +10,22 @@
   </div>
 </template>
 
-<script>
+<script lang='ts'>
 
 import router from "../router/index.js"
 import Cookie from "js-cookie"
 
-export default {
+interface IRecipe {
+  name: any;
+  props: any;
+  data: any;
+  mobile: any;
+  ingredients: any;
+  beforeMount: any;
+  watch: any;
+}
+
+const recipe : IRecipe = {
   name: 'recipe',
   props: ['recipeID'],
   data() {
@@ -47,6 +57,7 @@ export default {
     }
   }
 };
+export default recipe;
 </script>
 
 <style lang="stylus" scoped>
