@@ -254,7 +254,7 @@ const dataEntry: IDataEntry = {
       // this is where all the http requests will be monitored
       // when they are all fufilled, then send the user over to the
       // submision page.
-      let promiseArray = []
+      let promiseArray:any = [];
 
       // create a new batch data element
       var batchesData = new FormData()

@@ -159,8 +159,10 @@ const history:IHistory = {
           // find the csvDownload link and set some info about what it links to
           // and what the download file should be called
           let link = document.getElementById('csvDownload')
-          link.setAttribute("href", encodeURI(csvContent));
-          link.setAttribute("download", "batch_history_" + this.batch.batch_name + "_(" + moment().format("MM-DD-YYYY") + ").csv")
+          if (link != null) {
+            link.setAttribute("href", encodeURI(csvContent));
+            link.setAttribute("download", "batch_history_" + this.batch.batch_name + "_(" + moment().format("MM-DD-YYYY") + ").csv")
+          }
           }
         )
     }
