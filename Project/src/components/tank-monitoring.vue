@@ -41,6 +41,7 @@ interface ITankMonitoring {
   methods: any;
   mobile?: any;
   tanks?: any;
+  sortTanks?: any;
 }
 
 const tankMonitoring: ITankMonitoring = {
@@ -147,7 +148,7 @@ const tankMonitoring: ITankMonitoring = {
 
                     this.tanks.sort(this.sortTanks)
                   }, recipeResponse => {
-                    console.log('Response error, cant access recipes page', recipesResponse);
+                    console.log('Response error, cant access recipes page', recipeResponse);
                   });
               }, actionsResponse => {
                 console.log('Response error, cant access actions page', actionsResponse);
