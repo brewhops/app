@@ -23,7 +23,7 @@ import router from "../router/index.js";
 // import CryptoJS from "crypto-js";
 import Cookie from "js-cookie";
 
-const CryptoJS = require('crypto-js');
+const CryptoJS = require("crypto-js");
 
 export default {
   name: "login",
@@ -59,8 +59,10 @@ export default {
       } else {
         this.$http
           .get(`${process.env.API}/employees/admin/${username}`)
-          .then(response => {
-            this.isAdmin = response.body;
+          .then(response => response.json())
+          .then(json => {
+            console.log(json);
+            this.isAdmin = json.body;
           })
           .catch(err => console.log(err));
       }
@@ -115,9 +117,9 @@ export default {
           console.log(json);
           this.createCookie(this.username, this.isAdmin);
           // send us over to the home page
-          this.sendToHome()         
+          this.sendToHome();
         })
-        .catch(err => this.feedback.password = "Invalid Login");
+        .catch(err => (this.feedback.password = "Invalid Login"));
     },
     // redirect over to the home page
     sendToHome: function() {
@@ -125,6 +127,25 @@ export default {
         router.push("home-mobile");
       } else {
         router.push("home");
+      }
+    },
+    validateAdmin: function() {
+      if (this.isAdmin) {
+        const { username, password: pw } = this;
+
+        const password = CryptoJS.SHA3(pw).toString();
+
+        this.$http
+          .post(`${process.env.API}/employees/login/`, { username, password })
+          .then(response => response.json())
+          .then(json => {
+            console.log(json);
+            this.createCookie(this.username, this.isAdmin);
+            router.push("admin");
+          })
+          .catch(err => (this.feedback.password = "Invalid Login"));
+      } else {
+        this.feedback.username = 'User is not an administrator'
       }
     },
     createCookie: function(username, adminStatus) {
