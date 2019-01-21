@@ -277,9 +277,9 @@ const admin: IAdmin = {
         newUser.append('last_name', this.last_name)
         newUser.append('username', this.username)
         if(this.admin)
-          newUser.append('admin', true)
+          newUser.append('admin', 'true')
         else
-          newUser.append('admin', false)
+          newUser.append('admin', 'false')
         var encryptedPassword = CryptoJS.AES.encrypt(this.password, this.username).toString()
         newUser.append('password', encryptedPassword)
         this.$http.post(process.env.API + '/employees', newUser).then(response => {
@@ -315,9 +315,9 @@ const admin: IAdmin = {
         formData.append('status', this.status);
         console.log(formData);
         if(this.in_use)
-          formData.append('in_use', true);
+          formData.append('in_use', 'true');
         else
-          formData.append('in_use', false);
+          formData.append('in_use', 'false');
 
         this.$http.post(process.env.API + '/tanks', formData)
       },
