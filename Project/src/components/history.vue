@@ -76,6 +76,7 @@ interface IHistory {
   batches?: any;
   batch?: any;
   batch_id?: any;
+  $http?: any;
 }
 
 const history:IHistory = {

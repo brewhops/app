@@ -110,6 +110,7 @@ interface IDataEntry {
   action_choice?: any;
   $http?: any;
   sortTanks?: any;
+  debugging?: any;
 }
 
 const dataEntry: IDataEntry = {

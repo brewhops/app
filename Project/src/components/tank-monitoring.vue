@@ -34,6 +34,19 @@ import router from "../router/index.js"
 import Cookie from "js-cookie"
 import moment from 'moment'
 
+interface ITank {
+  action?: any;
+  action_id?: any;
+  batch?: any;
+  pressure?: any;
+  temperature?: any;
+  recipe_id?: any;
+  airplane_code?: any;
+  id?: any;
+  name?:any;
+  status?: any;
+}
+
 interface ITankMonitoring {
   name: any;
   data: any; 
@@ -42,6 +55,8 @@ interface ITankMonitoring {
   mobile?: any;
   tanks?: any;
   sortTanks?: any;
+  debugging?: any;
+  $http?: any;
 }
 
 const tankMonitoring: ITankMonitoring = {
@@ -87,7 +102,7 @@ const tankMonitoring: ITankMonitoring = {
                       for(let tankInfo of tanksResponse.body) {
 
                         // create a temporary tank for us to fill with data
-                        let tank = {
+                        let tank:ITank = {
                           // keep track of tank id for searching
                           id: tankInfo.id,
                           // keep track of tank name for displaying
