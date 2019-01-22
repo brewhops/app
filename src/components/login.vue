@@ -29,7 +29,6 @@ interface IData {
   isAdmin: any;
   username: any;
   password: any;
-  encryptedPassword: any;
   feedback: any;
   submitLink: any;
 }
