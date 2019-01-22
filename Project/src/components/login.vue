@@ -123,9 +123,6 @@ const login: ILogin = {
       this.submitLink = '/home'
     }
 
-    let test: string = "test string";
-    alert(test);
-
     // if the cookie has login information in it already
     // then send us straight to the home page
     if (Cookie.get('loggedIn')) {
