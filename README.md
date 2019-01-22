@@ -1,12 +1,21 @@
-# NinkasiCapstone
+# ninkasi-brewhops
 
-A project for Ninkasi Brewery to modernize data storage methods for brewery operations.
+> A web app to allow ninkasi brewing to better track and manage brewery data
 
-# Structure
-* Documents
-    * ProblemStatement
+## Build Setup
 
-# Contributors
-Connor Christensen (chriconn)<br/>
-Lily Shellhammer (shellhal)</br>
-William Buffum (buffumw)
+``` bash
+# install dependencies
+npm install
+
+# serve with hot reload at localhost:8080
+npm run dev
+
+# build for production with minification
+npm run build
+
+# build for production and view the bundle analyzer report
+npm run build --report
+```
+
+For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
