@@ -13,26 +13,33 @@
   </div>
 </template>
 
-<script>
-import router from "../router/index.js"
-import Cookie from "js-cookie"
+<script lang="ts">
+import router from '../router/index.js';
+import Cookie from 'js-cookie';
 
-export default {
-  beforeMount() {
+interface IHomeMobile {
+  beforeMount: any;
+  methods: any;
+}
+
+const homeMobile: IHomeMobile = {
+  beforeMount: function() {
     // if the user is not logged in send them to the login page
     if (!Cookie.get('loggedIn')) {
-        router.push("/")
+      router.push('/');
     }
   },
   methods: {
     logout: function() {
       if (Cookie.get('loggedIn')) {
-        Cookie.remove('loggedIn')
+        Cookie.remove('loggedIn');
       }
-      router.push("/")
+      router.push('/');
     }
   }
-}
+};
+
+export default homeMobile;
 </script>
 
 <style lang="stylus" scoped>
@@ -45,5 +52,4 @@ export default {
     p
         color Teal
         font-weight bold
-
 </style>

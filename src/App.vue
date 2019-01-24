@@ -1,13 +1,12 @@
 <template>
-<div id="app">
-  <router-view/>
-</div>
+  <div id="app">
+    <router-view />
+  </div>
 </template>
 
-<script>
-export default {
-  name: 'App',
-};
+<script lang="ts">
+const App = {};
+export default App;
 </script>
 
 <style lang="stylus">
@@ -187,5 +186,4 @@ table
       grid-column span 3
     .col-span-8
       grid-column span 8
-
 </style>

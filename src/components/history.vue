@@ -9,7 +9,7 @@
         <h2>Batch</h2>
         <select v-model="batch_id" v-on:change="batchChoose">
           <option disabled value="">Batch</option>
-          <option v-for='batch in batches' v-bind:value='batch.id'>{{ batch.batch_name }}</option>
+          <option v-for="batch in batches" v-bind:value="batch.id">{{ batch.batch_name }}</option>
         </select>
       </div>
       <table v-if="batch_id && histories && batch">
@@ -21,7 +21,7 @@
           <th>temp</th>
           <th>pressure</th>
         </tr>
-        <tr v-for='history in histories'>
+        <tr v-for="history in histories">
           <td>{{ history.updated_at }}</td>
           <td>{{ history.SG }}</td>
           <td>{{ history.pH }}</td>
@@ -44,6 +44,7 @@
           <td>{{ batch.date_completed }}</td>
         </tr>
       </table>
+
       <a id="csvDownload">
         <button v-if="batch_id" type="button" name="button">
           Download
@@ -53,12 +54,33 @@
   </div>
 </template>
 
-<script>
-import router from "../router/index.js"
-import Cookie from "js-cookie"
-import moment from "moment"
+<script lang="ts">
+import router from '../router/index.js';
+import Cookie from 'js-cookie';
+import moment from 'moment';
 
-export default {
+interface IData {
+  mobile: any;
+  batch_id: any;
+  batches: any;
+  batch: any;
+  histories: any;
+}
+
+interface IHistory {
+  name: any;
+  data: () => IData;
+  beforeMount: any;
+  methods: any;
+  histories?: any;
+  mobile?: any;
+  batches?: any;
+  batch?: any;
+  batch_id?: any;
+  $http?: any;
+}
+
+const history: IHistory = {
   name: 'batch-history',
   data() {
     return {
@@ -66,85 +88,105 @@ export default {
       batch_id: '',
       batches: [],
       batch: {},
-      histories: [],
-    }
+      histories: []
+    };
   },
   beforeMount() {
     // if the user is not logged in send them to the login page
     if (!Cookie.get('loggedIn')) {
-        router.push("/")
+      router.push('/');
     }
 
-    this.$http.get(process.env.API + '/batches/')
-      .then(batchesResponse => {
-        // get our batches data
-        this.batches = batchesResponse.body
-        // sort the batches by ID
-        this.batches.sort((a, b) => a.id - b.id)
-      })
+    this.$http.get(process.env.API + '/batches/').then(batchesResponse => {
+      // get our batches data
+      this.batches = batchesResponse.body;
+      // sort the batches by ID
+      this.batches.sort((a, b) => a.id - b.id);
+    });
   },
   methods: {
     home: function() {
       if (this.mobile) {
-        router.push("/home-mobile")
+        router.push('/home-mobile');
       }
-      router.push("/")
+      router.push('/');
     },
     batchChoose: function() {
       // filter out all the batches that aren't ours, and set that one element
       // to our batch object
-      this.batch = this.batches.filter(e => e.id === this.batch_id)[0]
+      this.batch = this.batches.filter(e => e.id === this.batch_id)[0];
 
       // when the user chooses a batch, get the info on that batch
-      this.$http.get(process.env.API + '/batches/' + this.batch_id + '/batch_contents_versions')
+      this.$http
+        .get(process.env.API + '/batches/' + this.batch_id + '/batch_contents_versions')
         .then(historyResponse => {
-
-          this.histories = historyResponse.body
+          this.histories = historyResponse.body;
           // for every batch history, format the date so its easy to read
           for (let history of this.histories) {
-            history.updated_at = moment(history.updated_at).format("MM-DD-YY HH:mm")
+            history.updated_at = moment(history.updated_at).format('MM-DD-YY HH:mm');
           }
           // create our header
-          let rows = [["Date", "SG", "pH", "ABV", "temp", "pressure", "Volume", "Bright", "Generation", "Date Started", "Date Completed"]]
+          let rows = [
+            [
+              'Date',
+              'SG',
+              'pH',
+              'ABV',
+              'temp',
+              'pressure',
+              'Volume',
+              'Bright',
+              'Generation',
+              'Date Started',
+              'Date Completed'
+            ]
+          ];
 
           // for each history element
           for (let history of this.histories) {
             // add in that history row
-            rows.push(
-              [
-                history.updated_at,
-                history.SG,
-                history.pH,
-                history.ABV,
-                history.temp,
-                history.pressure,
-                this.batch.volume,
-                this.batch.bright,
-                this.batch.generation,
-                this.batch.date_started,
-                this.batch.date_completed
-              ]
-            )
+            rows.push([
+              history.updated_at,
+              history.SG,
+              history.pH,
+              history.ABV,
+              history.temp,
+              history.pressure,
+              this.batch.volume,
+              this.batch.bright,
+              this.batch.generation,
+              this.batch.date_started,
+              this.batch.date_completed
+            ]);
           }
 
           // create the header for the csv that we will download
-          let csvContent = "data:text/csv;charset=utf-8,"
+          let csvContent = 'data:text/csv;charset=utf-8,';
 
           // for every row, add a comma to the end and some new line chars
           for (let row of rows) {
-            csvContent += row.join(',') + "\r\n"
+            csvContent += row.join(',') + '\r\n';
           }
 
           // find the csvDownload link and set some info about what it links to
           // and what the download file should be called
-          let link = document.getElementById('csvDownload')
-          link.setAttribute("href", encodeURI(csvContent));
-          link.setAttribute("download", "batch_history_" + this.batch.batch_name + "_(" + moment().format("MM-DD-YYYY") + ").csv")
+          let link = document.getElementById('csvDownload');
+          if (link != null) {
+            link.setAttribute('href', encodeURI(csvContent));
+            link.setAttribute(
+              'download',
+              'batch_history_' +
+                this.batch.batch_name +
+                '_(' +
+                moment().format('MM-DD-YYYY') +
+                ').csv'
+            );
           }
-        )
+        });
     }
   }
-}
+};
+export default history;
 </script>
 
 <style lang="stylus" scoped>

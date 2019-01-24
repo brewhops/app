@@ -1,14 +1,31 @@
-<template>
-</template>
+<template> </template>
 
-<script>
+<script lang="ts">
 // import the c3 javascript code
-const c3 = require('c3')
+const c3 = require('c3');
 // import the c3 css code
 // if you dont specify a starting location, webpack will look in the node_modules folder
-import 'c3/c3.min.css'
+import 'c3/c3.min.css';
 
-export default {
+interface IChart {
+  name: any;
+  props: any;
+  watch: any;
+
+  data?: any;
+  x?: any;
+  y?: any;
+  zoom?: any;
+  enabled?;
+  xFormat?: any;
+  columns?: any;
+  axis?: any;
+  type?: any;
+  tick?: any;
+  format?: any;
+}
+
+const chart: IChart = {
   name: 'chart',
   props: ['date', 'data'],
   data() {
@@ -24,7 +41,7 @@ export default {
         data: {
           x: 'Date', //bind the x axis to the 'Date' data set
           xFormat: '%m/%d/%Y %H:%M',
-          columns: [ this.date, this.data ]
+          columns: [this.date, this.data]
         },
         axis: {
           x: {
@@ -36,23 +53,26 @@ export default {
               // count: 4 if you want to set the ticks to a fixed ammount
             }
           },
-          y : {
+          y: {
             tick: {
               // round the numbers on the y axis to a max of 10 decimal places
               // this gets the y axis numbers behaving and not getting too long
-              format: function(d) { return +d.toFixed(10) }
+              format: function(d) {
+                return +d.toFixed(10);
+              }
             }
           }
         },
         // allow the user to zoom in and scroll around on the map
         zoom: {
-            enabled: true
-        },
+          enabled: true
+        }
       });
-    },
+    }
   }
 };
+
+export default chart;
 </script>
 
-<style lang="css" scoped>
-</style>
+<style lang="css" scoped></style>
