@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="header" v-if="!mobile">
-       <a v-on:click="logout">Logout</a>
+      <a v-on:click="logout">Logout</a>
       <h2>Home</h2>
     </div>
     <div id="content">
@@ -12,11 +12,10 @@
 </template>
 
 <script lang="ts">
-
-import dataEntry from './data-entry.vue'
-import tankMonitoring from './tank-monitoring.vue'
-import router from "../router/index.js"
-import Cookie from "js-cookie"
+import dataEntry from './data-entry.vue';
+import tankMonitoring from './tank-monitoring.vue';
+import router from '../router/index.js';
+import Cookie from 'js-cookie';
 
 interface IHome {
   name: any;
@@ -43,19 +42,23 @@ export const home: IHome = {
   beforeMount: function() {
     // if the user is not logged in send them to the login page
     if (!Cookie.get('loggedIn')) {
-        router.push("/")
+      router.push('/');
     }
 
-    if (/iPhone|iPad|iPod|Android|webOS|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
-      this.mobile = true
+    if (
+      /iPhone|iPad|iPod|Android|webOS|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(
+        navigator.userAgent
+      )
+    ) {
+      this.mobile = true;
     }
   },
   methods: {
     logout: function() {
       if (Cookie.get('loggedIn')) {
-        Cookie.remove('loggedIn')
+        Cookie.remove('loggedIn');
       }
-      router.push("/")
+      router.push('/');
     }
   }
 };
@@ -77,5 +80,4 @@ export default home;
     grid-template-columns 98vw
     grid-template-areas "entry" "info"
   justify-items center
-
 </style>

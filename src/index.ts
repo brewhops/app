@@ -9,11 +9,10 @@ Vue.use(resource);
 
 Vue.config.productionTip = false;
 
-/* eslint-disable no-new */
-let v = new Vue({
-  el: '#app',
+const v = new Vue({
   router,
-  render: (h) => h(App),
+  el: '#app',
   template: '<App/>',
-  components: App
+  components: App,
+  ...App
 });

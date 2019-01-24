@@ -20,12 +20,12 @@
     }
   },
   "lint-staged": {
-    "src/**/*.{ts,vue}": [
+    "src/**/*.{ts}": [
       "tslint --fix -p ./tsconfig.json",
       "prettier --single-quote --print-width 100 --write",
       "git add"
     ],
-    "src/**/*.{js,json}": [
+    "src/**/*.{js,vue}": [
       "prettier --single-quote --print-width 100 --write",
       "git add"
     ],

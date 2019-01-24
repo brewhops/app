@@ -5,25 +5,27 @@
     </div>
     <div class="column-1">
       <div id="login">
-        <img src="../assets/logo.png" class="logo-med">
+        <img src="../assets/logo.png" class="logo-med" />
         <h2>Login</h2>
-        <input v-model.lazy="username" placeholder="username">
+        <input v-model.lazy="username" placeholder="username" />
         <span>{{ feedback.username }}</span>
-        <input v-model.lazy="password" placeholder="password" type="password">
+        <input v-model.lazy="password" placeholder="password" type="password" />
         <span>{{ feedback.password }}</span>
         <button v-on:click="submit">Submit</button>
-        <button v-if="isAdmin" v-on:click="validateAdmin" type="button" name="button">Admin Page</button>
+        <button v-if="isAdmin" v-on:click="validateAdmin" type="button" name="button">
+          Admin Page
+        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import router from "../router/index.js";
+import router from '../router/index.js';
 // import CryptoJS from "crypto-js";
-import Cookie from "js-cookie";
+import Cookie from 'js-cookie';
 
-const CryptoJS = require("crypto-js");
+const CryptoJS = require('crypto-js');
 interface IData {
   mobile: any;
   isAdmin: any;
@@ -48,19 +50,19 @@ interface ILogin {
   employees?: any;
 }
 
-const login:ILogin = {
-  name: "login",
+const login: ILogin = {
+  name: 'login',
   data() {
     return {
       mobile: false,
       isAdmin: false,
-      username: "",
-      password: "",
+      username: '',
+      password: '',
       feedback: {
-        username: "",
-        password: ""
+        username: '',
+        password: ''
       },
-      submitLink: ""
+      submitLink: ''
     };
   },
   watch: {
@@ -74,11 +76,11 @@ const login:ILogin = {
       // if the username is only numbers and letters
       // else there are illegal characters
       if (username.length === 0) {
-        this.feedback.username = "";
+        this.feedback.username = '';
       } else if (username.length < 3 || username.length > 20) {
-        this.feedback.username = "username must be between 3 and 20 characters";
-      } else if (!username.match("^[0-9A-z]+$")) {
-        this.feedback.username = "username must only be digits and letters";
+        this.feedback.username = 'username must be between 3 and 20 characters';
+      } else if (!username.match('^[0-9A-z]+$')) {
+        this.feedback.username = 'username must only be digits and letters';
       } else {
         this.$http
           .get(`${process.env.API}/employees/admin/${username}`)
@@ -99,13 +101,13 @@ const login:ILogin = {
       // if the password is numbers, letters and some select special characters
       // else there are illegal characters
       if (password.length === 0) {
-        this.feedback.password = "";
+        this.feedback.password = '';
       } else if (password.length < 6 || password.length > 25) {
-        this.feedback.password = "password must be between 6 and 25 characters";
-      } else if (password.match("^[0-9A-z@#$%*^!-=&]+$")) {
-        this.feedback.password = "";
+        this.feedback.password = 'password must be between 6 and 25 characters';
+      } else if (password.match('^[0-9A-z@#$%*^!-=&]+$')) {
+        this.feedback.password = '';
       } else {
-        this.feedback.password = "password must only be digits and letters";
+        this.feedback.password = 'password must only be digits and letters';
       }
     }
   },
@@ -116,14 +118,14 @@ const login:ILogin = {
       )
     ) {
       this.mobile = true;
-      this.submitLink = "/home-mobile";
+      this.submitLink = '/home-mobile';
     } else {
-      this.submitLink = "/home";
+      this.submitLink = '/home';
     }
 
     // if the cookie has login information in it already
     // then send us straight to the home page
-    if (Cookie.get("loggedIn")) {
+    if (Cookie.get('loggedIn')) {
       this.sendToHome();
     }
   },
@@ -142,14 +144,14 @@ const login:ILogin = {
           // send us over to the home page
           this.sendToHome();
         })
-        .catch(err => (this.feedback.password = "Invalid Login"));
+        .catch(err => (this.feedback.password = 'Invalid Login'));
     },
     // redirect over to the home page
     sendToHome: function() {
       if (this.mobile) {
-        router.push("home-mobile");
+        router.push('home-mobile');
       } else {
-        router.push("home");
+        router.push('home');
       }
     },
     validateAdmin: function() {
@@ -164,16 +166,16 @@ const login:ILogin = {
           .then(json => {
             console.log(json);
             this.createCookie(this.username, this.isAdmin);
-            router.push("admin");
+            router.push('admin');
           })
-          .catch(err => (this.feedback.password = "Invalid Login"));
+          .catch(err => (this.feedback.password = 'Invalid Login'));
       } else {
-        this.feedback.username = 'User is not an administrator'
+        this.feedback.username = 'User is not an administrator';
       }
     },
     createCookie: function(username, adminStatus) {
-      if (!Cookie.get("loggedIn")) {
-        Cookie.set("loggedIn", {
+      if (!Cookie.get('loggedIn')) {
+        Cookie.set('loggedIn', {
           username: username,
           admin: adminStatus
         });
@@ -183,7 +185,6 @@ const login:ILogin = {
 };
 
 export default login;
-
 </script>
 
 <style lang="stylus" scoped>

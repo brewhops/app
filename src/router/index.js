@@ -1,69 +1,70 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import login from '@/components/login'
-import admin from '@/components/admin'
-import home from '@/components/home'
-import tankMonitoring from '@/components/tank-monitoring'
-import tankInfo from '@/components/tank-info'
-import homeMobile from '@/components/home-mobile'
-import dataEntry from '@/components/data-entry'
-import dataSubmission from '@/components/data-submission'
-import recipe from '@/components/recipe'
-import history from '@/components/history'
+import Vue from 'vue';
+import Router from 'vue-router';
+import login from '@/components/login';
+import admin from '@/components/admin';
+import home from '@/components/home';
+import tankMonitoring from '@/components/tank-monitoring';
+import tankInfo from '@/components/tank-info';
+import homeMobile from '@/components/home-mobile';
+import dataEntry from '@/components/data-entry';
+import dataSubmission from '@/components/data-submission';
+import recipe from '@/components/recipe';
+import history from '@/components/history';
 
-Vue.use(Router)
+Vue.use(Router);
 
+// tslint:disable-next-line:no-default-export
 export default new Router({
   routes: [
     {
-      path: '/',
+      component: login,
       name: 'login',
-      component: login
+      path: '/'
     },
     {
-      path: '/admin',
+      component: admin,
       name: 'admin',
-      component: admin
+      path: '/admin'
     },
     {
-      path: '/home',
+      component: home,
       name: 'home',
-      component: home
+      path: '/home'
     },
     {
-      path: '/tank-monitoring',
+      component: tankMonitoring,
       name: 'tank-monitoring',
-      component: tankMonitoring
+      path: '/tank-monitoring'
     },
     {
-      path: '/tank-info/:tankID',
+      component: tankInfo,
       name: 'tank-info',
-      component: tankInfo
+      path: '/tank-info/:tankID'
     },
     {
-      path: '/home-mobile',
+      component: homeMobile,
       name: 'home-mobile',
-      component: homeMobile
+      path: '/home-mobile'
     },
     {
-      path: '/data-entry',
+      component: dataEntry,
       name: 'data-entry',
-      component: dataEntry
+      path: '/data-entry'
     },
     {
-      path: '/data-submission',
+      component: dataSubmission,
       name: 'data-submission',
-      component: dataSubmission
+      path: '/data-submission'
     },
     {
-      path: '/recipe',
+      component: recipe,
       name: 'recipe',
-      component: recipe
+      path: '/recipe'
     },
     {
-      path: '/history',
+      component: history,
       name: 'batch-history',
-      component: history
+      path: '/history'
     }
   ]
-})
+});

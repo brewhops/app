@@ -1,19 +1,18 @@
 <template>
   <div id="recipe">
-    <h2>{{name}}</h2>
+    <h2>{{ name }}</h2>
     <table>
       <tr v-for="(ratio, ingredient) in ingredients">
-        <td>{{ingredient}}</td>
-        <td>{{ratio}}</td>
+        <td>{{ ingredient }}</td>
+        <td>{{ ratio }}</td>
       </tr>
     </table>
   </div>
 </template>
 
-<script lang='ts'>
-
-import router from "../router/index.js"
-import Cookie from "js-cookie"
+<script lang="ts">
+import router from '../router/index.js';
+import Cookie from 'js-cookie';
 
 interface IRecipe {
   name: any;
@@ -25,7 +24,7 @@ interface IRecipe {
   ingredients?: any;
 }
 
-const recipe : IRecipe = {
+const recipe: IRecipe = {
   name: 'recipe',
   props: ['recipeID'],
   data() {
@@ -38,22 +37,29 @@ const recipe : IRecipe = {
   beforeMount() {
     // if the user is not logged in send them to the login page
     if (!Cookie.get('loggedIn')) {
-      router.push("/")
+      router.push('/');
     }
 
-    if (/iPhone|iPad|iPod|Android|webOS|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
-      this.mobile = true
+    if (
+      /iPhone|iPad|iPod|Android|webOS|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(
+        navigator.userAgent
+      )
+    ) {
+      this.mobile = true;
     }
   },
   watch: {
     recipeID() {
-      this.$http.get(process.env.API + '/recipes/' + this.recipeID).then(recipeResponse => {
-        const recipe = recipeResponse.body
-        this.name = recipe.recipe_name
-        this.ingredients = JSON.parse(recipe.instructions)
-      }, error => {
-        console.warn("Failed to get recipe", error)
-      })
+      this.$http.get(process.env.API + '/recipes/' + this.recipeID).then(
+        recipeResponse => {
+          const recipe = recipeResponse.body;
+          this.name = recipe.recipe_name;
+          this.ingredients = JSON.parse(recipe.instructions);
+        },
+        error => {
+          console.warn('Failed to get recipe', error);
+        }
+      );
     }
   }
 };
