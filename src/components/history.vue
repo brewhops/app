@@ -55,11 +55,14 @@
 </template>
 
 <script lang="ts">
+import Vue from 'vue';
 import router from '../router/index.js';
 import Cookie from 'js-cookie';
 import moment from 'moment';
 
-interface IData {
+// tslint:disable: no-any
+
+interface IHistoryState {
   mobile: any;
   batch_id: any;
   batches: any;
@@ -67,22 +70,9 @@ interface IData {
   histories: any;
 }
 
-interface IHistory {
-  name: any;
-  data: () => IData;
-  beforeMount: any;
-  methods: any;
-  histories?: any;
-  mobile?: any;
-  batches?: any;
-  batch?: any;
-  batch_id?: any;
-  $http?: any;
-}
-
-const history: IHistory = {
+export default Vue.extend({
   name: 'batch-history',
-  data() {
+  data(): IHistoryState {
     return {
       mobile: false,
       batch_id: '',
@@ -93,11 +83,11 @@ const history: IHistory = {
   },
   beforeMount() {
     // if the user is not logged in send them to the login page
-    if (!Cookie.get('loggedIn')) {
+    if (!Cookie.getJSON('loggedIn')) {
       router.push('/');
     }
 
-    this.$http.get(process.env.API + '/batches/').then(batchesResponse => {
+    this.$http.get(`${process.env.API}/batches/`).then(batchesResponse => {
       // get our batches data
       this.batches = batchesResponse.body;
       // sort the batches by ID
@@ -105,20 +95,20 @@ const history: IHistory = {
     });
   },
   methods: {
-    home: function() {
+    home() {
       if (this.mobile) {
         router.push('/home-mobile');
       }
       router.push('/');
     },
-    batchChoose: function() {
+    batchChoose() {
       // filter out all the batches that aren't ours, and set that one element
       // to our batch object
       this.batch = this.batches.filter(e => e.id === this.batch_id)[0];
 
       // when the user chooses a batch, get the info on that batch
       this.$http
-        .get(process.env.API + '/batches/' + this.batch_id + '/batch_contents_versions')
+        .get(`${process.env.API}/batches/${this.batch_id}/batch_contents_versions`)
         .then(historyResponse => {
           this.histories = historyResponse.body;
           // for every batch history, format the date so its easy to read
@@ -185,8 +175,7 @@ const history: IHistory = {
         });
     }
   }
-};
-export default history;
+});
 </script>
 
 <style lang="stylus" scoped>

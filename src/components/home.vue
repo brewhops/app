@@ -18,20 +18,24 @@ import tankMonitoring from './tank-monitoring.vue';
 import router from '../router/index.js';
 import Cookie from 'js-cookie';
 
+interface IHomePageState {
+  mobile: boolean;
+}
+
 export default Vue.extend({
   name: 'home',
   components: {
     'data-entry': dataEntry,
     'tank-monitoring': tankMonitoring
   },
-  data: function() {
+  data(): IHomePageState {
     return {
       mobile: false
     };
   },
-  beforeMount: function() {
+  beforeMount() {
     // if the user is not logged in send them to the login page
-    if (!Cookie.get('loggedIn')) {
+    if (!Cookie.getJSON('loggedIn')) {
       router.push('/');
     }
 
@@ -44,8 +48,8 @@ export default Vue.extend({
     }
   },
   methods: {
-    logout: function() {
-      if (Cookie.get('loggedIn')) {
+    logout() {
+      if (Cookie.getJSON('loggedIn')) {
         Cookie.remove('loggedIn');
       }
       router.push('/');

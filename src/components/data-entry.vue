@@ -95,7 +95,9 @@ import moment from 'moment';
 import { Tank, Action, Recipe } from '../types';
 import { HttpResponse } from 'vue-resource/types/vue_resource';
 
-interface IData {
+// tslint:disable:no-any
+
+interface IDataEntryState {
   SG?: any;
   tank_id?: number;
   tank_name?: string;
@@ -124,8 +126,8 @@ interface IData {
 
 export default Vue.extend({
   name: 'data-entry',
-  data() {
-    return <IData>{
+  data(): IDataEntryState {
+    return {
       SG: '',
       status: '',
       pH: '',
@@ -143,12 +145,12 @@ export default Vue.extend({
       recipes: [],
       update: true,
       mobile: false,
-      tanks: [], //to save info from all tank info pulled from db
-      actions: [] //save all info on all possible actions
+      tanks: [],
+      actions: []
     };
   },
   async beforeMount() {
-    if (!Cookie.get('loggedIn')) {
+    if (!Cookie.getJSON('loggedIn')) {
       router.push('/');
     }
     if (
@@ -166,20 +168,22 @@ export default Vue.extend({
 
       for (const tank of tanks) {
         if (
-          tank.status != 'broken' &&
-          tank.status != 'transferring' &&
-          tank.status != 'completed'
+          tank.status !== 'broken' &&
+          tank.status !== 'transferring' &&
+          tank.status !== 'completed'
         ) {
           if (!this.tanks) this.tanks = [];
           this.tanks.push(tank);
         }
       }
     } catch (err) {
+      // tslint:disable-next-line:no-console
       console.error(err);
     }
   },
   methods: {
-    tankChoose: async function() {
+    // tslint:disable-next-line:max-func-body-length
+    async tankChoose() {
       // clear all our values each time we choose a new tank
       this.batch_id = '';
       this.batch_name = '';
@@ -199,7 +203,8 @@ export default Vue.extend({
         const tank: Tank = await this.$http
           .get(`${process.env.API}/tanks/id/${this.tank_id}`)
           .json();
-        const batches: any[] = this.$http.get(process.env.API + '/batches').json();
+        // tslint:disable-next-line:no-any
+        const batches: any[] = this.$http.get(`${process.env.API}/batches`).json();
         const { id, name } = tank;
 
         this.tank_id = id;
@@ -207,7 +212,7 @@ export default Vue.extend({
 
         for (const batch of batches) {
           if (batch.tank_id === id) {
-            //save batch_id, generation, volume, recipe_id
+            // save batch_id, generation, volume, recipe_id
             this.batch_id = batch.id;
             this.batch_name = batch.batch_name;
             this.generation = batch.generation;
@@ -216,7 +221,10 @@ export default Vue.extend({
             this.recipe_id = batch.recipe_id;
           }
         }
-      } catch (err) {}
+      } catch (err) {
+        // tslint:disable-next-line:no-console
+        console.error(err);
+      }
       // .then(
       //   tanksResponse => {
       //     this.tank_id = tanksResponse.body.id; //get tank database id
@@ -282,14 +290,15 @@ export default Vue.extend({
       //   }
       // );
     },
-    submit: async function() {
+    // tslint:disable-next-line:max-func-body-length
+    async submit() {
       // this is where all the http requests will be monitored
       // when they are all fufilled, then send the user over to the
       // submision page.
-      let promiseArray: any = [];
+      const promiseArray: any = [];
 
       // create a new batch data element
-      var batchesData = {
+      const batchesData = {
         recipe_id: this.recipe_id,
         tank_id: this.tank_id,
         volume: this.volume,
@@ -318,16 +327,19 @@ export default Vue.extend({
         // create a new batch element
         try {
           const { body } = await this.$http.post(`${process.env.API}/batches`, batchesData);
-        } catch (err) {}
+        } catch (err) {
+          // tslint:disable-next-line:no-console
+          console.error(err);
+        }
         this.$http
-          .post(process.env.API + '/batches', batchesData)
+          .post(`${process.env.API}/batches`, batchesData)
           .then(success => {
             // set our id to the id of the batch that we are getting back
             id = success.body.id;
           })
           .then(success => {
             // post the batch history
-            let batchHistory = new FormData();
+            const batchHistory = new FormData();
             batchHistory.append('batch_id', id);
             batchHistory.append('pH', this.pH);
             batchHistory.append('ABV', this.ABV);
@@ -337,56 +349,42 @@ export default Vue.extend({
 
             // create a new batch history point
             this.$http
-              .post(process.env.API + '/batch_contents_versions', batchHistory)
-              .then(success => {})
+              .post(`${process.env.API}/batch_contents_versions`, batchHistory)
+              .then(success => {
+                // tslint:disable-next-line:no-console
+                console.log(success);
+              })
               .catch(error => {
                 console.warn(error);
               });
 
-            let taskData = new FormData();
+            const taskData = new FormData();
             // if the user wants to set an action
             if (this.action !== '') {
               taskData.append('action_id', this.action);
               taskData.append('batch_id', id);
               // create our new task
-              this.$http.post(process.env.API + '/tasks', taskData).catch(error => {
+              this.$http.post(`${process.env.API}/tasks`, taskData).catch(error => {
                 console.warn(error);
               });
             }
           })
           .then(success => {
-            router.push(
-              /*{ name: 'data-submission', params: {
-                data: {
-                  batch_id: id,
-                  ph: this.pH,
-                  abv: this.ABV,
-                  pressure: this.pressure,
-                  temp: this.temp,
-                  sg: this.SG,
-                  recipe_id: this.recipe_id,
-                  tank_id: this.tank_id,
-                  volume: this.volume,
-                  bright: this.bright,
-                  generation: this.generation,
-                }
-              } */
-              {}
-            );
+            router.push({});
           })
           .catch(error => {
             console.warn(error);
           });
       } else {
-        // get our batch url
-        var url = process.env.API + '/batches/' + this.batch_id;
         // patch the contents on that batch
-        promiseArray.push(this.$http.patch(url, batchesData));
+        promiseArray.push(
+          this.$http.patch(`${process.env.API}/batches/${this.batch_id}`, batchesData)
+        );
         // change the id to the batchID
         id = this.batch_id;
 
         // post the batch history
-        var batchHistory = new FormData();
+        const batchHistory = new FormData();
         batchHistory.append('batch_id', id);
         batchHistory.append('pH', this.pH);
         batchHistory.append('ABV', this.ABV);
@@ -396,44 +394,28 @@ export default Vue.extend({
 
         // create a new batch history point
         promiseArray.push(
-          this.$http.post(process.env.API + '/batch_contents_versions', batchHistory)
+          this.$http.post(`${process.env.API}/batch_contents_versions`, batchHistory)
         );
 
-        let taskData = new FormData();
+        const taskData = new FormData();
         // if the user wants to set an action
         if (this.action !== '') {
           taskData.append('action_id', this.action);
           taskData.append('batch_id', id);
           // create our new task
-          promiseArray.push(this.$http.post(process.env.API + '/tasks', taskData));
+          promiseArray.push(this.$http.post(`${process.env.API}/tasks`, taskData));
         }
 
         Promise.all(promiseArray)
           .then(success => {
-            router.push(
-              /*{ name: 'data-submission', params: {
-                data: {
-                  batch_id: id,
-                  ph: this.pH,
-                  abv: this.ABV,
-                  pressure: this.pressure,
-                  temp: this.temp,
-                  sg: this.SG,
-                  recipe_id: this.recipe_id,
-                  tank_id: this.tank_id,
-                  volume: this.volume,
-                  bright: this.bright,
-                  generation: this.generation,
-                }
-              }}*/ {}
-            );
+            router.push({});
           })
           .catch(error => {
             console.warn(error);
           });
       }
     },
-    sortTanks: function(a, b) {
+    sortTanks(a, b) {
       return a.id - b.id;
     }
   }

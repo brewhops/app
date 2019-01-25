@@ -12,7 +12,9 @@
 
         <select v-model="status" class="dropdown">
           <option disabled value="">Status on Tank</option>
-          <option v-for="tankStatus in tankStatuses" :value="tankStatus">{{ tankStatus }}</option>
+          <option v-for="tankStatus in tankStatuses" v-bind:key="tankStatus" :value="tankStatus">{{
+            tankStatus
+          }}</option>
         </select>
 
         <div class="checkbox">
@@ -26,12 +28,16 @@
         <h2>Update Tank Status {{ tank_id }}</h2>
         <select v-model="tank_id" class="dropdown">
           <option disabled value="">Tank Number</option>
-          <option v-for="tank in tanks" :value="tank.id">{{ tank.tank_id }}</option>
+          <option v-for="tank in tanks" v-bind:key="tank.id" :value="tank.id">{{
+            tank.tank_id
+          }}</option>
         </select>
 
         <select v-model="status" class="dropdown">
           <option disabled value="">Status on Tank</option>
-          <option v-for="tankStatus in tankStatuses" :value="tankStatus">{{ tankStatus }}</option>
+          <option v-for="tankStatus in tankStatuses" v-bind:key="tankStatus" :value="tankStatus">{{
+            tankStatus
+          }}</option>
         </select>
 
         <button v-on:click="tank_update">Submit</button>
@@ -67,7 +73,7 @@
         <input v-model="yeast" placeholder="Yeast" />
         <!-- TODO: Validate Yeast?? maybe-->
         <span>{{ feedback.yeast }}</span>
-        <div class="inline" v-for="x in hopNumbers">
+        <div class="inline" v-for="x in hopNumbers" v-bind:key="x">
           <input v-model="dryHopAdjunct[x - 1]" placeholder="Dry Hop/Adjunct" />
           <input v-model="rate[x - 1]" placeholder="Rate" />
         </div>
@@ -80,89 +86,98 @@
 </template>
 
 <script lang="ts">
+import Vue from 'vue';
 import router from '../router/index.js';
 import CryptoJS from 'crypto-js';
 import Cookie from 'js-cookie';
+import { Tank } from '../types';
 
-interface IAdmin {
-  name: any;
-  data: any;
-  watch: any;
-  beforeMount: any;
-  methods: any;
-
-  employees?: any;
-  tanks?: any;
-  tankStatus?: any;
-  tank_id?: '';
-  status?: '';
-  in_use?: false;
-  admin?: false;
-  first_name?: any;
-  last_name?: any;
-  username?: any;
-  password?: any;
-  passwordcheck?: any;
-  hopNumbers?: any;
-  dryHopAdjunct?: any;
-  rate?: any;
-  airplane_code?: any;
-  recipe_name?: any;
-  yeast?: any;
-  feedback?: any;
-  $http?: any;
-  debugging?: any;
+interface IAdminState {
+  // tslint:disable-next-line:no-any
+  employees: {
+    username: string;
+  }[];
+  tanks: Tank[];
+  tankStatuses: string[];
+  tank_id: number | string;
+  status: string;
+  in_use: boolean;
+  admin: boolean;
+  first_name: string;
+  last_name: string;
+  username: string;
+  password: string;
+  passwordcheck: string;
+  hopNumbers: number;
+  dryHopAdjunct?: string[];
+  // tslint:disable-next-line:no-any
+  rate: any[];
+  airplane_code: string;
+  recipe_name: string;
+  yeast: string;
+  feedback: {
+    first_name: string;
+    last_name: string;
+    username: string;
+    password: string;
+    passwordcheck: string;
+    server: {
+      user: string;
+      brand: string;
+      new_tank: string;
+      update_tank: string;
+    };
+    // tslint:disable-next-line:no-any
+    dryhopadjunct: any[];
+    brandID: string;
+    yeast: string;
+  };
+  debugging?: string;
+  brandID?: string;
 }
 
-const admin: IAdmin = {
+export default Vue.extend({
   name: 'admin',
-  data() {
+  data(): IAdminState {
     return {
-      employees: {},
-      tanks: {},
-
+      employees: [],
+      tanks: [],
       tankStatuses: ['busy', 'broken', 'available', 'brewing', 'transferring', 'completed'],
-
       tank_id: '',
       status: '',
       in_use: false,
       admin: false,
-
       first_name: '',
       last_name: '',
       username: '',
       password: '',
       passwordcheck: '',
-
       hopNumbers: 4,
       dryHopAdjunct: [],
       rate: [],
       airplane_code: '',
       recipe_name: '',
       yeast: '',
-
       feedback: {
         first_name: '',
         last_name: '',
         username: '',
         password: '',
         passwordcheck: '',
-
         server: {
           user: '',
           brand: '',
           new_tank: '',
           update_tank: ''
         },
-
-        dryhopadjunct: '',
+        dryhopadjunct: [],
         brandID: '',
         yeast: ''
       }
     };
   },
   watch: {
-    first_name: function() {
+    first_name() {
       // shorten our username variable for readability
       const first_name = this.first_name;
 
@@ -172,7 +187,7 @@ const admin: IAdmin = {
         this.feedback.first_name = 'First name can only be digits and letters';
       }
     },
-    last_name: function() {
+    last_name() {
       // shorten our username variable for readability
       const last_name = this.last_name;
 
@@ -182,14 +197,15 @@ const admin: IAdmin = {
         this.feedback.last_name = 'First name can only be letters, spaces, and hyphens';
       }
     },
-    username: function() {
+    username() {
       const username = this.username;
 
       // if the username is already in the  database,
       // give feedback and exit the function
-      for (var x in this.employees) {
+      for (const x in this.employees) {
         if (this.employees[x].username === username) {
           this.feedback.username = 'Username taken';
+
           return;
         }
       }
@@ -204,7 +220,7 @@ const admin: IAdmin = {
         this.feedback.username = 'Username must only be digits and letters';
       }
     },
-    password: function() {
+    password() {
       const password = this.password;
 
       if (password.length === 0) {
@@ -217,120 +233,117 @@ const admin: IAdmin = {
         this.feedback.password = 'Password must only be digits and letters';
       }
     },
-    passwordcheck: function() {
+    passwordcheck() {
       if (this.passwordcheck === this.password) this.feedback.passwordcheck = '';
       else {
         this.feedback.passwordcheck = 'Passwords must match';
       }
     },
-    brandID: function() {
-      var brandID = this.brandID;
-      if (brandID.match('^[0-9A-z]+$')) {
+    brandID() {
+      const brandID = this.brandID;
+      if (brandID && brandID.match('^[0-9A-z]+$')) {
         this.feedback.brandID = '';
       } else {
         this.feedback.brandID = 'Brand ID can only be numbers and dashes';
       }
     }
   },
-  beforeMount() {
+  async beforeMount() {
     // if the user is not logged, or they are logged in but not an admin
     // send them to the login page
-    if (!Cookie.get('loggedIn') || !JSON.parse(Cookie.get('loggedIn')).admin) {
-      console.log(Cookie.get('loggedIn'));
+    if (!Cookie.getJSON('loggedIn') || !JSON.parse(Cookie.getJSON('loggedIn')).admin) {
+      // tslint:disable-next-line:no-console
+      console.log(Cookie.getJSON('loggedIn'));
       router.push('/');
     }
 
-    //get users from heroku
-    this.$http.get(process.env.API + '/employees').then(
-      response => {
-        // get body data
-        this.employees = response.body;
-      },
-      response => {
-        this.debugging = 'Debugging Flag: Response error, cant access employees page';
-        console.log(this.employees);
-      }
-    );
+    // get users from heroku
+    try {
+      const response = await this.$http.get(`${process.env.API}/employees`);
+      this.employees = response.json();
+    } catch (err) {
+      this.debugging = 'Debugging Flag: Response error, cant access employees page';
+    }
 
-    //get tank numebrs
-    this.$http.get(process.env.API + '/tanks').then(
-      response => {
-        // get body data
-        this.tanks = response.body;
-      },
-      response => {
-        this.debugging = 'Debugging Flag: Response error, cant access tanks page';
-        console.log(this.tanks);
-      }
-    );
+    // get tank numebrs
+    try {
+      const response = await this.$http.get(`${process.env.API}/tanks`);
+      this.tanks = response.json();
+    } catch (err) {
+      this.debugging = 'Debugging Flag: Response error, cant access tanks page';
+    }
   },
   methods: {
-    login_submit: function() {
-      var newUser = new FormData();
-      newUser.append('first_name', this.first_name);
-      newUser.append('last_name', this.last_name);
-      newUser.append('username', this.username);
-      if (this.admin) newUser.append('admin', 'true');
-      else newUser.append('admin', 'false');
-      var encryptedPassword = CryptoJS.AES.encrypt(this.password, this.username).toString();
-      newUser.append('password', encryptedPassword);
-      this.$http.post(process.env.API + '/employees', newUser).then(
-        response => {
-          if (response.ok === true) {
-            this.feedback.server.user = 'New user succesfully created';
-          }
-        },
-        error => {
-          console.log(error);
+    async login_submit() {
+      const newUser = {
+        first_name: this.first_name,
+        last_name: this.last_name,
+        username: this.username,
+        admin: this.admin,
+        password: CryptoJS.SHA3(this.password).toString()
+      };
+
+      try {
+        const response = await this.$http.post(`${process.env.API}'/employees`, newUser);
+        if (response.ok === true) {
+          this.feedback.server.user = 'New user succesfully created';
         }
-      );
+      } catch (err) {
+        // tslint:disable-next-line:no-console
+        console.error(err);
+      }
     },
-    recipe_submit: function() {
-      var formData = new FormData();
-      //Now only add to recipe the values that aren't empty or null
-      let instructions = {};
-      for (let x in this.dryHopAdjunct) {
-        if (!(this.dryHopAdjunct[x] === '' || this.dryHopAdjunct === null)) {
-          instructions[this.dryHopAdjunct[x]] = this.rate[x];
+    async recipe_submit() {
+      // Now only add to recipe the values that aren't empty or null
+      const instructions = {};
+      if (this.dryHopAdjunct) {
+        for (const x in this.dryHopAdjunct) {
+          if (!(this.dryHopAdjunct[x] === '' || this.dryHopAdjunct === null)) {
+            instructions[this.dryHopAdjunct[x]] = this.rate[x];
+          }
         }
       }
-      //append recipe, submit to database
-      formData.append('airplane_code', this.airplane_code);
-      formData.append('instructions', JSON.stringify(instructions));
-      formData.append('recipe_name', this.recipe_name);
-      this.$http.post(process.env.API + '/recipes', formData).then(response => {
+
+      const recipe = {
+        airplane_code: this.airplane_code,
+        instructions: JSON.stringify(instructions),
+        recipe_name: this.recipe_name
+      };
+
+      try {
+        const response = await this.$http.post(`${process.env.API}/recipes`, recipe);
         if (response.ok) {
           this.feedback.server.brand = 'Created a new brand';
         }
-      });
+      } catch (err) {
+        // tslint:disable-next-line:no-console
+        console.error(err);
+      }
     },
-    tank_submit: function() {
-      var formData = new FormData();
-      formData.append('tank_id', this.tank_id);
-      formData.append('status', this.status);
-      console.log(formData);
-      if (this.in_use) formData.append('in_use', 'true');
-      else formData.append('in_use', 'false');
+    async tank_submit() {
+      const tank = {
+        id: this.tank_id,
+        status: this.status,
+        in_use: this.in_use
+      };
 
-      this.$http.post(process.env.API + '/tanks', formData);
+      await this.$http.post(`${process.env.API}/tanks`, tank);
     },
-    tank_update: function() {
-      var formData = new FormData();
-      formData.append('status', this.status);
-      var url = process.env.API + '/tanks/' + this.tank_id;
-      console.log(url);
-      this.$http.patch(url, formData);
+    async tank_update() {
+      const tank = {
+        id: this.tank_id,
+        status: this.status
+      };
+      await this.$http.patch(`${process.env.API}/tanks/${this.tank_id}`, tank);
     },
-    logout: function() {
-      if (Cookie.get('loggedIn')) {
+    logout() {
+      if (Cookie.getJSON('loggedIn')) {
         Cookie.remove('loggedIn');
       }
       router.push('/');
     }
   }
-};
-
-export default admin;
+});
 </script>
 
 <style lang="stylus" scoped>
