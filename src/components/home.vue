@@ -12,23 +12,13 @@
 </template>
 
 <script lang="ts">
+import Vue from 'vue';
 import dataEntry from './data-entry.vue';
 import tankMonitoring from './tank-monitoring.vue';
 import router from '../router/index.js';
 import Cookie from 'js-cookie';
 
-interface IHome {
-  name: any;
-  components: any;
-  data: any;
-  beforeMount: any;
-  methods: any;
-  dataEntry?: any;
-  tankMonitoring?: any;
-  mobile?: any;
-}
-
-export const home: IHome = {
+export default Vue.extend({
   name: 'home',
   components: {
     'data-entry': dataEntry,
@@ -61,23 +51,27 @@ export const home: IHome = {
       router.push('/');
     }
   }
-};
-
-export default home;
+});
 </script>
 
 <style lang="stylus" scoped>
-@import '../styles/breakpoints'
+@import '../styles/breakpoints';
 
+#content {
+  display: grid;
 
-#content
-  display grid
-  +greater-than(desktop)
-    grid-template-columns 1fr 2fr
-  grid-template-columns 1fr 1fr
-  grid-template-areas "entry info"
-  +less-than(tablet)
-    grid-template-columns 98vw
-    grid-template-areas "entry" "info"
-  justify-items center
+  +greater-than(desktop) {
+    grid-template-columns: 1fr 2fr;
+  }
+
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas: 'entry info';
+
+  +less-than(tablet) {
+    grid-template-columns: 98vw;
+    grid-template-areas: 'entry' 'info';
+  }
+
+  justify-items: center;
+}
 </style>

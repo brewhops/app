@@ -88,18 +88,17 @@
 </template>
 
 <script lang="ts">
+import Vue from 'vue';
 import router from '../router/index.js';
 import Cookie from 'js-cookie';
 import moment from 'moment';
+import { Tank, Action, Recipe } from '../types';
+import { HttpResponse } from 'vue-resource/types/vue_resource';
 
-interface IDataEntry {
-  name: any;
-  data: any;
-  beforeMount: any;
-  methods: any;
-
+interface IData {
   SG?: any;
-  tank_id?: any;
+  tank_id?: number;
+  tank_name?: string;
   status?: any;
   pH?: any;
   ABV?: any;
@@ -113,22 +112,21 @@ interface IDataEntry {
   pressure?: any;
   action?: any;
   time?: any;
-  recipes?: any;
+  recipes?: Recipe[];
   update?: any;
   mobile?: any;
-  tanks?: any;
-  action_choice?: any;
+  tanks?: Tank[];
+  actions?: Action[];
   $http?: any;
   sortTanks?: any;
   debugging?: any;
 }
 
-const dataEntry: IDataEntry = {
+export default Vue.extend({
   name: 'data-entry',
   data() {
-    return {
+    return <IData>{
       SG: '',
-      tank_id: '',
       status: '',
       pH: '',
       ABV: '',
@@ -142,14 +140,14 @@ const dataEntry: IDataEntry = {
       pressure: '',
       action: '',
       time: '',
-      recipes: {},
+      recipes: [],
       update: true,
       mobile: false,
       tanks: [], //to save info from all tank info pulled from db
-      action_choice: [] //save all info on all possible actions
+      actions: [] //save all info on all possible actions
     };
   },
-  beforeMount() {
+  async beforeMount() {
     if (!Cookie.get('loggedIn')) {
       router.push('/');
     }
@@ -161,44 +159,27 @@ const dataEntry: IDataEntry = {
       this.mobile = true;
     }
 
-    this.$http.get(process.env.API + '/tanks').then(
-      response => {
-        // get available tanks
-        for (let tank of response.body) {
-          // if the tank is not broken, transferring or completed, add the tank
-          if (
-            tank.status != 'broken' &&
-            tank.status != 'transferring' &&
-            tank.status != 'completed'
-          ) {
-            this.tanks.push(tank);
-          }
+    try {
+      const tanks: Tank[] = await this.$http.get(`${process.env.API}/tanks`).json();
+      this.actions = await this.$http.get(`${process.env.API}/actions`);
+      this.recipes = await this.$http.get(`${process.env.API}/recipes`);
+
+      for (const tank of tanks) {
+        if (
+          tank.status != 'broken' &&
+          tank.status != 'transferring' &&
+          tank.status != 'completed'
+        ) {
+          if (!this.tanks) this.tanks = [];
+          this.tanks.push(tank);
         }
-        // sort our tanks by the tankID
-        this.tanks.sort(this.sortTanks);
-      },
-      response => {
-        console.warn('Error with the tanks route', response);
       }
-    );
-
-    this.$http.get(process.env.API + '/actions').then(
-      response => {
-        // get all our actions so we can put it in a dropdown selection
-        this.action_choice = response.body;
-      },
-      response => {
-        this.debugging = 'Debugging Flag: Response error, cant access employees page';
-        console.warn('Error with the actions route', response);
-      }
-    );
-
-    this.$http.get(process.env.API + '/recipes').then(response => {
-      this.recipes = response.body;
-    });
+    } catch (err) {
+      console.error(err);
+    }
   },
   methods: {
-    tankChoose: function() {
+    tankChoose: async function() {
       // clear all our values each time we choose a new tank
       this.batch_id = '';
       this.batch_name = '';
@@ -214,88 +195,108 @@ const dataEntry: IDataEntry = {
       // set the time with the required dateime format eg "2018-05-10T15:08"
       this.time = moment().format('YYYY-MM-DDTHH:mm');
 
-      //create url to get tank:
-      const tankUrl = process.env.API + '/tanks/' + this.tank_id;
-      this.$http.get(tankUrl).then(
-        tanksResponse => {
-          this.tank_id = tanksResponse.body.id; //get tank database id
-          this.tank_name = tanksResponse.body.tank_id; //get tank given name
-          /********** query batches ********************/
-          this.$http.get(process.env.API + '/batches').then(
-            batchResponse => {
-              /********** query batch_contents_versions ********************/
-              this.$http.get(process.env.API + '/batch_contents_versions').then(
-                batchContentsResponse => {
-                  // Iterate through batches information
-                  for (let batch of batchResponse.body) {
-                    //if our batch is in the specified tank
-                    if (batch.tank_id === this.tank_id) {
-                      //save batch_id, generation, volume, recipe_id
-                      this.batch_id = batch.id;
-                      this.batch_name = batch.batch_name;
-                      this.generation = batch.generation;
-                      this.volume = batch.volume;
-                      this.bright = batch.bright;
-                      this.recipe_id = batch.recipe_id;
-                    }
-                  }
-                  //check and see if we are pulling info, if we pulled nothing, its a new batch!
-                  this.update = true;
-                  if (this.batch_id === '') {
-                    this.update = false;
-                  }
+      try {
+        const tank: Tank = await this.$http
+          .get(`${process.env.API}/tanks/id/${this.tank_id}`)
+          .json();
+        const batches: any[] = this.$http.get(process.env.API + '/batches').json();
+        const { id, name } = tank;
 
-                  // our max date will hold the most recent batch date
-                  var maxDate = moment('1995-07-29');
-                  for (let batchHistory of batchContentsResponse.body) {
-                    // if this the batchID that we are looking for and the time is more recent
-                    if (
-                      batchHistory.batch_id === this.batch_id &&
-                      moment(batchHistory.updated_at) > maxDate
-                    ) {
-                      // set our new max date
-                      maxDate = moment(batchHistory.updated_at);
-                      this.ABV = batchHistory.ABV;
-                      this.pH = batchHistory.pH;
-                      this.temp = batchHistory.temp;
-                      this.pressure = batchHistory.pressure;
-                      this.SG = batchHistory.SG;
-                    }
-                  }
-                },
-                batchContentsResponse => {
-                  this.debugging =
-                    'Debugging Flag: Response error, cant access batches contents page';
-                }
-              );
-              /*****************************************/
-            },
-            batchResponse => {
-              this.debugging = 'Debugging Flag: Response error, cant access batches page';
-            }
-          );
-          /*****************************************/
-        },
-        tanksResponse => {
-          this.debugging = 'Debugging Flag: Response error, cant access tanks page';
+        this.tank_id = id;
+        this.tank_name = name;
+
+        for (const batch of batches) {
+          if (batch.tank_id === id) {
+            //save batch_id, generation, volume, recipe_id
+            this.batch_id = batch.id;
+            this.batch_name = batch.batch_name;
+            this.generation = batch.generation;
+            this.volume = batch.volume;
+            this.bright = batch.bright;
+            this.recipe_id = batch.recipe_id;
+          }
         }
-      );
+      } catch (err) {}
+      // .then(
+      //   tanksResponse => {
+      //     this.tank_id = tanksResponse.body.id; //get tank database id
+      //     this.tank_name = tanksResponse.body.tank_id; //get tank given name
+      //     /********** query batches ********************/
+      //     this.$http.get(process.env.API + '/batches').then(
+      //       batchResponse => {
+      //         /********** query batch_contents_versions ********************/
+      //         this.$http.get(process.env.API + '/batch_contents_versions').then(
+      //           batchContentsResponse => {
+      //             // Iterate through batches information
+      //             for (let batch of batchResponse.body) {
+      //               //if our batch is in the specified tank
+      //               if (batch.tank_id === this.tank_id) {
+      //                 //save batch_id, generation, volume, recipe_id
+      //                 this.batch_id = batch.id;
+      //                 this.batch_name = batch.batch_name;
+      //                 this.generation = batch.generation;
+      //                 this.volume = batch.volume;
+      //                 this.bright = batch.bright;
+      //                 this.recipe_id = batch.recipe_id;
+      //               }
+      //             }
+      //             //check and see if we are pulling info, if we pulled nothing, its a new batch!
+      //             this.update = true;
+      //             if (this.batch_id === '') {
+      //               this.update = false;
+      //             }
+
+      //             // our max date will hold the most recent batch date
+      //             var maxDate = moment('1995-07-29');
+      //             for (let batchHistory of batchContentsResponse.body) {
+      //               // if this the batchID that we are looking for and the time is more recent
+      //               if (
+      //                 batchHistory.batch_id === this.batch_id &&
+      //                 moment(batchHistory.updated_at) > maxDate
+      //               ) {
+      //                 // set our new max date
+      //                 maxDate = moment(batchHistory.updated_at);
+      //                 this.ABV = batchHistory.ABV;
+      //                 this.pH = batchHistory.pH;
+      //                 this.temp = batchHistory.temp;
+      //                 this.pressure = batchHistory.pressure;
+      //                 this.SG = batchHistory.SG;
+      //               }
+      //             }
+      //           },
+      //           batchContentsResponse => {
+      //             this.debugging =
+      //               'Debugging Flag: Response error, cant access batches contents page';
+      //           }
+      //         );
+      //         /*****************************************/
+      //       },
+      //       batchResponse => {
+      //         this.debugging = 'Debugging Flag: Response error, cant access batches page';
+      //       }
+      //     );
+      //     /*****************************************/
+      //   },
+      //   tanksResponse => {
+      //     this.debugging = 'Debugging Flag: Response error, cant access tanks page';
+      //   }
+      // );
     },
-    submit: function() {
+    submit: async function() {
       // this is where all the http requests will be monitored
       // when they are all fufilled, then send the user over to the
       // submision page.
       let promiseArray: any = [];
 
       // create a new batch data element
-      var batchesData = new FormData();
-
-      batchesData.append('recipe_id', this.recipe_id);
-      batchesData.append('tank_id', this.tank_id);
-      batchesData.append('volume', this.volume);
-      batchesData.append('bright', this.bright);
-      batchesData.append('generation', this.generation);
-      batchesData.append('batch_name', this.batch_name);
+      var batchesData = {
+        recipe_id: this.recipe_id,
+        tank_id: this.tank_id,
+        volume: this.volume,
+        bright: this.bright,
+        generation: this.generation,
+        batch_name: this.batch_name
+      };
 
       // We have two different paths we can take. Either the batch already
       // exists and we are just adding a new data point in the history,
@@ -315,6 +316,9 @@ const dataEntry: IDataEntry = {
       // if we are going to make a new batch element
       if (!this.update) {
         // create a new batch element
+        try {
+          const { body } = await this.$http.post(`${process.env.API}/batches`, batchesData);
+        } catch (err) {}
         this.$http
           .post(process.env.API + '/batches', batchesData)
           .then(success => {
@@ -353,20 +357,20 @@ const dataEntry: IDataEntry = {
           .then(success => {
             router.push(
               /*{ name: 'data-submission', params: {
-              data: {
-                batch_id: id,
-                ph: this.pH,
-                abv: this.ABV,
-                pressure: this.pressure,
-                temp: this.temp,
-                sg: this.SG,
-                recipe_id: this.recipe_id,
-                tank_id: this.tank_id,
-                volume: this.volume,
-                bright: this.bright,
-                generation: this.generation,
-              }
-            } */
+                data: {
+                  batch_id: id,
+                  ph: this.pH,
+                  abv: this.ABV,
+                  pressure: this.pressure,
+                  temp: this.temp,
+                  sg: this.SG,
+                  recipe_id: this.recipe_id,
+                  tank_id: this.tank_id,
+                  volume: this.volume,
+                  bright: this.bright,
+                  generation: this.generation,
+                }
+              } */
               {}
             );
           })
@@ -408,20 +412,20 @@ const dataEntry: IDataEntry = {
           .then(success => {
             router.push(
               /*{ name: 'data-submission', params: {
-              data: {
-                batch_id: id,
-                ph: this.pH,
-                abv: this.ABV,
-                pressure: this.pressure,
-                temp: this.temp,
-                sg: this.SG,
-                recipe_id: this.recipe_id,
-                tank_id: this.tank_id,
-                volume: this.volume,
-                bright: this.bright,
-                generation: this.generation,
-              }
-            }}*/ {}
+                data: {
+                  batch_id: id,
+                  ph: this.pH,
+                  abv: this.ABV,
+                  pressure: this.pressure,
+                  temp: this.temp,
+                  sg: this.SG,
+                  recipe_id: this.recipe_id,
+                  tank_id: this.tank_id,
+                  volume: this.volume,
+                  bright: this.bright,
+                  generation: this.generation,
+                }
+              }}*/ {}
             );
           })
           .catch(error => {
@@ -433,9 +437,7 @@ const dataEntry: IDataEntry = {
       return a.id - b.id;
     }
   }
-};
-
-export default dataEntry;
+});
 </script>
 
 <style lang="stylus" scoped>
