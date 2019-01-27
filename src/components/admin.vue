@@ -260,7 +260,7 @@ export default Vue.extend({
     // get users from heroku
     try {
       const response = await this.$http.get(`${process.env.API}/employees`);
-      this.employees = response.json();
+      this.employees = response.data;
     } catch (err) {
       this.debugging = 'Debugging Flag: Response error, cant access employees page';
     }
@@ -268,7 +268,7 @@ export default Vue.extend({
     // get tank numebrs
     try {
       const response = await this.$http.get(`${process.env.API}/tanks`);
-      this.tanks = response.json();
+      this.tanks = response.data;
     } catch (err) {
       this.debugging = 'Debugging Flag: Response error, cant access tanks page';
     }
