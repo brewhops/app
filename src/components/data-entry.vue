@@ -182,8 +182,6 @@ export default Vue.extend({
           this.tanks.push(tank);
         }
       }
-      // tslint:disable-next-line:no-console
-      console.log(this.tanks);
     } catch (err) {
       // tslint:disable-next-line:no-console
       console.error(err);
@@ -211,8 +209,8 @@ export default Vue.extend({
         const tankResponse = await this.$http.get(`${process.env.API}/tanks/id/${this.tank_id}`);
         // tslint:disable-next-line:no-any
         const batchResponse = this.$http.get(`${process.env.API}/batches`);
-        const batches: any[] = batchResponse.json();
-        const { id, name } = tankResponse.json();
+        const batches: any[] = batchResponse.data;
+        const { id, name } = tankResponse.data;
 
         this.tank_id = id;
         this.tank_name = name;
@@ -232,70 +230,6 @@ export default Vue.extend({
         // tslint:disable-next-line:no-console
         console.error(err);
       }
-      // .then(
-      //   tanksResponse => {
-      //     this.tank_id = tanksResponse.body.id; //get tank database id
-      //     this.tank_name = tanksResponse.body.tank_id; //get tank given name
-      //     /********** query batches ********************/
-      //     this.$http.get(process.env.API + '/batches').then(
-      //       batchResponse => {
-      //         /********** query batch_contents_versions ********************/
-      //         this.$http.get(process.env.API + '/batch_contents_versions').then(
-      //           batchContentsResponse => {
-      //             // Iterate through batches information
-      //             for (let batch of batchResponse.body) {
-      //               //if our batch is in the specified tank
-      //               if (batch.tank_id === this.tank_id) {
-      //                 //save batch_id, generation, volume, recipe_id
-      //                 this.batch_id = batch.id;
-      //                 this.batch_name = batch.batch_name;
-      //                 this.generation = batch.generation;
-      //                 this.volume = batch.volume;
-      //                 this.bright = batch.bright;
-      //                 this.recipe_id = batch.recipe_id;
-      //               }
-      //             }
-      //             //check and see if we are pulling info, if we pulled nothing, its a new batch!
-      //             this.update = true;
-      //             if (this.batch_id === '') {
-      //               this.update = false;
-      //             }
-
-      //             // our max date will hold the most recent batch date
-      //             var maxDate = moment('1995-07-29');
-      //             for (let batchHistory of batchContentsResponse.body) {
-      //               // if this the batchID that we are looking for and the time is more recent
-      //               if (
-      //                 batchHistory.batch_id === this.batch_id &&
-      //                 moment(batchHistory.updated_at) > maxDate
-      //               ) {
-      //                 // set our new max date
-      //                 maxDate = moment(batchHistory.updated_at);
-      //                 this.ABV = batchHistory.ABV;
-      //                 this.pH = batchHistory.pH;
-      //                 this.temp = batchHistory.temp;
-      //                 this.pressure = batchHistory.pressure;
-      //                 this.SG = batchHistory.SG;
-      //               }
-      //             }
-      //           },
-      //           batchContentsResponse => {
-      //             this.debugging =
-      //               'Debugging Flag: Response error, cant access batches contents page';
-      //           }
-      //         );
-      //         /*****************************************/
-      //       },
-      //       batchResponse => {
-      //         this.debugging = 'Debugging Flag: Response error, cant access batches page';
-      //       }
-      //     );
-      //     /*****************************************/
-      //   },
-      //   tanksResponse => {
-      //     this.debugging = 'Debugging Flag: Response error, cant access tanks page';
-      //   }
-      // );
     },
     // tslint:disable-next-line:max-func-body-length
     async submit() {
