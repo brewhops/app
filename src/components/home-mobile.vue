@@ -14,32 +14,26 @@
 </template>
 
 <script lang="ts">
+import Vue from 'vue';
 import router from '../router/index.js';
 import Cookie from 'js-cookie';
 
-interface IHomeMobile {
-  beforeMount: any;
-  methods: any;
-}
-
-const homeMobile: IHomeMobile = {
-  beforeMount: function() {
+export default Vue.extend({
+  beforeMount() {
     // if the user is not logged in send them to the login page
-    if (!Cookie.get('loggedIn')) {
+    if (!Cookie.getJSON('loggedIn')) {
       router.push('/');
     }
   },
   methods: {
-    logout: function() {
-      if (Cookie.get('loggedIn')) {
+    logout() {
+      if (Cookie.getJSON('loggedIn')) {
         Cookie.remove('loggedIn');
       }
       router.push('/');
     }
   }
-};
-
-export default homeMobile;
+});
 </script>
 
 <style lang="stylus" scoped>
