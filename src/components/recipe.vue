@@ -46,14 +46,17 @@ export default Vue.extend({
     }
   },
   watch: {
-    async recipeID(): Promise<void> {
-      try {
-        const response = await this.$http.get(`${process.env.API}/recipes/${this.recipeID}`);
-        const { recipe_name, instructions } = response.json();
-        this.name = recipe_name;
-        this.ingredients = JSON.parse(instructions);
-      } catch (err) {
-        console.warn('Failed to get recipe', err);
+    // tslint:disable-next-line:object-literal-shorthand
+    async recipeID() {
+      if (this.recipeID) {
+        try {
+          const response = await this.$http.get(`${process.env.API}/recipes/id/${this.recipeID}`);
+          const { recipe_name, instructions } = response.data;
+          this.name = recipe_name;
+          this.ingredients = JSON.parse(instructions);
+        } catch (err) {
+          console.warn('Failed to get recipe', err);
+        }
       }
     }
   }
