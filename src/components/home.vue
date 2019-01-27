@@ -25,8 +25,8 @@ interface IHomePageState {
 export default Vue.extend({
   name: 'home',
   components: {
-    'data-entry': dataEntry,
-    'tank-monitoring': tankMonitoring
+    dataEntry,
+    tankMonitoring
   },
   data(): IHomePageState {
     return {

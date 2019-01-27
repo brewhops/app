@@ -12,7 +12,7 @@
           <select v-model="tank_id" v-on:change="tankChoose">
             <option disabled value="">Tank</option>
             <option v-for="tank in tanks" v-bind:key="tank.id" v-bind:value="tank.id">{{
-              tank.tank_id
+              tank.id
             }}</option>
           </select>
         </div>
@@ -21,7 +21,7 @@
           <select v-model="action">
             <option value="">No Action</option>
             <option
-              v-for="action_option in action_choice"
+              v-for="action_option in actions"
               v-bind:key="action_option.id"
               v-bind:value="action_option.id"
             >
@@ -99,7 +99,7 @@ import { HttpResponse } from 'vue-resource/types/vue_resource';
 
 interface IDataEntryState {
   SG?: any;
-  tank_id?: number;
+  tank_id?: string;
   tank_name?: string;
   status?: any;
   pH?: any;
@@ -128,6 +128,7 @@ export default Vue.extend({
   name: 'data-entry',
   data(): IDataEntryState {
     return {
+      tank_id: '',
       SG: '',
       status: '',
       pH: '',
@@ -162,9 +163,14 @@ export default Vue.extend({
     }
 
     try {
-      const tanks: Tank[] = await this.$http.get(`${process.env.API}/tanks`).json();
-      this.actions = await this.$http.get(`${process.env.API}/actions`);
-      this.recipes = await this.$http.get(`${process.env.API}/recipes`);
+      const tanksResponse: HttpResponse = await this.$http.get(`${process.env.API}/tanks`);
+      const actionsResponse: HttpResponse = await this.$http.get(`${process.env.API}/actions`);
+      const recipesResponse: HttpResponse = await this.$http.get(`${process.env.API}/recipes`);
+      const tanks: Tank[] = tanksResponse.data;
+      const actions: Action[] = actionsResponse.data;
+      const recipes: Recipe[] = recipesResponse.data;
+      this.actions = actions;
+      this.recipes = recipes;
 
       for (const tank of tanks) {
         if (
@@ -176,6 +182,8 @@ export default Vue.extend({
           this.tanks.push(tank);
         }
       }
+      // tslint:disable-next-line:no-console
+      console.log(this.tanks);
     } catch (err) {
       // tslint:disable-next-line:no-console
       console.error(err);
@@ -200,12 +208,11 @@ export default Vue.extend({
       this.time = moment().format('YYYY-MM-DDTHH:mm');
 
       try {
-        const tank: Tank = await this.$http
-          .get(`${process.env.API}/tanks/id/${this.tank_id}`)
-          .json();
+        const tankResponse = await this.$http.get(`${process.env.API}/tanks/id/${this.tank_id}`);
         // tslint:disable-next-line:no-any
-        const batches: any[] = this.$http.get(`${process.env.API}/batches`).json();
-        const { id, name } = tank;
+        const batchResponse = this.$http.get(`${process.env.API}/batches`);
+        const batches: any[] = batchResponse.json();
+        const { id, name } = tankResponse.json();
 
         this.tank_id = id;
         this.tank_name = name;
