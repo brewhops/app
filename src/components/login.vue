@@ -72,7 +72,7 @@ export default Vue.extend({
       } else {
         try {
           const response = await this.$http.get(`${process.env.API}/employees/admin/${username}`);
-          this.isAdmin = response.json();
+          this.isAdmin = response.data;
         } catch (err) {
           // tslint:disable-next-line:no-console
           console.error(err);
