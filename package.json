@@ -5,9 +5,9 @@
   "author": "ConnorChristensen <chriconn@oregonstate.edu>, LilyShellhammer <shellhal@oregonstate.edu>, WilliamBuffum <buffumw@oregonstate.edu>",
   "private": true,
   "scripts": {
-    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
+    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js --mode=development",
     "start": "npm run dev",
-    "prod": "webpack-dev-server --inline --progress --config build/webpack.prod.conf.js",
+    "prod": "webpack-dev-server --inline --progress --config build/webpack.prod.conf.js --mode=production",
     "bld": "webpack --config build/webpack.dev.conf.js",
     "build": "node build/build.js",
     "format": "prettier --single-quote --print-width 100 --write src/**/*.{ts,vue,js,json}",
