@@ -109,21 +109,22 @@ export default Vue.extend({
           }
         }
 
-        // keep track of most recent date with a starting low value
-        // let max = moment('1995-07-29');
+        const versionsResponse = await this.$http.get(
+          `${process.env.API}/versions/batch/${tank.batch.id}`
+        );
 
-        // // for every data point we have in a batch
-        // for (const batchHistory of batchContentsResponse.json()) {
-        //   // if the batchID of our data point matches the batchID we are looking for
-        //   if (batchHistory.batch_id === tank.batch.id) {
-        //     // if the date is the largest, it is the most recent one
-        //     if (moment(batchHistory.updated_at) > max) {
-        //       max = moment(batchHistory.updated_at);
-        //       tank.pressure = batchHistory.pressure;
-        //       tank.temperature = batchHistory.temp;
-        //     }
-        //   }
-        // }
+        // keep track of most recent date with a starting low value
+        let max = moment('1995-07-29');
+
+        // for every data point we have in a batch
+        for (const batchHistory of versionsResponse.data) {
+          // if the date is the largest, it is the most recent one
+          if (moment(batchHistory.updated_at) > max) {
+            max = moment(batchHistory.updated_at);
+            tank.pressure = batchHistory.pressure;
+            tank.temperature = batchHistory.temperature;
+          }
+        }
 
         // find task associated with tank
         for (const task of tasksResponse.data) {
@@ -148,117 +149,6 @@ export default Vue.extend({
       // tslint:disable-next-line:no-console
       console.error(err);
     }
-
-    // get our batches
-    // this.$http.get(`${process.env.API}/batches`).then(
-    //   batchResponse => {
-    //     //get the history of our batches to find most recent measurements
-    //     this.$http.get(process.env.API + '/batch_contents_versions').then(
-    //       batchContentsResponse => {
-    //         //get tanks to find status
-    //         this.$http.get(process.env.API + '/tanks').then(
-    //           tanksResponse => {
-    //             //get tanks to find tasks
-    //             this.$http.get(process.env.API + '/tasks').then(
-    //               tasksResponse => {
-    //                 //get tanks to find actions
-    //                 this.$http.get(process.env.API + '/actions').then(
-    //                   actionsResponse => {
-    //                     //get tanks to find actions
-    //                     this.$http.get(process.env.API + '/recipes').then(
-    //                       recipeResponse => {
-    //                         for (let tankInfo of tanksResponse.body) {
-    //                           // create a temporary tank for us to fill with data
-    //                           let tank: ITank = {
-    //                             // keep track of tank id for searching
-    //                             id: tankInfo.id,
-    //                             // keep track of tank name for displaying
-    //                             name: tankInfo.tank_id,
-    //                             status: tankInfo.status,
-    //                             batch: {}
-    //                           };
-
-    //                           for (let batch of batchResponse.body) {
-    //                             // if our batches tankID matches our tankID
-    //                             if (batch.tank_id === tank.id) {
-    //                               // add in our batchesID to the tank info box
-    //                               tank.batch.id = batch.id;
-    //                               tank.batch.name = batch.batch_name;
-    //                               // add the recipeID to the tank info box
-    //                               tank.recipe_id = batch.recipe_id;
-    //                             }
-    //                           }
-    //                           for (let recipeHistory of recipeResponse.body) {
-    //                             if (tank.recipe_id === recipeHistory.id)
-    //                               tank.airplane_code = recipeHistory.airplane_code;
-    //                           }
-
-    //                           //keep track of most recent date with a starting low value
-    //                           var max = moment('1995-07-29');
-
-    //                           //for every data point we have in a batch
-    //                           for (let batchHistory of batchContentsResponse.body) {
-    //                             //if the batchID of our data point matches the batchID we are looking for
-    //                             if (batchHistory.batch_id === tank.batch.id) {
-    //                               //if the date is the largest, it is the most recent one
-    //                               if (moment(batchHistory.updated_at) > max) {
-    //                                 max = moment(batchHistory.updated_at);
-    //                                 tank.pressure = batchHistory.pressure;
-    //                                 tank.temperature = batchHistory.temp;
-    //                               }
-    //                             }
-    //                           }
-
-    //                           //find task associated with tank
-    //                           for (let task of tasksResponse.body) {
-    //                             if (tank.batch.id === task.batch_id) {
-    //                               //if task has our batch id
-    //                               tank.action_id = task.action_id; //save the asscoiated action
-    //                             }
-    //                           }
-
-    //                           //find action associated with task
-    //                           for (let action of actionsResponse.body) {
-    //                             if (tank.action_id === action.id) {
-    //                               tank.action = action.name;
-    //                             }
-    //                           }
-    //                           // push data holder to the tanks array
-    //                           this.tanks.push(tank);
-    //                         }
-
-    //                         this.tanks.sort(this.sortTanks);
-    //                       },
-    //                       recipeResponse => {
-    //                         console.log('Response error, cant access recipes page', recipeResponse);
-    //                       }
-    //                     );
-    //                   },
-    //                   actionsResponse => {
-    //                     console.log('Response error, cant access actions page', actionsResponse);
-    //                   }
-    //                 );
-    //               },
-    //               tasksResponse => {
-    //                 console.log('Response error, cant access tasks page', tasksResponse);
-    //               }
-    //             );
-    //           },
-    //           tanksResponse => {
-    //             console.log('Response error, cant access tanks page', tanksResponse);
-    //           }
-    //         );
-    //         /*************************************/
-    //       },
-    //       batchContentsResponse => {
-    //         this.debugging = 'Debugging Flag: Response error, cant access batches contents page';
-    //       }
-    //     );
-    //   },
-    //   batchResponse => {
-    //     this.debugging = 'Debugging Flag: Response error, cant access batches page';
-    //   }
-    // );
   },
   methods: {
     showTankInfo(tankID) {
