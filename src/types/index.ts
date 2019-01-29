@@ -20,35 +20,35 @@ export type Recipe = {
 };
 
 export type Batch = {
-  id?: number;
+  id?: string | number;
   name: string;
   generation: number;
   volume: number;
   bright: number;
   recipe_id: number;
-  tank_id: number;
-  started_on: string;
-  completed_on: string;
+  tank_id?: string | number;
+  started_on?: string;
+  completed_on?: string;
 };
 
 export type Task = {
-    id: number;
-    added_on: string;
-    completed_on: string;
-    assigned: boolean;
+    id?: number;
+    added_on?: string;
+    completed_on?: string;
+    assigned?: boolean;
     batch_id: number;
     action_id: number;
-    employee_id: number;
+    employee_id?: number;
 };
 
 export type Version = {
-    id: number;
+    id?: number;
     sg: number;
     ph: number;
     abv: number;
     temperature: number;
     pressure: number;
-    measured_on: string;
-    completed: false;
+    measured_on?: string;
+    completed?: false;
     batch_id: number;
 };
