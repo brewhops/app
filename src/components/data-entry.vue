@@ -92,10 +92,10 @@ import Vue from 'vue';
 import router from '../router/index.js';
 import Cookie from 'js-cookie';
 import moment from 'moment';
-import { Tank, Action, Recipe } from '../types';
+import { Tank, Action, Recipe, Batch, Version, Task } from '../types';
 import { HttpResponse } from 'vue-resource/types/vue_resource';
 
-// tslint:disable:no-any
+// tslint:disable:no-any no-console
 
 interface IDataEntryState {
   SG?: any;
@@ -239,13 +239,13 @@ export default Vue.extend({
       const promiseArray: any = [];
 
       // create a new batch data element
-      const batchesData = {
+      const batch: Batch = {
         recipe_id: this.recipe_id,
         tank_id: this.tank_id,
         volume: this.volume,
         bright: this.bright,
         generation: this.generation,
-        batch_name: this.batch_name
+        name: this.batch_name
       };
 
       // We have two different paths we can take. Either the batch already
@@ -267,84 +267,78 @@ export default Vue.extend({
       if (!this.update) {
         // create a new batch element
         try {
-          const { body } = await this.$http.post(`${process.env.API}/batches`, batchesData);
+          const { body } = await this.$http.post(`${process.env.API}/batches`, batch);
         } catch (err) {
-          // tslint:disable-next-line:no-console
           console.error(err);
         }
-        this.$http
-          .post(`${process.env.API}/batches`, batchesData)
-          .then(success => {
-            // set our id to the id of the batch that we are getting back
-            id = success.body.id;
-          })
-          .then(success => {
-            // post the batch history
-            const batchHistory = new FormData();
-            batchHistory.append('batch_id', id);
-            batchHistory.append('pH', this.pH);
-            batchHistory.append('ABV', this.ABV);
-            batchHistory.append('pressure', this.pressure);
-            batchHistory.append('temp', this.temp);
-            batchHistory.append('SG', this.SG);
 
-            // create a new batch history point
-            this.$http
-              .post(`${process.env.API}/batch_contents_versions`, batchHistory)
-              .then(success => {
-                // tslint:disable-next-line:no-console
-                console.log(success);
-              })
-              .catch(error => {
-                console.warn(error);
-              });
+        try {
+          const response = this.$http.post(`${process.env.API}/batches`, batch);
+          // set our id to the id of the batch that we are getting back
+          id = response.data.id;
+        } catch (err) {
+          console.error(err);
+        }
 
-            const taskData = new FormData();
-            // if the user wants to set an action
-            if (this.action !== '') {
-              taskData.append('action_id', this.action);
-              taskData.append('batch_id', id);
-              // create our new task
-              this.$http.post(`${process.env.API}/tasks`, taskData).catch(error => {
-                console.warn(error);
-              });
-            }
-          })
-          .then(success => {
+        // create a new batch history point (version)
+        const version: Version = {
+          batch_id: id,
+          ph: this.pH,
+          abv: this.ABV,
+          pressure: this.pressure,
+          temperature: this.temp,
+          sg: this.SG
+        };
+
+        try {
+          // post the batch history (version)
+          const response = this.$http.post(`${process.env.API}/versions/`, version);
+          console.log(response.data);
+        } catch (err) {
+          console.error(err);
+        }
+
+        // if the user wants to set an action
+        if (this.action !== '') {
+          const task: Task = {
+            batch_id: id,
+            action_id: this.action
+          };
+          try {
+            // create our new task
+            this.$http.post(`${process.env.API}/tasks`, task);
             router.push({});
-          })
-          .catch(error => {
-            console.warn(error);
-          });
+          } catch (err) {
+            console.error(err);
+          }
+        }
       } else {
         // patch the contents on that batch
-        promiseArray.push(
-          this.$http.patch(`${process.env.API}/batches/${this.batch_id}`, batchesData)
-        );
+        promiseArray.push(this.$http.patch(`${process.env.API}/batches/${this.batch_id}`, batch));
         // change the id to the batchID
         id = this.batch_id;
 
         // post the batch history
-        const batchHistory = new FormData();
-        batchHistory.append('batch_id', id);
-        batchHistory.append('pH', this.pH);
-        batchHistory.append('ABV', this.ABV);
-        batchHistory.append('pressure', this.pressure);
-        batchHistory.append('temp', this.temp);
-        batchHistory.append('SG', this.SG);
+        const version: Version = {
+          batch_id: id,
+          ph: this.pH,
+          abv: this.ABV,
+          pressure: this.pressure,
+          temperature: this.temp,
+          sg: this.SG
+        };
 
         // create a new batch history point
-        promiseArray.push(
-          this.$http.post(`${process.env.API}/batch_contents_versions`, batchHistory)
-        );
+        promiseArray.push(this.$http.post(`${process.env.API}/versions`, version));
 
-        const taskData = new FormData();
         // if the user wants to set an action
         if (this.action !== '') {
-          taskData.append('action_id', this.action);
-          taskData.append('batch_id', id);
+          const task: Task = {
+            batch_id: id,
+            action_id: this.action
+          };
           // create our new task
-          promiseArray.push(this.$http.post(`${process.env.API}/tasks`, taskData));
+          promiseArray.push(this.$http.post(`${process.env.API}/tasks`, task));
         }
 
         Promise.all(promiseArray)
