@@ -12,7 +12,7 @@
           <select v-model="tank_id" v-on:change="tankChoose">
             <option disabled value="">Tank</option>
             <option v-for="tank in tanks" v-bind:key="tank.id" v-bind:value="tank.id">{{
-              tank.id
+              tank.name
             }}</option>
           </select>
         </div>
@@ -208,7 +208,7 @@ export default Vue.extend({
       try {
         const tankResponse = await this.$http.get(`${process.env.API}/tanks/id/${this.tank_id}`);
         // tslint:disable-next-line:no-any
-        const batchResponse = this.$http.get(`${process.env.API}/batches`);
+        const batchResponse = await this.$http.get(`${process.env.API}/batches`);
         const batches: any[] = batchResponse.data;
         const { id, name } = tankResponse.data;
 
@@ -219,7 +219,7 @@ export default Vue.extend({
           if (batch.tank_id === id) {
             // save batch_id, generation, volume, recipe_id
             this.batch_id = batch.id;
-            this.batch_name = batch.batch_name;
+            this.batch_name = batch.name;
             this.generation = batch.generation;
             this.volume = batch.volume;
             this.bright = batch.bright;
@@ -273,7 +273,7 @@ export default Vue.extend({
         }
 
         try {
-          const response = this.$http.post(`${process.env.API}/batches`, batch);
+          const response = await this.$http.post(`${process.env.API}/batches`, batch);
           // set our id to the id of the batch that we are getting back
           id = response.data.id;
         } catch (err) {
@@ -292,7 +292,7 @@ export default Vue.extend({
 
         try {
           // post the batch history (version)
-          const response = this.$http.post(`${process.env.API}/versions/`, version);
+          const response = await this.$http.post(`${process.env.API}/versions/`, version);
           console.log(response.data);
         } catch (err) {
           console.error(err);
@@ -306,7 +306,7 @@ export default Vue.extend({
           };
           try {
             // create our new task
-            this.$http.post(`${process.env.API}/tasks`, task);
+            await this.$http.post(`${process.env.API}/tasks`, task);
             router.push({});
           } catch (err) {
             console.error(err);
@@ -314,7 +314,9 @@ export default Vue.extend({
         }
       } else {
         // patch the contents on that batch
-        promiseArray.push(this.$http.patch(`${process.env.API}/batches/${this.batch_id}`, batch));
+        promiseArray.push(
+          await this.$http.patch(`${process.env.API}/batches/${this.batch_id}`, batch)
+        );
         // change the id to the batchID
         id = this.batch_id;
 
@@ -329,7 +331,7 @@ export default Vue.extend({
         };
 
         // create a new batch history point
-        promiseArray.push(this.$http.post(`${process.env.API}/versions`, version));
+        promiseArray.push(await this.$http.post(`${process.env.API}/versions`, version));
 
         // if the user wants to set an action
         if (this.action !== '') {
@@ -338,7 +340,7 @@ export default Vue.extend({
             action_id: this.action
           };
           // create our new task
-          promiseArray.push(this.$http.post(`${process.env.API}/tasks`, task));
+          promiseArray.push(await this.$http.post(`${process.env.API}/tasks`, task));
         }
 
         Promise.all(promiseArray)
