@@ -14,6 +14,7 @@
           <chart v-bind:date="history.date" v-bind:data="history.ph"></chart>
         </div>
       </div>
+
       <div id="tank">
         <h2>Tank {{ tankInfo.name }}</h2>
         <table>
@@ -71,9 +72,7 @@
           </tr>
         </table>
 
-        <router-link v-bind:to="doneLink"
-          ><button type="button" name="button">Add Data</button>
-        </router-link>
+        <data-entry :tank_id="tankInfo.id"></data-entry>
       </div>
       <recipe v-bind:recipeID="tankInfo.recipe_id"></recipe>
     </div>
@@ -84,6 +83,7 @@
 import Vue from 'vue';
 import recipe from './recipe.vue';
 import chart from './chart.vue';
+import dataEntry from './data-entry.vue';
 
 import router from '../router/index.js';
 import Cookie from 'js-cookie';
@@ -92,7 +92,6 @@ import moment from 'moment';
 import { Batch, Tank, Task, Action, Version } from '../types';
 
 // tslint:disable: no-any
-
 interface ITankInfoState {
   tankInfo?: any;
   doneLink?: any;
@@ -106,14 +105,15 @@ export default Vue.extend({
   name: 'tank-info',
   components: {
     recipe,
-    chart
+    chart,
+    dataEntry
   },
   data(): ITankInfoState {
     return {
       tankInfo: {
-        tank_id: '',
-        recipe_id: '',
-        batch_id: '',
+        id: Number(this.$route.params.tankID),
+        recipe_id: undefined,
+        batch_id: undefined,
         batch_name: '',
         volume: '',
         bright: '',
@@ -125,7 +125,8 @@ export default Vue.extend({
         status: '',
         time: '',
         name: '',
-        action: ''
+        action: '',
+        in_use: undefined
       },
       history: {
         date: ['Date'],
@@ -166,6 +167,7 @@ export default Vue.extend({
       );
       const { id, name, status, in_use }: Tank = response.data as Tank;
       this.tankInfo = {
+        ...this.tankInfo,
         id,
         name,
         status,
@@ -192,13 +194,13 @@ export default Vue.extend({
             recipe_id
           }: Batch = batch;
           this.tankInfo = {
+            ...this.tankInfo,
             batch_id,
             batch_name,
             bright,
             generation,
             volume,
-            recipe_id,
-            ...this.tankInfo
+            recipe_id
           };
         }
       }
@@ -270,17 +272,18 @@ export default Vue.extend({
 
 
 #content
+  margin 2vw
   display grid
   grid-template-columns auto 400px
 
   grid-template-areas "data tank" "data recipe"
-  width 100vw
+  width 92vw
 
   +less-than(tablet)
     align-items flex-start
 
   +less-than(mobile)
-    grid-template-columns 98vw
+    grid-template-columns 92vw
     grid-template-areas "tank" "recipe"
 
 #data

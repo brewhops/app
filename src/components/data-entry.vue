@@ -8,13 +8,10 @@
       <h2 v-if="!mobile">Data Entry</h2>
       <div id="formFields" class="grid">
         <div class="col-3">
-          <h4>Tank</h4>
-          <select v-model="tank_id" v-on:change="tankChoose">
-            <option disabled value="">Tank</option>
-            <option v-for="tank in tanks" v-bind:key="tank.id" v-bind:value="tank.id">{{
-              tank.name
-            }}</option>
-          </select>
+          <span>
+            <h4>Tank:</h4>
+            {{ tank.name }}
+          </span>
         </div>
         <div class="col-3">
           <h4>Action</h4>
@@ -127,7 +124,7 @@ interface IDataEntryState {
   recipes?: Recipe[];
   update?: any;
   mobile?: any;
-  tanks?: Tank[];
+  tank?: Tank;
   actions?: Action[];
   tasks?: Task[];
   sortTanks?: any;
@@ -137,9 +134,14 @@ interface IDataEntryState {
 
 export default Vue.extend({
   name: 'data-entry',
+  props: {
+    tank_id: {
+      type: Number,
+      required: true
+    }
+  },
   data(): IDataEntryState {
     return {
-      tank_id: '',
       SG: '',
       status: '',
       pH: '',
@@ -157,7 +159,12 @@ export default Vue.extend({
       recipes: [],
       update: true,
       mobile: false,
-      tanks: [],
+      tank: {
+        id: -1,
+        name: '',
+        status: '',
+        in_use: false
+      },
       actions: [],
       tasks: []
     };
@@ -175,28 +182,20 @@ export default Vue.extend({
     }
 
     try {
-      const tanksResponse: HttpResponse = await this.$http.get(`${process.env.API}/tanks`);
+      const tankResponse: HttpResponse = await this.$http.get(
+        `${process.env.API}/tanks/id/${this.tank_id}`
+      );
+      const tank: Tank = tankResponse.data;
+
       const actionsResponse: HttpResponse = await this.$http.get(`${process.env.API}/actions`);
-      const recipesResponse: HttpResponse = await this.$http.get(`${process.env.API}/recipes`);
-      const tasksResponse: HttpResponse = await this.$http.get(`${process.env.API}/tasks`);
-      const tanks: Tank[] = tanksResponse.data;
       const actions: Action[] = actionsResponse.data;
+
+      const recipesResponse: HttpResponse = await this.$http.get(`${process.env.API}/recipes`);
       const recipes: Recipe[] = recipesResponse.data;
-      const tasks: Task[] = tasksResponse.data;
+
+      this.tank = tank;
       this.actions = actions;
       this.recipes = recipes;
-      this.tasks = tasks;
-
-      for (const tank of tanks) {
-        if (
-          tank.status !== 'broken' &&
-          tank.status !== 'transferring' &&
-          tank.status !== 'completed'
-        ) {
-          if (!this.tanks) this.tanks = [];
-          this.tanks.push(tank);
-        }
-      }
     } catch (err) {
       // tslint:disable-next-line:no-console
       console.error(err);
