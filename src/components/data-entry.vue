@@ -315,7 +315,7 @@ export default Vue.extend({
       } else {
         // patch the contents on that batch
         promiseArray.push(
-          await this.$http.patch(`${process.env.API}/batches/${this.batch_id}`, batch)
+          this.$http.patch(`${process.env.API}/batches/${this.batch_id}`, batch)
         );
         // change the id to the batchID
         id = this.batch_id;
@@ -331,7 +331,9 @@ export default Vue.extend({
         };
 
         // create a new batch history point
-        promiseArray.push(await this.$http.post(`${process.env.API}/versions`, version));
+        promiseArray.push(
+          this.$http.post(`${process.env.API}/versions`, version)
+        );
 
         // if the user wants to set an action
         if (this.action !== '') {
@@ -340,7 +342,9 @@ export default Vue.extend({
             action_id: this.action
           };
           // create our new task
-          promiseArray.push(await this.$http.post(`${process.env.API}/tasks`, task));
+          promiseArray.push(
+            this.$http.post(`${process.env.API}/tasks`, task)
+          );
         }
 
         Promise.all(promiseArray)
