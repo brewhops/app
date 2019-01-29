@@ -1,12 +1,12 @@
 export type Tank = {
-  id: string;
+  id: number;
   name: string;
   status: string;
   in_use: boolean;
 };
 
 export type Action = {
-  id: string;
+  id: number;
   name: string;
   description: string;
 };
@@ -20,7 +20,7 @@ export type Recipe = {
 };
 
 export type Batch = {
-  id?: string;
+  id?: number;
   name: string;
   generation: number;
   volume: number;
@@ -29,4 +29,26 @@ export type Batch = {
   tank_id: number;
   started_on: string;
   completed_on: string;
+};
+
+export type Task = {
+    id: number;
+    added_on: string;
+    completed_on: string;
+    assigned: boolean;
+    batch_id: number;
+    action_id: number;
+    employee_id: number;
+};
+
+export type Version = {
+    id: number;
+    sg: number;
+    ph: number;
+    abv: number;
+    temperature: number;
+    pressure: number;
+    measured_on: string;
+    completed: false;
+    batch_id: number;
 };

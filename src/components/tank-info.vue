@@ -89,7 +89,7 @@ import router from '../router/index.js';
 import Cookie from 'js-cookie';
 
 import moment from 'moment';
-import { Batch } from '../types';
+import { Batch, Tank, Task, Action, Version } from '../types';
 
 // tslint:disable: no-any
 
@@ -164,7 +164,7 @@ export default Vue.extend({
       const response = await this.$http.get(
         `${process.env.API}/tanks/id/${this.$route.params.tankID}`
       );
-      const { id, name, status, in_use } = response.data;
+      const { id, name, status, in_use }: Tank = response.data as Tank;
       this.tankInfo = {
         id,
         name,
@@ -183,7 +183,14 @@ export default Vue.extend({
       // if our batch tankID is the tankID we are looking for set some data
       for (const batch of batches) {
         if (batch.tank_id === this.tankInfo.id) {
-          const { id: batch_id, name: batch_name, bright, generation, volume, recipe_id } = batch;
+          const {
+            id: batch_id,
+            name: batch_name,
+            bright,
+            generation,
+            volume,
+            recipe_id
+          }: Batch = batch;
           this.tankInfo = {
             batch_id,
             batch_name,
@@ -200,9 +207,10 @@ export default Vue.extend({
     }
 
     try {
-      const tasksResponse = await this.$http.get(`${process.env.API}/tasks`);
+      const response = await this.$http.get(`${process.env.API}/tasks`);
+      const tasks: Task[] = response.data as Task[];
       let actionID;
-      for (const task of tasksResponse.data) {
+      for (const task of tasks) {
         // if the batch is the one we are looking for
         if (task.batch_id === this.tankInfo.batch_id) {
           // set our actionID and break out of the loop
@@ -214,7 +222,8 @@ export default Vue.extend({
       if (actionID >= 0) {
         // get the action associated with that ID
         const actionResponse = await this.$http.get(`${process.env.API}/actions/id/${actionID}`);
-        this.tankInfo.action = actionResponse.data.name;
+        const { name }: Action = actionResponse.data as Action;
+        this.tankInfo.action = name;
       }
     } catch (err) {
       // tslint:disable-next-line:no-console
@@ -225,6 +234,7 @@ export default Vue.extend({
       const response = await this.$http.get(
         `${process.env.API}/versions/batch/${this.tankInfo.batch_id}`
       );
+      const versions: Version[] = response.data;
       let max = moment('1995-07-29');
       let date;
       for (const version of response.data) {
