@@ -15,7 +15,7 @@
         </div>
       </div>
       <div id="tank">
-        <h2>Tank {{ tankInfo.tank_name }}</h2>
+        <h2>Tank {{ tankInfo.name }}</h2>
         <table>
           <tr v-if="tankInfo.action !== ''" class="important">
             <td>Action</td>
