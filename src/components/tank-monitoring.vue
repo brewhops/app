@@ -88,7 +88,7 @@ export default Vue.extend({
           // keep track of tank id for searching
           id: tankInfo.id,
           // keep track of tank name for displaying
-          name: tankInfo.tank_id,
+          name: tankInfo.name,
           status: tankInfo.status,
           batch: {}
         };
