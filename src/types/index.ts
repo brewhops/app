@@ -50,5 +50,11 @@ export type Version = {
     pressure: number;
     measured_on?: string;
     completed?: false;
-    batch_id: number;
+    batch_id?: number;
+};
+
+export type BrewhopsCookie = {
+  id: string | number;
+  username: string;
+  admin: boolean;
 };
