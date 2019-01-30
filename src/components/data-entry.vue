@@ -12,7 +12,7 @@
           <select v-model="tank_id" v-on:change="tankChoose">
             <option disabled value="">Tank</option>
             <option v-for="tank in tanks" v-bind:key="tank.id" v-bind:value="tank.id">{{
-              tank.id
+              tank.name
             }}</option>
           </select>
         </div>
@@ -233,7 +233,7 @@ export default Vue.extend({
             }
             // save batch_id, generation, volume, recipe_id
             this.batch_id = batch.id;
-            this.batch_name = batch.batch_name;
+            this.batch_name = batch.name;
             this.generation = batch.generation;
             this.volume = batch.volume;
             this.bright = batch.bright;
