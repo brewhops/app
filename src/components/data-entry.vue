@@ -92,7 +92,17 @@ import Vue from 'vue';
 import router from '../router/index.js';
 import Cookie from 'js-cookie';
 import moment from 'moment';
-import { Tank, Action, Recipe, Batch, Version, Task, BrewhopsCookie } from '../types';
+import {
+  Tank,
+  Action,
+  ActionUpdate,
+  Recipe,
+  Batch,
+  Version,
+  Task,
+  BrewhopsCookie,
+  BatchUpdateOrCreate
+} from '../types';
 import { HttpResponse } from 'vue-resource/types/vue_resource';
 
 // tslint:disable:no-any no-console
@@ -112,7 +122,7 @@ interface IDataEntryState {
   batch_name?: any;
   bright?: any;
   pressure?: any;
-  action?: any;
+  action?: number;
   time?: any;
   recipes?: Recipe[];
   update?: any;
@@ -142,7 +152,6 @@ export default Vue.extend({
       batch_name: '',
       bright: '',
       pressure: '',
-      action: '',
       time: '',
       recipes: [],
       update: true,
@@ -248,40 +257,23 @@ export default Vue.extend({
     },
     // tslint:disable-next-line:max-func-body-length
     async submit() {
-      // this is where all the http requests will be monitored
-      // when they are all fufilled, then send the user over to the
-      // submission page.
-      const promiseArray: any = [];
+      const cookie: BrewhopsCookie = Cookie.getJSON('loggedIn');
 
-      // create a new batch data element
-      const batch: Batch = {
+      const requestObject: BatchUpdateOrCreate = {
         recipe_id: this.recipe_id,
         tank_id: this.tank_id,
         volume: this.volume,
         bright: this.bright,
         generation: this.generation,
-        name: this.batch_name
-      };
-
-      // create a new batch history point (version)
-      const version: Version = {
+        name: this.batch_name,
         ph: this.pH,
         abv: this.ABV,
         pressure: this.pressure,
         temperature: this.temp,
-        sg: this.SG
-      };
-
-      const cookie: BrewhopsCookie = Cookie.getJSON('loggedIn');
-
-      console.log(cookie);
-
-      const requestObject = {
-        ...batch,
-        ...version,
+        sg: this.SG,
         action: {
           id: this.action,
-          completed: this.prevActionId !== this.action,
+          completed: this.prevActionId !== this.action ? true : false,
           assigned: false,
           employee: {
             id: cookie.id
@@ -289,7 +281,7 @@ export default Vue.extend({
         }
       };
 
-      console.log(requestObject);
+      console.log(JSON.stringify(requestObject));
 
       try {
         const response = await this.$http.post(`${process.env.API}/batches`, requestObject);

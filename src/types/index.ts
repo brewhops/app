@@ -58,3 +58,16 @@ export type BrewhopsCookie = {
   username: string;
   admin: boolean;
 };
+
+export type ActionUpdate = {
+  action: {
+    id: string | number | undefined;
+    completed: boolean;
+    assigned: boolean;
+    employee: {
+      id: string | number ;
+    };
+  };
+};
+
+export type BatchUpdateOrCreate = ActionUpdate & Batch & Version;
