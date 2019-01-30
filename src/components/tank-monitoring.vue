@@ -98,7 +98,7 @@ export default Vue.extend({
           if (batch.tank_id === tank.id) {
             // add in our batchesID to the tank info box
             tank.batch.id = batch.id;
-            tank.batch.name = batch.batch_name;
+            tank.batch.name = batch.name;
             // add the recipeID to the tank info box
             tank.recipe_id = batch.recipe_id;
           }
