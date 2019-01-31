@@ -122,7 +122,7 @@ interface IDataEntryState {
   batch_name?: any;
   bright?: any;
   pressure?: any;
-  action?: number;
+  action: number | string;
   time?: any;
   recipes?: Recipe[];
   update?: any;
@@ -152,6 +152,7 @@ export default Vue.extend({
       batch_name: '',
       bright: '',
       pressure: '',
+      action: '',
       time: '',
       recipes: [],
       update: true,
