@@ -1,3 +1,7 @@
+export type Employee = {
+  username: string;
+};
+
 export type Tank = {
   id?: number | string;
   name: string;
