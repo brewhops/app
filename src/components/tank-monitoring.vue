@@ -12,14 +12,15 @@
             <tr>
               <td>{{ tank.name }}</td>
               <td v-if="tank.pressure">{{ tank.pressure }} psi</td>
+              <td v-else>{{ tank.status }}</td>
             </tr>
             <tr>
               <td>{{ tank.airplane_code }}</td>
               <td v-if="tank.temperature">{{ tank.temperature }}ºF</td>
             </tr>
             <tr>
-              <td>{{ tank.batch.name }}</td>
-              <td>{{ tank.action }}</td>
+              <td v-if="tank.batch">{{ tank.batch.name }}</td>
+              <td v-if="tank.action">{{ tank.action }}</td>
             </tr>
           </table>
         </a>
@@ -82,6 +83,7 @@ export default Vue.extend({
       const tasksResponse = await this.$http.get(`${process.env.API}/tasks`);
       const actionsResponse = await this.$http.get(`${process.env.API}/actions`);
       const recipeResponse = await this.$http.get(`${process.env.API}/recipes`);
+
       for (const tankInfo of tanksResponse.data) {
         // create a temporary tank for us to fill with data
         const tank: ITank = {
@@ -89,13 +91,13 @@ export default Vue.extend({
           id: tankInfo.id,
           // keep track of tank name for displaying
           name: tankInfo.name,
-          status: tankInfo.status,
-          batch: {}
+          status: tankInfo.status
         };
 
         for (const batch of batchResponse.data) {
           // if our batches tankID matches our tankID
           if (batch.tank_id === tank.id) {
+            tank.batch = {};
             // add in our batchesID to the tank info box
             tank.batch.id = batch.id;
             tank.batch.name = batch.name;
@@ -109,28 +111,28 @@ export default Vue.extend({
           }
         }
 
-        const versionsResponse = await this.$http.get(
-          `${process.env.API}/versions/batch/${tank.batch.id}`
-        );
+        if (tank.batch) {
+          const versionsResponse = await this.$http.get(
+            `${process.env.API}/versions/batch/${tank.batch.id}`
+          );
+          // keep track of most recent date with a starting low value
+          let max = moment('1995-07-29');
 
-        // keep track of most recent date with a starting low value
-        let max = moment('1995-07-29');
-
-        // for every data point we have in a batch
-        for (const batchHistory of versionsResponse.data) {
-          // if the date is the largest, it is the most recent one
-          if (moment(batchHistory.updated_at) > max) {
-            max = moment(batchHistory.updated_at);
-            tank.pressure = batchHistory.pressure;
-            tank.temperature = batchHistory.temperature;
+          // for every data point we have in a batch
+          for (const batchHistory of versionsResponse.data) {
+            // if the date is the largest, it is the most recent one
+            if (moment(batchHistory.updated_at) > max) {
+              max = moment(batchHistory.updated_at);
+              tank.pressure = batchHistory.pressure;
+              tank.temperature = batchHistory.temperature;
+            }
           }
-        }
-
-        // find task associated with tank
-        for (const task of tasksResponse.data) {
-          if (tank.batch.id === task.batch_id) {
-            // if task has our batch id
-            tank.action_id = task.action_id; // save the asscoiated action
+          // find task associated with tank
+          for (const task of tasksResponse.data) {
+            if (tank.batch.id === task.batch_id) {
+              // if task has our batch id
+              tank.action_id = task.action_id; // save the asscoiated action
+            }
           }
         }
 
@@ -140,6 +142,7 @@ export default Vue.extend({
             tank.action = action.name;
           }
         }
+
         // push data holder to the tanks array
         this.tanks.push(tank);
       }

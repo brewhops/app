@@ -127,7 +127,8 @@ export default Vue.extend({
           username,
           password
         });
-        this.createCookie(response.data.id, this.username, this.isAdmin);
+        const { id, token } = response.data;
+        this.createCookie(id, this.username, this.isAdmin, token);
         this.sendToHome();
       } catch (err) {
         this.feedback.password = 'Invalid Login';
@@ -152,7 +153,8 @@ export default Vue.extend({
             username,
             password
           });
-          this.createCookie(response.data.id, this.username, this.isAdmin);
+          const { id, token } = response.data;
+          this.createCookie(id, this.username, this.isAdmin, token);
           router.push('admin');
         } catch (err) {
           this.feedback.password = 'Invalid Login';
@@ -161,13 +163,14 @@ export default Vue.extend({
         this.feedback.username = 'User is not an administrator';
       }
     },
-    createCookie(id, username, admin): void {
+    createCookie(id, username, admin, token): void {
       if (!Cookie.getJSON('loggedIn')) {
         // tslint:disable-next-line:no-backbone-get-set-outside-model
         Cookie.set('loggedIn', {
           id,
           username,
-          admin
+          admin,
+          token
         });
       }
     }
