@@ -64,7 +64,7 @@ export default new Router({
     {
       component: batchHistory,
       name: 'batch-history',
-      path: '/batch-istory'
+      path: '/batch-history'
     }
   ]
 });
