@@ -42,12 +42,12 @@
           <td>{{ batch.volume }}</td>
           <td>{{ batch.bright }}</td>
           <td>{{ batch.generation }}</td>
-          <td>{{ batch.date_started }}</td>
-          <td>{{ batch.date_completed }}</td>
+          <td>{{ formatDate(batch.date_started) }}</td>
+          <td>{{ formatDate(batch.date_completed) }}</td>
         </tr>
       </table>
 
-      <a id="csvDownload">
+      <a id="csvDownload" @click="downloadCSV()">
         <button v-if="batch_id" type="button" name="button">
           Download
         </button>
@@ -115,6 +115,9 @@ export default Vue.extend({
       }
       router.push('/');
     },
+    formatDate(date: string | null) {
+      return date ? moment(date).format('MM-DD-YYYY') : '';
+    },
     async batchChoose() {
       // filter out all the batches that aren't ours, and set that one element
       // to our batch object
@@ -131,60 +134,39 @@ export default Vue.extend({
         // tslint:disable-next-line:no-console
         console.error(err);
       }
-
-      // create our header
-      const rows: string[][] = [
-        [
-          'Date',
-          'SG',
-          'pH',
-          'ABV',
-          'temp',
-          'pressure',
-          'Volume',
-          'Bright',
-          'Generation',
-          'Date Started',
-          'Date Completed'
-        ]
-      ];
-
-      // for each history element
-      for (const history of this.histories) {
-        // add in that history row
-        rows.push([
-          history.measured_on,
-          history.sg,
-          history.ph,
-          history.abv,
-          history.temperature,
-          history.pressure,
-          this.batch.volume,
-          this.batch.bright,
-          this.batch.generation,
-          this.batch.started_on,
-          this.batch.completed_on
-        ]);
-      }
-
-      // create the header for the csv that we will download
-      let csvContent = 'data:text/csv;charset=utf-8,';
-
-      // for every row, add a comma to the end and some new line chars
-      for (const row of rows) {
-        csvContent = `${csvContent},${'\r\n'}`;
-      }
-
-      // find the csvDownload link and set some info about what it links to
-      // and what the download file should be called
-      const link = document.getElementById('csvDownload');
+    },
+    downloadCSV() {
+      let link = document.getElementById('csvDownload');
       if (link) {
-        link.setAttribute('href', encodeURI(csvContent));
+        link.setAttribute('href', encodeURI(this.generateCSV()));
         link.setAttribute(
           'download',
           `batch_history_${this.batch.name}_(${moment().format('MM-DD-YYYY')}).csv`
         );
       }
+    },
+    generateCSV() {
+      const rows: string[][] = this.histories.map(history => [...history]);
+
+      // add header
+      rows.unshift([
+        'Date',
+        'SG',
+        'pH',
+        'ABV',
+        'temp',
+        'pressure',
+        'Volume',
+        'Bright',
+        'Generation',
+        'Date Started',
+        'Date Completed'
+      ]);
+
+      let csvHeader = 'data:text/csv;charset=utf-8,';
+      let csvContent = `${csvHeader}${rows.map(row => `${row.join(',')},`).join('\r\n')}`;
+
+      return csvContent;
     }
   }
 });
