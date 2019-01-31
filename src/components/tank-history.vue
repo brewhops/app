@@ -29,13 +29,13 @@
           <td>{{ history.volume }}</td>
           <td>{{ history.bright }}</td>
           <td>{{ history.generation }}</td>
-          <td>{{ history.started_on }}</td>
-          <td>{{ history.completed_on }}</td>
+          <td>{{ formatDate(history.started_on) }}</td>
+          <td>{{ formatDate(history.completed_on) }}</td>
           <td>{{ history.update_user }}</td>
         </tr>
       </table>
 
-      <a id="csvDownload">
+      <a id="csvDownload" @click="downloadCSV()">
         <button v-if="tank_id" type="button" name="button">
           Download
         </button>
@@ -99,6 +99,9 @@ export default Vue.extend({
       }
       router.push('/');
     },
+    formatDate(date: string | null) {
+      return date ? moment(date).format('MM-DD-YYYY') : '';
+    },
     async tankChoose() {
       // filter out all the tanks that aren't ours, and set that one element
       // to our tank object
@@ -107,7 +110,7 @@ export default Vue.extend({
       // when the user chooses a batch, get the info on that batch
       try {
         const tankResponse = await this.$http.get(
-          `${process.env.API}/batches/inTank/${this.tank_id}`
+          `${process.env.API}/batches/tank/${this.tank_id}`
         );
 
         this.histories = tankResponse.data;
@@ -115,53 +118,35 @@ export default Vue.extend({
         // tslint:disable-next-line:no-console
         console.error(err);
       }
-
-      // create our header
-      const rows: string[][] = [
-        ['Name', 'Volume', 'Bright', 'Generation', 'Start Date', 'End Date', 'Updater']
-      ];
-
-      // for each history element
-      for (const history of this.histories) {
-        // add in that history row
-        rows.push([
-          history.name,
-          history.volume,
-          history.bright,
-          history.generation,
-          // formated date in CSV or not?
-          // moment(history.started_on).format('MM-DD-YYYY'),
-          // moment(history.completed_on).format('MM-DD-YYYY'),
-          history.started_on,
-          history.completed_on,
-          history.update_user
-        ]);
-      }
-
-      this.histories = this.histories.map(element => ({
-        ...element,
-        started_on: moment(element.started_on).format('MM-DD-YYYY'),
-        completed_on: element.completed_on ? moment(element.completed_on).format('MM-DD-YYYY') : ' '
-      }));
-
-      // create the header for the csv that we will download
-      let csvContent = 'data:text/csv;charset=utf-8,';
-
-      // for every row, add a comma to the end and some new line chars
-      for (const row of rows) {
-        csvContent = `${csvContent}${row}${'\r\n'}`;
-      }
-
-      // find the csvDownload link and set some info about what it links to
-      // and what the download file should be called
-      const link = document.getElementById('csvDownload');
+    },
+    downloadCSV() {
+      let link = document.getElementById('csvDownload');
       if (link) {
-        link.setAttribute('href', encodeURI(csvContent));
+        link.setAttribute('href', encodeURI(this.generateCSV()));
         link.setAttribute(
           'download',
           `tank_history_${this.tank.name}_(${moment().format('MM-DD-YYYY')}).csv`
         );
       }
+    },
+    generateCSV() {
+      const rows: string[][] = this.histories.map(history => [
+        history.name,
+        history.volume,
+        history.bright,
+        history.generation,
+        history.started_on,
+        history.completed_on,
+        history.update_user
+      ]);
+
+      // add header
+      rows.unshift(['Name', 'Volume', 'Bright', 'Generation', 'Start Date', 'End Date', 'Updater']);
+
+      let csvHeader = 'data:text/csv;charset=utf-8,';
+      let csvContent = `${csvHeader}${rows.map(row => `${row.join(',')},`).join('\r\n')}`;
+
+      return csvContent;
     }
   }
 });
@@ -181,6 +166,7 @@ export default Vue.extend({
 
   table {
     border-collapse: collapse;
+    border: 1px solid black;
     tr {
       td, th {
         padding: 10px;
