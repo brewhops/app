@@ -10,6 +10,7 @@ import dataEntry from '@/components/data-entry';
 import dataSubmission from '@/components/data-submission';
 import recipe from '@/components/recipe';
 import history from '@/components/history';
+import tankHistory from '@/components/tank-history';
 
 Vue.use(Router);
 
@@ -65,6 +66,11 @@ export default new Router({
       component: history,
       name: 'batch-history',
       path: '/history'
+    },
+    {
+      component: tankHistory,
+      name: 'tank-history',
+      path: '/tank-history'
     }
   ]
 });
