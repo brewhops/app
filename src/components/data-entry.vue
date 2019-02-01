@@ -6,10 +6,14 @@
     </div>
     <div id="dataEntry">
       <h2 v-if="!mobile">Data Entry</h2>
+      <span id="batchName">
+        <h4>Batch:</h4>
+        {{ batch_name }}
+      </span>
       <div id="formFields" class="grid">
         <div class="col-3">
           <span>
-            <h4>Tank:</h4>
+            <h4>Tank</h4>
             {{ tank.name }}
           </span>
         </div>
@@ -28,12 +32,7 @@
         </div>
         <div class="col-3">
           <h4>Recipe</h4>
-          <select v-model="recipe_id" required>
-            <option disabled value="">Recipe</option>
-            <option v-for="recipe in recipes" v-bind:key="recipe.id" v-bind:value="recipe.id">{{
-              recipe.airplane_code
-            }}</option>
-          </select>
+          {{ recipe_name }}
         </div>
         <div class="col-3 inputGroup">
           <input v-model="pH" type="number" step="0.01" required />
@@ -71,15 +70,8 @@
           <input v-model="time" type="datetime-local" />
           <label>Time Measured</label>
         </div>
-        <div class="col-1 inputGroup">
-          <input v-model="batch_name" required />
-          <label>Batch Name</label>
-        </div>
       </div>
       <button v-on:click="submit">Submit</button>
-      <router-link to="/history" v-if="!mobile">
-        <button type="button" name="button">Batch Histories</button>
-      </router-link>
     </div>
   </div>
 </template>
@@ -114,6 +106,7 @@ interface IDataEntryState {
   temp?: any;
   volume?: any;
   generation?: any;
+  recipe_name?: any;
   recipe_id?: any;
   batch_id?: any;
   batch_name?: any;
@@ -121,7 +114,7 @@ interface IDataEntryState {
   pressure?: any;
   action: number | string;
   time?: any;
-  recipes?: Recipe[];
+  recipe?: Recipe;
   update?: any;
   mobile?: any;
   tank?: Tank;
@@ -151,12 +144,12 @@ export default Vue.extend({
       generation: '',
       recipe_id: '',
       batch_id: '',
+      recipe_name: '',
       batch_name: '',
       bright: '',
       pressure: '',
       action: '',
       time: '',
-      recipes: [],
       update: true,
       mobile: false,
       tank: {
@@ -190,12 +183,10 @@ export default Vue.extend({
       const actionsResponse: HttpResponse = await this.$http.get(`${process.env.API}/actions`);
       const actions: Action[] = actionsResponse.data;
 
-      const recipesResponse: HttpResponse = await this.$http.get(`${process.env.API}/recipes`);
-      const recipes: Recipe[] = recipesResponse.data;
-
       this.tank = tank;
       this.actions = actions;
-      this.recipes = recipes;
+
+      this.tankChoose();
     } catch (err) {
       // tslint:disable-next-line:no-console
       console.error(err);
@@ -226,7 +217,6 @@ export default Vue.extend({
         const batches: any[] = batchResponse.data;
         const { id, name } = tankResponse.data;
 
-        this.tank_id = id;
         this.tank_name = name;
 
         for (const batch of batches) {
@@ -248,6 +238,15 @@ export default Vue.extend({
             this.bright = batch.bright;
             this.recipe_id = batch.recipe_id;
             this.prevActionId = actionID;
+
+            // Get the recipe name
+            const recipeResponse: HttpResponse = await this.$http.get(
+              `${process.env.API}/recipes/id/${this.recipe_id}`
+            );
+            const recipe: Recipe = recipeResponse.data;
+            this.recipe_name = recipe.name;
+
+            break;
           }
         }
       } catch (err) {
@@ -298,6 +297,9 @@ export default Vue.extend({
 
 <style lang="stylus" scoped>
 @import '../styles/breakpoints'
+
+#batchName
+  text-align center
 
 #dataEntry
   padding 15px
