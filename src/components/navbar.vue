@@ -53,14 +53,14 @@ export default Vue.extend({
       if (!Cookie.getJSON('loggedIn')) {
         router.push('/');
       } else {
-        router.push('/history');
+        router.push('/batch-history');
       }
     },
     tankHistory() {
       if (!Cookie.getJSON('loggedIn')) {
         router.push('/');
       } else {
-        router.push('/tank-info');
+        router.push('/tank-history');
       }
     },
     adminPage() {
@@ -77,6 +77,8 @@ export default Vue.extend({
 <style global>
 .navbar {
   display: flex;
+  position: sticky;
+  top: 0;
   background-color: #00aaa6;
   justify-content: center;
 }

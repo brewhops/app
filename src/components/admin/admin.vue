@@ -4,6 +4,7 @@
       <a v-on:click="logout">Logout</a>
       <h2>Ninkasi Admin</h2>
     </div>
+    <navbar v-bind:activeState="[false, false, false, true]" />
     <div id="content">
       <create-tank
         :tanks="this.tanks"
@@ -25,6 +26,7 @@
 import Vue from 'vue';
 import Cookie from 'js-cookie';
 import router from '../../router/index.js';
+import Navbar from '../navbar.vue';
 import CreateTank from './create-tank.vue';
 import UpdateTank from './update-tank.vue';
 import CreateUser from './create-user.vue';
@@ -42,6 +44,7 @@ interface IAdminState {
 export default Vue.extend({
   name: 'admin',
   components: {
+    navbar: Navbar,
     'create-tank': CreateTank,
     'update-tank': UpdateTank,
     'create-user': CreateUser,

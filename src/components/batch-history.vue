@@ -1,7 +1,7 @@
 <template lang="html">
   <div>
     <div class="header" v-if="!mobile">
-      <a v-on:click="home">home</a>
+      <router-link to="login">Logout</router-link>
       <h2>Batch History</h2>
     </div>
     <navbar v-bind:activeState="[false, true, false, false]" />
