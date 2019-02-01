@@ -95,11 +95,12 @@ export default Vue.extend({
       try {
         const response = await this.$http.post(`${process.env.API}/recipes`, recipe, { headers });
         if (response.ok) {
-          this.feedback.server.brand = 'Created a new brand';
+          this.feedback.server.brand = 'Created a new brand.';
+          setTimeout(async () => (this.feedback.server.brand = ``), 5000);
         }
       } catch (err) {
-        // tslint:disable-next-line:no-console
         console.error(err);
+        this.feedback.server.brand = 'Failed to create new brand.';
       }
     }
   }

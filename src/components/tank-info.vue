@@ -1,9 +1,10 @@
 <template>
   <div>
     <div class="header">
-      <router-link v-bind:to="home">home</router-link>
+      <router-link to="login">Logout</router-link>
       <h2>Tank Data</h2>
     </div>
+    <navbar v-bind:activeState="[false, false, false, false]" />
     <div id="content">
       <div id="data">
         <h2>Brand History</h2>
@@ -84,6 +85,7 @@
 import Vue from 'vue';
 import recipe from './recipe.vue';
 import chart from './chart.vue';
+import navbar from './navbar.vue';
 
 import router from '../router/index.js';
 import Cookie from 'js-cookie';
@@ -105,6 +107,7 @@ interface ITankInfoState {
 export default Vue.extend({
   name: 'tank-info',
   components: {
+    navbar,
     recipe,
     chart
   },

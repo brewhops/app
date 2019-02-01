@@ -1,9 +1,10 @@
 <template lang="html">
   <div>
     <div class="header" v-if="!mobile">
-      <a v-on:click="home">home</a>
+      <router-link to="login">Logout</router-link>
       <h2>Batch History</h2>
     </div>
+    <navbar v-bind:activeState="[false, true, false, false]" />
     <div id="content">
       <div>
         <h2>Batch</h2>
@@ -58,6 +59,7 @@ import Cookie from 'js-cookie';
 import moment from 'moment';
 import { Batch } from '../types';
 import { version } from 'punycode';
+import NavbarComponent from './navbar.vue';
 
 // tslint:disable: no-any
 
@@ -73,6 +75,7 @@ interface IHistoryState {
 
 export default Vue.extend({
   name: 'batch-history',
+  components: { navbar: NavbarComponent },
   data(): IHistoryState {
     return {
       batch_titles: ['Volume', 'Bright', 'Generation', 'Date Started', 'Date Completed'],

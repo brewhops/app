@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="header" v-if="mobile">
-      <router-link to="/home-mobile">Home</router-link>
+      <router-link v-bind:to="login">Logout</router-link>
       <h2>Tank Monitoring</h2>
     </div>
     <div id="tankInfo">
@@ -34,6 +34,7 @@ import Vue from 'vue';
 import router from '../router/index.js';
 import Cookie from 'js-cookie';
 import moment from 'moment';
+import { Tank } from '../types/index.js';
 
 // tslint:disable: max-func-body-length no-any
 
@@ -159,8 +160,8 @@ export default Vue.extend({
       // to be the tankID that we clicked on.
       router.push({ name: 'tank-info', params: { tankID } });
     },
-    sortTanks(a, b) {
-      return a.tank_id - b.tank_id;
+    sortTanks(a: Tank, b: Tank) {
+      return <number>a.id - <number>b.id;
     }
   }
 });
