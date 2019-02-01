@@ -5,8 +5,16 @@
       <h2>Ninkasi Admin</h2>
     </div>
     <div id="content">
-      <create-tank :tanks="this.tanks" :statuses="this.tankStatuses"></create-tank>
-      <update-tank :tanks="this.tanks" :statuses="this.tankStatuses"></update-tank>
+      <create-tank
+        :tanks="this.tanks"
+        :statuses="this.tankStatuses"
+        @update="this.tankUpdate"
+      ></create-tank>
+      <update-tank
+        :tanks="this.tanks"
+        :statuses="this.tankStatuses"
+        @update="this.tankUpdate"
+      ></update-tank>
       <create-user :employees="this.employees"></create-user>
       <create-brand></create-brand>
     </div>
@@ -78,6 +86,14 @@ export default Vue.extend({
         Cookie.remove('loggedIn');
       }
       router.push('/');
+    },
+    async tankUpdate() {
+      try {
+        const response = await this.$http.get(`${process.env.API}/tanks`);
+        this.tanks = response.data as Tank[];
+      } catch (err) {
+        console.error(err);
+      }
     }
   }
 });

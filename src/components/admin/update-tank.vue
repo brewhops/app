@@ -11,6 +11,9 @@
       <option v-for="status in statuses" v-bind:key="status" :value="status">{{ status }}</option>
     </select>
 
+    <div>
+      <p>{{ feedback.server.tank }}</p>
+    </div>
     <button v-on:click="tank_update">Submit</button>
   </div>
 </template>
@@ -19,10 +22,16 @@
 import Vue from 'vue';
 import Cookie from 'js-cookie';
 import { Tank, BrewhopsCookie } from '../../types';
+import { emit } from 'cluster';
 
 interface IUpdateTankState {
   tank_name: string;
   status: string;
+  feedback: {
+    server: {
+      tank: string;
+    };
+  };
 }
 
 // tslint:disable: no-console
@@ -33,7 +42,12 @@ export default Vue.extend({
   data(): IUpdateTankState {
     return {
       tank_name: '',
-      status: ''
+      status: '',
+      feedback: {
+        server: {
+          tank: ''
+        }
+      }
     };
   },
   methods: {
@@ -52,9 +66,17 @@ export default Vue.extend({
         };
 
         try {
-          await this.$http.patch(`${process.env.API}/tanks/id/${id}`, tank, { headers });
+          const response = await this.$http.patch(`${process.env.API}/tanks/id/${id}`, tank, {
+            headers
+          });
+          if (response.ok) {
+            this.feedback.server.tank = `Tank ${this.tank_name} succesfully updated.`;
+            setTimeout(async () => (this.feedback.server.tank = ``), 5000);
+          }
+          this.$emit('update');
         } catch (err) {
           console.error(err);
+          this.feedback.server.tank = `Failed to update ${this.tank_name}.`;
         }
       }
     }
