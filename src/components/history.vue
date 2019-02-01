@@ -4,6 +4,7 @@
       <a v-on:click="home">home</a>
       <h2>Batch History</h2>
     </div>
+    <navbar v-bind:activeState="[false, true, false, false]" />
     <div id="content">
       <div>
         <h2>Batch</h2>
@@ -62,6 +63,7 @@ import router from '../router/index.js';
 import Cookie from 'js-cookie';
 import moment from 'moment';
 import { Batch } from '../types';
+import NavbarComponent from './navbar.vue';
 
 // tslint:disable: no-any
 
@@ -75,6 +77,7 @@ interface IHistoryState {
 
 export default Vue.extend({
   name: 'batch-history',
+  components: { navbar: NavbarComponent },
   data(): IHistoryState {
     return {
       mobile: false,

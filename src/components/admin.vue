@@ -4,6 +4,7 @@
       <a v-on:click="logout">Logout</a>
       <h2>Ninkasi Admin</h2>
     </div>
+    <navbar v-bind:activeState="[false, false, false, true]" />
     <div id="content">
       <div class="element">
         <h2>Create New Tank</h2>
@@ -91,6 +92,7 @@ import router from '../router/index.js';
 import CryptoJS from 'crypto-js';
 import Cookie from 'js-cookie';
 import { Tank } from '../types';
+import NavbarComponent from './navbar.vue';
 
 interface IAdminState {
   // tslint:disable-next-line:no-any
@@ -138,6 +140,7 @@ interface IAdminState {
 
 export default Vue.extend({
   name: 'admin',
+  components: { navbar: NavbarComponent },
   data(): IAdminState {
     return {
       employees: [],
