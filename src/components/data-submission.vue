@@ -8,7 +8,7 @@
       <div>
         <h2>Data Submitted</h2>
         <table>
-          <tr v-for="(value, key) in lastSubmission">
+          <tr v-for="(value, key) in lastSubmission" v-bind:key="key">
             <td>{{ key }}</td>
             <td>{{ value }}</td>
           </tr>
@@ -23,29 +23,25 @@
 </template>
 
 <script lang="ts">
+import Vue from 'vue';
 import router from '../router/index.js';
 import Cookie from 'js-cookie';
 
-interface IDataSubmission {
-  name: any;
-  data: any;
-  beforeMount: any;
-  mounted: any;
-  doneLink?: any;
-  lastSubmission?: any;
-  $route?: any;
+// tslint:disable: no-any
+interface IDataSubmissionState {
+  doneLink: string;
+  lastSubmission: any;
 }
-
-const dataSubmission: IDataSubmission = {
+export default Vue.extend({
   name: 'data-submission',
-  data() {
+  data(): IDataSubmissionState {
     return {
       doneLink: '',
       lastSubmission: {}
     };
   },
   beforeMount() {
-    if (!Cookie.get('loggedIn')) {
+    if (!Cookie.getJSON('loggedIn')) {
       router.push('/');
     }
 
@@ -62,9 +58,7 @@ const dataSubmission: IDataSubmission = {
   mounted() {
     this.lastSubmission = this.$route.params.data;
   }
-};
-
-export default dataSubmission;
+});
 </script>
 
 <style lang="stylus" scoped>

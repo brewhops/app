@@ -2,7 +2,7 @@
   <div id="recipe">
     <h2>{{ name }}</h2>
     <table>
-      <tr v-for="(ratio, ingredient) in ingredients">
+      <tr v-for="(ratio, ingredient) in ingredients" v-bind:key="ingredient">
         <td>{{ ingredient }}</td>
         <td>{{ ratio }}</td>
       </tr>
@@ -11,32 +11,29 @@
 </template>
 
 <script lang="ts">
+import Vue from 'vue';
 import router from '../router/index.js';
 import Cookie from 'js-cookie';
 
-interface IRecipe {
-  name: any;
-  props: any;
-  data: any;
-  beforeMount: any;
-  watch: any;
-  mobile?: any;
-  ingredients?: any;
+interface IRecipeState {
+  name: string;
+  mobile: boolean;
+  ingredients: object;
 }
 
-const recipe: IRecipe = {
+export default Vue.extend({
   name: 'recipe',
   props: ['recipeID'],
-  data() {
+  data(): IRecipeState {
     return {
       mobile: false,
       name: '',
       ingredients: {}
     };
   },
-  beforeMount() {
+  beforeMount(): void {
     // if the user is not logged in send them to the login page
-    if (!Cookie.get('loggedIn')) {
+    if (!Cookie.getJSON('loggedIn')) {
       router.push('/');
     }
 
@@ -49,21 +46,21 @@ const recipe: IRecipe = {
     }
   },
   watch: {
-    recipeID() {
-      this.$http.get(process.env.API + '/recipes/' + this.recipeID).then(
-        recipeResponse => {
-          const recipe = recipeResponse.body;
-          this.name = recipe.recipe_name;
-          this.ingredients = JSON.parse(recipe.instructions);
-        },
-        error => {
-          console.warn('Failed to get recipe', error);
+    // tslint:disable-next-line:object-literal-shorthand
+    async recipeID() {
+      if (this.recipeID) {
+        try {
+          const response = await this.$http.get(`${process.env.API}/recipes/id/${this.recipeID}`);
+          const { recipe_name, instructions } = response.data;
+          this.name = recipe_name;
+          this.ingredients = JSON.parse(instructions);
+        } catch (err) {
+          console.warn('Failed to get recipe', err);
         }
-      );
+      }
     }
   }
-};
-export default recipe;
+});
 </script>
 
 <style lang="stylus" scoped>

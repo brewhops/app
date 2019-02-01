@@ -12,7 +12,7 @@
           <select v-model="tank_id" v-on:change="tankChoose">
             <option disabled value="">Tank</option>
             <option v-for="tank in tanks" v-bind:key="tank.id" v-bind:value="tank.id">{{
-              tank.tank_id
+              tank.name
             }}</option>
           </select>
         </div>
@@ -21,7 +21,7 @@
           <select v-model="action">
             <option value="">No Action</option>
             <option
-              v-for="action_option in action_choice"
+              v-for="action_option in actions"
               v-bind:key="action_option.id"
               v-bind:value="action_option.id"
             >
@@ -88,18 +88,29 @@
 </template>
 
 <script lang="ts">
+import Vue from 'vue';
 import router from '../router/index.js';
 import Cookie from 'js-cookie';
 import moment from 'moment';
+import {
+  Tank,
+  Action,
+  ActionUpdate,
+  Recipe,
+  Batch,
+  Version,
+  Task,
+  BrewhopsCookie,
+  BatchUpdateOrCreate
+} from '../types';
+import { HttpResponse } from 'vue-resource/types/vue_resource';
 
-interface IDataEntry {
-  name: any;
-  data: any;
-  beforeMount: any;
-  methods: any;
+// tslint:disable:no-any no-console
 
+interface IDataEntryState {
   SG?: any;
-  tank_id?: any;
+  tank_id?: string;
+  tank_name?: string;
   status?: any;
   pH?: any;
   ABV?: any;
@@ -111,24 +122,25 @@ interface IDataEntry {
   batch_name?: any;
   bright?: any;
   pressure?: any;
-  action?: any;
+  action: number | string;
   time?: any;
-  recipes?: any;
+  recipes?: Recipe[];
   update?: any;
   mobile?: any;
-  tanks?: any;
-  action_choice?: any;
-  $http?: any;
+  tanks?: Tank[];
+  actions?: Action[];
+  tasks?: Task[];
   sortTanks?: any;
   debugging?: any;
+  prevActionId?: number;
 }
 
-const dataEntry: IDataEntry = {
+export default Vue.extend({
   name: 'data-entry',
-  data() {
+  data(): IDataEntryState {
     return {
-      SG: '',
       tank_id: '',
+      SG: '',
       status: '',
       pH: '',
       ABV: '',
@@ -142,15 +154,16 @@ const dataEntry: IDataEntry = {
       pressure: '',
       action: '',
       time: '',
-      recipes: {},
+      recipes: [],
       update: true,
       mobile: false,
-      tanks: [], //to save info from all tank info pulled from db
-      action_choice: [] //save all info on all possible actions
+      tanks: [],
+      actions: [],
+      tasks: []
     };
   },
-  beforeMount() {
-    if (!Cookie.get('loggedIn')) {
+  async beforeMount() {
+    if (!Cookie.getJSON('loggedIn')) {
       router.push('/');
     }
     if (
@@ -161,44 +174,37 @@ const dataEntry: IDataEntry = {
       this.mobile = true;
     }
 
-    this.$http.get(process.env.API + '/tanks').then(
-      response => {
-        // get available tanks
-        for (let tank of response.body) {
-          // if the tank is not broken, transferring or completed, add the tank
-          if (
-            tank.status != 'broken' &&
-            tank.status != 'transferring' &&
-            tank.status != 'completed'
-          ) {
-            this.tanks.push(tank);
-          }
+    try {
+      const tanksResponse: HttpResponse = await this.$http.get(`${process.env.API}/tanks`);
+      const actionsResponse: HttpResponse = await this.$http.get(`${process.env.API}/actions`);
+      const recipesResponse: HttpResponse = await this.$http.get(`${process.env.API}/recipes`);
+      const tasksResponse: HttpResponse = await this.$http.get(`${process.env.API}/tasks`);
+      const tanks: Tank[] = tanksResponse.data;
+      const actions: Action[] = actionsResponse.data;
+      const recipes: Recipe[] = recipesResponse.data;
+      const tasks: Task[] = tasksResponse.data;
+      this.actions = actions;
+      this.recipes = recipes;
+      this.tasks = tasks;
+
+      for (const tank of tanks) {
+        if (
+          tank.status !== 'broken' &&
+          tank.status !== 'transferring' &&
+          tank.status !== 'completed'
+        ) {
+          if (!this.tanks) this.tanks = [];
+          this.tanks.push(tank);
         }
-        // sort our tanks by the tankID
-        this.tanks.sort(this.sortTanks);
-      },
-      response => {
-        console.warn('Error with the tanks route', response);
       }
-    );
-
-    this.$http.get(process.env.API + '/actions').then(
-      response => {
-        // get all our actions so we can put it in a dropdown selection
-        this.action_choice = response.body;
-      },
-      response => {
-        this.debugging = 'Debugging Flag: Response error, cant access employees page';
-        console.warn('Error with the actions route', response);
-      }
-    );
-
-    this.$http.get(process.env.API + '/recipes').then(response => {
-      this.recipes = response.body;
-    });
+    } catch (err) {
+      // tslint:disable-next-line:no-console
+      console.error(err);
+    }
   },
   methods: {
-    tankChoose: function() {
+    // tslint:disable-next-line:max-func-body-length
+    async tankChoose() {
       // clear all our values each time we choose a new tank
       this.batch_id = '';
       this.batch_name = '';
@@ -214,228 +220,81 @@ const dataEntry: IDataEntry = {
       // set the time with the required dateime format eg "2018-05-10T15:08"
       this.time = moment().format('YYYY-MM-DDTHH:mm');
 
-      //create url to get tank:
-      const tankUrl = process.env.API + '/tanks/' + this.tank_id;
-      this.$http.get(tankUrl).then(
-        tanksResponse => {
-          this.tank_id = tanksResponse.body.id; //get tank database id
-          this.tank_name = tanksResponse.body.tank_id; //get tank given name
-          /********** query batches ********************/
-          this.$http.get(process.env.API + '/batches').then(
-            batchResponse => {
-              /********** query batch_contents_versions ********************/
-              this.$http.get(process.env.API + '/batch_contents_versions').then(
-                batchContentsResponse => {
-                  // Iterate through batches information
-                  for (let batch of batchResponse.body) {
-                    //if our batch is in the specified tank
-                    if (batch.tank_id === this.tank_id) {
-                      //save batch_id, generation, volume, recipe_id
-                      this.batch_id = batch.id;
-                      this.batch_name = batch.batch_name;
-                      this.generation = batch.generation;
-                      this.volume = batch.volume;
-                      this.bright = batch.bright;
-                      this.recipe_id = batch.recipe_id;
-                    }
-                  }
-                  //check and see if we are pulling info, if we pulled nothing, its a new batch!
-                  this.update = true;
-                  if (this.batch_id === '') {
-                    this.update = false;
-                  }
+      try {
+        const tankResponse = await this.$http.get(`${process.env.API}/tanks/id/${this.tank_id}`);
+        // tslint:disable-next-line:no-any
+        const batchResponse = await this.$http.get(`${process.env.API}/batches`);
+        const batches: any[] = batchResponse.data;
+        const { id, name } = tankResponse.data;
 
-                  // our max date will hold the most recent batch date
-                  var maxDate = moment('1995-07-29');
-                  for (let batchHistory of batchContentsResponse.body) {
-                    // if this the batchID that we are looking for and the time is more recent
-                    if (
-                      batchHistory.batch_id === this.batch_id &&
-                      moment(batchHistory.updated_at) > maxDate
-                    ) {
-                      // set our new max date
-                      maxDate = moment(batchHistory.updated_at);
-                      this.ABV = batchHistory.ABV;
-                      this.pH = batchHistory.pH;
-                      this.temp = batchHistory.temp;
-                      this.pressure = batchHistory.pressure;
-                      this.SG = batchHistory.SG;
-                    }
-                  }
-                },
-                batchContentsResponse => {
-                  this.debugging =
-                    'Debugging Flag: Response error, cant access batches contents page';
+        this.tank_id = id;
+        this.tank_name = name;
+
+        for (const batch of batches) {
+          if (batch.tank_id === id) {
+            let actionID;
+            // find the current action id
+            if (this.tasks) {
+              this.tasks.forEach((task: Task) => {
+                if (task.batch_id === batch.id) {
+                  actionID = task.action_id;
                 }
-              );
-              /*****************************************/
-            },
-            batchResponse => {
-              this.debugging = 'Debugging Flag: Response error, cant access batches page';
-            }
-          );
-          /*****************************************/
-        },
-        tanksResponse => {
-          this.debugging = 'Debugging Flag: Response error, cant access tanks page';
-        }
-      );
-    },
-    submit: function() {
-      // this is where all the http requests will be monitored
-      // when they are all fufilled, then send the user over to the
-      // submision page.
-      let promiseArray: any = [];
-
-      // create a new batch data element
-      var batchesData = new FormData();
-
-      batchesData.append('recipe_id', this.recipe_id);
-      batchesData.append('tank_id', this.tank_id);
-      batchesData.append('volume', this.volume);
-      batchesData.append('bright', this.bright);
-      batchesData.append('generation', this.generation);
-      batchesData.append('batch_name', this.batch_name);
-
-      // We have two different paths we can take. Either the batch already
-      // exists and we are just adding a new data point in the history,
-      // or we are creating a new batch and all it's associated information
-
-      // if we are updating, we don't need to know any information about each
-      // process unless it failed. So we can put this all in a promise array
-      // and fufil them one by one.
-
-      // if we are making new stuff, we need to get information back from the
-      // data base before we continue. As such, it is best that we do a promise
-      // chain where we can pass information from the response of one event
-      // into the next event.
-
-      let id;
-
-      // if we are going to make a new batch element
-      if (!this.update) {
-        // create a new batch element
-        this.$http
-          .post(process.env.API + '/batches', batchesData)
-          .then(success => {
-            // set our id to the id of the batch that we are getting back
-            id = success.body.id;
-          })
-          .then(success => {
-            // post the batch history
-            let batchHistory = new FormData();
-            batchHistory.append('batch_id', id);
-            batchHistory.append('pH', this.pH);
-            batchHistory.append('ABV', this.ABV);
-            batchHistory.append('pressure', this.pressure);
-            batchHistory.append('temp', this.temp);
-            batchHistory.append('SG', this.SG);
-
-            // create a new batch history point
-            this.$http
-              .post(process.env.API + '/batch_contents_versions', batchHistory)
-              .then(success => {})
-              .catch(error => {
-                console.warn(error);
-              });
-
-            let taskData = new FormData();
-            // if the user wants to set an action
-            if (this.action !== '') {
-              taskData.append('action_id', this.action);
-              taskData.append('batch_id', id);
-              // create our new task
-              this.$http.post(process.env.API + '/tasks', taskData).catch(error => {
-                console.warn(error);
               });
             }
-          })
-          .then(success => {
-            router.push(
-              /*{ name: 'data-submission', params: {
-              data: {
-                batch_id: id,
-                ph: this.pH,
-                abv: this.ABV,
-                pressure: this.pressure,
-                temp: this.temp,
-                sg: this.SG,
-                recipe_id: this.recipe_id,
-                tank_id: this.tank_id,
-                volume: this.volume,
-                bright: this.bright,
-                generation: this.generation,
-              }
-            } */
-              {}
-            );
-          })
-          .catch(error => {
-            console.warn(error);
-          });
-      } else {
-        // get our batch url
-        var url = process.env.API + '/batches/' + this.batch_id;
-        // patch the contents on that batch
-        promiseArray.push(this.$http.patch(url, batchesData));
-        // change the id to the batchID
-        id = this.batch_id;
-
-        // post the batch history
-        var batchHistory = new FormData();
-        batchHistory.append('batch_id', id);
-        batchHistory.append('pH', this.pH);
-        batchHistory.append('ABV', this.ABV);
-        batchHistory.append('pressure', this.pressure);
-        batchHistory.append('temp', this.temp);
-        batchHistory.append('SG', this.SG);
-
-        // create a new batch history point
-        promiseArray.push(
-          this.$http.post(process.env.API + '/batch_contents_versions', batchHistory)
-        );
-
-        let taskData = new FormData();
-        // if the user wants to set an action
-        if (this.action !== '') {
-          taskData.append('action_id', this.action);
-          taskData.append('batch_id', id);
-          // create our new task
-          promiseArray.push(this.$http.post(process.env.API + '/tasks', taskData));
+            // save batch_id, generation, volume, recipe_id
+            this.batch_id = batch.id;
+            this.batch_name = batch.name;
+            this.generation = batch.generation;
+            this.volume = batch.volume;
+            this.bright = batch.bright;
+            this.recipe_id = batch.recipe_id;
+            this.prevActionId = actionID;
+          }
         }
-
-        Promise.all(promiseArray)
-          .then(success => {
-            router.push(
-              /*{ name: 'data-submission', params: {
-              data: {
-                batch_id: id,
-                ph: this.pH,
-                abv: this.ABV,
-                pressure: this.pressure,
-                temp: this.temp,
-                sg: this.SG,
-                recipe_id: this.recipe_id,
-                tank_id: this.tank_id,
-                volume: this.volume,
-                bright: this.bright,
-                generation: this.generation,
-              }
-            }}*/ {}
-            );
-          })
-          .catch(error => {
-            console.warn(error);
-          });
+      } catch (err) {
+        // tslint:disable-next-line:no-console
+        console.error(err);
       }
     },
-    sortTanks: function(a, b) {
+    // tslint:disable-next-line:max-func-body-length
+    async submit() {
+      const cookie: BrewhopsCookie = Cookie.getJSON('loggedIn');
+
+      const requestObject: BatchUpdateOrCreate = {
+        recipe_id: this.recipe_id,
+        tank_id: this.tank_id,
+        volume: this.volume,
+        bright: this.bright,
+        generation: this.generation,
+        name: this.batch_name,
+        ph: this.pH,
+        abv: this.ABV,
+        pressure: this.pressure,
+        temperature: this.temp,
+        sg: this.SG,
+        action: {
+          id: this.action,
+          completed: this.prevActionId !== this.action ? true : false,
+          assigned: false,
+          employee: {
+            id: cookie.id
+          }
+        }
+      };
+
+      console.log(JSON.stringify(requestObject));
+
+      try {
+        const response = await this.$http.post(`${process.env.API}/batches`, requestObject);
+      } catch (err) {
+        console.error(err);
+      }
+    },
+    sortTanks(a, b) {
       return a.id - b.id;
     }
   }
-};
-
-export default dataEntry;
+});
 </script>
 
 <style lang="stylus" scoped>

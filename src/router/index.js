@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import login from '@/components/login';
-import admin from '@/components/admin';
+import admin from '@/components/admin/admin';
 import home from '@/components/home';
 import tankMonitoring from '@/components/tank-monitoring';
 import tankInfo from '@/components/tank-info';
@@ -9,7 +9,7 @@ import homeMobile from '@/components/home-mobile';
 import dataEntry from '@/components/data-entry';
 import dataSubmission from '@/components/data-submission';
 import recipe from '@/components/recipe';
-import history from '@/components/history';
+import batchHistory from '@/components/batch-history';
 
 Vue.use(Router);
 
@@ -62,9 +62,9 @@ export default new Router({
       path: '/recipe'
     },
     {
-      component: history,
+      component: batchHistory,
       name: 'batch-history',
-      path: '/history'
+      path: '/batch-history'
     }
   ]
 });

@@ -5,8 +5,8 @@
 </template>
 
 <script lang="ts">
-const App = {};
-export default App;
+import Vue from 'vue';
+export default {};
 </script>
 
 <style lang="stylus">

@@ -15,7 +15,7 @@
         </div>
       </div>
       <div id="tank">
-        <h2>Tank {{ tankInfo.tank_name }}</h2>
+        <h2>Tank {{ tankInfo.name }}</h2>
         <table>
           <tr v-if="tankInfo.action !== ''" class="important">
             <td>Action</td>
@@ -81,6 +81,7 @@
 </template>
 
 <script lang="ts">
+import Vue from 'vue';
 import recipe from './recipe.vue';
 import chart from './chart.vue';
 
@@ -88,29 +89,26 @@ import router from '../router/index.js';
 import Cookie from 'js-cookie';
 
 import moment from 'moment';
+import { Batch, Tank, Task, Action, Version } from '../types';
 
-interface ITankInfo {
-  name: any;
-  components: any;
-  data: any;
-  beforeMount: any;
-  debugging?: any;
-  $route?: any;
-  $http?: any;
+// tslint:disable: no-any
+
+interface ITankInfoState {
   tankInfo?: any;
   doneLink?: any;
   history?: any;
   home?: any;
   mobile?: any;
+  debugging?: string;
 }
 
-const tankInfo: ITankInfo = {
+export default Vue.extend({
   name: 'tank-info',
   components: {
-    recipe: recipe,
-    chart: chart
+    recipe,
+    chart
   },
-  data() {
+  data(): ITankInfoState {
     return {
       tankInfo: {
         tank_id: '',
@@ -126,7 +124,7 @@ const tankInfo: ITankInfo = {
         temp: '',
         status: '',
         time: '',
-        tank_name: '',
+        name: '',
         action: ''
       },
       history: {
@@ -138,12 +136,14 @@ const tankInfo: ITankInfo = {
       },
       doneLink: '',
       home: '',
-      mobile: false
+      mobile: false,
+      debugging: ''
     };
   },
-  beforeMount() {
+  // tslint:disable-next-line:max-func-body-length
+  async beforeMount() {
     // if the user is not logged in send them to the login page
-    if (!Cookie.get('loggedIn')) {
+    if (!Cookie.getJSON('loggedIn')) {
       router.push('/');
     }
 
@@ -160,103 +160,109 @@ const tankInfo: ITankInfo = {
       this.home = '/home';
     }
 
-    //create url to get tank:
-    var tankUrl = process.env.API + '/tanks/' + this.$route.params.tankID;
+    try {
+      const response = await this.$http.get(
+        `${process.env.API}/tanks/id/${this.$route.params.tankID}`
+      );
+      const { id, name, status, in_use }: Tank = response.data as Tank;
+      this.tankInfo = {
+        id,
+        name,
+        status,
+        in_use
+      };
+    } catch (err) {
+      // tslint:disable-next-line:no-console
+      console.error(err);
+      this.debugging = 'Debugging Flag: Response error, cant access tanks page';
+    }
 
-    this.$http.get(tankUrl).then(
-      tanksResponse => {
-        // set the tank stat]us
-        this.tankInfo.tank_id = tanksResponse.body.id;
-        //HEADS UP: tank_id will be changed to tank_name in db soon, for now id is tank id and tank_id is the name we call it
-        this.tankInfo.tank_name = tanksResponse.body.tank_id;
-        this.tankInfo.status = tanksResponse.body.status;
-        /********** query batches ********************/
-        this.$http.get(process.env.API + '/batches').then(
-          batchResponse => {
-            /********** query batch_contents_versions ********************/
-            // Get batches information
-            for (let batch of batchResponse.body) {
-              // if our batch tankID is the tankID we are looking for set some data
-              if (batch.tank_id === this.tankInfo.tank_id) {
-                this.tankInfo.batch_id = batch.id;
-                this.tankInfo.batch_name = batch.batch_name;
-                this.tankInfo.bright = batch.bright;
-                this.tankInfo.generation = batch.generation;
-                this.tankInfo.volume = batch.volume;
-                this.tankInfo.recipe_id = batch.recipe_id;
-              }
-            }
-
-            // get info on the action the tank needs
-            this.$http.get(process.env.API + '/tasks').then(tasksResponse => {
-              let actionID;
-              for (let task of tasksResponse.body) {
-                // if the batch is the one we are looking for
-                if (task.batch_id === this.tankInfo.batch_id) {
-                  // set our actionID and break out of the loop
-                  actionID = task.action_id;
-                  break;
-                }
-              }
-              // if our actionID was set
-              if (actionID >= 0) {
-                // get the action associated with that ID
-                this.$http.get(process.env.API + '/actions/' + actionID).then(actionResponse => {
-                  this.tankInfo.action = actionResponse.body.name;
-                });
-              }
-            });
-
-            this.$http.get(process.env.API + '/batch_contents_versions').then(
-              batchContentsResponse => {
-                // Find most recent batch in batch contents and pull that info
-                var max = moment('1995-07-29');
-                var date;
-                for (let batchContents of batchContentsResponse.body) {
-                  var batchTime = moment(batchContents.updated_at);
-                  if (batchContents.batch_id === this.tankInfo.batch_id) {
-                    // format the date to include the month, day, year, hour and minute
-                    date = moment(batchContents.updated_at).format('MM/DD/YY H:m');
-                    this.history.date.push(date);
-                    this.history.temp.push(batchContents.temp);
-                    this.history.abv.push(batchContents.ABV);
-                    this.history.sg.push(batchContents.SG);
-                    this.history.ph.push(batchContents.pH);
-                  }
-
-                  if (batchContents.batch_id === this.tankInfo.batch_id && batchTime > max) {
-                    max = moment(batchContents.updated_at);
-                    this.tankInfo.ABV = batchContents.ABV;
-                    this.tankInfo.pH = batchContents.pH;
-                    this.tankInfo.temp = batchContents.temp;
-                    this.tankInfo.SG = batchContents.SG;
-                    this.tankInfo.pressure = batchContents.pressure;
-                    // use a lowercase h to change the hours from 24 to 12
-                    // the mm sets the minute with a leading 0
-                    this.tankInfo.time = moment(batchContents.updated_at).format('MM/DD/YY H:mm');
-                  }
-                }
-              },
-              batchContentsResponse => {
-                this.debugging = 'Debugging Flag: Response error, cant access batches page';
-              }
-            );
-            /*****************************************/
-          },
-          batchResponse => {
-            this.debugging = 'Debugging Flag: Response error, cant access batches page';
-          }
-        );
-        /*****************************************/
-      },
-      tanksResponse => {
-        this.debugging = 'Debugging Flag: Response error, cant access tanks page';
+    try {
+      const response = await this.$http.get(`${process.env.API}/batches`);
+      const batches: Batch[] = response.data as Batch[];
+      // if our batch tankID is the tankID we are looking for set some data
+      for (const batch of batches) {
+        if (batch.tank_id === this.tankInfo.id) {
+          const {
+            id: batch_id,
+            name: batch_name,
+            bright,
+            generation,
+            volume,
+            recipe_id
+          }: Batch = batch;
+          this.tankInfo = {
+            batch_id,
+            batch_name,
+            bright,
+            generation,
+            volume,
+            recipe_id,
+            ...this.tankInfo
+          };
+        }
       }
-    );
-  }
-};
+    } catch (err) {
+      this.debugging = 'Debugging Flag: Response error, cant access batches page';
+    }
 
-export default tankInfo;
+    try {
+      const response = await this.$http.get(`${process.env.API}/tasks`);
+      const tasks: Task[] = response.data as Task[];
+      let actionID;
+      for (const task of tasks) {
+        // if the batch is the one we are looking for
+        if (task.batch_id === this.tankInfo.batch_id) {
+          // set our actionID and break out of the loop
+          actionID = task.action_id;
+          break;
+        }
+      }
+      // if our actionID was set
+      if (actionID >= 0) {
+        // get the action associated with that ID
+        const actionResponse = await this.$http.get(`${process.env.API}/actions/id/${actionID}`);
+        const { name }: Action = actionResponse.data as Action;
+        this.tankInfo.action = name;
+      }
+    } catch (err) {
+      // tslint:disable-next-line:no-console
+      console.error(err);
+    }
+
+    try {
+      const response = await this.$http.get(
+        `${process.env.API}/versions/batch/${this.tankInfo.batch_id}`
+      );
+      const versions: Version[] = response.data;
+      let max = moment('1995-07-29');
+      let date;
+      for (const version of response.data) {
+        const batchTime = moment(response.data.updated_at);
+        if (batchTime > max) {
+          max = moment(version.measured_on);
+          this.tankInfo.ABV = version.abv;
+          this.tankInfo.pH = version.ph;
+          this.tankInfo.temp = version.temperature;
+          this.tankInfo.SG = version.sg;
+          this.tankInfo.pressure = version.pressure;
+          // use a lowercase h to change the hours from 24 to 12
+          // the mm sets the minute with a leading 0
+          this.tankInfo.time = moment(version.updated_at).format('MM/DD/YY H:mm');
+        }
+        date = moment(version.measured_on).format('MM/DD/YY H:m');
+        this.history.date.push(date);
+        this.history.temp.push(version.temperature);
+        this.history.abv.push(version.abv);
+        this.history.sg.push(version.sg);
+        this.history.ph.push(version.ph);
+      }
+    } catch (err) {
+      // tslint:disable-next-line:no-console
+      console.error(err);
+    }
+  }
+});
 </script>
 
 <style lang="stylus" scoped>

@@ -21,38 +21,26 @@
 </template>
 
 <script lang="ts">
+import Vue from 'vue';
 import router from '../router/index.js';
-// import CryptoJS from "crypto-js";
+import CryptoJS from 'crypto-js';
 import Cookie from 'js-cookie';
 
-const CryptoJS = require('crypto-js');
-interface IData {
-  mobile: any;
-  isAdmin: any;
-  username: any;
-  password: any;
-  feedback: any;
-  submitLink: any;
+interface ILoginState {
+  mobile: boolean;
+  isAdmin: boolean;
+  username: string;
+  password: string;
+  feedback: {
+    username: string;
+    password: string;
+  };
+  submitLink: string;
 }
 
-interface ILogin {
-  name: any;
-  data: () => IData;
-  watch: any;
-  beforeMount: any;
-  methods: any;
-  mobile?: any;
-  encryptedPassword?: any;
-  feedback?: any;
-  submitLink?: any;
-  sendToHome?: any;
-  $http?: any;
-  employees?: any;
-}
-
-const login: ILogin = {
+export default Vue.extend({
   name: 'login',
-  data() {
+  data(): ILoginState {
     return {
       mobile: false,
       isAdmin: false,
@@ -66,9 +54,9 @@ const login: ILogin = {
     };
   },
   watch: {
-    username: function() {
+    async username(): Promise<void> {
       // shorten our username variable for readability
-      let validUsername = false;
+      const validUsername = false;
       const { username } = this;
 
       // if the field is empty, clear the feedback
@@ -82,17 +70,16 @@ const login: ILogin = {
       } else if (!username.match('^[0-9A-z]+$')) {
         this.feedback.username = 'username must only be digits and letters';
       } else {
-        this.$http
-          .get(`${process.env.API}/employees/admin/${username}`)
-          .then(response => response.json())
-          .then(json => {
-            console.log(json);
-            this.isAdmin = json.body;
-          })
-          .catch(err => console.log(err));
+        try {
+          const response = await this.$http.get(`${process.env.API}/employees/admin/${username}`);
+          this.isAdmin = response.data;
+        } catch (err) {
+          // tslint:disable-next-line:no-console
+          console.error(err);
+        }
       }
     },
-    password: function() {
+    password(): void {
       // shorten our username variable for readability
       const { password } = this;
 
@@ -111,7 +98,7 @@ const login: ILogin = {
       }
     }
   },
-  beforeMount() {
+  beforeMount(): void {
     if (
       /iPhone|iPad|iPod|Android|webOS|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(
         navigator.userAgent
@@ -125,66 +112,70 @@ const login: ILogin = {
 
     // if the cookie has login information in it already
     // then send us straight to the home page
-    if (Cookie.get('loggedIn')) {
+    if (Cookie.getJSON('loggedIn')) {
       this.sendToHome();
     }
   },
   methods: {
-    submit: function() {
+    async submit(): Promise<void> {
       const { username, password: pw } = this;
 
       const password = CryptoJS.SHA3(pw).toString();
 
-      this.$http
-        .post(`${process.env.API}/employees/login/`, { username, password })
-        .then(response => response.json())
-        .then(json => {
-          console.log(json);
-          this.createCookie(this.username, this.isAdmin);
-          // send us over to the home page
-          this.sendToHome();
-        })
-        .catch(err => (this.feedback.password = 'Invalid Login'));
+      try {
+        const response = await this.$http.post(`${process.env.API}/employees/login/`, {
+          username,
+          password
+        });
+        const { id, token } = response.data;
+        this.createCookie(id, this.username, this.isAdmin, token);
+        this.sendToHome();
+      } catch (err) {
+        this.feedback.password = 'Invalid Login';
+      }
     },
     // redirect over to the home page
-    sendToHome: function() {
+    sendToHome(): void {
       if (this.mobile) {
         router.push('home-mobile');
       } else {
         router.push('home');
       }
     },
-    validateAdmin: function() {
+    async validateAdmin(): Promise<void> {
       if (this.isAdmin) {
         const { username, password: pw } = this;
 
         const password = CryptoJS.SHA3(pw).toString();
 
-        this.$http
-          .post(`${process.env.API}/employees/login/`, { username, password })
-          .then(response => response.json())
-          .then(json => {
-            console.log(json);
-            this.createCookie(this.username, this.isAdmin);
-            router.push('admin');
-          })
-          .catch(err => (this.feedback.password = 'Invalid Login'));
+        try {
+          const response = await this.$http.post(`${process.env.API}/employees/login/`, {
+            username,
+            password
+          });
+          const { id, token } = response.data;
+          this.createCookie(id, this.username, this.isAdmin, token);
+          router.push('admin');
+        } catch (err) {
+          this.feedback.password = 'Invalid Login';
+        }
       } else {
         this.feedback.username = 'User is not an administrator';
       }
     },
-    createCookie: function(username, adminStatus) {
-      if (!Cookie.get('loggedIn')) {
+    createCookie(id, username, admin, token): void {
+      if (!Cookie.getJSON('loggedIn')) {
+        // tslint:disable-next-line:no-backbone-get-set-outside-model
         Cookie.set('loggedIn', {
-          username: username,
-          admin: adminStatus
+          id,
+          username,
+          admin,
+          token
         });
       }
     }
   }
-};
-
-export default login;
+});
 </script>
 
 <style lang="stylus" scoped>

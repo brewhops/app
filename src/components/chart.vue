@@ -1,11 +1,11 @@
 <template> </template>
 
 <script lang="ts">
-// import the c3 javascript code
-const c3 = require('c3');
-// import the c3 css code
-// if you dont specify a starting location, webpack will look in the node_modules folder
+import Vue from 'vue';
+import c3 from 'c3';
 import 'c3/c3.min.css';
+
+// tslint:disable: no-any
 
 interface IChart {
   name: any;
@@ -20,12 +20,13 @@ interface IChart {
   xFormat?: any;
   columns?: any;
   axis?: any;
+  // tslint:disable-next-line:no-reserved-keywords
   type?: any;
   tick?: any;
   format?: any;
 }
 
-const chart: IChart = {
+export default Vue.extend({
   name: 'chart',
   props: ['date', 'data'],
   data() {
@@ -33,13 +34,13 @@ const chart: IChart = {
   },
   watch: {
     // when the data array changes, redraw the chart
-    data: function() {
+    data() {
       // create our chart
       c3.generate({
         // bind it to this instance of the component
         bindto: this.$el,
         data: {
-          x: 'Date', //bind the x axis to the 'Date' data set
+          x: 'Date',
           xFormat: '%m/%d/%Y %H:%M',
           columns: [this.date, this.data]
         },
@@ -57,7 +58,7 @@ const chart: IChart = {
             tick: {
               // round the numbers on the y axis to a max of 10 decimal places
               // this gets the y axis numbers behaving and not getting too long
-              format: function(d) {
+              format(d) {
                 return +d.toFixed(10);
               }
             }
@@ -70,9 +71,7 @@ const chart: IChart = {
       });
     }
   }
-};
-
-export default chart;
+});
 </script>
 
 <style lang="css" scoped></style>
