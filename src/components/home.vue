@@ -4,6 +4,7 @@
       <a v-on:click="logout">Logout</a>
       <h2>Home</h2>
     </div>
+    <navbar v-bind:activeState="[true, false, false, false]" />
     <div id="content">
       <tank-monitoring></tank-monitoring>
     </div>
@@ -15,6 +16,7 @@ import Vue from 'vue';
 import tankMonitoring from './tank-monitoring.vue';
 import router from '../router/index.js';
 import Cookie from 'js-cookie';
+import NavbarComponent from './navbar.vue';
 
 interface IHomePageState {
   mobile: boolean;
@@ -23,7 +25,8 @@ interface IHomePageState {
 export default Vue.extend({
   name: 'home',
   components: {
-    tankMonitoring
+    tankMonitoring,
+    navbar: NavbarComponent
   },
   data(): IHomePageState {
     return {

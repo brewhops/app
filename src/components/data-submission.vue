@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="header">
-      <router-link v-bind:to="doneLink">Home</router-link>
+      <router-link to="/">Logout</router-link>
       <h2>Data Submitted</h2>
     </div>
     <div id="dataSubmission">
