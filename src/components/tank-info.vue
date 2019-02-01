@@ -69,17 +69,17 @@
         </div>
 
         <div id="entry">
-          <data-entry v-bind:tank_id="tankInfo.id"></data-entry>
+          <data-entry v-bind:tank_id="tankInfo.id" @newDataCallback="loadHistoryData"></data-entry>
         </div>
       </div>
 
       <div id="data">
         <h2>Brand History</h2>
         <div id="charts">
-          <chart class="chart" v-bind:date="history.date" v-bind:data="history.temp"></chart>
-          <chart class="chart" v-bind:date="history.date" v-bind:data="history.sg"></chart>
-          <chart class="chart" v-bind:date="history.date" v-bind:data="history.abv"></chart>
           <chart class="chart" v-bind:date="history.date" v-bind:data="history.ph"></chart>
+          <chart class="chart" v-bind:date="history.date" v-bind:data="history.abv"></chart>
+          <chart class="chart" v-bind:date="history.date" v-bind:data="history.sg"></chart>
+          <chart class="chart" v-bind:date="history.date" v-bind:data="history.temp"></chart>
         </div>
       </div>
     </div>
@@ -186,89 +186,109 @@ export default Vue.extend({
       this.debugging = 'Debugging Flag: Response error, cant access tanks page';
     }
 
-    try {
-      const response = await this.$http.get(`${process.env.API}/batches`);
-      const batches: Batch[] = response.data as Batch[];
-      // if our batch tankID is the tankID we are looking for set some data
-      for (const batch of batches) {
-        if (batch.tank_id === this.tankInfo.id) {
-          const {
-            id: batch_id,
-            name: batch_name,
-            bright,
-            generation,
-            volume,
-            recipe_id
-          }: Batch = batch;
-          this.tankInfo = {
-            ...this.tankInfo,
-            batch_id,
-            batch_name,
-            bright,
-            generation,
-            volume,
-            recipe_id
-          };
+    await this.loadBatchData();
+    await this.loadHistoryData();
+  },
+  methods: {
+    async loadBatchData() {
+      try {
+        const response = await this.$http.get(`${process.env.API}/batches`);
+        const batches: Batch[] = response.data as Batch[];
+        // if our batch tankID is the tankID we are looking for set some data
+        for (const batch of batches) {
+          if (batch.tank_id === this.tankInfo.id) {
+            const {
+              id: batch_id,
+              name: batch_name,
+              bright,
+              generation,
+              volume,
+              recipe_id
+            }: Batch = batch;
+            this.tankInfo = {
+              ...this.tankInfo,
+              batch_id,
+              batch_name,
+              bright,
+              generation,
+              volume,
+              recipe_id
+            };
+          }
         }
+      } catch (err) {
+        this.debugging = 'Debugging Flag: Response error, cant access batches page';
       }
-    } catch (err) {
-      this.debugging = 'Debugging Flag: Response error, cant access batches page';
-    }
 
-    try {
-      const response = await this.$http.get(`${process.env.API}/tasks`);
-      const tasks: Task[] = response.data as Task[];
-      let actionID;
-      for (const task of tasks) {
-        // if the batch is the one we are looking for
-        if (task.batch_id === this.tankInfo.batch_id) {
-          // set our actionID and break out of the loop
-          actionID = task.action_id;
-          break;
+      try {
+        const response = await this.$http.get(`${process.env.API}/tasks`);
+        const tasks: Task[] = response.data as Task[];
+        let actionID;
+        for (const task of tasks) {
+          // if the batch is the one we are looking for
+          if (task.batch_id === this.tankInfo.batch_id) {
+            // set our actionID and break out of the loop
+            actionID = task.action_id;
+            break;
+          }
         }
+        // if our actionID was set
+        if (actionID >= 0) {
+          // get the action associated with that ID
+          const actionResponse = await this.$http.get(`${process.env.API}/actions/id/${actionID}`);
+          const { name }: Action = actionResponse.data as Action;
+          this.tankInfo.action = name;
+        }
+      } catch (err) {
+        // tslint:disable-next-line:no-console
+        console.error(err);
       }
-      // if our actionID was set
-      if (actionID >= 0) {
-        // get the action associated with that ID
-        const actionResponse = await this.$http.get(`${process.env.API}/actions/id/${actionID}`);
-        const { name }: Action = actionResponse.data as Action;
-        this.tankInfo.action = name;
-      }
-    } catch (err) {
-      // tslint:disable-next-line:no-console
-      console.error(err);
-    }
+    },
+    async loadHistoryData() {
+      try {
+        const response = await this.$http.get(
+          `${process.env.API}/versions/batch/${this.tankInfo.batch_id}`
+        );
 
-    try {
-      const response = await this.$http.get(
-        `${process.env.API}/versions/batch/${this.tankInfo.batch_id}`
-      );
-      const versions: Version[] = response.data;
-      let max = moment('1995-07-29');
-      let date;
-      for (const version of response.data) {
-        const batchTime = moment(response.data.updated_at);
-        if (batchTime > max) {
-          max = moment(version.measured_on);
-          this.tankInfo.ABV = version.abv;
-          this.tankInfo.pH = version.ph;
-          this.tankInfo.temp = version.temperature;
-          this.tankInfo.SG = version.sg;
-          this.tankInfo.pressure = version.pressure;
-          // use a lowercase h to change the hours from 24 to 12
-          // the mm sets the minute with a leading 0
-          this.tankInfo.time = moment(version.updated_at).format('MM/DD/YY H:mm');
+        const versions: Version[] = (response.data as Version[])
+          .map((v: Version) => {
+            v.measured_on = moment(v.measured_on);
+            return v;
+          })
+          .sort((a: Version, b: Version) => {
+            return moment.utc(a.measured_on).diff(moment.utc(b.measured_on));
+          });
+
+        this.history = {
+          date: ['Date'],
+          temp: ['Temperature'],
+          abv: ['ABV'],
+          sg: ['Specific Gravity'],
+          ph: ['pH']
+        };
+
+        for (const version of versions) {
+          this.history.date.push(version.measured_on);
+          this.history.temp.push(version.temperature);
+          this.history.abv.push(version.abv);
+          this.history.sg.push(version.sg);
+          this.history.ph.push(version.ph);
         }
-        date = moment(version.measured_on).format('MM/DD/YY H:m');
-        this.history.date.push(date);
-        this.history.temp.push(version.temperature);
-        this.history.abv.push(version.abv);
-        this.history.sg.push(version.sg);
-        this.history.ph.push(version.ph);
+
+        // Set current data
+        const lastVersion = versions[versions.length - 1];
+        this.tankInfo.ABV = lastVersion.abv;
+        this.tankInfo.pH = lastVersion.ph;
+        this.tankInfo.temp = lastVersion.temperature;
+        this.tankInfo.SG = lastVersion.sg;
+        this.tankInfo.pressure = lastVersion.pressure;
+        // use a lowercase h to change the hours from 24 to 12
+        // the mm sets the minute with a leading 0
+        this.tankInfo.time = (lastVersion.measured_on as moment.Moment).format('MM/DD/YY H:mm');
+      } catch (err) {
+        // tslint:disable-next-line:no-console
+        console.error(err);
       }
-    } catch (err) {
-      // tslint:disable-next-line:no-console
-      console.error(err);
     }
   }
 });

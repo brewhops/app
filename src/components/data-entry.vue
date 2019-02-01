@@ -270,9 +270,10 @@ export default Vue.extend({
         pressure: this.pressure,
         temperature: this.temp,
         sg: this.SG,
+        measured_on: moment(this.time).toISOString(),
         action: {
           id: this.action,
-          completed: this.prevActionId !== this.action ? true : false,
+          completed: this.prevActionId !== this.action,
           assigned: false,
           employee: {
             id: cookie.id
@@ -280,13 +281,15 @@ export default Vue.extend({
         }
       };
 
-      console.log(JSON.stringify(requestObject));
+      console.log(requestObject);
 
       try {
         const response = await this.$http.post(`${process.env.API}/batches`, requestObject);
       } catch (err) {
         console.error(err);
       }
+
+      this.$emit('newDataCallback');
     },
     sortTanks(a, b) {
       return a.id - b.id;
