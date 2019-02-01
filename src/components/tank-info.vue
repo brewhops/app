@@ -5,76 +5,83 @@
       <h2>Tank Data</h2>
     </div>
     <div id="content">
-      <div id="data">
-        <h2>Brand History</h2>
-        <div id="charts">
-          <chart v-bind:date="history.date" v-bind:data="history.temp"></chart>
-          <chart v-bind:date="history.date" v-bind:data="history.sg"></chart>
-          <chart v-bind:date="history.date" v-bind:data="history.abv"></chart>
-          <chart v-bind:date="history.date" v-bind:data="history.ph"></chart>
+      <div id="info-content">
+        <div id="tank">
+          <h2>Tank {{ tankInfo.name }}</h2>
+          <table class="table">
+            <tbody>
+              <tr scope="row" v-if="tankInfo.action !== ''" class="important">
+                <td>Action</td>
+                <td>{{ tankInfo.action }}</td>
+              </tr>
+              <tr>
+                <td>Status</td>
+                <td>{{ tankInfo.status }}</td>
+              </tr>
+              <tr>
+                <td>Brand ID</td>
+                <td>{{ tankInfo.recipe_id }}</td>
+              </tr>
+              <tr>
+                <td>Batch Name</td>
+                <td>{{ tankInfo.batch_name }}</td>
+              </tr>
+              <tr>
+                <td>Generation</td>
+                <td>{{ tankInfo.generation }}</td>
+              </tr>
+              <tr>
+                <td>Volume</td>
+                <td>{{ tankInfo.volume }}</td>
+              </tr>
+              <tr>
+                <td>Bright</td>
+                <td>{{ tankInfo.bright }}</td>
+              </tr>
+              <tr>
+                <td>Temperature</td>
+                <td>{{ tankInfo.temp }}º F</td>
+              </tr>
+              <tr>
+                <td>Specific Gravity</td>
+                <td>{{ tankInfo.SG }}</td>
+              </tr>
+              <tr>
+                <td>pH</td>
+                <td>{{ tankInfo.pH }}</td>
+              </tr>
+              <tr>
+                <td>Pressure</td>
+                <td>{{ tankInfo.pressure }}</td>
+              </tr>
+              <tr>
+                <td>ABV</td>
+                <td>{{ tankInfo.ABV }}%</td>
+              </tr>
+              <tr>
+                <td>Time Last Updated</td>
+                <td>{{ tankInfo.time }}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <recipe v-bind:recipeID="tankInfo.recipe_id"></recipe>
+        </div>
+
+        <div id="entry">
+          <data-entry v-bind:tank_id="tankInfo.id"></data-entry>
         </div>
       </div>
 
-      <div id="tank">
-        <h2>Tank {{ tankInfo.name }}</h2>
-        <table>
-          <tr v-if="tankInfo.action !== ''" class="important">
-            <td>Action</td>
-            <td>{{ tankInfo.action }}</td>
-          </tr>
-          <tr>
-            <td>Status</td>
-            <td>{{ tankInfo.status }}</td>
-          </tr>
-          <tr>
-            <td>Brand ID</td>
-            <td>{{ tankInfo.recipe_id }}</td>
-          </tr>
-          <tr>
-            <td>Batch Name</td>
-            <td>{{ tankInfo.batch_name }}</td>
-          </tr>
-          <tr>
-            <td>Generation</td>
-            <td>{{ tankInfo.generation }}</td>
-          </tr>
-          <tr>
-            <td>Volume</td>
-            <td>{{ tankInfo.volume }}</td>
-          </tr>
-          <tr>
-            <td>Bright</td>
-            <td>{{ tankInfo.bright }}</td>
-          </tr>
-          <tr>
-            <td>Temperature</td>
-            <td>{{ tankInfo.temp }}º F</td>
-          </tr>
-          <tr>
-            <td>Specific Gravity</td>
-            <td>{{ tankInfo.SG }}</td>
-          </tr>
-          <tr>
-            <td>pH</td>
-            <td>{{ tankInfo.pH }}</td>
-          </tr>
-          <tr>
-            <td>Pressure</td>
-            <td>{{ tankInfo.pressure }}</td>
-          </tr>
-          <tr>
-            <td>ABV</td>
-            <td>{{ tankInfo.ABV }}%</td>
-          </tr>
-          <tr>
-            <td>Time Last Updated</td>
-            <td>{{ tankInfo.time }}</td>
-          </tr>
-        </table>
-
-        <data-entry :tank_id="tankInfo.id"></data-entry>
+      <div id="data">
+        <h2>Brand History</h2>
+        <div id="charts">
+          <chart class="chart" v-bind:date="history.date" v-bind:data="history.temp"></chart>
+          <chart class="chart" v-bind:date="history.date" v-bind:data="history.sg"></chart>
+          <chart class="chart" v-bind:date="history.date" v-bind:data="history.abv"></chart>
+          <chart class="chart" v-bind:date="history.date" v-bind:data="history.ph"></chart>
+        </div>
       </div>
-      <recipe v-bind:recipeID="tankInfo.recipe_id"></recipe>
     </div>
   </div>
 </template>
@@ -271,39 +278,46 @@ export default Vue.extend({
 @import '../styles/breakpoints'
 
 
-#content
-  margin 2vw
+#info-content
   display grid
-  grid-template-columns auto 400px
+  grid-template-columns auto auto
 
-  grid-template-areas "data tank" "data recipe"
+  grid-template-areas "tank entry"
   width 92vw
 
   +less-than(tablet)
-    align-items flex-start
+    grid-template-columns 92vw
+    grid-template-areas "tank" "entry" "recipe"
 
   +less-than(mobile)
     grid-template-columns 92vw
     grid-template-areas "tank" "recipe"
 
 #data
+  justify-content center
   +less-than(mobile)
     display none
-  grid-area data
   #charts
     display grid
-    grid-template-columns repeat(2, 30vw)
+    justify-content center
+    grid-template-columns repeat(2, 48vw)
     +less-than(tablet)
-      grid-template-columns auto
+      grid-template-columns 92vw
+    .chart
+      margin-left 5vw
+      margin-right 5vw
   h2
     text-align center
 
 
 #tank
   text-align center
+  justify-content center
+  padding 15px
   table
     text-align left
     margin auto
+    margin-top 30px
   h2, h3, h4
     text-align center
   grid-area tank
