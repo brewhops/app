@@ -14,36 +14,31 @@
           }}</option>
         </select>
       </div>
-      <table v-if="batch_id && histories && batch">
+      <table v-if="batch_id && batch">
         <tr>
-          <th>Date</th>
-          <th>SG</th>
-          <th>pH</th>
-          <th>ABV</th>
-          <th>temp</th>
-          <th>pressure</th>
-        </tr>
-        <tr v-for="history in histories">
-          <td>{{ history.measured_on }}</td>
-          <td>{{ history.sg }}</td>
-          <td>{{ history.ph }}</td>
-          <td>{{ history.abv }}</td>
-          <td>{{ history.temperature }}</td>
-          <td>{{ history.pressure }}</td>
-        </tr>
-        <tr>
-          <th>Volume</th>
-          <th>Bright</th>
-          <th>Generation</th>
-          <th>Date Started</th>
-          <th>Date Completed</th>
+          <th v-for="title in batch_titles">{{ title }}</th>
         </tr>
         <tr>
           <td>{{ batch.volume }}</td>
           <td>{{ batch.bright }}</td>
           <td>{{ batch.generation }}</td>
-          <td>{{ formatDate(batch.date_started) }}</td>
-          <td>{{ formatDate(batch.date_completed) }}</td>
+          <td>{{ formatDate(batch.started_on) }}</td>
+          <td>{{ formatDate(batch.completed_on) }}</td>
+        </tr>
+      </table>
+
+      <p v-if="batch_id && histories && batch">Versions</p>
+      <table v-if="batch_id && histories && batch">
+        <tr>
+          <th v-for="title in version_titles">{{ title }}</th>
+        </tr>
+        <tr v-for="history in histories">
+          <td>{{ formatDate(history.measured_on) }}</td>
+          <td>{{ history.sg }}</td>
+          <td>{{ history.ph }}</td>
+          <td>{{ history.abv }}</td>
+          <td>{{ history.temperature }}</td>
+          <td>{{ history.pressure }}</td>
         </tr>
       </table>
 
@@ -62,10 +57,13 @@ import router from '../router/index.js';
 import Cookie from 'js-cookie';
 import moment from 'moment';
 import { Batch } from '../types';
+import { version } from 'punycode';
 
 // tslint:disable: no-any
 
 interface IHistoryState {
+  batch_titles: string[];
+  version_titles: string[];
   mobile: boolean;
   batch_id: number | string;
   batches: Batch[];
@@ -77,6 +75,8 @@ export default Vue.extend({
   name: 'batch-history',
   data(): IHistoryState {
     return {
+      batch_titles: ['Volume', 'Bright', 'Generation', 'Date Started', 'Date Completed'],
+      version_titles: ['Date', 'SG', 'pH', 'ABV', 'temp', 'pressure'],
       mobile: false,
       batch_id: '',
       batches: [],
@@ -146,22 +146,26 @@ export default Vue.extend({
       }
     },
     generateCSV() {
-      const rows: string[][] = this.histories.map(history => [...history]);
-
-      // add header
-      rows.unshift([
-        'Date',
-        'SG',
-        'pH',
-        'ABV',
-        'temp',
-        'pressure',
-        'Volume',
-        'Bright',
-        'Generation',
-        'Date Started',
-        'Date Completed'
+      let rows: (string | number | undefined)[][] = [];
+      rows.push(this.batch_titles);
+      rows.push([
+        this.batch.volume,
+        this.batch.bright,
+        this.batch.generation,
+        this.batch.started_on,
+        this.batch.completed_on
       ]);
+      rows.push(this.version_titles);
+      rows = rows.concat(
+        this.histories.map(history => [
+          history.measured_on,
+          history.sg,
+          history.ph,
+          history.abv,
+          history.temperature,
+          history.pressure
+        ])
+      );
 
       let csvHeader = 'data:text/csv;charset=utf-8,';
       let csvContent = `${csvHeader}${rows.map(row => `${row.join(',')},`).join('\r\n')}`;
@@ -185,6 +189,8 @@ export default Vue.extend({
   }
 
   table {
+    border-collapse: collapse;
+    border: 1px solid black;
     tr {
       td, th {
         padding: 10px;
