@@ -297,13 +297,13 @@ export default Vue.extend({
 <style lang="stylus" scoped>
 @import '../styles/breakpoints'
 
-
 #info-content
   display grid
   grid-template-columns auto auto
 
   grid-template-areas "tank entry"
   width 92vw
+  margin auto
 
   +less-than(tablet)
     grid-template-columns 92vw
