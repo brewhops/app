@@ -14,6 +14,9 @@
       <p>Tank is in use</p>
     </div>
 
+    <div>
+      <p>{{ feedback.server.tank }}</p>
+    </div>
     <button v-on:click="tank_submit">Submit</button>
   </div>
 </template>
@@ -22,6 +25,7 @@
 import Vue from 'vue';
 import Cookie from 'js-cookie';
 import { Tank, BrewhopsCookie } from '../../types';
+import { setTimeout } from 'timers';
 
 interface ICreateTankState {
   tank_name: string;
@@ -29,6 +33,9 @@ interface ICreateTankState {
   in_use: boolean;
   feedback: {
     tank_name: string;
+    server: {
+      tank: string;
+    };
   };
 }
 
@@ -43,7 +50,10 @@ export default Vue.extend({
       status: '',
       in_use: false,
       feedback: {
-        tank_name: ''
+        tank_name: '',
+        server: {
+          tank: ''
+        }
       }
     };
   },
@@ -63,7 +73,12 @@ export default Vue.extend({
         };
 
         try {
-          await this.$http.post(`${process.env.API}/tanks`, tank, { headers });
+          const response = await this.$http.post(`${process.env.API}/tanks`, tank, { headers });
+          if (response.ok) {
+            this.feedback.server.tank = `Tank ${this.tank_name} succesfully created.`;
+            setTimeout(async () => (this.feedback.server.tank = ``), 5000);
+          }
+          this.$emit('update');
         } catch (err) {
           console.error(err);
         }

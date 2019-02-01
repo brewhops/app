@@ -152,11 +152,13 @@ export default Vue.extend({
 
       try {
         const response = await this.$http.post(`${process.env.API}/employees`, user, { headers });
-        if (response.ok === true) {
+        if (response.ok) {
           this.feedback.server.user = 'New user succesfully created';
+          setTimeout(async () => (this.feedback.server.user = ``), 5000);
         }
       } catch (err) {
         console.error(err);
+        this.feedback.server.user = 'Failed to create new user.';
       }
     }
   }
