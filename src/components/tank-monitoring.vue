@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="header" v-if="mobile">
-      <router-link to="/home-mobile">Home</router-link>
+      <router-link v-bind:to="login">Logout</router-link>
       <h2>Tank Monitoring</h2>
     </div>
     <div id="tankInfo">

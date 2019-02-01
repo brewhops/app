@@ -1,9 +1,10 @@
 <template lang="html">
   <div>
     <div class="header" v-if="!mobile">
-      <a v-on:click="home">home</a>
+      <router-link to="login">Logout</router-link>
       <h2>Tank History</h2>
     </div>
+    <navbar v-bind:activeState="[false, false, true, false]" />
     <div id="content">
       <div>
         <h2>Tank</h2>
@@ -49,6 +50,7 @@ import Vue from 'vue';
 import router from '../router/index.js';
 import Cookie from 'js-cookie';
 import moment from 'moment';
+import navbar from './navbar.vue';
 import { Tank } from '../types';
 
 // tslint:disable: no-any
@@ -63,6 +65,9 @@ interface ITankHistoryState {
 
 export default Vue.extend({
   name: 'tank-history',
+  components: {
+    navbar
+  },
   data(): ITankHistoryState {
     return {
       mobile: false,
@@ -120,7 +125,7 @@ export default Vue.extend({
       }
     },
     downloadCSV() {
-      let link = document.getElementById('csvDownload');
+      const link = document.getElementById('csvDownload');
       if (link) {
         link.setAttribute('href', encodeURI(this.generateCSV()));
         link.setAttribute(
@@ -143,10 +148,9 @@ export default Vue.extend({
       // add header
       rows.unshift(['Name', 'Volume', 'Bright', 'Generation', 'Start Date', 'End Date', 'Updater']);
 
-      let csvHeader = 'data:text/csv;charset=utf-8,';
-      let csvContent = `${csvHeader}${rows.map(row => `${row.join(',')},`).join('\r\n')}`;
+      const csvHeader = 'data:text/csv;charset=utf-8,';
 
-      return csvContent;
+      return `${csvHeader}${rows.map(row => `${row.join(',')},`).join('\r\n')}`;
     }
   }
 });
