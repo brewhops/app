@@ -206,6 +206,7 @@ export default Vue.extend({
   }
 
   table {
+    border-collapse: collapse;
     tr {
       td, th {
         padding: 10px;

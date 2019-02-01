@@ -1,5 +1,9 @@
+export type Employee = {
+  username: string;
+};
+
 export type Tank = {
-  id: number;
+  id?: number | string;
   name: string;
   status: string;
   in_use: boolean;
