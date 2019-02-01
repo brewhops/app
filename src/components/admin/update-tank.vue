@@ -1,7 +1,7 @@
 <template>
   <div class="element">
     <h2>Update Tank Status</h2>
-    <select v-model="tank_name" class="dropdown">
+    <select v-model="tank_id" class="dropdown">
       <option disabled value="">Tank Number</option>
       <option v-for="tank in tanks" v-bind:key="tank.id" :value="tank.id">{{ tank.name }}</option>
     </select>
@@ -25,7 +25,7 @@ import { Tank, BrewhopsCookie } from '../../types';
 import { emit } from 'cluster';
 
 interface IUpdateTankState {
-  tank_name: string;
+  tank_id: string;
   status: string;
   feedback: {
     server: {
@@ -41,7 +41,7 @@ export default Vue.extend({
   props: ['tanks', 'statuses'],
   data(): IUpdateTankState {
     return {
-      tank_name: '',
+      tank_id: '',
       status: '',
       feedback: {
         server: {
@@ -52,13 +52,13 @@ export default Vue.extend({
   },
   methods: {
     async tank_update() {
-      const currentTank: Tank = this.tanks.filter((tank: Tank) => tank.name === this.tank_name);
+      const currentTank: Tank = this.tanks.filter((tank: Tank) => tank.id === this.tank_id);
 
       if (currentTank) {
-        const { id, name, status } = currentTank;
+        const { id, name, status } = currentTank[0];
         const tank = {
           name,
-          status
+          status: this.status
         };
 
         const headers = {
@@ -70,13 +70,13 @@ export default Vue.extend({
             headers
           });
           if (response.ok) {
-            this.feedback.server.tank = `Tank ${this.tank_name} succesfully updated.`;
+            this.feedback.server.tank = `Tank ${name} succesfully updated.`;
             setTimeout(async () => (this.feedback.server.tank = ``), 5000);
           }
           this.$emit('update');
         } catch (err) {
           console.error(err);
-          this.feedback.server.tank = `Failed to update ${this.tank_name}.`;
+          this.feedback.server.tank = `Failed to update ${name}.`;
         }
       }
     }
