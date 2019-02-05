@@ -28,20 +28,22 @@
         </tr>
       </table>
 
-      <p v-if="batch_id && histories && batch">Versions</p>
-      <table v-if="batch_id && histories && batch">
-        <tr>
-          <th v-for="title in version_titles">{{ title }}</th>
-        </tr>
-        <tr v-for="history in histories">
-          <td>{{ formatDate(history.measured_on) }}</td>
-          <td>{{ history.sg }}</td>
-          <td>{{ history.ph }}</td>
-          <td>{{ history.abv }}</td>
-          <td>{{ history.temperature }}</td>
-          <td>{{ history.pressure }}</td>
-        </tr>
-      </table>
+      <div v-if="batch_id && histories && batch">
+        <p>Versions</p>
+        <table>
+          <tr>
+            <th v-for="title in version_titles">{{ title }}</th>
+          </tr>
+          <tr v-for="history in histories">
+            <td>{{ formatDate(history.measured_on) }}</td>
+            <td>{{ history.sg }}</td>
+            <td>{{ history.ph }}</td>
+            <td>{{ history.abv }}</td>
+            <td>{{ history.temperature }}</td>
+            <td>{{ history.pressure }}</td>
+          </tr>
+        </table>
+      </div>
 
       <a id="csvDownload" @click="downloadCSV()">
         <button v-if="batch_id" type="button" name="button">
