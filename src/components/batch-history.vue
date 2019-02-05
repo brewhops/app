@@ -28,6 +28,13 @@
         </tr>
       </table>
 
+      <div id="charts">
+        <chart class="chart" v-bind:date="history.date" v-bind:data="history.ph"></chart>
+        <chart class="chart" v-bind:date="history.date" v-bind:data="history.abv"></chart>
+        <chart class="chart" v-bind:date="history.date" v-bind:data="history.sg"></chart>
+        <chart class="chart" v-bind:date="history.date" v-bind:data="history.temp"></chart>
+      </div>
+
       <div v-if="batch_id && histories && batch">
         <p>Versions</p>
         <table>
@@ -59,8 +66,9 @@ import Vue from 'vue';
 import router from '../router/index.js';
 import Cookie from 'js-cookie';
 import moment from 'moment';
-import { Batch } from '../types';
+import { Batch, Version } from '../types';
 import { version } from 'punycode';
+import chart from './chart.vue';
 import NavbarComponent from './navbar.vue';
 
 // tslint:disable: no-any
@@ -73,11 +81,12 @@ interface IHistoryState {
   batches: Batch[];
   batch: Batch;
   histories: any[];
+  history: any;
 }
 
 export default Vue.extend({
   name: 'batch-history',
-  components: { navbar: NavbarComponent },
+  components: { navbar: NavbarComponent, chart: chart },
   data(): IHistoryState {
     return {
       batch_titles: ['Volume', 'Bright', 'Generation', 'Date Started', 'Date Completed'],
@@ -95,7 +104,14 @@ export default Vue.extend({
         started_on: '',
         completed_on: ''
       },
-      histories: []
+      histories: [],
+      history: {
+        date: ['Date'],
+        temp: ['Temperature'],
+        abv: ['ABV'],
+        sg: ['Specific Gravity'],
+        ph: ['pH']
+      }
     };
   },
   async beforeMount() {
@@ -135,6 +151,22 @@ export default Vue.extend({
         );
 
         this.histories = batchResponse.data;
+        const versions: Version[] = (batchResponse.data as Version[])
+          .map((v: Version) => {
+            v.measured_on = moment(v.measured_on);
+            return v;
+          })
+          .sort((a: Version, b: Version) => {
+            return moment.utc(a.measured_on).diff(moment.utc(b.measured_on));
+          });
+
+        for (const version of versions) {
+          this.history.date.push(version.measured_on);
+          this.history.temp.push(version.temperature);
+          this.history.abv.push(version.abv);
+          this.history.sg.push(version.sg);
+          this.history.ph.push(version.ph);
+        }
       } catch (err) {
         // tslint:disable-next-line:no-console
         console.error(err);
@@ -182,6 +214,7 @@ export default Vue.extend({
 </script>
 
 <style lang="stylus" scoped>
+@import '../styles/breakpoints'
 #content {
   display: grid;
   justify-items: center;
@@ -191,6 +224,19 @@ export default Vue.extend({
   p {
     color: Teal;
     font-weight: bold;
+  }
+
+  #charts {
+    display grid
+    justify-content center
+    grid-template-columns repeat(2, 48vw)
+    +less-than(tablet) {
+      grid-template-columns 92vw
+    }
+    .chart {
+      margin-left 5vw
+      margin-right 5vw
+    }
   }
 
   table {
