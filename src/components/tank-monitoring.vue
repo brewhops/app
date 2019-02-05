@@ -8,7 +8,7 @@
       <h2>Tank Info</h2>
       <div id="tankContents">
         <a v-on:click="showTankInfo(tank.id)" v-for="tank in tanks" v-bind:key="tank.id">
-          <table class="tank" v-bind:class="tank.action">
+          <table class="tank" v-bind:class="tank.action_id">
             <tr>
               <td>{{ tank.name }}</td>
               <td v-if="tank.pressure">{{ tank.pressure }} psi</td>
@@ -141,9 +141,9 @@ export default Vue.extend({
         for (const action of actionsResponse.data) {
           if (tank.action_id === action.id) {
             tank.action = action.name;
+            tank.action_id = `action${action.id}`;
           }
         }
-
         // push data holder to the tanks array
         this.tanks.push(tank);
       }
@@ -217,16 +217,60 @@ export default Vue.extend({
       }
     }
 
-    .CAP {
-      background: Orange;
+    .action1 {
+      background: White;
+      color: Black;
+      border: 1px solid Black;
     }
 
-    .COOL {
-      background: Brown;
+    .action2 {
+      background: rgb(0, 167, 255);
+      color: Black;
     }
 
-    .CRASH {
-      background: green;
+    .action3  {
+      background: rgb(255, 255, 3);
+      color: Black;
+    }
+
+    .action4  {
+      background: rgb(224, 218, 233);
+      color: Black;
+    }
+
+    .action5 {
+      background: rgb(135, 201, 71);
+      color: Black;
+    }
+
+    .action6 {
+      background: rgb(255, 184, 2);
+      color: Black;
+    }
+
+    .action7 {
+      background: rgb(0, 167, 238);
+      color: Black;
+    }
+
+    .action8 {
+      background: rgb(255, 0, 1);
+      color: Black;
+    }
+
+    .action9 {
+      background: rgb(222, 96, 13);
+      color: Black;
+    }
+
+    .action10 {
+      background: rgb(255, 255, 3);
+      color: Black;
+    }
+
+    .action11 {
+      background: rgb(252, 207, 171);
+      color: Black;
     }
 
     .broken {
