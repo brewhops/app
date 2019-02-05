@@ -1,3 +1,5 @@
+import { Moment } from 'moment';
+
 export type Employee = {
   username: string;
 };
@@ -52,7 +54,7 @@ export type Version = {
     abv: number;
     temperature: number;
     pressure: number;
-    measured_on?: string;
+    measured_on?: string | Moment;
     completed?: false;
     batch_id?: number;
 };

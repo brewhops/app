@@ -6,7 +6,6 @@
     </div>
     <navbar v-bind:activeState="[true, false, false, false]" />
     <div id="content">
-      <data-entry></data-entry>
       <tank-monitoring></tank-monitoring>
     </div>
   </div>
@@ -14,7 +13,6 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import dataEntry from './data-entry.vue';
 import tankMonitoring from './tank-monitoring.vue';
 import router from '../router/index.js';
 import Cookie from 'js-cookie';
@@ -27,7 +25,6 @@ interface IHomePageState {
 export default Vue.extend({
   name: 'home',
   components: {
-    dataEntry,
     tankMonitoring,
     navbar: NavbarComponent
   },
@@ -68,15 +65,15 @@ export default Vue.extend({
   display: grid;
 
   +greater-than(desktop) {
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: 1fr;
   }
 
-  grid-template-columns: 1fr 1fr;
-  grid-template-areas: 'entry info';
+  grid-template-columns: 1fr;
+  grid-template-areas: 'info';
 
   +less-than(tablet) {
     grid-template-columns: 98vw;
-    grid-template-areas: 'entry' 'info';
+    grid-template-areas: 'info';
   }
 
   justify-items: center;

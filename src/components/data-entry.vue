@@ -6,15 +6,16 @@
     </div>
     <div id="dataEntry">
       <h2 v-if="!mobile">Data Entry</h2>
+      <span id="batchName">
+        <h4>Batch:</h4>
+        {{ batch_name }}
+      </span>
       <div id="formFields" class="grid">
         <div class="col-3">
-          <h4>Tank</h4>
-          <select v-model="tank_id" v-on:change="tankChoose">
-            <option disabled value="">Tank</option>
-            <option v-for="tank in tanks" v-bind:key="tank.id" v-bind:value="tank.id">{{
-              tank.name
-            }}</option>
-          </select>
+          <span>
+            <h4>Tank</h4>
+            {{ tank.name }}
+          </span>
         </div>
         <div class="col-3">
           <h4>Action</h4>
@@ -31,12 +32,7 @@
         </div>
         <div class="col-3">
           <h4>Recipe</h4>
-          <select v-model="recipe_id" required>
-            <option disabled value="">Recipe</option>
-            <option v-for="recipe in recipes" v-bind:key="recipe.id" v-bind:value="recipe.id">{{
-              recipe.airplane_code
-            }}</option>
-          </select>
+          {{ recipe_name }}
         </div>
         <div class="col-3 inputGroup">
           <input v-model="pH" type="number" step="0.01" required />
@@ -74,15 +70,8 @@
           <input v-model="time" type="datetime-local" />
           <label>Time Measured</label>
         </div>
-        <div class="col-1 inputGroup">
-          <input v-model="batch_name" required />
-          <label>Batch Name</label>
-        </div>
       </div>
       <button v-on:click="submit">Submit</button>
-      <router-link to="/history" v-if="!mobile">
-        <button type="button" name="button">Batch Histories</button>
-      </router-link>
     </div>
   </div>
 </template>
@@ -117,6 +106,7 @@ interface IDataEntryState {
   temp?: any;
   volume?: any;
   generation?: any;
+  recipe_name?: any;
   recipe_id?: any;
   batch_id?: any;
   batch_name?: any;
@@ -124,10 +114,10 @@ interface IDataEntryState {
   pressure?: any;
   action: number | string;
   time?: any;
-  recipes?: Recipe[];
+  recipe?: Recipe;
   update?: any;
   mobile?: any;
-  tanks?: Tank[];
+  tank?: Tank;
   actions?: Action[];
   tasks?: Task[];
   sortTanks?: any;
@@ -137,9 +127,14 @@ interface IDataEntryState {
 
 export default Vue.extend({
   name: 'data-entry',
+  props: {
+    tank_id: {
+      type: Number,
+      required: true
+    }
+  },
   data(): IDataEntryState {
     return {
-      tank_id: '',
       SG: '',
       status: '',
       pH: '',
@@ -149,15 +144,20 @@ export default Vue.extend({
       generation: '',
       recipe_id: '',
       batch_id: '',
+      recipe_name: '',
       batch_name: '',
       bright: '',
       pressure: '',
       action: '',
       time: '',
-      recipes: [],
       update: true,
       mobile: false,
-      tanks: [],
+      tank: {
+        id: -1,
+        name: '',
+        status: '',
+        in_use: false
+      },
       actions: [],
       tasks: []
     };
@@ -175,28 +175,18 @@ export default Vue.extend({
     }
 
     try {
-      const tanksResponse: HttpResponse = await this.$http.get(`${process.env.API}/tanks`);
-      const actionsResponse: HttpResponse = await this.$http.get(`${process.env.API}/actions`);
-      const recipesResponse: HttpResponse = await this.$http.get(`${process.env.API}/recipes`);
-      const tasksResponse: HttpResponse = await this.$http.get(`${process.env.API}/tasks`);
-      const tanks: Tank[] = tanksResponse.data;
-      const actions: Action[] = actionsResponse.data;
-      const recipes: Recipe[] = recipesResponse.data;
-      const tasks: Task[] = tasksResponse.data;
-      this.actions = actions;
-      this.recipes = recipes;
-      this.tasks = tasks;
+      const tankResponse: HttpResponse = await this.$http.get(
+        `${process.env.API}/tanks/id/${this.tank_id}`
+      );
+      const tank: Tank = tankResponse.data;
 
-      for (const tank of tanks) {
-        if (
-          tank.status !== 'broken' &&
-          tank.status !== 'transferring' &&
-          tank.status !== 'completed'
-        ) {
-          if (!this.tanks) this.tanks = [];
-          this.tanks.push(tank);
-        }
-      }
+      const actionsResponse: HttpResponse = await this.$http.get(`${process.env.API}/actions`);
+      const actions: Action[] = actionsResponse.data;
+
+      this.tank = tank;
+      this.actions = actions;
+
+      this.tankChoose();
     } catch (err) {
       // tslint:disable-next-line:no-console
       console.error(err);
@@ -227,7 +217,6 @@ export default Vue.extend({
         const batches: any[] = batchResponse.data;
         const { id, name } = tankResponse.data;
 
-        this.tank_id = id;
         this.tank_name = name;
 
         for (const batch of batches) {
@@ -249,6 +238,15 @@ export default Vue.extend({
             this.bright = batch.bright;
             this.recipe_id = batch.recipe_id;
             this.prevActionId = actionID;
+
+            // Get the recipe name
+            const recipeResponse: HttpResponse = await this.$http.get(
+              `${process.env.API}/recipes/id/${this.recipe_id}`
+            );
+            const recipe: Recipe = recipeResponse.data;
+            this.recipe_name = recipe.name;
+
+            break;
           }
         }
       } catch (err) {
@@ -272,9 +270,10 @@ export default Vue.extend({
         pressure: this.pressure,
         temperature: this.temp,
         sg: this.SG,
+        measured_on: moment(this.time).toISOString(),
         action: {
           id: this.action,
-          completed: this.prevActionId !== this.action ? true : false,
+          completed: this.prevActionId !== this.action,
           assigned: false,
           employee: {
             id: cookie.id
@@ -282,13 +281,15 @@ export default Vue.extend({
         }
       };
 
-      console.log(JSON.stringify(requestObject));
+      console.log(requestObject);
 
       try {
         const response = await this.$http.post(`${process.env.API}/batches`, requestObject);
       } catch (err) {
         console.error(err);
       }
+
+      this.$emit('newDataCallback');
     },
     sortTanks(a, b) {
       return a.id - b.id;
@@ -299,6 +300,9 @@ export default Vue.extend({
 
 <style lang="stylus" scoped>
 @import '../styles/breakpoints'
+
+#batchName
+  text-align center
 
 #dataEntry
   padding 15px
