@@ -12,9 +12,6 @@
         <input v-model.lazy="password" placeholder="password" type="password" />
         <span>{{ feedback.password }}</span>
         <button v-on:click="submit">Submit</button>
-        <button v-if="isAdmin" v-on:click="validateAdmin" type="button" name="button">
-          Admin Page
-        </button>
       </div>
     </div>
   </div>
@@ -140,27 +137,6 @@ export default Vue.extend({
         router.push('home-mobile');
       } else {
         router.push('home');
-      }
-    },
-    async validateAdmin(): Promise<void> {
-      if (this.isAdmin) {
-        const { username, password: pw } = this;
-
-        const password = CryptoJS.SHA3(pw).toString();
-
-        try {
-          const response = await this.$http.post(`${process.env.API}/employees/login/`, {
-            username,
-            password
-          });
-          const { id, token } = response.data;
-          this.createCookie(id, this.username, this.isAdmin, token);
-          router.push('admin');
-        } catch (err) {
-          this.feedback.password = 'Invalid Login';
-        }
-      } else {
-        this.feedback.username = 'User is not an administrator';
       }
     },
     createCookie(id, username, admin, token): void {
