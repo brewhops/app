@@ -273,6 +273,11 @@ export default Vue.extend({
       color: Black;
     }
 
+    .action12 {
+      background: rgb(128,0,128);
+      color: White;
+    }
+
     .broken {
       background: Red;
     }
