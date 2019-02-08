@@ -8,12 +8,19 @@
     <div id="content">
       <div>
         <h2>Batch</h2>
-        <select v-model="batch_id" v-on:change="batchChoose">
-          <option disabled value="">Batch</option>
-          <option v-for="(batch, idx) in batches" v-bind:key="idx" v-bind:value="batch.id">{{
-            batch.name
-          }}</option>
-        </select>
+        <div>
+          <select v-model="batch_id" v-on:change="batchChoose">
+            <option disabled value="">Batch</option>
+            <option v-for="(batch, idx) in batches" v-bind:key="idx" v-bind:value="batch.id">{{
+              batch.name
+            }}</option>
+          </select>
+          <a id="csvDownload" @click="downloadCSV()">
+            <button v-if="batch_id" type="button" name="button">
+              Download CSV
+            </button>
+          </a>
+        </div>
       </div>
       <table v-if="batch_id && batch">
         <tr>
@@ -28,35 +35,49 @@
         </tr>
       </table>
 
-      <div id="charts">
-        <chart class="chart" v-bind:date="history.date" v-bind:data="history.ph"></chart>
-        <chart class="chart" v-bind:date="history.date" v-bind:data="history.abv"></chart>
-        <chart class="chart" v-bind:date="history.date" v-bind:data="history.sg"></chart>
-        <chart class="chart" v-bind:date="history.date" v-bind:data="history.temp"></chart>
+      <div id="charts" v-if="versions && batch_id">
+        <chart
+          class="chart"
+          v-bind:title="'pH'"
+          v-bind:date="getData('measured_on')"
+          v-bind:data="getData('ph')"
+        />
+        <chart
+          class="chart"
+          v-bind:title="'ABV'"
+          v-bind:date="getData('measured_on')"
+          v-bind:data="getData('abv')"
+        />
+        <chart
+          class="chart"
+          v-bind:title="'SG'"
+          v-bind:date="getData('measured_on')"
+          v-bind:data="getData('sg')"
+        />
+        <chart
+          class="chart"
+          v-bind:title="'Tempurature'"
+          v-bind:date="getData('measured_on')"
+          v-bind:data="getData('temperature')"
+        />
       </div>
 
-      <div v-if="batch_id && histories && batch">
+      <div v-if="batch_id && versions && batch">
         <p>Versions</p>
         <table>
           <tr>
             <th v-for="title in version_titles">{{ title }}</th>
           </tr>
-          <tr v-for="history in histories">
-            <td>{{ formatDate(history.measured_on) }}</td>
-            <td>{{ history.sg }}</td>
-            <td>{{ history.ph }}</td>
-            <td>{{ history.abv }}</td>
-            <td>{{ history.temperature }}</td>
-            <td>{{ history.pressure }}</td>
+          <tr v-for="version in versions">
+            <td>{{ formatDate(version.measured_on) }}</td>
+            <td>{{ version.sg }}</td>
+            <td>{{ version.ph }}</td>
+            <td>{{ version.abv }}</td>
+            <td>{{ version.temperature }}</td>
+            <td>{{ version.pressure }}</td>
           </tr>
         </table>
       </div>
-
-      <a id="csvDownload" @click="downloadCSV()">
-        <button v-if="batch_id" type="button" name="button">
-          Download
-        </button>
-      </a>
     </div>
   </div>
 </template>
@@ -67,11 +88,9 @@ import router from '../router/index.js';
 import Cookie from 'js-cookie';
 import moment from 'moment';
 import { Batch, Version } from '../types';
-import { version } from 'punycode';
+import { Moment } from 'moment';
 import chart from './chart.vue';
 import NavbarComponent from './navbar.vue';
-
-// tslint:disable: no-any
 
 interface IHistoryState {
   batch_titles: string[];
@@ -80,8 +99,7 @@ interface IHistoryState {
   batch_id: number | string;
   batches: Batch[];
   batch: Batch;
-  histories: any[];
-  history: any;
+  versions: Version[];
 }
 
 export default Vue.extend({
@@ -104,14 +122,7 @@ export default Vue.extend({
         started_on: '',
         completed_on: ''
       },
-      histories: [],
-      history: {
-        date: ['Date'],
-        temp: ['Temperature'],
-        abv: ['ABV'],
-        sg: ['Specific Gravity'],
-        ph: ['pH']
-      }
+      versions: []
     };
   },
   async beforeMount() {
@@ -136,6 +147,9 @@ export default Vue.extend({
       }
       router.push('/');
     },
+    getData(key: string) {
+      return this.versions.map(v => v[key]);
+    },
     formatDate(date: string | null) {
       return date ? moment(date).format('MM-DD-YYYY') : '';
     },
@@ -150,8 +164,7 @@ export default Vue.extend({
           `${process.env.API}/versions/batch/${this.batch_id}`
         );
 
-        this.histories = batchResponse.data;
-        const versions: Version[] = (batchResponse.data as Version[])
+        this.versions = (batchResponse.data as Version[])
           .map((v: Version) => {
             v.measured_on = moment(v.measured_on);
             return v;
@@ -159,14 +172,6 @@ export default Vue.extend({
           .sort((a: Version, b: Version) => {
             return moment.utc(a.measured_on).diff(moment.utc(b.measured_on));
           });
-
-        for (const version of versions) {
-          this.history.date.push(version.measured_on);
-          this.history.temp.push(version.temperature);
-          this.history.abv.push(version.abv);
-          this.history.sg.push(version.sg);
-          this.history.ph.push(version.ph);
-        }
       } catch (err) {
         // tslint:disable-next-line:no-console
         console.error(err);
@@ -183,29 +188,26 @@ export default Vue.extend({
       }
     },
     generateCSV() {
-      let rows: (string | number | undefined)[][] = [];
-      rows.push(this.batch_titles);
-      rows.push([
+      const rows = this.versions.map((v: Version) => [
+        v.measured_on,
+        v.sg,
+        v.ph,
+        v.abv,
+        v.temperature,
+        v.pressure
+      ]);
+      const csvHeader = 'data:text/csv;charset=utf-8,';
+      const batchHeader = `${this.batch_titles.toString()}\r\n`;
+      const versionsHeader = `${this.version_titles.toString()}\r\n`;
+      const batchContent = `${[
         this.batch.volume,
         this.batch.bright,
         this.batch.generation,
         this.batch.started_on,
         this.batch.completed_on
-      ]);
-      rows.push(this.version_titles);
-      rows = rows.concat(
-        this.histories.map(history => [
-          history.measured_on,
-          history.sg,
-          history.ph,
-          history.abv,
-          history.temperature,
-          history.pressure
-        ])
-      );
-
-      let csvHeader = 'data:text/csv;charset=utf-8,';
-      let csvContent = `${csvHeader}${rows.map(row => `${row.join(',')},`).join('\r\n')}`;
+      ].toString()}\r\n`;
+      const versionContent = `${rows.map(row => `${row.join(',')},`).join('\r\n')}`;
+      const csvContent = `${csvHeader}${batchHeader}${batchContent}${versionsHeader}${versionContent}`;
 
       return csvContent;
     }
