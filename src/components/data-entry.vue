@@ -122,7 +122,7 @@ interface IDataEntryState {
   tasks?: Task[];
   sortTanks?: any;
   debugging?: any;
-  prevActionId?: number;
+  previousTask?: Task;
 }
 
 export default Vue.extend({
@@ -183,10 +183,14 @@ export default Vue.extend({
       const actionsResponse: HttpResponse = await this.$http.get(`${process.env.API}/actions`);
       const actions: Action[] = actionsResponse.data;
 
+      const tasksResponse: HttpResponse = await this.$http.get(`${process.env.API}/tasks`);
+      const tasks: Task[] = tasksResponse.data;
+
       this.tank = tank;
       this.actions = actions;
+      this.tasks = tasks;
 
-      this.tankChoose();
+      this.loadData();
     } catch (err) {
       // tslint:disable-next-line:no-console
       console.error(err);
@@ -194,7 +198,7 @@ export default Vue.extend({
   },
   methods: {
     // tslint:disable-next-line:max-func-body-length
-    async tankChoose() {
+    async loadData() {
       // clear all our values each time we choose a new tank
       this.batch_id = '';
       this.batch_name = '';
@@ -221,12 +225,12 @@ export default Vue.extend({
 
         for (const batch of batches) {
           if (batch.tank_id === id) {
-            let actionID;
+            let pTask;
             // find the current action id
             if (this.tasks) {
               this.tasks.forEach((task: Task) => {
                 if (task.batch_id === batch.id) {
-                  actionID = task.action_id;
+                  pTask = task;
                 }
               });
             }
@@ -234,10 +238,13 @@ export default Vue.extend({
             this.batch_id = batch.id;
             this.batch_name = batch.name;
             this.generation = batch.generation;
-            this.volume = batch.volume;
-            this.bright = batch.bright;
+            this.volume = batch.volume.toFixed(2);
+            this.bright = batch.bright.toFixed(1);
             this.recipe_id = batch.recipe_id;
-            this.prevActionId = actionID;
+
+            if (pTask !== undefined) {
+              this.previousTask = pTask;
+            }
 
             // Get the recipe name
             const recipeResponse: HttpResponse = await this.$http.get(
@@ -258,6 +265,16 @@ export default Vue.extend({
     async submit() {
       const cookie: BrewhopsCookie = Cookie.getJSON('loggedIn');
 
+      if (this.previousTask && this.previousTask.action_id !== this.action) {
+        let task: Task = this.previousTask;
+        task.completed_on = moment().toISOString();
+        try {
+          const response = await this.$http.patch(`${process.env.API}/tasks`, task);
+        } catch (err) {
+          console.error(err);
+        }
+      }
+
       const requestObject: BatchUpdateOrCreate = {
         recipe_id: this.recipe_id,
         tank_id: this.tank_id,
@@ -273,7 +290,7 @@ export default Vue.extend({
         measured_on: moment(this.time).toISOString(),
         action: {
           id: this.action,
-          completed: this.prevActionId !== this.action,
+          completed: false,
           assigned: false,
           employee: {
             id: cookie.id
