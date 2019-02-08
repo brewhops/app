@@ -4,17 +4,17 @@
       <router-link to="/home-mobile">Home</router-link>
       <h2>Data Entry</h2>
     </div>
-    <div id="dataEntry">
+    <form id="dataEntry" @submit.prevent="submit">
       <h2 v-if="!mobile">Data Entry</h2>
       <span id="batchName">
         <h4>Batch:</h4>
-        {{ batch_name }}
+        {{ model.batch_name }}
       </span>
       <div id="formFields" class="grid">
         <div class="col-3">
           <span>
             <h4>Tank</h4>
-            {{ tank.name }}
+            {{ model.tank_name }}
           </span>
         </div>
         <div class="col-3">
@@ -22,7 +22,7 @@
           <select v-model="action">
             <option value="">No Action</option>
             <option
-              v-for="action_option in actions"
+              v-for="action_option in model.actions"
               v-bind:key="action_option.id"
               v-bind:value="action_option.id"
             >
@@ -32,7 +32,7 @@
         </div>
         <div class="col-3">
           <h4>Recipe</h4>
-          {{ recipe_name }}
+          {{ model.recipe_name }}
         </div>
         <div class="col-3 inputGroup">
           <input v-model="pH" type="number" step="0.01" required />
@@ -71,8 +71,8 @@
           <label>Time Measured</label>
         </div>
       </div>
-      <button v-on:click="submit">Submit</button>
-    </div>
+      <button>Submit</button>
+    </form>
   </div>
 </template>
 
@@ -80,7 +80,7 @@
 import Vue from 'vue';
 import router from '../router/index.js';
 import Cookie from 'js-cookie';
-import moment from 'moment';
+import moment, { unix } from 'moment';
 import {
   Tank,
   Action,
@@ -94,35 +94,38 @@ import {
 } from '../types';
 import { HttpResponse } from 'vue-resource/types/vue_resource';
 
-// tslint:disable:no-any no-console
+interface IDataEntryViewModel {
+  tank_name: string;
+  recipe_name: string;
+  batch_name: string;
+  actions: Action[];
+}
 
+// tslint:disable:no-any no-console
 interface IDataEntryState {
-  SG?: any;
-  tank_id?: string;
-  tank_name?: string;
-  status?: any;
-  pH?: any;
-  ABV?: any;
-  temp?: any;
-  volume?: any;
-  generation?: any;
-  recipe_name?: any;
-  recipe_id?: any;
-  batch_id?: any;
-  batch_name?: any;
-  bright?: any;
-  pressure?: any;
+  model: IDataEntryViewModel;
+
+  pH: string;
+  ABV: string;
+  bright: string;
+  pressure: string;
+  generation: string;
+  volume: string;
+  SG: string;
+  temp: string;
+  time: string;
   action: number | string;
-  time?: any;
+
+  tank?: Tank;
   recipe?: Recipe;
+  batch?: Batch;
+  tasks?: Task[];
+  activeTask?: Task;
+
   update?: any;
   mobile?: any;
-  tank?: Tank;
-  actions?: Action[];
-  tasks?: Task[];
   sortTanks?: any;
   debugging?: any;
-  previousTask?: Task;
 }
 
 export default Vue.extend({
@@ -135,31 +138,32 @@ export default Vue.extend({
   },
   data(): IDataEntryState {
     return {
-      SG: '',
-      status: '',
+      model: {
+        tank_name: '',
+        recipe_name: '',
+        batch_name: '',
+        actions: []
+      },
+
       pH: '',
       ABV: '',
-      temp: '',
-      volume: '',
-      generation: '',
-      recipe_id: '',
-      batch_id: '',
-      recipe_name: '',
-      batch_name: '',
       bright: '',
       pressure: '',
-      action: '',
+      generation: '',
+      volume: '',
+      SG: '',
+      temp: '',
       time: '',
+      action: '',
+
+      tank: undefined,
+      batch: undefined,
+      recipe: undefined,
+      tasks: [],
+      activeTask: undefined,
+
       update: true,
-      mobile: false,
-      tank: {
-        id: -1,
-        name: '',
-        status: '',
-        in_use: false
-      },
-      actions: [],
-      tasks: []
+      mobile: false
     };
   },
   async beforeMount() {
@@ -187,7 +191,10 @@ export default Vue.extend({
       const tasks: Task[] = tasksResponse.data;
 
       this.tank = tank;
-      this.actions = actions;
+      this.model = {
+        ...this.model,
+        actions
+      };
       this.tasks = tasks;
 
       this.loadData();
@@ -200,73 +207,82 @@ export default Vue.extend({
     // tslint:disable-next-line:max-func-body-length
     async loadData() {
       // clear all our values each time we choose a new tank
-      this.batch_id = '';
-      this.batch_name = '';
-      this.generation = '';
-      this.volume = '';
-      this.recipe_id = '';
-      this.ABV = '';
+      this.model = {
+        ...this.model,
+        batch_name: ''
+      };
       this.pH = '';
-      this.temp = '';
-      this.SG = '';
+      this.ABV = '';
       this.bright = '';
       this.pressure = '';
+      this.generation = '';
+      this.volume = '';
+      this.SG = '';
+      this.temp = '';
       // set the time with the required dateime format eg "2018-05-10T15:08"
       this.time = moment().format('YYYY-MM-DDTHH:mm');
 
       try {
-        const tankResponse = await this.$http.get(`${process.env.API}/tanks/id/${this.tank_id}`);
-        // tslint:disable-next-line:no-any
-        const batchResponse = await this.$http.get(`${process.env.API}/batches`);
-        const batches: any[] = batchResponse.data;
-        const { id, name } = tankResponse.data;
+        const tankResponse: HttpResponse = await this.$http.get(
+          `${process.env.API}/tanks/id/${this.tank_id}`
+        );
+        const tank: Tank = tankResponse.data;
 
-        this.tank_name = name;
+        this.tank = tank;
+        this.model = {
+          ...this.model,
+          tank_name: tank.name
+        };
 
-        for (const batch of batches) {
-          if (batch.tank_id === id) {
-            let pTask;
-            // find the current action id
-            if (this.tasks) {
-              this.tasks.forEach((task: Task) => {
-                if (task.batch_id === batch.id) {
-                  pTask = task;
-                }
-              });
-            }
-            // save batch_id, generation, volume, recipe_id
-            this.batch_id = batch.id;
-            this.batch_name = batch.name;
-            this.generation = batch.generation;
-            this.volume = batch.volume.toFixed(2);
-            this.bright = batch.bright.toFixed(1);
-            this.recipe_id = batch.recipe_id;
+        const batchResponse: HttpResponse = await this.$http.get(
+          `${process.env.API}/batches/tank/${this.tank_id}`
+        );
+        const batches: Batch[] = batchResponse.data;
 
-            if (pTask !== undefined) {
-              this.previousTask = pTask;
-            }
+        const batch: Batch = batches.filter((b: Batch) => b.completed_on === null)[0];
+        this.batch = batch;
+        this.model = {
+          ...this.model,
+          batch_name: batch.name
+        };
+        this.generation = batch.generation.toString();
+        this.volume = batch.volume.toFixed(2);
+        this.bright = batch.bright.toFixed(1);
 
-            // Get the recipe name
-            const recipeResponse: HttpResponse = await this.$http.get(
-              `${process.env.API}/recipes/id/${this.recipe_id}`
-            );
-            const recipe: Recipe = recipeResponse.data;
-            this.recipe_name = recipe.name;
+        // Get active task
+        const tasksResponse = await this.$http.get(`${process.env.API}/tasks/batch/${batch.id}`);
+        const batchTasks: Task[] = tasksResponse.data;
 
-            break;
-          }
+        const activeTasks: Task[] = batchTasks.filter((t: Task) => t.completed_on === null);
+
+        if (activeTasks.length > 0) {
+          this.activeTask = activeTasks[0];
+        } else {
+          this.activeTask = undefined;
         }
+
+        // Get the recipe name
+        const recipeResponse: HttpResponse = await this.$http.get(
+          `${process.env.API}/recipes/id/${batch.recipe_id}`
+        );
+        const recipe: Recipe = recipeResponse.data;
+
+        this.recipe = recipe;
+        this.model = {
+          ...this.model,
+          recipe_name: recipe.name
+        };
       } catch (err) {
         // tslint:disable-next-line:no-console
         console.error(err);
       }
     },
     // tslint:disable-next-line:max-func-body-length
-    async submit() {
+    async submit(event) {
       const cookie: BrewhopsCookie = Cookie.getJSON('loggedIn');
 
-      if (this.previousTask && this.previousTask.action_id !== this.action) {
-        let task: Task = this.previousTask;
+      if (this.activeTask && this.activeTask.action_id !== this.action) {
+        const task: Task = this.activeTask;
         task.completed_on = moment().toISOString();
         try {
           const response = await this.$http.patch(`${process.env.API}/tasks`, task);
@@ -276,17 +292,17 @@ export default Vue.extend({
       }
 
       const requestObject: BatchUpdateOrCreate = {
-        recipe_id: this.recipe_id,
+        recipe_id: this.recipe!.id,
         tank_id: this.tank_id,
-        volume: this.volume,
-        bright: this.bright,
-        generation: this.generation,
-        name: this.batch_name,
-        ph: this.pH,
-        abv: this.ABV,
-        pressure: this.pressure,
-        temperature: this.temp,
-        sg: this.SG,
+        volume: Number(this.volume),
+        bright: Number(this.bright),
+        generation: Number(this.generation),
+        name: this.model.batch_name,
+        ph: Number(this.pH),
+        abv: Number(this.ABV),
+        pressure: Number(this.pressure),
+        temperature: Number(this.temp),
+        sg: Number(this.SG),
         measured_on: moment(this.time).toISOString(),
         action: {
           id: this.action,
@@ -298,18 +314,14 @@ export default Vue.extend({
         }
       };
 
-      console.log(requestObject);
-
       try {
         const response = await this.$http.post(`${process.env.API}/batches`, requestObject);
+        this.$emit('newDataCallback');
+        this.loadData();
+        event.target.reset();
       } catch (err) {
         console.error(err);
       }
-
-      this.$emit('newDataCallback');
-    },
-    sortTanks(a, b) {
-      return a.id - b.id;
     }
   }
 });
