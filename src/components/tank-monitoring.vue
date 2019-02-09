@@ -178,8 +178,6 @@ export default Vue.extend({
   }
 
   #tankContents {
-    max-height: 80vh;
-    overflow: scroll;
     display: grid;
     justify-content: center;
     grid-gap: 10px;
