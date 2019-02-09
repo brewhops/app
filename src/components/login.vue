@@ -7,9 +7,14 @@
       <div id="login">
         <img src="../assets/logo.png" class="logo-med" />
         <h2>Login</h2>
-        <input v-model.lazy="username" placeholder="username" />
+        <input v-model.lazy="username" v-on:keyup.enter="submit" placeholder="username" />
         <span>{{ feedback.username }}</span>
-        <input v-model.lazy="password" placeholder="password" type="password" />
+        <input
+          v-model.lazy="password"
+          v-on:keyup.enter="submit"
+          placeholder="password"
+          type="password"
+        />
         <span>{{ feedback.password }}</span>
         <button v-on:click="submit">Submit</button>
       </div>
