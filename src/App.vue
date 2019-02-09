@@ -111,6 +111,7 @@ input, .dropdown
 
 select
   margin 10px 0
+  width 100%
 
 .checkbox
   display flex
