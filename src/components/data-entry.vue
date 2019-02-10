@@ -239,6 +239,7 @@ export default Vue.extend({
         );
         const batches: Batch[] = batchResponse.data;
 
+        // Get current batch
         const batch: Batch = batches.filter((b: Batch) => b.completed_on === null)[0];
         this.batch = batch;
         this.model = {
@@ -292,12 +293,12 @@ export default Vue.extend({
       }
 
       const requestObject: BatchUpdateOrCreate = {
-        recipe_id: this.recipe!.id,
-        tank_id: this.tank_id,
+        recipe_id: Number(this.recipe!.id),
+        tank_id: Number(this.tank!.id),
         volume: Number(this.volume),
         bright: Number(this.bright),
         generation: Number(this.generation),
-        name: this.model.batch_name,
+        name: this.batch!.name,
         ph: Number(this.pH),
         abv: Number(this.ABV),
         pressure: Number(this.pressure),

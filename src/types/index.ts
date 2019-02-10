@@ -16,7 +16,7 @@ export type Action = {
 };
 
 export type Recipe = {
-  id: string;
+  id: number;
   name: string;
   airplane_code: string;
   yeast: number;
