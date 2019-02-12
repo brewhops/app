@@ -220,6 +220,17 @@ export default Vue.extend({
     }
   },
   methods: {
+    async reset() {
+      this.pH = '';
+      this.ABV = '';
+      this.bright = '';
+      this.pressure = '';
+      this.generation = '';
+      this.volume = '';
+      this.SG = '';
+      this.temp = '';
+      this.action = '';
+    },
     // tslint:disable-next-line:max-func-body-length
     async submit(event) {
       const cookie: BrewhopsCookie = Cookie.getJSON('loggedIn');
@@ -260,6 +271,7 @@ export default Vue.extend({
       try {
         const response = await this.$http.post(`${process.env.API}/batches`, requestObject);
         this.$emit('newDataCallback');
+        this.reset();
         event.target.reset();
       } catch (err) {
         console.error(err);
