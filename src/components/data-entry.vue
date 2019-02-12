@@ -116,12 +116,6 @@ interface IDataEntryState {
   time: string;
   action: number | string;
 
-  tank?: Tank;
-  recipe?: Recipe;
-  batch?: Batch;
-  tasks?: Task[];
-  activeTask?: Task;
-
   update?: any;
   mobile?: any;
   sortTanks?: any;
@@ -131,9 +125,22 @@ interface IDataEntryState {
 export default Vue.extend({
   name: 'data-entry',
   props: {
-    tank_id: {
-      type: Number,
-      required: true
+    tank: {
+      type: Object,
+      required: false
+    },
+    batch: {
+      type: Object,
+      required: false
+    },
+    recipe: {
+      type: Object,
+      required: false
+    },
+    activeTask: {
+      type: Object,
+      required: false,
+      default: undefined
     }
   },
   data(): IDataEntryState {
@@ -156,15 +163,33 @@ export default Vue.extend({
       time: '',
       action: '',
 
-      tank: undefined,
-      batch: undefined,
-      recipe: undefined,
-      tasks: [],
-      activeTask: undefined,
-
       update: true,
       mobile: false
     };
+  },
+  watch: {
+    tank() {
+      this.model = {
+        ...this.model,
+        tank_name: this.tank!.name
+      };
+    },
+    recipe() {
+      this.model = {
+        ...this.model,
+        recipe_name: this.recipe!.name
+      };
+    },
+    batch() {
+      this.model = {
+        ...this.model,
+        batch_name: this.batch!.name
+      };
+
+      this.generation = this.batch!.generation.toString();
+      this.volume = this.batch!.volume.toFixed(2);
+      this.bright = this.batch!.bright.toFixed(1);
+    }
   },
   async beforeMount() {
     if (!Cookie.getJSON('loggedIn')) {
@@ -178,106 +203,23 @@ export default Vue.extend({
       this.mobile = true;
     }
 
-    try {
-      const tankResponse: HttpResponse = await this.$http.get(
-        `${process.env.API}/tanks/id/${this.tank_id}`
-      );
-      const tank: Tank = tankResponse.data;
+    // set the time with the required dateime format eg "2018-05-10T15:08"
+    this.time = moment().format('YYYY-MM-DDTHH:mm');
 
+    try {
       const actionsResponse: HttpResponse = await this.$http.get(`${process.env.API}/actions`);
       const actions: Action[] = actionsResponse.data;
 
-      const tasksResponse: HttpResponse = await this.$http.get(`${process.env.API}/tasks`);
-      const tasks: Task[] = tasksResponse.data;
-
-      this.tank = tank;
       this.model = {
         ...this.model,
         actions
       };
-      this.tasks = tasks;
-
-      this.loadData();
     } catch (err) {
       // tslint:disable-next-line:no-console
       console.error(err);
     }
   },
   methods: {
-    // tslint:disable-next-line:max-func-body-length
-    async loadData() {
-      // clear all our values each time we choose a new tank
-      this.model = {
-        ...this.model,
-        batch_name: ''
-      };
-      this.pH = '';
-      this.ABV = '';
-      this.bright = '';
-      this.pressure = '';
-      this.generation = '';
-      this.volume = '';
-      this.SG = '';
-      this.temp = '';
-      // set the time with the required dateime format eg "2018-05-10T15:08"
-      this.time = moment().format('YYYY-MM-DDTHH:mm');
-
-      try {
-        const tankResponse: HttpResponse = await this.$http.get(
-          `${process.env.API}/tanks/id/${this.tank_id}`
-        );
-        const tank: Tank = tankResponse.data;
-
-        this.tank = tank;
-        this.model = {
-          ...this.model,
-          tank_name: tank.name
-        };
-
-        const batchResponse: HttpResponse = await this.$http.get(
-          `${process.env.API}/batches/tank/${this.tank_id}`
-        );
-        const batches: Batch[] = batchResponse.data;
-
-        // Get current batch
-        const batch: Batch = batches.filter((b: Batch) => b.completed_on === null)[0];
-        this.batch = batch;
-        this.model = {
-          ...this.model,
-          batch_name: batch.name
-        };
-        this.generation = batch.generation.toString();
-        this.volume = batch.volume.toFixed(2);
-        this.bright = batch.bright.toFixed(1);
-
-        // Get active task
-        const tasksResponse = await this.$http.get(`${process.env.API}/tasks/batch/${batch.id}`);
-        const batchTasks: Task[] = tasksResponse.data;
-
-        const activeTasks: Task[] = batchTasks.filter((t: Task) => t.completed_on === null);
-
-        if (activeTasks.length > 0) {
-          this.activeTask = activeTasks[0];
-        } else {
-          this.activeTask = undefined;
-        }
-
-        // Get the recipe name
-        const recipeResponse: HttpResponse = await this.$http.get(
-          `${process.env.API}/recipes/id/${batch.recipe_id}`
-        );
-        const recipe: Recipe = recipeResponse.data;
-
-        this.recipe = recipe;
-        this.model = {
-          ...this.model,
-          recipe_name: recipe.name
-        };
-      } catch (err) {
-        // tslint:disable-next-line:no-console
-        console.error(err);
-      }
-    },
     // tslint:disable-next-line:max-func-body-length
     async submit(event) {
       const cookie: BrewhopsCookie = Cookie.getJSON('loggedIn');
@@ -318,7 +260,6 @@ export default Vue.extend({
       try {
         const response = await this.$http.post(`${process.env.API}/batches`, requestObject);
         this.$emit('newDataCallback');
-        this.loadData();
         event.target.reset();
       } catch (err) {
         console.error(err);
