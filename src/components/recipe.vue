@@ -1,5 +1,5 @@
 <template>
-  <div id="recipe">
+  <div v-show="recipe" id="recipe">
     <h2>{{ name }}</h2>
     <table class="table">
       <thead>
