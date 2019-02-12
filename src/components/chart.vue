@@ -28,13 +28,15 @@ interface IChart {
 
 export default Vue.extend({
   name: 'chart',
-  props: ['date', 'data'],
+  props: ['title', 'date', 'data'],
   data() {
     return {};
   },
   watch: {
     // when the data array changes, redraw the chart
     data() {
+      this.data.unshift(this.title);
+      this.date.unshift('Date');
       // create our chart
       c3.generate({
         // bind it to this instance of the component
