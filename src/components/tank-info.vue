@@ -82,12 +82,32 @@
       </div>
 
       <div id="data">
-        <h2>Brand History</h2>
+        <h2>Batch History</h2>
         <div id="charts">
-          <chart class="chart" v-bind:date="history.date" v-bind:data="history.ph"></chart>
-          <chart class="chart" v-bind:date="history.date" v-bind:data="history.abv"></chart>
-          <chart class="chart" v-bind:date="history.date" v-bind:data="history.sg"></chart>
-          <chart class="chart" v-bind:date="history.date" v-bind:data="history.temp"></chart>
+          <chart
+            class="chart"
+            v-bind:title="'pH'"
+            v-bind:date="getData('measured_on')"
+            v-bind:data="getData('ph')"
+          />
+          <chart
+            class="chart"
+            v-bind:title="'ABV'"
+            v-bind:date="getData('measured_on')"
+            v-bind:data="getData('abv')"
+          />
+          <chart
+            class="chart"
+            v-bind:title="'SG'"
+            v-bind:date="getData('measured_on')"
+            v-bind:data="getData('sg')"
+          />
+          <chart
+            class="chart"
+            v-bind:title="'Tempurature'"
+            v-bind:date="getData('measured_on')"
+            v-bind:data="getData('temperature')"
+          />
         </div>
       </div>
     </div>
@@ -104,19 +124,19 @@ import navbar from './navbar.vue';
 import router from '../router/index.js';
 import Cookie from 'js-cookie';
 
-import moment, { unix, months } from 'moment';
+import moment, { unix, months, Moment } from 'moment';
 import { Batch, Tank, Task, Action, Version, Recipe } from '../types';
 
 // tslint:disable: no-any
 interface ITankInfoState {
   tankInfo?: any;
   batch?: Batch;
+  versions: Version[];
   tank?: Tank;
   task?: Task;
   recipe?: Recipe;
   action?: Action;
   doneLink?: any;
-  history?: any;
   home?: any;
   mobile?: any;
   debugging?: string;
@@ -150,13 +170,6 @@ export default Vue.extend({
         action: '',
         in_use: undefined
       },
-      history: {
-        date: ['Date'],
-        temp: ['Temperature'],
-        abv: ['ABV'],
-        sg: ['Specific Gravity'],
-        ph: ['pH']
-      },
       doneLink: '',
       home: '',
       mobile: false,
@@ -164,6 +177,7 @@ export default Vue.extend({
       tank: undefined,
       task: undefined,
       batch: undefined,
+      versions: [],
       recipe: undefined,
       action: undefined
     };
@@ -211,6 +225,9 @@ export default Vue.extend({
     await this.loadData();
   },
   methods: {
+    getData(key: string) {
+      return this.versions.map((v: Version) => v[key]);
+    },
     async loadData() {
       await this.loadBatchData();
       await this.loadTaskData();
@@ -325,33 +342,19 @@ export default Vue.extend({
             `${process.env.API}/versions/batch/${this.tankInfo.batch_id}`
           );
 
-          const versions: Version[] = (response.data as Version[]).sort(
-            (a: Version, b: Version) => {
-              return moment.utc(moment(a.measured_on)).diff(moment.utc(moment(b.measured_on)));
-            }
-          );
+          this.versions = [];
+          this.versions = (response.data as Version[])
+            .map((v: Version) => {
+              v.measured_on = moment(v.measured_on);
+              return v;
+            })
+            .sort((a: Version, b: Version) => {
+              return moment.utc(a.measured_on).diff(moment.utc(b.measured_on));
+            });
 
-          let history;
-
-          if (versions.length > 0) {
-            history = {
-              date: ['Date'],
-              temp: ['Temperature'],
-              abv: ['ABV'],
-              sg: ['Specific Gravity'],
-              ph: ['pH']
-            };
-
-            for (const version of versions) {
-              history.date.push(moment(version.measured_on));
-              history.temp.push(version.temperature);
-              history.abv.push(version.abv);
-              history.sg.push(version.sg);
-              history.ph.push(version.ph);
-            }
-
+          if (this.versions.length > 0) {
             // Set current data
-            const lastVersion = versions[versions.length - 1];
+            const lastVersion = this.versions[this.versions.length - 1];
 
             this.tankInfo.ABV = lastVersion.abv;
             this.tankInfo.pH = lastVersion.ph;
@@ -360,7 +363,7 @@ export default Vue.extend({
             this.tankInfo.pressure = lastVersion.pressure;
             // use a lowercase h to change the hours from 24 to 12
             // the mm sets the minute with a leading 0
-            this.tankInfo.time = moment(lastVersion.measured_on).format('MM/DD/YY H:mm');
+            this.tankInfo.time = (lastVersion.measured_on as Moment).format('MM/DD/YY H:mm');
           } else {
             this.tankInfo.ABV = '';
             this.tankInfo.pH = '';
@@ -368,8 +371,6 @@ export default Vue.extend({
             this.tankInfo.SG = '';
             this.tankInfo.pressure = '';
           }
-
-          this.history = history;
         } catch (err) {
           // tslint:disable-next-line:no-console
           console.error(err);

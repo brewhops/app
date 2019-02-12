@@ -9,7 +9,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in ingredients" v-bind:key="item">
+        <tr v-for="item in ingredients" v-bind:key="item.ingredient">
           <td>{{ item.ingredient }}</td>
           <td>{{ item.ratio }}</td>
         </tr>
