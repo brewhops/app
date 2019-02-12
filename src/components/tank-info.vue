@@ -81,7 +81,7 @@
         </div>
       </div>
 
-      <div id="data">
+      <div v-show="versions.length > 0" id="data">
         <h2>Batch History</h2>
         <div id="charts">
           <chart
