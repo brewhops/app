@@ -66,11 +66,18 @@
             </tbody>
           </table>
 
-          <recipe v-bind:recipeID="tankInfo.recipe_id"></recipe>
+          <recipe id="recipe" v-bind:recipe="recipe"></recipe>
         </div>
 
         <div id="entry">
-          <data-entry v-bind:tank_id="tankInfo.id" @newDataCallback="loadData"></data-entry>
+          <data-entry
+            v-bind:tank="tank"
+            v-bind:batch="batch"
+            v-bind:recipe="recipe"
+            v-bind:activeTask="task"
+            @newDataCallback="loadData"
+          >
+          </data-entry>
         </div>
       </div>
 
@@ -98,13 +105,15 @@ import router from '../router/index.js';
 import Cookie from 'js-cookie';
 
 import moment, { unix, months } from 'moment';
-import { Batch, Tank, Task, Action, Version } from '../types';
+import { Batch, Tank, Task, Action, Version, Recipe } from '../types';
 
 // tslint:disable: no-any
 interface ITankInfoState {
   tankInfo?: any;
   batch?: Batch;
+  tank?: Tank;
   task?: Task;
+  recipe?: Recipe;
   action?: Action;
   doneLink?: any;
   history?: any;
@@ -152,8 +161,10 @@ export default Vue.extend({
       home: '',
       mobile: false,
       debugging: '',
-      batch: undefined,
+      tank: undefined,
       task: undefined,
+      batch: undefined,
+      recipe: undefined,
       action: undefined
     };
   },
@@ -181,13 +192,15 @@ export default Vue.extend({
       const response = await this.$http.get(
         `${process.env.API}/tanks/id/${this.$route.params.tankID}`
       );
-      const { id, name, status, in_use }: Tank = response.data as Tank;
+      const tank: Tank = response.data as Tank;
+      this.tank = tank;
+
       this.tankInfo = {
         ...this.tankInfo,
-        id,
-        name,
-        status,
-        in_use
+        id: tank.id,
+        name: tank.name,
+        status: tank.status,
+        in_use: tank.in_use
       };
     } catch (err) {
       // tslint:disable-next-line:no-console
@@ -224,9 +237,6 @@ export default Vue.extend({
         } else if (openBatches.length == 1) {
           // Found only open batch
           batch = openBatches[0];
-        } else {
-          // No batches found return
-          batch = undefined;
         }
 
         // Set the current batch
@@ -249,6 +259,17 @@ export default Vue.extend({
           this.tankInfo.volume = '';
           this.tankInfo.recipe_id = '';
         }
+
+        let recipe: Recipe | undefined;
+        if (batch) {
+          // Get the recipe
+          const recipeResponse = await this.$http.get(
+            `${process.env.API}/recipes/id/${batch.recipe_id}`
+          );
+          recipe = recipeResponse.data;
+        }
+
+        this.recipe = recipe;
       } catch (err) {
         this.debugging = 'Debugging Flag: Response error, cant access batches page';
       }
@@ -272,28 +293,25 @@ export default Vue.extend({
           } else if (activeTasks.length === 1) {
             // Only one active task
             task = activeTasks[0];
-          } else {
-            // No active tasks
-            task = undefined;
           }
 
           this.task = task;
 
+          let action: Action | undefined;
           if (task) {
             // get the action name associated with the task
             const actionResponse = await this.$http.get(
               `${process.env.API}/actions/id/${task.action_id}`
             );
-            const action: Action = actionResponse.data as Action;
-
-            this.action = action;
+            action = actionResponse.data as Action;
 
             this.tankInfo.action = action.name;
             this.tankInfo.time = moment(task.added_on).format('MM/DD/YY H:mm');
           } else {
-            this.action = undefined;
             this.tankInfo.action = '';
           }
+
+          this.action = action;
         } catch (err) {
           // tslint:disable-next-line:no-console
           console.error(err);
@@ -313,8 +331,10 @@ export default Vue.extend({
             }
           );
 
+          let history;
+
           if (versions.length > 0) {
-            this.history = {
+            history = {
               date: ['Date'],
               temp: ['Temperature'],
               abv: ['ABV'],
@@ -323,11 +343,11 @@ export default Vue.extend({
             };
 
             for (const version of versions) {
-              this.history.date.push(moment(version.measured_on));
-              this.history.temp.push(version.temperature);
-              this.history.abv.push(version.abv);
-              this.history.sg.push(version.sg);
-              this.history.ph.push(version.ph);
+              history.date.push(moment(version.measured_on));
+              history.temp.push(version.temperature);
+              history.abv.push(version.abv);
+              history.sg.push(version.sg);
+              history.ph.push(version.ph);
             }
 
             // Set current data
@@ -342,14 +362,14 @@ export default Vue.extend({
             // the mm sets the minute with a leading 0
             this.tankInfo.time = moment(lastVersion.measured_on).format('MM/DD/YY H:mm');
           } else {
-            this.history = undefined;
-
             this.tankInfo.ABV = '';
             this.tankInfo.pH = '';
             this.tankInfo.temp = '';
             this.tankInfo.SG = '';
             this.tankInfo.pressure = '';
           }
+
+          this.history = history;
         } catch (err) {
           // tslint:disable-next-line:no-console
           console.error(err);
@@ -378,6 +398,9 @@ export default Vue.extend({
   +less-than(mobile)
     grid-template-columns 92vw
     grid-template-areas "tank" "recipe"
+
+#recipe
+  margin-top 30px
 
 #data
   justify-content center
