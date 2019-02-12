@@ -1,11 +1,19 @@
 <template>
   <div id="recipe">
     <h2>{{ name }}</h2>
-    <table>
-      <tr v-for="(ratio, ingredient) in ingredients" v-bind:key="ingredient">
-        <td>{{ ingredient }}</td>
-        <td>{{ ratio }}</td>
-      </tr>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Ingredient</th>
+          <th>Ratio</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="item in ingredients" v-bind:key="item">
+          <td>{{ item.ingredient }}</td>
+          <td>{{ item.ratio }}</td>
+        </tr>
+      </tbody>
     </table>
   </div>
 </template>
@@ -23,7 +31,7 @@ interface IRecipeState {
 
 export default Vue.extend({
   name: 'recipe',
-  props: ['recipeID'],
+  props: ['recipe'],
   data(): IRecipeState {
     return {
       mobile: false,
@@ -47,17 +55,11 @@ export default Vue.extend({
   },
   watch: {
     // tslint:disable-next-line:object-literal-shorthand
-    async recipeID() {
-      if (this.recipeID) {
-        try {
-          const response = await this.$http.get(`${process.env.API}/recipes/id/${this.recipeID}`);
-          const { recipe_name, instructions } = response.data;
-          this.name = recipe_name;
-          this.ingredients = JSON.parse(instructions);
-        } catch (err) {
-          console.warn('Failed to get recipe', err);
-        }
-      }
+    async recipe() {
+      const { name, instructions } = this.recipe;
+
+      this.name = name;
+      this.ingredients = instructions;
     }
   }
 });
@@ -70,10 +72,12 @@ export default Vue.extend({
   table
     text-align left
     margin auto
+    thead, tbody
+      td, th
+        padding-right 10px
+        padding-left 10px
+        padding-top 5px
+        padding-bottom 5px
   h2, h3, h4
     text-align center
-
-table
-  td
-    padding 5px
 </style>
