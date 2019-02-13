@@ -66,21 +66,48 @@
             </tbody>
           </table>
 
-          <recipe v-bind:recipeID="tankInfo.recipe_id"></recipe>
+          <recipe id="recipe" v-bind:recipe="recipe"></recipe>
         </div>
 
         <div id="entry">
-          <data-entry v-bind:tank_id="tankInfo.id" @newDataCallback="loadHistoryData"></data-entry>
+          <data-entry
+            v-bind:tank="tank"
+            v-bind:batch="batch"
+            v-bind:recipe="recipe"
+            v-bind:activeTask="task"
+            @newDataCallback="loadData"
+          >
+          </data-entry>
         </div>
       </div>
 
-      <div id="data">
-        <h2>Brand History</h2>
+      <div v-show="versions.length > 0" id="data">
+        <h2>Batch History</h2>
         <div id="charts">
-          <chart class="chart" v-bind:date="history.date" v-bind:data="history.ph"></chart>
-          <chart class="chart" v-bind:date="history.date" v-bind:data="history.abv"></chart>
-          <chart class="chart" v-bind:date="history.date" v-bind:data="history.sg"></chart>
-          <chart class="chart" v-bind:date="history.date" v-bind:data="history.temp"></chart>
+          <chart
+            class="chart"
+            v-bind:title="'pH'"
+            v-bind:date="getData('measured_on')"
+            v-bind:data="getData('ph')"
+          />
+          <chart
+            class="chart"
+            v-bind:title="'ABV'"
+            v-bind:date="getData('measured_on')"
+            v-bind:data="getData('abv')"
+          />
+          <chart
+            class="chart"
+            v-bind:title="'SG'"
+            v-bind:date="getData('measured_on')"
+            v-bind:data="getData('sg')"
+          />
+          <chart
+            class="chart"
+            v-bind:title="'Tempurature'"
+            v-bind:date="getData('measured_on')"
+            v-bind:data="getData('temperature')"
+          />
         </div>
       </div>
     </div>
@@ -97,14 +124,19 @@ import navbar from './navbar.vue';
 import router from '../router/index.js';
 import Cookie from 'js-cookie';
 
-import moment from 'moment';
-import { Batch, Tank, Task, Action, Version } from '../types';
+import moment, { unix, months, Moment } from 'moment';
+import { Batch, Tank, Task, Action, Version, Recipe } from '../types';
 
 // tslint:disable: no-any
 interface ITankInfoState {
   tankInfo?: any;
+  batch?: Batch;
+  versions: Version[];
+  tank?: Tank;
+  task?: Task;
+  recipe?: Recipe;
+  action?: Action;
   doneLink?: any;
-  history?: any;
   home?: any;
   mobile?: any;
   debugging?: string;
@@ -138,17 +170,16 @@ export default Vue.extend({
         action: '',
         in_use: undefined
       },
-      history: {
-        date: ['Date'],
-        temp: ['Temperature'],
-        abv: ['ABV'],
-        sg: ['Specific Gravity'],
-        ph: ['pH']
-      },
       doneLink: '',
       home: '',
       mobile: false,
-      debugging: ''
+      debugging: '',
+      tank: undefined,
+      task: undefined,
+      batch: undefined,
+      versions: [],
+      recipe: undefined,
+      action: undefined
     };
   },
   // tslint:disable-next-line:max-func-body-length
@@ -175,13 +206,15 @@ export default Vue.extend({
       const response = await this.$http.get(
         `${process.env.API}/tanks/id/${this.$route.params.tankID}`
       );
-      const { id, name, status, in_use }: Tank = response.data as Tank;
+      const tank: Tank = response.data as Tank;
+      this.tank = tank;
+
       this.tankInfo = {
         ...this.tankInfo,
-        id,
-        name,
-        status,
-        in_use
+        id: tank.id,
+        name: tank.name,
+        status: tank.status,
+        in_use: tank.in_use
       };
     } catch (err) {
       // tslint:disable-next-line:no-console
@@ -189,108 +222,159 @@ export default Vue.extend({
       this.debugging = 'Debugging Flag: Response error, cant access tanks page';
     }
 
-    await this.loadBatchData();
-    await this.loadHistoryData();
+    await this.loadData();
   },
   methods: {
+    getData(key: string) {
+      return this.versions.map((v: Version) => v[key]);
+    },
+    async loadData() {
+      await this.loadBatchData();
+      await this.loadTaskData();
+      await this.loadHistoryData();
+    },
     async loadBatchData() {
       try {
-        const response = await this.$http.get(`${process.env.API}/batches`);
-        const batches: Batch[] = response.data as Batch[];
-        // if our batch tankID is the tankID we are looking for set some data
-        for (const batch of batches) {
-          if (batch.tank_id === this.tankInfo.id) {
-            const {
-              id: batch_id,
-              name: batch_name,
-              bright,
-              generation,
-              volume,
-              recipe_id
-            }: Batch = batch;
-            this.tankInfo = {
-              ...this.tankInfo,
-              batch_id,
-              batch_name,
-              bright,
-              generation,
-              volume,
-              recipe_id
-            };
-          }
+        const response = await this.$http.get(
+          `${process.env.API}/batches/tank/${this.tankInfo.id}`
+        );
+
+        const openBatches: Batch[] = (response.data as Batch[]).filter(
+          (b: Batch) => b.completed_on === null
+        );
+
+        let batch: Batch | undefined;
+        if (openBatches.length > 1) {
+          this.debugging = 'Debugging Flag: more than one open batch';
+
+          // Use the most recently opened batch
+          batch = openBatches.sort((a: Batch, b: Batch) => {
+            return moment.utc(b.started_on).diff(moment.utc(a.started_on));
+          })[0];
+        } else if (openBatches.length == 1) {
+          // Found only open batch
+          batch = openBatches[0];
         }
+
+        // Set the current batch
+        this.batch = batch;
+
+        if (batch) {
+          // Populate the view model
+          this.tankInfo.batch_id = batch.id;
+          this.tankInfo.batch_name = batch.name;
+          this.tankInfo.bright = batch.bright;
+          this.tankInfo.generation = batch.generation;
+          this.tankInfo.volume = batch.volume;
+          this.tankInfo.recipe_id = batch.recipe_id;
+        } else {
+          // Update the view model
+          this.tankInfo.batch_id = '';
+          this.tankInfo.batch_name = '';
+          this.tankInfo.bright = '';
+          this.tankInfo.generation = '';
+          this.tankInfo.volume = '';
+          this.tankInfo.recipe_id = '';
+        }
+
+        let recipe: Recipe | undefined;
+        if (batch) {
+          // Get the recipe
+          const recipeResponse = await this.$http.get(
+            `${process.env.API}/recipes/id/${batch.recipe_id}`
+          );
+          recipe = recipeResponse.data;
+        }
+
+        this.recipe = recipe;
       } catch (err) {
         this.debugging = 'Debugging Flag: Response error, cant access batches page';
       }
+    },
+    async loadTaskData() {
+      if (this.batch) {
+        try {
+          const response = await this.$http.get(`${process.env.API}/tasks/batch/${this.batch.id}`);
+          const batchTasks: Task[] = response.data as Task[];
 
-      try {
-        const response = await this.$http.get(`${process.env.API}/tasks`);
-        const tasks: Task[] = response.data as Task[];
-        let actionID;
-        for (const task of tasks) {
-          // if the batch is the one we are looking for
-          if (task.batch_id === this.tankInfo.batch_id) {
-            // set our actionID and break out of the loop
-            actionID = task.action_id;
-            break;
+          const activeTasks: Task[] = batchTasks.filter((t: Task) => t.completed_on === null);
+
+          let task: Task | undefined;
+          if (activeTasks.length > 1) {
+            this.debugging = 'Debugging Fal: more than one active task for batch';
+
+            // Use the most recently opened task
+            task = activeTasks.sort((a: Task, b: Task) => {
+              return moment.utc(b.added_on).diff(moment.utc(a.added_on));
+            })[0];
+          } else if (activeTasks.length === 1) {
+            // Only one active task
+            task = activeTasks[0];
           }
+
+          this.task = task;
+
+          let action: Action | undefined;
+          if (task) {
+            // get the action name associated with the task
+            const actionResponse = await this.$http.get(
+              `${process.env.API}/actions/id/${task.action_id}`
+            );
+            action = actionResponse.data as Action;
+
+            this.tankInfo.action = action.name;
+            this.tankInfo.time = moment(task.added_on).format('MM/DD/YY H:mm');
+          } else {
+            this.tankInfo.action = '';
+          }
+
+          this.action = action;
+        } catch (err) {
+          // tslint:disable-next-line:no-console
+          console.error(err);
         }
-        // if our actionID was set
-        if (actionID >= 0) {
-          // get the action associated with that ID
-          const actionResponse = await this.$http.get(`${process.env.API}/actions/id/${actionID}`);
-          const { name }: Action = actionResponse.data as Action;
-          this.tankInfo.action = name;
-        }
-      } catch (err) {
-        // tslint:disable-next-line:no-console
-        console.error(err);
       }
     },
     async loadHistoryData() {
-      try {
-        const response = await this.$http.get(
-          `${process.env.API}/versions/batch/${this.tankInfo.batch_id}`
-        );
+      if (this.batch) {
+        try {
+          const response = await this.$http.get(
+            `${process.env.API}/versions/batch/${this.tankInfo.batch_id}`
+          );
 
-        const versions: Version[] = (response.data as Version[])
-          .map((v: Version) => {
-            v.measured_on = moment(v.measured_on);
-            return v;
-          })
-          .sort((a: Version, b: Version) => {
-            return moment.utc(a.measured_on).diff(moment.utc(b.measured_on));
-          });
+          this.versions = [];
+          this.versions = (response.data as Version[])
+            .map((v: Version) => {
+              v.measured_on = moment(v.measured_on);
+              return v;
+            })
+            .sort((a: Version, b: Version) => {
+              return moment.utc(a.measured_on).diff(moment.utc(b.measured_on));
+            });
 
-        this.history = {
-          date: ['Date'],
-          temp: ['Temperature'],
-          abv: ['ABV'],
-          sg: ['Specific Gravity'],
-          ph: ['pH']
-        };
+          if (this.versions.length > 0) {
+            // Set current data
+            const lastVersion = this.versions[this.versions.length - 1];
 
-        for (const version of versions) {
-          this.history.date.push(version.measured_on);
-          this.history.temp.push(version.temperature);
-          this.history.abv.push(version.abv);
-          this.history.sg.push(version.sg);
-          this.history.ph.push(version.ph);
+            this.tankInfo.ABV = lastVersion.abv;
+            this.tankInfo.pH = lastVersion.ph;
+            this.tankInfo.temp = lastVersion.temperature;
+            this.tankInfo.SG = lastVersion.sg;
+            this.tankInfo.pressure = lastVersion.pressure;
+            // use a lowercase h to change the hours from 24 to 12
+            // the mm sets the minute with a leading 0
+            this.tankInfo.time = (lastVersion.measured_on as Moment).format('MM/DD/YY H:mm');
+          } else {
+            this.tankInfo.ABV = '';
+            this.tankInfo.pH = '';
+            this.tankInfo.temp = '';
+            this.tankInfo.SG = '';
+            this.tankInfo.pressure = '';
+          }
+        } catch (err) {
+          // tslint:disable-next-line:no-console
+          console.error(err);
         }
-
-        // Set current data
-        const lastVersion = versions[versions.length - 1];
-        this.tankInfo.ABV = lastVersion.abv;
-        this.tankInfo.pH = lastVersion.ph;
-        this.tankInfo.temp = lastVersion.temperature;
-        this.tankInfo.SG = lastVersion.sg;
-        this.tankInfo.pressure = lastVersion.pressure;
-        // use a lowercase h to change the hours from 24 to 12
-        // the mm sets the minute with a leading 0
-        this.tankInfo.time = (lastVersion.measured_on as moment.Moment).format('MM/DD/YY H:mm');
-      } catch (err) {
-        // tslint:disable-next-line:no-console
-        console.error(err);
       }
     }
   }
@@ -315,6 +399,9 @@ export default Vue.extend({
   +less-than(mobile)
     grid-template-columns 92vw
     grid-template-areas "tank" "recipe"
+
+#recipe
+  margin-top 30px
 
 #data
   justify-content center

@@ -18,7 +18,7 @@ export type Action = {
 };
 
 export type Recipe = {
-  id: string;
+  id: number;
   name: string;
   airplane_code: string;
   yeast: number;
@@ -55,7 +55,7 @@ export type Version = {
     temperature: number;
     pressure: number;
     measured_on?: string | Moment;
-    completed?: false;
+    completed?: false | Moment;
     batch_id?: number;
 };
 
