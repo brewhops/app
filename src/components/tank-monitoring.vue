@@ -205,6 +205,7 @@ export default Vue.extend({
       background: Teal;
       width: 100%;
       height: 100%;
+      min-height 128px;
 
       td:nth-child(2) {
         text-align: right;
