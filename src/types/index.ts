@@ -38,25 +38,25 @@ export type Batch = {
 };
 
 export type Task = {
-    id?: number;
-    added_on?: string;
-    completed_on?: string;
-    assigned?: boolean;
-    batch_id: number;
-    action_id: number;
-    employee_id?: number;
+  id?: number;
+  added_on?: string;
+  completed_on?: string;
+  assigned?: boolean;
+  batch_id: number;
+  action_id: number;
+  employee_id?: number;
 };
 
 export type Version = {
-    id?: number;
-    sg: number;
-    ph: number;
-    abv: number;
-    temperature: number;
-    pressure: number;
-    measured_on?: string | Moment;
-    completed?: false | Moment;
-    batch_id?: number;
+  id?: number;
+  sg: number;
+  ph: number;
+  abv: number;
+  temperature: number;
+  pressure: number;
+  measured_on?: string | Moment;
+  completed?: false | Moment;
+  batch_id?: number;
 };
 
 export type BrewhopsCookie = {
@@ -71,7 +71,7 @@ export type ActionUpdate = {
     completed: boolean;
     assigned: boolean;
     employee: {
-      id: string | number ;
+      id: string | number;
     };
   };
 };
