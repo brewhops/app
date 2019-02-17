@@ -25,7 +25,8 @@
 <script lang="ts">
 import Vue from 'vue';
 import Cookie from 'js-cookie';
-import router from '../../router/index.js';
+import router from '../../router';
+import { logout } from '../../utils';
 import Navbar from '../navbar.vue';
 import CreateTank from './create-tank.vue';
 import UpdateTank from './update-tank.vue';
@@ -84,12 +85,7 @@ export default Vue.extend({
     }
   },
   methods: {
-    logout() {
-      if (Cookie.getJSON('loggedIn')) {
-        Cookie.remove('loggedIn');
-      }
-      router.push('/');
-    },
+    logout,
     async tankUpdate() {
       try {
         const response = await this.$http.get(`${process.env.API}/tanks`);

@@ -1,12 +1,12 @@
 <template>
   <div>
     <div class="header">
-      <router-link to="login">Logout</router-link>
+      <a v-on:click="logout">Logout</a>
       <h2>Tank Data</h2>
     </div>
     <navbar v-bind:activeState="[false, false, false, false]" />
     <div id="content">
-      <div v-if="this.tank.in_use" id="info-content">
+      <div v-if="this.tankInfo.in_use" id="info-content">
         <div id="tank">
           <h2>Tank {{ tankInfo.name }}</h2>
           <table class="table">
@@ -124,8 +124,8 @@ import chart from './chart.vue';
 import dataEntry from './data-entry.vue';
 import navbar from './navbar.vue';
 import newBatch from './new-batch.vue';
-
-import router from '../router/index.js';
+import { logout } from '../utils';
+import router from '../router';
 import Cookie from 'js-cookie';
 
 import moment, { unix, months, Moment } from 'moment';
@@ -230,6 +230,7 @@ export default Vue.extend({
     await this.loadData();
   },
   methods: {
+    logout,
     getData(key: string) {
       return this.versions.map((v: Version) => v[key]);
     },
