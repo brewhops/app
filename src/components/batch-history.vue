@@ -62,21 +62,37 @@
         />
       </div>
 
-      <div v-if="batch_id && versions && batch">
-        <p>Versions</p>
-        <table>
-          <tr>
-            <th v-for="title in version_titles">{{ title }}</th>
-          </tr>
-          <tr v-for="version in versions">
-            <td>{{ formatDate(version.measured_on) }}</td>
-            <td>{{ version.sg }}</td>
-            <td>{{ version.ph }}</td>
-            <td>{{ version.abv }}</td>
-            <td>{{ version.temperature }}</td>
-            <td>{{ version.pressure }}</td>
-          </tr>
-        </table>
+      <div class="tables">
+        <div v-if="batch_id && tasks && batch">
+          <dataTable
+            v-bind:title="'Tasks'"
+            v-bind:data="tasks"
+            v-bind:headers="['Action', 'Actor', 'Date Started', 'Date Completed']"
+            v-bind:fields="[
+              i => actions.filter(a => a.id == i.action_id)[0].name,
+              i => employees.filter(e => e.id == i.employee_id)[0].first_name,
+              i => formatDate(i.added_on),
+              i => formatDate(i.completed_on)
+            ]"
+          />
+        </div>
+
+        <div v-if="batch_id && versions && batch">
+          <p>Versions</p>
+          <table>
+            <tr>
+              <th v-for="title in version_titles">{{ title }}</th>
+            </tr>
+            <tr v-for="version in versions">
+              <td>{{ formatDate(version.measured_on) }}</td>
+              <td>{{ version.sg }}</td>
+              <td>{{ version.ph }}</td>
+              <td>{{ version.abv }}</td>
+              <td>{{ version.temperature }}</td>
+              <td>{{ version.pressure }}</td>
+            </tr>
+          </table>
+        </div>
       </div>
     </div>
   </div>
@@ -87,10 +103,11 @@ import Vue from 'vue';
 import router from '../router/index.js';
 import Cookie from 'js-cookie';
 import moment from 'moment';
-import { Batch, Version } from '../types';
+import { Batch, Version, Task, Employee, Action } from '../types';
 import { Moment } from 'moment';
 import chart from './chart.vue';
 import NavbarComponent from './navbar.vue';
+import dataTable from './dataTable.vue';
 
 interface IHistoryState {
   batch_titles: string[];
@@ -100,11 +117,14 @@ interface IHistoryState {
   batches: Batch[];
   batch: Batch;
   versions: Version[];
+  tasks: Task[];
+  employees: Employee[];
+  actions: Action[];
 }
 
 export default Vue.extend({
   name: 'batch-history',
-  components: { navbar: NavbarComponent, chart: chart },
+  components: { navbar: NavbarComponent, chart: chart, dataTable: dataTable },
   data(): IHistoryState {
     return {
       batch_titles: ['Volume', 'Bright', 'Generation', 'Date Started', 'Date Completed'],
@@ -122,7 +142,10 @@ export default Vue.extend({
         started_on: '',
         completed_on: ''
       },
-      versions: []
+      versions: [],
+      tasks: [],
+      employees: [],
+      actions: []
     };
   },
   async beforeMount() {
@@ -133,6 +156,10 @@ export default Vue.extend({
 
     try {
       const response = await this.$http.get(`${process.env.API}/batches/`);
+      const employees = await this.$http.get(`${process.env.API}/employees/`);
+      const actions = await this.$http.get(`${process.env.API}/actions/`);
+      this.employees = <Employee[]>employees.data;
+      this.actions = <Action[]>actions.data;
       this.batches = <Batch[]>response.data;
       this.batches.sort((a: any, b: any) => a.id - b.id);
     } catch (err) {
@@ -163,6 +190,14 @@ export default Vue.extend({
         const batchResponse = await this.$http.get(
           `${process.env.API}/versions/batch/${this.batch_id}`
         );
+        const taskResponse = await this.$http.get(
+          `${process.env.API}/tasks/batch/${this.batch_id}`
+        );
+
+        this.tasks = (taskResponse.data as Task[]).map((t: Task) => {
+          t.added_on = moment(t.added_on);
+          return t;
+        });
 
         this.versions = (batchResponse.data as Version[])
           .map((v: Version) => {
@@ -228,7 +263,7 @@ export default Vue.extend({
     font-weight: bold;
   }
 
-  #charts {
+  #charts, .tables {
     display grid
     justify-content center
     grid-template-columns repeat(2, 48vw)
