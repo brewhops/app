@@ -64,10 +64,10 @@
 
       <div class="tables">
         <div v-if="batch_id && tasks && batch">
-          <dataTable
+          <data-table
             v-bind:title="'Tasks'"
             v-bind:data="tasks"
-            v-bind:headers="['Action', 'Actor', 'Date Started', 'Date Completed']"
+            v-bind:headers="['Action', 'Employee', 'Date Started', 'Date Completed']"
             v-bind:fields="[
               i => actions.filter(a => a.id == i.action_id)[0].name,
               i => employees.filter(e => e.id == i.employee_id)[0].first_name,
@@ -107,7 +107,7 @@ import { Batch, Version, Task, Employee, Action } from '../types';
 import { Moment } from 'moment';
 import chart from './chart.vue';
 import NavbarComponent from './navbar.vue';
-import dataTable from './dataTable.vue';
+import dataTable from './data-table.vue';
 
 interface IHistoryState {
   batch_titles: string[];
