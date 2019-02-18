@@ -207,7 +207,13 @@ export default Vue.extend({
     this.time = moment().format('YYYY-MM-DDTHH:mm');
 
     try {
-      const actionsResponse: HttpResponse = await this.$http.get(`${process.env.API}/actions`);
+      const headers = {
+        Authorization: `Bearer ${Cookie.getJSON('loggedIn').token}`
+      };
+      const actionsResponse: HttpResponse = await this.$http.get(
+        `${process.env.API}/actions`,
+        headers
+      );
       const actions: Action[] = actionsResponse.data;
 
       this.model = {
