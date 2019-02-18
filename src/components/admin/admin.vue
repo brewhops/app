@@ -33,6 +33,7 @@ import UpdateTank from './update-tank.vue';
 import CreateUser from './create-user.vue';
 import CreateBrand from './create-brand.vue';
 import { Employee, Tank, BrewhopsCookie } from '../../types';
+import { TANK_STATUS } from '../../utils';
 // tslint:disable: no-console
 
 interface IAdminState {
@@ -55,7 +56,14 @@ export default Vue.extend({
     return {
       employees: [],
       tanks: [],
-      tankStatuses: ['busy', 'broken', 'available', 'brewing', 'transferring', 'completed'],
+      tankStatuses: [
+        TANK_STATUS.BUSY,
+        TANK_STATUS.BROKEN,
+        TANK_STATUS.AVAILABLE,
+        TANK_STATUS.BREWING,
+        TANK_STATUS.TRANSFERRING,
+        TANK_STATUS.COMPLETED
+      ],
       debugging: ''
     };
   },

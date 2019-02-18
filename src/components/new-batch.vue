@@ -28,8 +28,9 @@ import moment from 'moment';
 import router from '../router';
 import Cookie from 'js-cookie';
 import loader from './loader.vue';
-import { Recipe, Batch, Tank } from '../types';
+import { Recipe, Batch, Tank, Task } from '../types';
 import { isMoment } from 'moment';
+import { TANK_STATUS } from '../utils';
 
 interface INewBatchState {
   recipes: Recipe[];
@@ -84,14 +85,10 @@ export default Vue.extend({
       console.error(err);
     }
   },
-  watch: {
-    tank() {
-      console.log(this.tank);
-    }
-  },
   methods: {
     async createBatch() {
       if (this.recipe_id && this.batch_name) {
+        const employeeId: number = Cookie.getJSON('id');
         const batch: Batch = {
           name: this.batch_name,
           generation: 0,
@@ -101,21 +98,16 @@ export default Vue.extend({
           tank_id: this.tank.id
         };
 
-        const { id, ...tank } = this.tank;
-        tank.in_use = true;
-        tank.update_user = Cookie.getJSON('id');
-
         const headers = {
           Authorization: `Bearer ${Cookie.getJSON('loggedIn').token}`
         };
 
         try {
-          const batchResponse = this.$http.post(`${process.env.API}/batches/new`, batch, {
+          const batchResponse = await this.$http.post(`${process.env.API}/batches/new`, batch, {
             headers
           });
-          const tankResponse = this.$http.patch(`${process.env.API}/tanks/id/${id}`, tank, {
-            headers
-          });
+          await this.updateTank(employeeId, headers);
+          await this.createInitialTask(employeeId);
           location.reload();
         } catch (err) {
           console.error(err);
@@ -128,6 +120,36 @@ export default Vue.extend({
           this.feedback.batch_name = 'Enter a name for the batch';
         }
       }
+    },
+    async createInitialTask(employee_id: number) {
+      try {
+        const batchResponse = await this.$http.get(`${process.env.API}/batches/`);
+        const batches = batchResponse.data.filter((batch: Batch) => batch.name === this.batch_name);  
+        console.log(batches);
+        const task: Task = {
+          employee_id,
+          batch_id: batches[0].id,
+          action_id: 12,
+          added_on: new Date().toUTCString()
+        }
+        const taskResponse = await this.$http.post(`${process.env.API}/tasks/`, task); 
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    async updateTank(employeeId: number, headers: any) {
+        const { id, ...tank } = this.tank;
+        tank.in_use = true;
+        tank.update_user = employeeId;
+        tank.status = TANK_STATUS.BREWING;
+
+        try {
+          const tankResponse = await this.$http.patch(`${process.env.API}/tanks/id/${id}`, tank, {
+            headers
+          });
+        } catch (err) {
+          console.error(err);
+        }
     }
   }
 });

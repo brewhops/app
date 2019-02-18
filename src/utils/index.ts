@@ -7,3 +7,12 @@ export function logout() {
   }
   router.push('/');
 }
+
+export enum TANK_STATUS {
+  BUSY = 'busy',
+  BROKEN = 'broken',
+  AVAILABLE = 'available',
+  BREWING = 'brewing',
+  TRANSFERRING = 'transferring',
+  COMPLETED = 'completed'
+}
