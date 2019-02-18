@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <h2>Create new batch in tank {{ this.tank.name }}</h2>
+  <div v-if="this.tank">
+    <h2>Create new batch</h2>
     <form id="create-new-batch">
       <div class="grid">
         <div class="col-1 inputGroup">
@@ -16,20 +16,24 @@
           </select>
         </div>
       </div>
-      <button>Submit</button>
+      <button v-on:click="createBatch">Submit</button>
     </form>
   </div>
+  <loader v-else></loader>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import router from '../router/index.js';
+import moment from 'moment';
+import router from '../router';
 import Cookie from 'js-cookie';
-import { Recipe } from '../types/index.js';
+import loader from './loader.vue';
+import { Recipe, Batch, Tank } from '../types';
+import { isMoment } from 'moment';
 
 interface INewBatchState {
   recipes: Recipe[];
-  recipe_id?: number;
+  recipe_id: string;
   batch_name: string;
   mobile: boolean;
   feedback: {
@@ -40,10 +44,17 @@ interface INewBatchState {
 
 export default Vue.extend({
   name: 'new-batch',
-  props: ['tank'],
+  components: { loader },
+  props: {
+    tank: {
+      type: Object,
+      required: true
+    }
+  },
   data(): INewBatchState {
     return {
       recipes: [],
+      recipe_id: '',
       batch_name: '',
       mobile: false,
       feedback: {
@@ -71,6 +82,52 @@ export default Vue.extend({
       this.recipes = <Recipe[]>recipeResponse.data;
     } catch (err) {
       console.error(err);
+    }
+  },
+  watch: {
+    tank() {
+      console.log(this.tank);
+    }
+  },
+  methods: {
+    async createBatch() {
+      if (this.recipe_id && this.batch_name) {
+        const batch: Batch = {
+          name: this.batch_name,
+          generation: 0,
+          volume: 0,
+          bright: 0,
+          recipe_id: parseInt(this.recipe_id),
+          tank_id: this.tank.id
+        };
+
+        const { id, ...tank } = this.tank;
+        tank.in_use = true;
+        tank.update_user = Cookie.getJSON('id');
+
+        const headers = {
+          Authorization: `Bearer ${Cookie.getJSON('loggedIn').token}`
+        };
+
+        try {
+          const batchResponse = this.$http.post(`${process.env.API}/batches/new`, batch, {
+            headers
+          });
+          const tankResponse = this.$http.patch(`${process.env.API}/tanks/id/${id}`, tank, {
+            headers
+          });
+          location.reload();
+        } catch (err) {
+          console.error(err);
+        }
+      } else {
+        if (!this.recipe_id) {
+          this.feedback.recipe = 'Select a recipe.';
+        }
+        if (!this.batch_name) {
+          this.feedback.batch_name = 'Enter a name for the batch';
+        }
+      }
     }
   }
 });

@@ -14,7 +14,7 @@
         <div class="col-3">
           <span>
             <h4>Tank</h4>
-            {{ model.tank_name }}
+            {{ this.tank.name }}
           </span>
         </div>
         <div class="col-3">
@@ -269,7 +269,7 @@ export default Vue.extend({
       };
 
       try {
-        const response = await this.$http.post(`${process.env.API}/batches`, requestObject);
+        const response = await this.$http.post(`${process.env.API}/batches/update`, requestObject);
         this.$emit('newDataCallback');
         this.reset();
         event.target.reset();

@@ -5,8 +5,8 @@
       <h2>Tank Data</h2>
     </div>
     <navbar v-bind:activeState="[false, false, false, false]" />
-    <div id="content">
-      <div v-if="this.tankInfo.in_use" id="info-content">
+    <div v-if="this.tank" id="content">
+      <div v-if="this.tank.in_use" id="info-content">
         <div id="tank">
           <h2>Tank {{ tankInfo.name }}</h2>
           <table class="table">
@@ -81,7 +81,8 @@
         </div>
       </div>
       <div v-else id="new-batch">
-        <new-batch :tank="this.tank" />
+        <new-batch v-if="this.tank" :tank="this.tank" />
+        <loader v-else></loader>
       </div>
 
       <div v-if="this.tank.in_use" v-show="versions.length > 0" id="data">
@@ -114,6 +115,9 @@
         </div>
       </div>
     </div>
+    <div v-else class="center">
+      <loader></loader>
+    </div>
   </div>
 </template>
 
@@ -124,6 +128,7 @@ import chart from './chart.vue';
 import dataEntry from './data-entry.vue';
 import navbar from './navbar.vue';
 import newBatch from './new-batch.vue';
+import loader from './loader.vue';
 import { logout } from '../utils';
 import router from '../router';
 import Cookie from 'js-cookie';
@@ -133,7 +138,7 @@ import { Batch, Tank, Task, Action, Version, Recipe } from '../types';
 
 // tslint:disable: no-any
 interface ITankInfoState {
-  tankInfo?: any;
+  tankInfo: any;
   batch?: Batch;
   versions: Version[];
   tank?: Tank;
@@ -153,7 +158,8 @@ export default Vue.extend({
     recipe,
     chart,
     dataEntry,
-    newBatch
+    newBatch,
+    loader
   },
   data(): ITankInfoState {
     return {
@@ -213,7 +219,6 @@ export default Vue.extend({
       );
       const tank: Tank = response.data as Tank;
       this.tank = tank;
-
       this.tankInfo = {
         ...this.tankInfo,
         id: tank.id,
@@ -389,6 +394,13 @@ export default Vue.extend({
 
 <style lang="stylus" scoped>
 @import '../styles/breakpoints'
+
+.center
+  display flex
+  width 100vw
+  height 100vh
+  justify-content center
+  align-items center
 
 #info-content
   display grid
