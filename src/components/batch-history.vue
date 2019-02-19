@@ -56,7 +56,7 @@
         />
         <chart
           class="chart"
-          v-bind:title="'Tempurature'"
+          v-bind:title="'Temperature'"
           v-bind:date="getData('measured_on')"
           v-bind:data="getData('temperature')"
         />
@@ -142,9 +142,6 @@ export default Vue.extend({
   },
   methods: {
     home() {
-      if (this.mobile) {
-        router.push('/home-mobile');
-      }
       router.push('/');
     },
     getData(key: string) {
