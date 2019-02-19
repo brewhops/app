@@ -20,7 +20,7 @@
         <div class="col-3">
           <h4>Action</h4>
           <select v-model="action">
-            <option value="">No Action</option>
+            <option value="">Select an Action</option>
             <option
               v-for="action_option in model.actions"
               v-bind:key="action_option.id"
