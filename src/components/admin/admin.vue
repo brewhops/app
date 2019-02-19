@@ -112,10 +112,10 @@ export default Vue.extend({
   width 80%
   margin auto
   align-items flex-start
-  +less-than(tablet)
+  +less-than(860px)
     width 98%
     grid-template-rows auto
-    grid-template-columns auto
+    grid-template-columns 92vw
 
 
 .element
