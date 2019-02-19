@@ -83,6 +83,7 @@ export default Vue.extend({
   top 0
   background-color #00aaa6
   justify-content center
+  z-index 1
 }
 
 .option {

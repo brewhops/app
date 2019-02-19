@@ -219,6 +219,7 @@ export default Vue.extend({
   justify-items: center;
   text-align: center;
   min-height: 60vh;
+  z-index: -1
 
   p {
     color: Teal;

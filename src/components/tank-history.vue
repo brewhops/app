@@ -99,9 +99,6 @@ export default Vue.extend({
   },
   methods: {
     home() {
-      if (this.mobile) {
-        router.push('/home-mobile');
-      }
       router.push('/');
     },
     formatDate(date: string | null) {
