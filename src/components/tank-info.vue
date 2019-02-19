@@ -443,7 +443,6 @@ export default Vue.extend({
   h2
     text-align center
 
-
 #tank
   text-align center
   justify-content center

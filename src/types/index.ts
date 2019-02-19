@@ -46,6 +46,7 @@ export type Task = {
   batch_id: number;
   action_id: number;
   employee_id?: number;
+  update_user?: number;
 };
 
 export type Version = {

@@ -72,6 +72,7 @@
         </div>
       </div>
       <button>Submit</button>
+      <button v-if="admin" v-on:click="completeBatch">Complete Batch</button>
     </form>
   </div>
 </template>
@@ -118,6 +119,7 @@ interface IDataEntryState {
 
   update?: any;
   mobile?: any;
+  admin: boolean;
   sortTanks?: any;
   debugging?: any;
 }
@@ -164,7 +166,8 @@ export default Vue.extend({
       action: '',
 
       update: true,
-      mobile: false
+      mobile: false,
+      admin: false
     };
   },
   watch: {
@@ -195,6 +198,8 @@ export default Vue.extend({
     if (!Cookie.getJSON('loggedIn')) {
       router.push('/');
     }
+    this.admin = Cookie.getJSON('loggedIn').admin;
+
     if (
       /iPhone|iPad|iPod|Android|webOS|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(
         navigator.userAgent
@@ -300,6 +305,40 @@ export default Vue.extend({
         event.target.reset();
       } catch (err) {
         console.error(err);
+      }
+    },
+    async completeBatch(event) {
+      event.preventDefault();
+
+      const cookie: BrewhopsCookie = Cookie.getJSON('loggedIn');
+      const headers = {
+        Authorization: `Bearer ${cookie.token}`
+      };
+
+      const confirmation = confirm('Are you sure you want to close the batch?');
+      if (confirmation) {
+        await this.$http.delete(`${process.env.API}/batches/close/${this.batch!.id}`, {
+          headers: headers
+        });
+
+        const { id, ...tank } = this.tank;
+        tank.status = 'avaiable';
+        tank.in_use = false;
+        tank.update_user = cookie.id;
+        await this.$http.patch(`${process.env.API}/tanks/id/${this.tank!.id}`, tank, {
+          headers: headers
+        });
+
+        if (this.activeTask) {
+          const task: Task = this.activeTask;
+          task.completed_on = moment().toISOString();
+          task.update_user = Number(cookie.id);
+          const response = await this.$http.patch(`${process.env.API}/tasks`, task, {
+            headers: headers
+          });
+        }
+
+        router.push('/');
       }
     }
   }
