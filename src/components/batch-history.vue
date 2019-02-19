@@ -22,19 +22,20 @@
           </a>
         </div>
       </div>
-      <table v-if="batch_id && batch">
-        <tr>
-          <th v-for="title in batch_titles">{{ title }}</th>
-        </tr>
-        <tr>
-          <td>{{ batch.volume }}</td>
-          <td>{{ batch.bright }}</td>
-          <td>{{ batch.generation }}</td>
-          <td>{{ formatDate(batch.started_on) }}</td>
-          <td>{{ formatDate(batch.completed_on) }}</td>
-        </tr>
-      </table>
-
+      <div v-if="batch_id && batch">
+        <data-table
+          v-bind:title="''"
+          v-bind:data="[batch]"
+          v-bind:headers="batch_titles"
+          v-bind:fields="[
+            b => b.volume,
+            b => b.bright,
+            b => b.generation,
+            b => formatDate(b.started_on),
+            b => formatDate(b.completed_on)
+          ]"
+        />
+      </div>
       <div id="charts" v-if="versions && batch_id">
         <chart
           class="chart"
@@ -67,31 +68,30 @@
           <data-table
             v-bind:title="'Tasks'"
             v-bind:data="tasks"
-            v-bind:headers="['Action', 'Employee', 'Date Started', 'Date Completed']"
+            v-bind:headers="task_titles"
             v-bind:fields="[
-              i => actions.filter(a => a.id == i.action_id)[0].name,
-              i => employees.filter(e => e.id == i.employee_id)[0].first_name,
-              i => formatDate(i.added_on),
-              i => formatDate(i.completed_on)
+              t => actions.filter(a => a.id == t.action_id)[0].name,
+              t => employees.filter(e => e.id == t.employee_id)[0].first_name,
+              t => formatDate(t.added_on),
+              t => formatDate(t.completed_on)
             ]"
           />
         </div>
 
         <div v-if="batch_id && versions && batch">
-          <p>Versions</p>
-          <table>
-            <tr>
-              <th v-for="title in version_titles">{{ title }}</th>
-            </tr>
-            <tr v-for="version in versions">
-              <td>{{ formatDate(version.measured_on) }}</td>
-              <td>{{ version.sg }}</td>
-              <td>{{ version.ph }}</td>
-              <td>{{ version.abv }}</td>
-              <td>{{ version.temperature }}</td>
-              <td>{{ version.pressure }}</td>
-            </tr>
-          </table>
+          <data-table
+            v-bind:title="'Version'"
+            v-bind:data="versions"
+            v-bind:headers="version_titles"
+            v-bind:fields="[
+              v => formatDate(v.measured_on),
+              v => v.sg,
+              v => v.ph,
+              v => v.abv,
+              v => v.temperature,
+              v => v.pressure
+            ]"
+          />
         </div>
       </div>
     </div>
@@ -112,6 +112,7 @@ import dataTable from './data-table.vue';
 interface IHistoryState {
   batch_titles: string[];
   version_titles: string[];
+  task_titles: string[];
   mobile: boolean;
   batch_id: number | string;
   batches: Batch[];
@@ -129,6 +130,7 @@ export default Vue.extend({
     return {
       batch_titles: ['Volume', 'Bright', 'Generation', 'Date Started', 'Date Completed'],
       version_titles: ['Date', 'SG', 'pH', 'ABV', 'temp', 'pressure'],
+      task_titles: ['Action', 'Employee', 'Date Started', 'Date Completed'],
       mobile: false,
       batch_id: '',
       batches: [],
