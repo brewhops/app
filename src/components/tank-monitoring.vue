@@ -1,9 +1,5 @@
 <template>
   <div>
-    <div class="header" v-if="mobile">
-      <router-link v-bind:to="login">Logout</router-link>
-      <h2>Tank Monitoring</h2>
-    </div>
     <div id="tankInfo">
       <h2>Tank Info</h2>
       <div id="tankContents">

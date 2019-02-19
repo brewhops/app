@@ -1,6 +1,6 @@
 <template lang="html">
   <div>
-    <div class="header" v-if="!mobile">
+    <div class="header">
       <router-link to="login">Logout</router-link>
       <h2>Batch History</h2>
     </div>

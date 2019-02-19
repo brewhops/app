@@ -1,6 +1,6 @@
 <template lang="html">
   <div>
-    <div class="header" v-if="!mobile">
+    <div class="header">
       <router-link to="login">Logout</router-link>
       <h2>Tank History</h2>
     </div>

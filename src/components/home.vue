@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="header" v-if="!mobile">
-      <a v-on:click="logout">Logout</a>
+    <div class="header">
+      <router-link to="login">Logout</router-link>
       <h2>Home</h2>
     </div>
     <navbar v-bind:activeState="[true, false, false, false]" />
