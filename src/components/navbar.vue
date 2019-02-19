@@ -74,21 +74,28 @@ export default Vue.extend({
 });
 </script>
 
-<style global>
+<style lang="stylus" global>
+@import '../styles/breakpoints'
+
 .navbar {
-  display: flex;
-  position: sticky;
-  top: 0;
-  background-color: #00aaa6;
-  justify-content: center;
+  display flex
+  position sticky
+  top 0
+  background-color #00aaa6
+  justify-content center
 }
+
 .option {
-  color: #ffffff;
-  text-decoration: none;
-  padding: 5px;
-  margin: 5px;
-  font-size: 16pt;
+  color #ffffff
+  text-decoration none
+  padding 5px
+  margin 5px
+  font-size 16pt
+  +less-than(tablet){
+    font-size 12pt
+  }
 }
+
 /* onclick color: 267f7d */
 .option:hover {
   background-color: #00ccc7;
