@@ -81,8 +81,7 @@
         </div>
       </div>
       <div v-else id="new-batch">
-        <new-batch v-if="this.tank" :tank="this.tank" />
-        <loader v-else></loader>
+        <new-batch :tank="this.tank" />
       </div>
 
       <div v-if="this.tank.in_use" v-show="versions.length > 0" id="data">
