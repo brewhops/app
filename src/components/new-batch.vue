@@ -6,15 +6,24 @@
         <div class="col-1 inputGroup">
           <h4>Batch Name</h4>
           <input v-model="batch_name" type="string" />
+          <span>{{ feedback.name }}</span>
         </div>
         <div class="col-1">
           <h4>Recipe</h4>
           <select v-model="recipe_id">
+            <option value="">Select a Recipe</option>
             <option v-for="recipe in recipes" v-bind:key="recipe.id" v-bind:value="recipe.id">
               {{ recipe.name }}
             </option>
           </select>
+          <span>{{ feedback.recipe }}</span>
         </div>
+        <div class="col-1 inputGroup">
+          <h4>Volume</h4>
+          <input v-model="volume" type="number" step="0.01" required />
+          <label>Volume</label>
+        </div>
+        <span>{{ feedback.volume }}</span>
       </div>
       <button v-on:click="createBatch">Submit</button>
     </form>
@@ -36,10 +45,12 @@ interface INewBatchState {
   recipes: Recipe[];
   recipe_id: string;
   batch_name: string;
+  volume: string;
   mobile: boolean;
   feedback: {
     batch_name: string;
     recipe: string;
+    volume: string;
   };
 }
 
@@ -57,10 +68,12 @@ export default Vue.extend({
       recipes: [],
       recipe_id: '',
       batch_name: '',
+      volume: '',
       mobile: false,
       feedback: {
         batch_name: '',
-        recipe: ''
+        recipe: '',
+        volume: ''
       }
     };
   },
@@ -92,7 +105,7 @@ export default Vue.extend({
         const batch: Batch = {
           name: this.batch_name,
           generation: 0,
-          volume: 0,
+          volume: parseInt(this.volume),
           bright: 0,
           recipe_id: parseInt(this.recipe_id),
           tank_id: this.tank.id
@@ -119,37 +132,40 @@ export default Vue.extend({
         if (!this.batch_name) {
           this.feedback.batch_name = 'Enter a name for the batch';
         }
+        if (!this.volume) {
+          this.feedback.volume = 'Enter the volume of the batch';
+        }
       }
     },
     async createInitialTask(employee_id: number) {
       try {
         const batchResponse = await this.$http.get(`${process.env.API}/batches/`);
-        const batches = batchResponse.data.filter((batch: Batch) => batch.name === this.batch_name);  
+        const batches = batchResponse.data.filter((batch: Batch) => batch.name === this.batch_name);
         console.log(batches);
         const task: Task = {
           employee_id,
           batch_id: batches[0].id,
           action_id: 12,
           added_on: new Date().toUTCString()
-        }
-        const taskResponse = await this.$http.post(`${process.env.API}/tasks/`, task); 
+        };
+        const taskResponse = await this.$http.post(`${process.env.API}/tasks/`, task);
       } catch (err) {
-        console.log(err)
+        console.log(err);
       }
     },
     async updateTank(employeeId: number, headers: any) {
-        const { id, ...tank } = this.tank;
-        tank.in_use = true;
-        tank.update_user = employeeId;
-        tank.status = TANK_STATUS.BREWING;
+      const { id, ...tank } = this.tank;
+      tank.in_use = true;
+      tank.update_user = employeeId;
+      tank.status = TANK_STATUS.BREWING;
 
-        try {
-          const tankResponse = await this.$http.patch(`${process.env.API}/tanks/id/${id}`, tank, {
-            headers
-          });
-        } catch (err) {
-          console.error(err);
-        }
+      try {
+        const tankResponse = await this.$http.patch(`${process.env.API}/tanks/id/${id}`, tank, {
+          headers
+        });
+      } catch (err) {
+        console.error(err);
+      }
     }
   }
 });
