@@ -67,8 +67,9 @@
           <label>Temperature</label>
         </div>
         <div class="col-1 time inputGroup">
-          <input v-model="time" type="datetime-local" />
-          <label>Time Measured</label>
+          <datepicker placeholder="Select Date" v-model="time"></datepicker>
+          <!-- <input v-model="time" type="datetime-local" /> -->
+          <!-- <label>Time Measured</label> -->
         </div>
       </div>
       <button>Submit</button>
@@ -81,6 +82,7 @@ import Vue from 'vue';
 import router from '../router/index.js';
 import Cookie from 'js-cookie';
 import moment, { unix } from 'moment';
+import Datepicker from 'vuejs-datepicker';
 import {
   Tank,
   Action,
@@ -142,6 +144,9 @@ export default Vue.extend({
       required: false,
       default: undefined
     }
+  },
+  components: {
+    Datepicker
   },
   data(): IDataEntryState {
     return {
