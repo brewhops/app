@@ -35,6 +35,7 @@ export type Batch = {
   tank_id?: string | number;
   started_on?: string;
   completed_on?: string;
+  update_user?: number;
 };
 
 export type Task = {
@@ -55,7 +56,7 @@ export type Version = {
   temperature: number;
   pressure: number;
   measured_on?: string | Moment;
-  completed?: false | Moment;
+  completed?: boolean;
   batch_id?: number;
 };
 
@@ -63,6 +64,7 @@ export type BrewhopsCookie = {
   id: string | number;
   username: string;
   admin: boolean;
+  token: string;
 };
 
 export type ActionUpdate = {
@@ -76,4 +78,4 @@ export type ActionUpdate = {
   };
 };
 
-export type BatchUpdateOrCreate = ActionUpdate & Batch & Version;
+export type BatchUpdateOrCreate = Batch & Version;

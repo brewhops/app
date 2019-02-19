@@ -240,12 +240,35 @@ export default Vue.extend({
     // tslint:disable-next-line:max-func-body-length
     async submit(event) {
       const cookie: BrewhopsCookie = Cookie.getJSON('loggedIn');
+      const headers = {
+        Authorization: `Bearer ${cookie.token}`
+      };
 
       if (this.activeTask && this.activeTask.action_id !== this.action) {
         const task: Task = this.activeTask;
         task.completed_on = moment().toISOString();
         try {
-          const response = await this.$http.patch(`${process.env.API}/tasks`, task);
+          const response = await this.$http.patch(`${process.env.API}/tasks`, task, {
+            headers: headers
+          });
+        } catch (err) {
+          console.error(err);
+        }
+      }
+
+      if ((!this.activeTask || this.activeTask.action_id !== this.action) && this.action) {
+        const task: Task = {
+          added_on: moment().toISOString(),
+          assigned: true,
+          batch_id: this.batch!.id,
+          action_id: Number(this.action),
+          employee_id: Number(cookie.id)
+        };
+
+        try {
+          const response = await this.$http.post(`${process.env.API}/tasks`, task, {
+            headers: headers
+          });
         } catch (err) {
           console.error(err);
         }
@@ -254,6 +277,7 @@ export default Vue.extend({
       const requestObject: BatchUpdateOrCreate = {
         recipe_id: Number(this.recipe!.id),
         tank_id: Number(this.tank!.id),
+        batch_id: Number(this.batch!.id),
         volume: Number(this.volume),
         bright: Number(this.bright),
         generation: Number(this.generation),
@@ -264,18 +288,13 @@ export default Vue.extend({
         temperature: Number(this.temp),
         sg: Number(this.SG),
         measured_on: moment(this.time).toISOString(),
-        action: {
-          id: this.action,
-          completed: false,
-          assigned: false,
-          employee: {
-            id: cookie.id
-          }
-        }
+        update_user: Number(cookie.id)
       };
 
       try {
-        const response = await this.$http.post(`${process.env.API}/batches/update`, requestObject);
+        const response = await this.$http.post(`${process.env.API}/batches/update`, requestObject, {
+          headers: headers
+        });
         this.$emit('newDataCallback');
         this.reset();
         event.target.reset();
