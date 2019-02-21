@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="header" v-if="mobile">
-      <router-link v-bind:to="login">Logout</router-link>
+      <a v-on:click="logout">Logout</a>
       <h2>Tank Monitoring</h2>
     </div>
     <div id="tankInfo">
@@ -31,10 +31,11 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import router from '../router/index.js';
+import router from '../router';
+import { logout } from '../utils';
 import Cookie from 'js-cookie';
 import moment from 'moment';
-import { Tank } from '../types/index.js';
+import { Tank } from '../types';
 
 // tslint:disable: max-func-body-length no-any
 
@@ -155,6 +156,7 @@ export default Vue.extend({
     }
   },
   methods: {
+    logout,
     showTankInfo(tankID) {
       // send us over to the tank info page and set the id on the url
       // to be the tankID that we clicked on.
@@ -205,6 +207,7 @@ export default Vue.extend({
       background: Teal;
       width: 100%;
       height: 100%;
+      min-height 128px;
 
       td:nth-child(2) {
         text-align: right;

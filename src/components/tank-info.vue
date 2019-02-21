@@ -1,12 +1,12 @@
 <template>
   <div>
     <div class="header">
-      <router-link to="login">Logout</router-link>
+      <a v-on:click="logout">Logout</a>
       <h2>Tank Data</h2>
     </div>
     <navbar v-bind:activeState="[false, false, false, false]" />
-    <div id="content">
-      <div id="info-content">
+    <div v-if="this.tank" id="content">
+      <div v-if="this.tank.in_use" id="info-content">
         <div id="tank">
           <h2>Tank {{ tankInfo.name }}</h2>
           <table class="table">
@@ -80,8 +80,11 @@
           </data-entry>
         </div>
       </div>
+      <div v-else id="new-batch">
+        <new-batch :tank="this.tank" />
+      </div>
 
-      <div v-show="versions.length > 0" id="data">
+      <div v-if="this.tank.in_use" v-show="versions.length > 0" id="data">
         <h2>Batch History</h2>
         <div id="charts">
           <chart
@@ -111,6 +114,9 @@
         </div>
       </div>
     </div>
+    <div v-else class="center">
+      <loader></loader>
+    </div>
   </div>
 </template>
 
@@ -120,8 +126,10 @@ import recipe from './recipe.vue';
 import chart from './chart.vue';
 import dataEntry from './data-entry.vue';
 import navbar from './navbar.vue';
-
-import router from '../router/index.js';
+import newBatch from './new-batch.vue';
+import loader from './loader.vue';
+import { logout } from '../utils';
+import router from '../router';
 import Cookie from 'js-cookie';
 
 import moment, { unix, months, Moment } from 'moment';
@@ -129,7 +137,7 @@ import { Batch, Tank, Task, Action, Version, Recipe } from '../types';
 
 // tslint:disable: no-any
 interface ITankInfoState {
-  tankInfo?: any;
+  tankInfo: any;
   batch?: Batch;
   versions: Version[];
   tank?: Tank;
@@ -148,7 +156,9 @@ export default Vue.extend({
     navbar,
     recipe,
     chart,
-    dataEntry
+    dataEntry,
+    newBatch,
+    loader
   },
   data(): ITankInfoState {
     return {
@@ -208,7 +218,6 @@ export default Vue.extend({
       );
       const tank: Tank = response.data as Tank;
       this.tank = tank;
-
       this.tankInfo = {
         ...this.tankInfo,
         id: tank.id,
@@ -225,6 +234,7 @@ export default Vue.extend({
     await this.loadData();
   },
   methods: {
+    logout,
     getData(key: string) {
       return this.versions.map((v: Version) => v[key]);
     },
@@ -384,6 +394,13 @@ export default Vue.extend({
 <style lang="stylus" scoped>
 @import '../styles/breakpoints'
 
+.center
+  display flex
+  width 100vw
+  height 100vh
+  justify-content center
+  align-items center
+
 #info-content
   display grid
   grid-template-columns auto auto
@@ -399,6 +416,13 @@ export default Vue.extend({
   +less-than(mobile)
     grid-template-columns 92vw
     grid-template-areas "tank" "recipe"
+
+#new-batch
+  display: grid
+  grid-template-columns: auto
+  justify-content: center
+  margin: auto
+  margin-top: 30px
 
 #recipe
   margin-top 30px

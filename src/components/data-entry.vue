@@ -14,13 +14,13 @@
         <div class="col-3">
           <span>
             <h4>Tank</h4>
-            {{ model.tank_name }}
+            {{ this.tank.name }}
           </span>
         </div>
         <div class="col-3">
           <h4>Action</h4>
           <select v-model="action">
-            <option value="">No Action</option>
+            <option value="">Select an Action</option>
             <option
               v-for="action_option in model.actions"
               v-bind:key="action_option.id"
@@ -207,7 +207,13 @@ export default Vue.extend({
     this.time = moment().format('YYYY-MM-DDTHH:mm');
 
     try {
-      const actionsResponse: HttpResponse = await this.$http.get(`${process.env.API}/actions`);
+      const headers = {
+        Authorization: `Bearer ${Cookie.getJSON('loggedIn').token}`
+      };
+      const actionsResponse: HttpResponse = await this.$http.get(
+        `${process.env.API}/actions`,
+        headers
+      );
       const actions: Action[] = actionsResponse.data;
 
       this.model = {
@@ -269,7 +275,7 @@ export default Vue.extend({
       };
 
       try {
-        const response = await this.$http.post(`${process.env.API}/batches`, requestObject);
+        const response = await this.$http.post(`${process.env.API}/batches/update`, requestObject);
         this.$emit('newDataCallback');
         this.reset();
         event.target.reset();
