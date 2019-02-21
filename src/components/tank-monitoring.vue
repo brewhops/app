@@ -200,17 +200,22 @@ export default Vue.extend({
     grid-gap: 10px;
     color: white;
     font-weight: 100;
+    grid-auto-rows: 128px;
 
     +greater-than(desktop) {
-      grid-template-columns: repeat(4, 170px);
+      grid-template-columns: repeat(4, 200px);
     }
 
     +between(laptop, desktop) {
-      grid-template-columns: repeat(3, 150px);
+      grid-template-columns: repeat(3, 200px);
     }
 
     +less-than(laptop) {
-      grid-template-columns: repeat(2, 150px);
+      grid-template-columns: repeat(3, 170px);
+    }
+
+    +less-than(tablet) {
+      grid-template-columns: repeat(2, 170px);
     }
 
     a {
