@@ -5,7 +5,7 @@
       <div class="grid">
         <div class="col-1 inputGroup">
           <h4>Batch Name</h4>
-          <input v-model="batch_name" type="string" />
+          <input v-model="batch_name" type="string" placeholder="Name" />
           <span>{{ feedback.name }}</span>
         </div>
         <div class="col-1">
