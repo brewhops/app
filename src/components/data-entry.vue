@@ -310,35 +310,37 @@ export default Vue.extend({
     async completeBatch(event) {
       event.preventDefault();
 
-      const cookie: BrewhopsCookie = Cookie.getJSON('loggedIn');
-      const headers = {
-        Authorization: `Bearer ${cookie.token}`
-      };
+      if (this.admin) {
+        const cookie: BrewhopsCookie = Cookie.getJSON('loggedIn');
+        const headers = {
+          Authorization: `Bearer ${cookie.token}`
+        };
 
-      const confirmation = confirm('Are you sure you want to close the batch?');
-      if (confirmation) {
-        await this.$http.delete(`${process.env.API}/batches/close/${this.batch!.id}`, {
-          headers: headers
-        });
-
-        const { id, ...tank } = this.tank;
-        tank.status = 'avaiable';
-        tank.in_use = false;
-        tank.update_user = cookie.id;
-        await this.$http.patch(`${process.env.API}/tanks/id/${this.tank!.id}`, tank, {
-          headers: headers
-        });
-
-        if (this.activeTask) {
-          const task: Task = this.activeTask;
-          task.completed_on = moment().toISOString();
-          task.update_user = Number(cookie.id);
-          const response = await this.$http.patch(`${process.env.API}/tasks`, task, {
+        const confirmation = confirm('Are you sure you want to close the batch?');
+        if (confirmation) {
+          await this.$http.delete(`${process.env.API}/batches/close/${this.batch!.id}`, {
             headers: headers
           });
-        }
 
-        router.push('/');
+          const { id, ...tank } = this.tank;
+          tank.status = 'avaiable';
+          tank.in_use = false;
+          tank.update_user = cookie.id;
+          await this.$http.patch(`${process.env.API}/tanks/id/${this.tank!.id}`, tank, {
+            headers: headers
+          });
+
+          if (this.activeTask) {
+            const task: Task = this.activeTask;
+            task.completed_on = moment().toISOString();
+            task.update_user = Number(cookie.id);
+            const response = await this.$http.patch(`${process.env.API}/tasks`, task, {
+              headers: headers
+            });
+          }
+
+          router.push('/');
+        }
       }
     }
   }
