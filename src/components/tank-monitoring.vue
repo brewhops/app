@@ -8,21 +8,26 @@
       <h2>Tank Info</h2>
       <div id="tankContents">
         <a v-on:click="showTankInfo(tank.id)" v-for="tank in tanks" v-bind:key="tank.id">
-          <table class="tank" v-bind:class="tank.action_id">
-            <tr>
-              <td>{{ tank.name }}</td>
-              <td v-if="tank.pressure">{{ tank.pressure }} psi</td>
-              <td v-else>{{ tank.status }}</td>
-            </tr>
-            <tr>
-              <td>{{ tank.airplane_code }}</td>
-              <td v-if="tank.temperature">{{ tank.temperature }}ºF</td>
-            </tr>
-            <tr>
-              <td v-if="tank.batch">{{ tank.batch.name }}</td>
-              <td v-if="tank.action">{{ tank.action }}</td>
-            </tr>
-          </table>
+          <div class="tank" v-bind:class="tank.action_id">
+            <div class="tank-name">
+              {{ tank.name }}
+            </div>
+            <table>
+              <tr>
+                <td v-if="tank.airplane_code">{{ tank.airplane_code }}</td>
+                <td v-if="tank.pressure">{{ tank.pressure }} psi</td>
+                <td v-else>{{ tank.status }}</td>
+              </tr>
+              <tr>
+                <td v-if="tank.batch">{{ tank.batch.name }}</td>
+                <td v-if="tank.temperature">{{ tank.temperature }}ºF</td>
+              </tr>
+            </table>
+
+            <div v-if="tank.action" class="tank-action">
+              {{ tank.action }}
+            </div>
+          </div>
         </a>
       </div>
     </div>
@@ -200,22 +205,22 @@ export default Vue.extend({
     grid-gap: 10px;
     color: white;
     font-weight: 100;
-    grid-auto-rows: 128px;
+    grid-auto-rows: minmax(128px, max-content);
 
     +greater-than(desktop) {
-      grid-template-columns: repeat(4, 200px);
+      grid-template-columns: repeat(4, 220px);
     }
 
     +between(laptop, desktop) {
-      grid-template-columns: repeat(3, 200px);
+      grid-template-columns: repeat(3, 220px);
     }
 
     +less-than(laptop) {
-      grid-template-columns: repeat(3, 170px);
+      grid-template-columns: repeat(2, 220px);
     }
 
     +less-than(tablet) {
-      grid-template-columns: repeat(2, 170px);
+      grid-template-columns: repeat(2, 200px);
     }
 
     a {
@@ -229,12 +234,31 @@ export default Vue.extend({
       height: 100%;
       min-height 128px;
 
-      td:nth-child(2) {
-        text-align: right;
+      table {
+        width: 100%;
+        padding-left: 5px;
+        padding-right: 7px;
+
+        td:nth-child(2) {
+          text-align: right;
+        }
+
+        td {
+          padding: 3px;
+        }
       }
 
-      td {
-        padding: 5px;
+      .tank-name {
+        padding: 8px;
+        font-size: 20px;
+      }
+
+      .tank-action {
+        padding-left: 10px;
+        padding-right: 10px;
+        margin-top: 10px;
+        margin-bottom: 8px;
+        text-align: center;
       }
     }
 
