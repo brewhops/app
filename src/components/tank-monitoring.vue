@@ -4,9 +4,9 @@
       <a v-on:click="logout">Logout</a>
       <h2>Tank Monitoring</h2>
     </div>
-    <div id="tankInfo">
+    <div id="tankInfo" v-if="tanks">
       <h2>Tank Info</h2>
-      <div id="tankContents">
+      <div id="tankContents" v-if="tanks.length > 0">
         <a v-on:click="showTankInfo(tank.id)" v-for="tank in tanks" v-bind:key="tank.id">
           <div class="tank" v-bind:class="tank.action_id">
             <div class="tank-name">
@@ -30,6 +30,12 @@
           </div>
         </a>
       </div>
+      <div v-else class="center">
+        No tanks exist
+      </div>
+    </div>
+    <div v-else class="center">
+      <loader></loader>
     </div>
   </div>
 </template>
@@ -37,6 +43,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import router from '../router';
+import loader from './loader.vue';
 import { logout } from '../utils';
 import Cookie from 'js-cookie';
 import moment from 'moment';
@@ -59,15 +66,18 @@ interface ITank {
 
 interface ITankMonitoringState {
   mobile: boolean;
-  tanks: ITank[];
+  tanks?: ITank[];
 }
 
 export default Vue.extend({
   name: 'tank-monitoring',
+  components: {
+    loader
+  },
   data(): ITankMonitoringState {
     return {
       mobile: false,
-      tanks: []
+      tanks: undefined
       // contents of a square is tankName, pressure, recipeName, temperature, batchNumber, Status
     };
   },
@@ -90,6 +100,7 @@ export default Vue.extend({
       const actionsResponse = await this.$http.get(`${process.env.API}/actions`);
       const recipeResponse = await this.$http.get(`${process.env.API}/recipes`);
 
+      const tankModels: ITank[] = [];
       const tanks: Tank[] = (tanksResponse.data as Tank[]).sort(this.sortTanks);
       for (const tankInfo of tanks) {
         // create a temporary tank for us to fill with data
@@ -163,9 +174,10 @@ export default Vue.extend({
         }
 
         // push data holder to the tanks array
-        this.tanks.push(tank);
+        tankModels.push(tank);
       }
 
+      this.tanks = tankModels;
       this.tanks.sort(this.sortITanks);
     } catch (err) {
       // tslint:disable-next-line:no-console
@@ -191,6 +203,13 @@ export default Vue.extend({
 
 <style lang="stylus" scoped>
 @import '../styles/breakpoints';
+
+.center
+  display flex
+  width 100vw
+  height 90vh
+  justify-content center
+  align-items center
 
 #tankInfo {
   grid-area: info;
