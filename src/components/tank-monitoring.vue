@@ -96,8 +96,7 @@ export default Vue.extend({
           status: tankInfo.status
         };
 
-        console.log(tankInfo);
-
+        // Get batch information
         const batch: Batch = (batchResponse.data as Batch[])
           .filter((b: Batch) => b.completed_on === null && b.tank_id === tankInfo.id)
           .sort((a: Batch, b: Batch) => {
