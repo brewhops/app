@@ -35,7 +35,7 @@ import router from '../router';
 import { logout } from '../utils';
 import Cookie from 'js-cookie';
 import moment from 'moment';
-import { Tank, Version, Task, Action, Recipe, Batch } from '../types';
+import { Action, Batch, Recipe, Tank, Task, Version } from '../types';
 
 // tslint:disable: max-func-body-length no-any
 
