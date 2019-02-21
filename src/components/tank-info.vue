@@ -307,7 +307,7 @@ export default Vue.extend({
           const response = await this.$http.get(`${process.env.API}/tasks/batch/${this.batch.id}`);
           const batchTasks: Task[] = response.data as Task[];
 
-          const activeTasks: Task[] = batchTasks.filter((t: Task) => t.completed_on === null);
+          const activeTasks: Task[] = batchTasks.filter((t: Task) => !t.completed_on);
 
           let task: Task | undefined;
           if (activeTasks.length > 1) {
