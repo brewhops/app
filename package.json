@@ -6,9 +6,10 @@
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js --mode=development",
-    "start": "node server.js",
+    "start": "cross-env NODE_ENV=production && node server.js",
     "prod": "webpack-dev-server --inline --progress --config build/webpack.prod.conf.js --mode=production",
     "bld": "webpack --config build/webpack.dev.conf.js",
+    "bld-prod": "webpack --config build/webpack.dev.conf.js",
     "build": "node build/build.js",
     "format": "prettier --single-quote --print-width 100 --write src/**/*.{ts,vue,js,json}",
     "lint": "tslint -c ./tslint.json -p ./tsconfig.json --fix"
@@ -16,6 +17,7 @@
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged",
+      "pre-push": "npm run bld-prod",
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   },
