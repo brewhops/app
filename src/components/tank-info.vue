@@ -5,10 +5,13 @@
       <h2>Tank Data</h2>
     </div>
     <navbar v-bind:activeState="[false, false, false, false]" />
+    <div class="title">
+      <h3>Tank {{ tankInfo.name }}</h3>
+    </div>
     <div v-if="this.tank" id="content">
       <div v-if="this.tank.in_use" id="info-content">
         <div id="tank">
-          <h2>Tank {{ tankInfo.name }}</h2>
+          <h2>Info</h2>
           <table class="table">
             <tbody>
               <tr scope="row" v-if="tankInfo.action !== ''" class="important">
@@ -307,7 +310,7 @@ export default Vue.extend({
           const response = await this.$http.get(`${process.env.API}/tasks/batch/${this.batch.id}`);
           const batchTasks: Task[] = response.data as Task[];
 
-          const activeTasks: Task[] = batchTasks.filter((t: Task) => t.completed_on === null);
+          const activeTasks: Task[] = batchTasks.filter((t: Task) => !t.completed_on);
 
           let task: Task | undefined;
           if (activeTasks.length > 1) {
@@ -394,10 +397,16 @@ export default Vue.extend({
 <style lang="stylus" scoped>
 @import '../styles/breakpoints'
 
+.title
+  display flex
+  width 100vw
+  justify-content center
+  align-items center
+
 .center
   display flex
   width 100vw
-  height 100vh
+  height 90vh
   justify-content center
   align-items center
 
@@ -442,7 +451,6 @@ export default Vue.extend({
       margin-right 5vw
   h2
     text-align center
-
 
 #tank
   text-align center
