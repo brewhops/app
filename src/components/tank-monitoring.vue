@@ -30,8 +30,8 @@
           </div>
         </a>
       </div>
-      <div v-else class="center">
-        No tanks exist
+      <div v-else class="text-center">
+        No tanks exist yet
       </div>
     </div>
     <div v-else class="center">
@@ -232,6 +232,9 @@ export default Vue.extend({
   height 90vh
   justify-content center
   align-items center
+
+.text-center
+  text-align center
 
 #tankInfo {
   grid-area: info;
