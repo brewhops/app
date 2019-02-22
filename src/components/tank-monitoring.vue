@@ -1,9 +1,5 @@
 <template>
   <div>
-    <div class="header" v-if="mobile">
-      <a v-on:click="logout">Logout</a>
-      <h2>Tank Monitoring</h2>
-    </div>
     <div id="tankInfo" v-if="tanks">
       <h2>Tank Info</h2>
       <div id="tankContents" v-if="tanks.length > 0">
@@ -67,7 +63,6 @@ interface ITank {
 }
 
 interface ITankMonitoringState {
-  mobile: boolean;
   tanks?: ITank[];
 }
 
@@ -78,7 +73,6 @@ export default Vue.extend({
   },
   data(): ITankMonitoringState {
     return {
-      mobile: false,
       tanks: undefined
       // contents of a square is tankName, pressure, recipeName, temperature, batchNumber, Status
     };
@@ -87,13 +81,6 @@ export default Vue.extend({
   async beforeMount() {
     if (!Cookie.getJSON('loggedIn')) {
       router.push('/');
-    }
-    if (
-      /iPhone|iPad|iPod|Android|webOS|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(
-        navigator.userAgent
-      )
-    ) {
-      this.mobile = true;
     }
 
     try {
