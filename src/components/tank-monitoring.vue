@@ -187,10 +187,13 @@ export default Vue.extend({
             .sort((a: Version, b: Version) => {
               return moment.utc(a.measured_on).diff(moment.utc(b.measured_on));
             });
-          const lastVersion = versions[versions.length - 1];
 
-          tank.pressure = lastVersion.pressure;
-          tank.temperature = lastVersion.temperature;
+          if (versions.length > 0) {
+            const lastVersion = versions[versions.length - 1];
+
+            tank.pressure = lastVersion.pressure;
+            tank.temperature = lastVersion.temperature;
+          }
         }
 
         // Get task information
