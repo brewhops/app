@@ -412,18 +412,18 @@ export default Vue.extend({
 
 #info-content
   display grid
-  grid-template-columns auto auto
+  grid-template-columns 45vw 45vw
 
   grid-template-areas "tank entry"
-  width 92vw
+  width 90vw
   margin auto
 
   +less-than(tablet)
-    grid-template-columns 92vw
+    grid-template-columns 90vw
     grid-template-areas "tank" "entry" "recipe"
 
   +less-than(mobile)
-    grid-template-columns 92vw
+    grid-template-columns 90vw
     grid-template-areas "tank" "recipe"
 
 #new-batch
@@ -436,19 +436,24 @@ export default Vue.extend({
 #recipe
   margin-top 30px
 
+#entry
+  +less-than(tablet)
+    margin auto
+
 #data
   justify-content center
-  +less-than(mobile)
-    display none
+  width 90vw
+  margin auto
+  margin-top 30px
   #charts
     display grid
     justify-content center
-    grid-template-columns repeat(2, 48vw)
+    grid-template-columns repeat(2, 43vw)
     +less-than(tablet)
-      grid-template-columns 92vw
+      grid-template-columns 90vw
     .chart
-      margin-left 5vw
-      margin-right 5vw
+      margin-left 1vw
+      margin-right 1vw
   h2
     text-align center
 
