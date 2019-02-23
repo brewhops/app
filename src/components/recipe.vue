@@ -71,7 +71,6 @@ export default Vue.extend({
   text-align center
   table
     text-align left
-    margin auto
     thead, tbody
       td, th
         padding-right 10px
