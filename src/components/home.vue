@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="header" v-if="!mobile">
+    <div class="header">
       <a v-on:click="logout">Logout</a>
       <h2>Home</h2>
     </div>
