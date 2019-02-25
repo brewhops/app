@@ -235,23 +235,28 @@ export default Vue.extend({
     justify-content: center;
     grid-gap: 10px;
     color: white;
-    font-weight: 100;
+    font-weight: 300;
+    margin: 5px;
     grid-auto-rows: minmax(128px, max-content);
 
     +greater-than(desktop) {
-      grid-template-columns: repeat(4, 220px);
+      grid-template-columns: repeat(4, 250px);
     }
 
     +between(laptop, desktop) {
-      grid-template-columns: repeat(3, 220px);
+      grid-template-columns: repeat(4, 220px);
     }
 
     +less-than(laptop) {
-      grid-template-columns: repeat(2, 220px);
+      grid-template-columns: repeat(3, 200px);
     }
 
     +less-than(tablet) {
       grid-template-columns: repeat(2, 200px);
+    }
+
+    +less-than(mobile) {
+      grid-template-columns: repeat(1, 250px);
     }
 
     a {
