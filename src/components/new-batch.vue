@@ -44,7 +44,7 @@ import Cookie from 'js-cookie';
 import loader from './loader.vue';
 import { Recipe, Batch, Tank, Task } from '../types';
 import { isMoment } from 'moment';
-import { TANK_STATUS } from '../utils';
+import { TANK_STATUS, ACTION } from '../utils';
 
 interface INewBatchState {
   recipes: Recipe[];
@@ -130,10 +130,10 @@ export default Vue.extend({
           });
           await this.updateTank(employeeId, headers);
           await this.createInitialTask(employeeId);
-          location.reload();
         } catch (err) {
           console.error(err);
         }
+        router.push('/');
       } else {
         if (!this.recipe_id) {
           this.feedback.recipe = 'Select a recipe.';
@@ -154,7 +154,7 @@ export default Vue.extend({
         const task: Task = {
           employee_id,
           batch_id: batches[0].id,
-          action_id: 12,
+          action_id: ACTION.PRIMARY_FERMENTATION,
           added_on: new Date().toUTCString()
         };
         const taskResponse = await this.$http.post(`${process.env.API}/tasks/`, task);
