@@ -84,7 +84,7 @@ export default Vue.extend({
     }
 
     try {
-      let data: HttpResponse[] = await Promise.all([
+      const data: HttpResponse[] = await Promise.all([
         this.$http.get(`${process.env.API}/tanks`),
         this.$http.get(`${process.env.API}/batches`),
         this.$http.get(`${process.env.API}/actions`),
@@ -169,6 +169,7 @@ export default Vue.extend({
           const versions: Version[] = (versionsResponse.data as Version[])
             .map((v: Version) => {
               v.measured_on = moment(v.measured_on);
+
               return v;
             })
             .sort((a: Version, b: Version) => {

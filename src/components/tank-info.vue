@@ -73,6 +73,8 @@
         </div>
 
         <div id="entry">
+          <update-action v-bind:tank="tank" v-bind:batch="batch" v-bind:activeTask="task">
+          </update-action>
           <data-entry
             v-bind:tank="tank"
             v-bind:batch="batch"
@@ -130,6 +132,7 @@ import chart from './chart.vue';
 import dataEntry from './data-entry.vue';
 import navbar from './navbar.vue';
 import newBatch from './new-batch.vue';
+import updateAction from './update-action.vue';
 import loader from './loader.vue';
 import { logout } from '../utils';
 import router from '../router';
@@ -161,6 +164,7 @@ export default Vue.extend({
     chart,
     dataEntry,
     newBatch,
+    updateAction,
     loader
   },
   data(): ITankInfoState {
@@ -264,7 +268,7 @@ export default Vue.extend({
           batch = openBatches.sort((a: Batch, b: Batch) => {
             return moment.utc(b.started_on).diff(moment.utc(a.started_on));
           })[0];
-        } else if (openBatches.length == 1) {
+        } else if (openBatches.length === 1) {
           // Found only open batch
           batch = openBatches[0];
         }
@@ -359,6 +363,7 @@ export default Vue.extend({
           this.versions = (response.data as Version[])
             .map((v: Version) => {
               v.measured_on = moment(v.measured_on);
+
               return v;
             })
             .sort((a: Version, b: Version) => {
@@ -451,6 +456,12 @@ export default Vue.extend({
       margin-right 5vw
   h2
     text-align center
+
+#entry
+  display flex
+  flex-direction column
+  justify-content center
+  align-items center
 
 #tank
   text-align center
