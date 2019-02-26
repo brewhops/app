@@ -1,7 +1,7 @@
 <template lang="html">
   <div>
     <div class="header" v-if="!mobile">
-      <router-link to="login">Logout</router-link>
+      <a v-on:click="logout">Logout</a>
       <h2>Batch History</h2>
     </div>
     <navbar v-bind:activeState="[false, true, false, false]" />
@@ -100,7 +100,8 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import router from '../router/index.js';
+import router from '../router';
+import { logout } from '../utils';
 import Cookie from 'js-cookie';
 import moment from 'moment';
 import { Batch, Version, Task, Employee, Action } from '../types';
@@ -170,6 +171,7 @@ export default Vue.extend({
     }
   },
   methods: {
+    logout,
     home() {
       if (this.mobile) {
         router.push('/home-mobile');

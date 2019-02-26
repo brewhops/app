@@ -25,13 +25,15 @@
 <script lang="ts">
 import Vue from 'vue';
 import Cookie from 'js-cookie';
-import router from '../../router/index.js';
+import router from '../../router';
+import { logout } from '../../utils';
 import Navbar from '../navbar.vue';
 import CreateTank from './create-tank.vue';
 import UpdateTank from './update-tank.vue';
 import CreateUser from './create-user.vue';
 import CreateBrand from './create-brand.vue';
 import { Employee, Tank, BrewhopsCookie } from '../../types';
+import { TANK_STATUS } from '../../utils';
 // tslint:disable: no-console
 
 interface IAdminState {
@@ -54,7 +56,14 @@ export default Vue.extend({
     return {
       employees: [],
       tanks: [],
-      tankStatuses: ['busy', 'broken', 'available', 'brewing', 'transferring', 'completed'],
+      tankStatuses: [
+        TANK_STATUS.BUSY,
+        TANK_STATUS.BROKEN,
+        TANK_STATUS.AVAILABLE,
+        TANK_STATUS.BREWING,
+        TANK_STATUS.TRANSFERRING,
+        TANK_STATUS.COMPLETED
+      ],
       debugging: ''
     };
   },
@@ -84,12 +93,7 @@ export default Vue.extend({
     }
   },
   methods: {
-    logout() {
-      if (Cookie.getJSON('loggedIn')) {
-        Cookie.remove('loggedIn');
-      }
-      router.push('/');
-    },
+    logout,
     async tankUpdate() {
       try {
         const response = await this.$http.get(`${process.env.API}/tanks`);
