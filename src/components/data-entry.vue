@@ -94,6 +94,7 @@ import {
   BatchUpdateOrCreate
 } from '../types';
 import { HttpResponse } from 'vue-resource/types/vue_resource';
+import { TANK_STATUS } from '../utils/index';
 
 interface IDataEntryViewModel {
   tank_name: string;
@@ -323,7 +324,7 @@ export default Vue.extend({
           });
 
           const { id, ...tank } = this.tank;
-          tank.status = 'avaiable';
+          tank.status = TANK_STATUS.AVAILABLE;
           tank.in_use = false;
           tank.update_user = cookie.id;
           await this.$http.patch(`${process.env.API}/tanks/id/${this.tank!.id}`, tank, {
