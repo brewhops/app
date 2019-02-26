@@ -23,7 +23,12 @@
           <input v-model="volume" type="number" step="0.01" required />
           <label>Volume</label>
         </div>
-        <span>{{ feedback.volume }}</span>
+        <div class="col-1 inputGroup">
+          <h4>Yeast Generation</h4>
+          <input v-model="generation" type="number" step="0.01" required />
+          <label>Yeast Generation</label>
+        </div>
+        <span>{{ feedback.generation }}</span>
       </div>
       <button v-on:click="createBatch">Submit</button>
     </form>
@@ -46,11 +51,13 @@ interface INewBatchState {
   recipe_id: string;
   batch_name: string;
   volume: string;
+  generation: string;
   mobile: boolean;
   feedback: {
     batch_name: string;
     recipe: string;
     volume: string;
+    generation: string;
   };
 }
 
@@ -69,11 +76,13 @@ export default Vue.extend({
       recipe_id: '',
       batch_name: '',
       volume: '',
+      generation: '',
       mobile: false,
       feedback: {
         batch_name: '',
         recipe: '',
-        volume: ''
+        volume: '',
+        generation: ''
       }
     };
   },
@@ -100,11 +109,11 @@ export default Vue.extend({
   },
   methods: {
     async createBatch() {
-      if (this.recipe_id && this.batch_name) {
+      if (this.recipe_id && this.batch_name && this.generation) {
         const employeeId: number = Cookie.getJSON('id');
         const batch: Batch = {
           name: this.batch_name,
-          generation: 0,
+          generation: parseInt(this.generation),
           volume: parseInt(this.volume),
           bright: 0,
           recipe_id: parseInt(this.recipe_id),
