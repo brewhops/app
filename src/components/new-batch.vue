@@ -22,6 +22,7 @@
           <h4>Volume</h4>
           <input v-model="volume" type="number" step="0.01" required />
           <label>Volume</label>
+          <span>{{ feedback.generation }}</span>
         </div>
         <div class="col-1 inputGroup">
           <h4>Yeast Generation</h4>
@@ -109,7 +110,7 @@ export default Vue.extend({
   },
   methods: {
     async createBatch() {
-      if (this.recipe_id && this.batch_name && this.generation) {
+      if (this.recipe_id && this.batch_name && this.volume && this.generation) {
         const employeeId: number = Cookie.getJSON('id');
         const batch: Batch = {
           name: this.batch_name,
@@ -133,7 +134,7 @@ export default Vue.extend({
         } catch (err) {
           console.error(err);
         }
-        router.push(`/`);
+        router.push('/');
       } else {
         if (!this.recipe_id) {
           this.feedback.recipe = 'Select a recipe.';
@@ -143,6 +144,9 @@ export default Vue.extend({
         }
         if (!this.volume) {
           this.feedback.volume = 'Enter the volume of the batch';
+        }
+        if (!this.generation) {
+          this.feedback.generation = 'Enter the yeast generation of the batch';
         }
       }
     },
