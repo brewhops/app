@@ -133,7 +133,7 @@ export default Vue.extend({
         } catch (err) {
           console.error(err);
         }
-        router.push('/');
+        router.push(`/`);
       } else {
         if (!this.recipe_id) {
           this.feedback.recipe = 'Select a recipe.';
