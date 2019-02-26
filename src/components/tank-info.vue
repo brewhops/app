@@ -72,17 +72,20 @@
           <recipe id="recipe" v-bind:recipe="recipe"></recipe>
         </div>
 
-        <div id="entry">
+        <div v-if="recipe && batch && recipe" id="entry">
           <update-action v-bind:tank="tank" v-bind:batch="batch" v-bind:activeTask="task">
           </update-action>
           <data-entry
-            v-bind:tank="tank"
-            v-bind:batch="batch"
-            v-bind:recipe="recipe"
-            v-bind:activeTask="task"
+            v-bind:tank="this.tank"
+            v-bind:batch="this.batch"
+            v-bind:recipe="this.recipe"
+            v-bind:activeTask="this.task"
             @newDataCallback="loadData"
           >
           </data-entry>
+        </div>
+        <div v-else>
+          <loader></loader>
         </div>
       </div>
       <div v-else id="new-batch">
