@@ -129,7 +129,7 @@ export default Vue.extend({
 
 #halfsizeleft
   width 50%
-  padding-left 7px
+  padding-right 7px
 
 #halfsizeright
   width 50%
