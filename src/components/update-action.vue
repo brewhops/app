@@ -40,8 +40,7 @@ export default Vue.extend({
     },
     activeTask: {
       type: Object,
-      required: false,
-      default: undefined
+      required: false
     },
     batch: {
       type: Object,
@@ -99,6 +98,7 @@ export default Vue.extend({
 
         try {
           const response = await this.$http.post(`${process.env.API}/tasks`, task, { headers });
+          this.$emit('newDataCallback');
         } catch (err) {
           console.error(err);
         }
