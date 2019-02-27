@@ -16,12 +16,12 @@
         <div class="col-3">
           <span id="batchName">
             <h4>Batch:</h4>
-            {{ model.batch_name }}
+            {{ this.batch.name }}
           </span>
         </div>
         <div class="col-3">
           <h4>Recipe</h4>
-          {{ model.recipe_name }}
+          {{ this.recipe.name }}
         </div>
         <div class="col-3 inputGroup">
           <input v-model="pH" type="number" step="0.01" required />
@@ -85,16 +85,8 @@ import {
 import { HttpResponse } from 'vue-resource/types/vue_resource';
 import { TANK_STATUS } from '../utils/index';
 
-interface IDataEntryViewModel {
-  tank_name: string;
-  recipe_name: string;
-  batch_name: string;
-}
-
 // tslint:disable:no-any no-console
 interface IDataEntryState {
-  model: IDataEntryViewModel;
-
   pH: string;
   ABV: string;
   bright: string;
@@ -104,7 +96,6 @@ interface IDataEntryState {
   SG: string;
   temp: string;
   time: string;
-
   update?: any;
   mobile?: any;
   admin: boolean;
@@ -135,12 +126,6 @@ export default Vue.extend({
   },
   data(): IDataEntryState {
     return {
-      model: {
-        tank_name: '',
-        recipe_name: '',
-        batch_name: ''
-      },
-
       pH: '',
       ABV: '',
       bright: '',
@@ -155,32 +140,6 @@ export default Vue.extend({
       mobile: false,
       admin: false
     };
-  },
-  watch: {
-    tank() {
-      this.model = {
-        ...this.model,
-        tank_name: this.tank.name
-      };
-    },
-    recipe() {
-      this.model = {
-        ...this.model,
-        recipe_name: this.recipe.name
-      };
-    },
-    batch() {
-      this.model = {
-        ...this.model,
-        batch_name: this.batch.name
-      };
-
-      if (this.batch) {
-        this.generation = this.batch.generation.toString();
-        this.volume = this.batch.volume.toFixed(2);
-        this.bright = this.batch.bright.toFixed(1);
-      }
-    }
   },
   async beforeMount() {
     if (!Cookie.getJSON('loggedIn')) {
