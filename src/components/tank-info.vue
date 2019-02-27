@@ -8,8 +8,8 @@
     <div class="title">
       <h3>Tank {{ tankInfo.name }}</h3>
     </div>
-    <div v-if="this.tank" id="content">
-      <div v-if="this.tank.in_use" id="info-content">
+    <div v-if="tank && this.tank.in_use && recipe && batch" id="content">
+      <div id="info-content">
         <div id="tank">
           <h2>Info</h2>
           <table class="table">
@@ -72,27 +72,25 @@
           <recipe id="recipe" v-bind:recipe="recipe"></recipe>
         </div>
 
-        <div v-if="recipe && batch && recipe" id="entry">
-          <update-action v-bind:tank="tank" v-bind:batch="batch" v-bind:activeTask="task">
+        <div id="entry">
+          <update-action
+            v-bind:tank="tank"
+            v-bind:batch="batch"
+            v-bind:activeTask="task"
+            @newDataCallback="loadData"
+          >
           </update-action>
           <data-entry
-            v-bind:tank="this.tank"
-            v-bind:batch="this.batch"
-            v-bind:recipe="this.recipe"
-            v-bind:activeTask="this.task"
+            v-bind:tank="tank"
+            v-bind:batch="batch"
+            v-bind:recipe="recipe"
+            v-bind:activeTask="task"
             @newDataCallback="loadData"
           >
           </data-entry>
         </div>
-        <div v-else>
-          <loader></loader>
-        </div>
       </div>
-      <div v-else id="new-batch">
-        <new-batch :tank="this.tank" />
-      </div>
-
-      <div v-if="this.tank.in_use" v-show="versions.length > 0" id="data">
+      <div v-show="versions.length > 0" id="data">
         <h2>Batch History</h2>
         <div id="charts">
           <chart
@@ -122,7 +120,10 @@
         </div>
       </div>
     </div>
-    <div v-else class="center">
+    <div v-if="tank && !this.tank.in_use" id="new-batch">
+      <new-batch :tank="this.tank" />
+    </div>
+    <div v-if="!tank || !recipe || !batch" class="center">
       <loader></loader>
     </div>
   </div>
@@ -235,13 +236,12 @@ export default Vue.extend({
         status: tank.status,
         in_use: tank.in_use
       };
+      await this.loadData();
     } catch (err) {
       // tslint:disable-next-line:no-console
       console.error(err);
       this.debugging = 'Debugging Flag: Response error, cant access tanks page';
     }
-
-    await this.loadData();
   },
   methods: {
     logout,
@@ -249,9 +249,13 @@ export default Vue.extend({
       return this.versions.map((v: Version) => v[key]);
     },
     async loadData() {
-      await this.loadBatchData();
-      await this.loadTaskData();
-      await this.loadHistoryData();
+      try {
+        await this.loadBatchData();
+        await this.loadTaskData();
+        await this.loadHistoryData();
+      } catch (err) {
+        console.error(err);
+      }
     },
     async loadBatchData() {
       try {
