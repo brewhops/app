@@ -16,7 +16,6 @@
     <div v-if="this.action === this.exception" class="col-1 inputGroup">
       <input v-model="reason" type="string" required />
       <label>Reason for exception.</label>
-      <span>{{ feedback.reason }}</span>
     </div>
     <div>
       <button>Submit</button>
