@@ -22,8 +22,14 @@
           <h4>Volume</h4>
           <input v-model="volume" type="number" step="0.01" required />
           <label>Volume</label>
+          <span>{{ feedback.generation }}</span>
         </div>
-        <span>{{ feedback.volume }}</span>
+        <div class="col-1 inputGroup">
+          <h4>Yeast Generation</h4>
+          <input v-model="generation" type="number" step="0.01" required />
+          <label>Yeast Generation</label>
+        </div>
+        <span>{{ feedback.generation }}</span>
       </div>
       <button v-on:click="createBatch">Submit</button>
     </form>
@@ -39,18 +45,20 @@ import Cookie from 'js-cookie';
 import loader from './loader.vue';
 import { Recipe, Batch, Tank, Task } from '../types';
 import { isMoment } from 'moment';
-import { TANK_STATUS } from '../utils';
+import { TANK_STATUS, ACTION } from '../utils';
 
 interface INewBatchState {
   recipes: Recipe[];
   recipe_id: string;
   batch_name: string;
   volume: string;
+  generation: string;
   mobile: boolean;
   feedback: {
     batch_name: string;
     recipe: string;
     volume: string;
+    generation: string;
   };
 }
 
@@ -69,11 +77,13 @@ export default Vue.extend({
       recipe_id: '',
       batch_name: '',
       volume: '',
+      generation: '',
       mobile: false,
       feedback: {
         batch_name: '',
         recipe: '',
-        volume: ''
+        volume: '',
+        generation: ''
       }
     };
   },
@@ -100,11 +110,11 @@ export default Vue.extend({
   },
   methods: {
     async createBatch() {
-      if (this.recipe_id && this.batch_name) {
+      if (this.recipe_id && this.batch_name && this.volume && this.generation) {
         const employeeId: number = Cookie.getJSON('id');
         const batch: Batch = {
           name: this.batch_name,
-          generation: 0,
+          generation: parseInt(this.generation),
           volume: parseInt(this.volume),
           bright: 0,
           recipe_id: parseInt(this.recipe_id),
@@ -121,10 +131,10 @@ export default Vue.extend({
           });
           await this.updateTank(employeeId, headers);
           await this.createInitialTask(employeeId);
-          location.reload();
         } catch (err) {
           console.error(err);
         }
+        router.push('/');
       } else {
         if (!this.recipe_id) {
           this.feedback.recipe = 'Select a recipe.';
@@ -134,6 +144,9 @@ export default Vue.extend({
         }
         if (!this.volume) {
           this.feedback.volume = 'Enter the volume of the batch';
+        }
+        if (!this.generation) {
+          this.feedback.generation = 'Enter the yeast generation of the batch';
         }
       }
     },
@@ -145,7 +158,7 @@ export default Vue.extend({
         const task: Task = {
           employee_id,
           batch_id: batches[0].id,
-          action_id: 12,
+          action_id: ACTION.PRIMARY_FERMENTATION,
           added_on: new Date().toUTCString()
         };
         const taskResponse = await this.$http.post(`${process.env.API}/tasks/`, task);

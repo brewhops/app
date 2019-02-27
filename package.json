@@ -6,9 +6,10 @@
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js --mode=development",
-    "start": "npm run dev",
+    "start": "cross-env NODE_ENV=production && node server.js",
     "prod": "webpack-dev-server --inline --progress --config build/webpack.prod.conf.js --mode=production",
     "bld": "webpack --config build/webpack.dev.conf.js",
+    "bld-prod": "webpack --config build/webpack.prod.conf.js",
     "build": "node build/build.js",
     "format": "prettier --single-quote --print-width 100 --write src/**/*.{ts,vue,js,json}",
     "lint": "tslint -c ./tslint.json -p ./tsconfig.json --fix"
@@ -16,6 +17,7 @@
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged",
+      "pre-push": "npm run bld-prod",
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   },
@@ -36,15 +38,18 @@
   },
   "dependencies": {
     "@types/crypto-js": "^3.1.43",
+    "@types/express": "^4.16.1",
     "@types/js-cookie": "^2.2.0",
     "@types/node": "^10.12.18",
     "@types/vue": "^2.0.0",
     "awesome-typescript-loader": "^5.2.1",
     "c3": "^0.4.20",
+    "cross-env": "^5.2.0",
     "crypto-js": "^3.1.9-1",
+    "express": "^4.16.4",
     "js-cookie": "^2.2.0",
     "moment": "^2.22.1",
-    "npm": "^5.8.0",
+    "serve-static": "^1.13.2",
     "source-map-loader": "^0.2.4",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.1",
@@ -72,7 +77,7 @@
     "chalk": "^2.0.1",
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.28.0",
-    "extract-text-webpack-plugin": "^3.0.0",
+    "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "file-loader": "^1.1.4",
     "friendly-errors-webpack-plugin": "^1.6.1",
     "html-webpack-plugin": "^3.2.0",
