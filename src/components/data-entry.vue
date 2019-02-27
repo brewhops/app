@@ -14,13 +14,13 @@
         <div class="col-3">
           <span>
             <h4>Tank</h4>
-            {{ model.tank_name }}
+            {{ this.tank.name }}
           </span>
         </div>
         <div class="col-3">
           <h4>Action</h4>
           <select v-model="action">
-            <option value="">No Action</option>
+            <option value="">Select an Action</option>
             <option
               v-for="action_option in model.actions"
               v-bind:key="action_option.id"
@@ -73,6 +73,7 @@
         </div>
       </div>
       <button>Submit</button>
+      <button v-if="admin" v-on:click="completeBatch">Complete Batch</button>
     </form>
   </div>
 </template>
@@ -120,6 +121,7 @@ interface IDataEntryState {
 
   update?: any;
   mobile?: any;
+  admin: boolean;
   sortTanks?: any;
   debugging?: any;
 }
@@ -169,7 +171,8 @@ export default Vue.extend({
       action: '',
 
       update: true,
-      mobile: false
+      mobile: false,
+      admin: false
     };
   },
   watch: {
@@ -200,6 +203,8 @@ export default Vue.extend({
     if (!Cookie.getJSON('loggedIn')) {
       router.push('/');
     }
+    this.admin = Cookie.getJSON('loggedIn').admin;
+
     if (
       /iPhone|iPad|iPod|Android|webOS|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(
         navigator.userAgent
@@ -212,7 +217,13 @@ export default Vue.extend({
     this.time = moment().format('YYYY-MM-DDTHH:mm');
 
     try {
-      const actionsResponse: HttpResponse = await this.$http.get(`${process.env.API}/actions`);
+      const headers = {
+        Authorization: `Bearer ${Cookie.getJSON('loggedIn').token}`
+      };
+      const actionsResponse: HttpResponse = await this.$http.get(
+        `${process.env.API}/actions`,
+        headers
+      );
       const actions: Action[] = actionsResponse.data;
 
       this.model = {
@@ -239,12 +250,35 @@ export default Vue.extend({
     // tslint:disable-next-line:max-func-body-length
     async submit(event) {
       const cookie: BrewhopsCookie = Cookie.getJSON('loggedIn');
+      const headers = {
+        Authorization: `Bearer ${cookie.token}`
+      };
 
       if (this.activeTask && this.activeTask.action_id !== this.action) {
         const task: Task = this.activeTask;
         task.completed_on = moment().toISOString();
         try {
-          const response = await this.$http.patch(`${process.env.API}/tasks`, task);
+          const response = await this.$http.patch(`${process.env.API}/tasks`, task, {
+            headers: headers
+          });
+        } catch (err) {
+          console.error(err);
+        }
+      }
+
+      if ((!this.activeTask || this.activeTask.action_id !== this.action) && this.action) {
+        const task: Task = {
+          added_on: moment().toISOString(),
+          assigned: true,
+          batch_id: this.batch!.id,
+          action_id: Number(this.action),
+          employee_id: Number(cookie.id)
+        };
+
+        try {
+          const response = await this.$http.post(`${process.env.API}/tasks`, task, {
+            headers: headers
+          });
         } catch (err) {
           console.error(err);
         }
@@ -253,6 +287,7 @@ export default Vue.extend({
       const requestObject: BatchUpdateOrCreate = {
         recipe_id: Number(this.recipe!.id),
         tank_id: Number(this.tank!.id),
+        batch_id: Number(this.batch!.id),
         volume: Number(this.volume),
         bright: Number(this.bright),
         generation: Number(this.generation),
@@ -263,23 +298,54 @@ export default Vue.extend({
         temperature: Number(this.temp),
         sg: Number(this.SG),
         measured_on: moment(this.time).toISOString(),
-        action: {
-          id: this.action,
-          completed: false,
-          assigned: false,
-          employee: {
-            id: cookie.id
-          }
-        }
+        update_user: Number(cookie.id)
       };
 
       try {
-        const response = await this.$http.post(`${process.env.API}/batches`, requestObject);
+        const response = await this.$http.post(`${process.env.API}/batches/update`, requestObject, {
+          headers: headers
+        });
         this.$emit('newDataCallback');
         this.reset();
         event.target.reset();
       } catch (err) {
         console.error(err);
+      }
+    },
+    async completeBatch(event) {
+      event.preventDefault();
+
+      if (this.admin) {
+        const cookie: BrewhopsCookie = Cookie.getJSON('loggedIn');
+        const headers = {
+          Authorization: `Bearer ${cookie.token}`
+        };
+
+        const confirmation = confirm('Are you sure you want to close the batch?');
+        if (confirmation) {
+          await this.$http.delete(`${process.env.API}/batches/close/${this.batch!.id}`, {
+            headers: headers
+          });
+
+          const { id, ...tank } = this.tank;
+          tank.status = 'avaiable';
+          tank.in_use = false;
+          tank.update_user = cookie.id;
+          await this.$http.patch(`${process.env.API}/tanks/id/${this.tank!.id}`, tank, {
+            headers: headers
+          });
+
+          if (this.activeTask) {
+            const task: Task = this.activeTask;
+            task.completed_on = moment().toISOString();
+            task.update_user = Number(cookie.id);
+            const response = await this.$http.patch(`${process.env.API}/tasks`, task, {
+              headers: headers
+            });
+          }
+
+          router.push('/');
+        }
       }
     }
   }

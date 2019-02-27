@@ -16,6 +16,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import router from '../router/index.js';
+import { logout } from '../utils';
 import Cookie from 'js-cookie';
 
 export default Vue.extend({
@@ -25,14 +26,7 @@ export default Vue.extend({
       router.push('/');
     }
   },
-  methods: {
-    logout() {
-      if (Cookie.getJSON('loggedIn')) {
-        Cookie.remove('loggedIn');
-      }
-      router.push('/');
-    }
-  }
+  methods: { logout }
 });
 </script>
 

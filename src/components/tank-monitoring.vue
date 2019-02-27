@@ -27,24 +27,25 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import router from '../router/index.js';
+import router from '../router';
+import { logout } from '../utils';
 import Cookie from 'js-cookie';
 import moment from 'moment';
-import { Tank } from '../types/index.js';
+import { Action, Batch, Recipe, Tank, Task, Version } from '../types';
 
 // tslint:disable: max-func-body-length no-any
 
 interface ITank {
-  action?: any;
-  action_id?: any;
+  action?: string;
+  action_id?: number | string;
   batch?: any;
-  pressure?: any;
-  temperature?: any;
-  recipe_id?: any;
-  airplane_code?: any;
-  id?: any;
-  name?: any;
-  status?: any;
+  pressure?: number;
+  temperature?: number;
+  recipe_id?: number;
+  airplane_code?: string;
+  id?: number;
+  name?: string;
+  status?: string;
 }
 
 interface ITankMonitoringState {
@@ -75,86 +76,105 @@ export default Vue.extend({
     }
 
     try {
-      const batchResponse = await this.$http.get(`${process.env.API}/batches`);
       const tanksResponse = await this.$http.get(`${process.env.API}/tanks`);
-      const tasksResponse = await this.$http.get(`${process.env.API}/tasks`);
+      const batchResponse = await this.$http.get(`${process.env.API}/batches`);
       const actionsResponse = await this.$http.get(`${process.env.API}/actions`);
       const recipeResponse = await this.$http.get(`${process.env.API}/recipes`);
 
-      for (const tankInfo of tanksResponse.data) {
+      const tanks: Tank[] = (tanksResponse.data as Tank[]).sort(this.sortTanks);
+      for (const tankInfo of tanks) {
         // create a temporary tank for us to fill with data
         const tank: ITank = {
           // keep track of tank id for searching
-          id: tankInfo.id,
+          id: Number(tankInfo.id),
           // keep track of tank name for displaying
           name: tankInfo.name,
           status: tankInfo.status
         };
 
-        for (const batch of batchResponse.data) {
-          // if our batches tankID matches our tankID
-          if (batch.tank_id === tank.id) {
-            tank.batch = {};
-            // add in our batchesID to the tank info box
-            tank.batch.id = batch.id;
-            tank.batch.name = batch.name;
-            // add the recipeID to the tank info box
-            tank.recipe_id = batch.recipe_id;
-          }
-        }
-        for (const recipeHistory of recipeResponse.data) {
-          if (tank.recipe_id === recipeHistory.id) {
-            tank.airplane_code = recipeHistory.airplane_code;
-          }
-        }
+        // Get batch information
+        const batch: Batch = (batchResponse.data as Batch[])
+          .filter((b: Batch) => b.completed_on === null && b.tank_id === tankInfo.id)
+          .sort((a: Batch, b: Batch) => {
+            return moment.utc(b.started_on).diff(moment.utc(a.started_on));
+          })[0];
 
-        if (tank.batch) {
-          const versionsResponse = await this.$http.get(
-            `${process.env.API}/versions/batch/${tank.batch.id}`
+        if (batch) {
+          tank.batch = {};
+          // add in our batchesID to the tank info box
+          tank.batch.id = batch.id;
+          tank.batch.name = batch.name;
+          // add the recipeID to the tank info box
+          tank.recipe_id = batch.recipe_id;
+
+          // Set recipe information
+          for (const recipe of recipeResponse.data as Recipe[]) {
+            if (batch.recipe_id === recipe.id) {
+              tank.airplane_code = recipe.airplane_code;
+            }
+          }
+
+          // Get version information if tank is in use
+          if (tankInfo.in_use) {
+            const versionsResponse = await this.$http.get(
+              `${process.env.API}/versions/batch/${batch.id}`
+            );
+            const versions: Version[] = (versionsResponse.data as Version[])
+              .map((v: Version) => {
+                v.measured_on = moment(v.measured_on);
+                return v;
+              })
+              .sort((a: Version, b: Version) => {
+                return moment.utc(a.measured_on).diff(moment.utc(b.measured_on));
+              });
+
+            if (versions.length > 0) {
+              const lastVersion = versions[versions.length - 1];
+
+              tank.pressure = lastVersion.pressure;
+              tank.temperature = lastVersion.temperature;
+            }
+          }
+
+          // Get task information
+          const tasksResponse = await this.$http.get(`${process.env.API}/tasks/batch/${batch.id}`);
+          const activeTasks: Task[] = (tasksResponse.data as Task[]).filter(
+            (t: Task) => !t.completed_on
           );
-          // keep track of most recent date with a starting low value
-          let max = moment('1995-07-29');
 
-          // for every data point we have in a batch
-          for (const batchHistory of versionsResponse.data) {
-            // if the date is the largest, it is the most recent one
-            if (moment(batchHistory.updated_at) > max) {
-              max = moment(batchHistory.updated_at);
-              tank.pressure = batchHistory.pressure;
-              tank.temperature = batchHistory.temperature;
-            }
-          }
-          // find task associated with tank
-          for (const task of tasksResponse.data) {
-            if (tank.batch.id === task.batch_id) {
-              // if task has our batch id
-              tank.action_id = task.action_id; // save the asscoiated action
+          if (activeTasks.length > 0) {
+            const task: Task = activeTasks[0];
+            tank.action_id = task.action_id;
+
+            // Set action data
+            for (const action of actionsResponse.data as Action[]) {
+              if (tank.action_id === action.id) {
+                tank.action = action.name;
+                tank.action_id = `action${action.id}`;
+              }
             }
           }
         }
 
-        // find action associated with task
-        for (const action of actionsResponse.data) {
-          if (tank.action_id === action.id) {
-            tank.action = action.name;
-            tank.action_id = `action${action.id}`;
-          }
-        }
         // push data holder to the tanks array
         this.tanks.push(tank);
       }
 
-      this.tanks.sort(this.sortTanks);
+      this.tanks.sort(this.sortITanks);
     } catch (err) {
       // tslint:disable-next-line:no-console
       console.error(err);
     }
   },
   methods: {
+    logout,
     showTankInfo(tankID) {
       // send us over to the tank info page and set the id on the url
       // to be the tankID that we clicked on.
       router.push({ name: 'tank-info', params: { tankID } });
+    },
+    sortITanks(a: ITank, b: ITank) {
+      return <number>a.id - <number>b.id;
     },
     sortTanks(a: Tank, b: Tank) {
       return <number>a.id - <number>b.id;
@@ -179,17 +199,22 @@ export default Vue.extend({
     grid-gap: 10px;
     color: white;
     font-weight: 100;
+    grid-auto-rows: 128px;
 
     +greater-than(desktop) {
-      grid-template-columns: repeat(4, 170px);
+      grid-template-columns: repeat(4, 200px);
     }
 
     +between(laptop, desktop) {
-      grid-template-columns: repeat(3, 150px);
+      grid-template-columns: repeat(3, 200px);
     }
 
     +less-than(laptop) {
-      grid-template-columns: repeat(2, 150px);
+      grid-template-columns: repeat(3, 170px);
+    }
+
+    +less-than(tablet) {
+      grid-template-columns: repeat(2, 170px);
     }
 
     a {
@@ -201,6 +226,7 @@ export default Vue.extend({
       background: Teal;
       width: 100%;
       height: 100%;
+      min-height 128px;
 
       td:nth-child(2) {
         text-align: right;

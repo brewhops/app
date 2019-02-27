@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="header">
-      <router-link to="/">Logout</router-link>
+      <a v-on:click="logout">Logout</a>
       <h2>Data Submitted</h2>
     </div>
     <div id="dataSubmission">
@@ -24,7 +24,8 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import router from '../router/index.js';
+import router from '../router';
+import { logout } from '../utils';
 import Cookie from 'js-cookie';
 
 // tslint:disable: no-any
@@ -57,7 +58,8 @@ export default Vue.extend({
   },
   mounted() {
     this.lastSubmission = this.$route.params.data;
-  }
+  },
+  methods: { logout }
 });
 </script>
 
