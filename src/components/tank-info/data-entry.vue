@@ -68,7 +68,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import router from '../router/index.js';
+import router from '../../router';
 import Cookie from 'js-cookie';
 import moment, { unix } from 'moment';
 import {
@@ -81,9 +81,9 @@ import {
   Task,
   BrewhopsCookie,
   BatchUpdateOrCreate
-} from '../types';
+} from '../../types';
 import { HttpResponse } from 'vue-resource/types/vue_resource';
-import { TANK_STATUS } from '../utils/index';
+import { TANK_STATUS } from '../../utils/index';
 
 // tslint:disable:no-any no-console
 interface IDataEntryState {
@@ -239,7 +239,7 @@ export default Vue.extend({
 </script>
 
 <style lang="stylus" scoped>
-@import '../styles/breakpoints'
+@import '../../styles/breakpoints'
 
 #batchName
   text-align center

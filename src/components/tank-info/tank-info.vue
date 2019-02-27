@@ -132,18 +132,18 @@
 <script lang="ts">
 import Vue from 'vue';
 import recipe from './recipe.vue';
-import chart from './chart.vue';
+import chart from '../chart.vue';
 import dataEntry from './data-entry.vue';
-import navbar from './navbar.vue';
+import navbar from '../navbar.vue';
 import newBatch from './new-batch.vue';
 import updateAction from './update-action.vue';
-import loader from './loader.vue';
-import { logout } from '../utils';
-import router from '../router';
+import loader from '../loader.vue';
+import { logout } from '../../utils';
+import router from '../../router';
 import Cookie from 'js-cookie';
 
 import moment, { unix, months, Moment } from 'moment';
-import { Batch, Tank, Task, Action, Version, Recipe } from '../types';
+import { Batch, Tank, Task, Action, Version, Recipe } from '../../types';
 
 // tslint:disable: no-any
 interface ITankInfoState {
@@ -407,7 +407,7 @@ export default Vue.extend({
 </script>
 
 <style lang="stylus" scoped>
-@import '../styles/breakpoints'
+@import '../../styles/breakpoints'
 
 .title
   display flex

@@ -20,7 +20,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import router from '../router/index.js';
+import router from '../../router/index.js';
 import Cookie from 'js-cookie';
 
 interface IRecipeState {

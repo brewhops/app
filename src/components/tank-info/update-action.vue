@@ -23,7 +23,7 @@
 import Vue from 'vue';
 import Cookie from 'js-cookie';
 import moment, { unix } from 'moment';
-import { Action, Task, BrewhopsCookie } from '../types';
+import { Action, Task, BrewhopsCookie } from '../../types';
 import { HttpResponse } from 'vue-resource/types/vue_resource';
 
 interface IUpdateAction {

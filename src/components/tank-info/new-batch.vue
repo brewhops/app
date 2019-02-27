@@ -40,12 +40,12 @@
 <script lang="ts">
 import Vue from 'vue';
 import moment from 'moment';
-import router from '../router';
+import router from '../../router';
 import Cookie from 'js-cookie';
-import loader from './loader.vue';
-import { Recipe, Batch, Tank, Task } from '../types';
+import loader from '../loader.vue';
+import { Recipe, Batch, Tank, Task } from '../../types';
 import { isMoment } from 'moment';
-import { TANK_STATUS, ACTION } from '../utils';
+import { TANK_STATUS, ACTION } from '../../utils';
 
 interface INewBatchState {
   recipes: Recipe[];
@@ -185,7 +185,7 @@ export default Vue.extend({
 </script>
 
 <style lang="stylus" scoped>
-@import '../styles/breakpoints'
+@import '../../styles/breakpoints'
 
 #create-new-batch
   padding 15px
