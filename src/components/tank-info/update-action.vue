@@ -96,6 +96,7 @@ export default Vue.extend({
 
         try {
           const response = await this.$http.patch(`${process.env.API}/tasks`, task, { headers });
+          this.$emit('newDataCallback');
         } catch (err) {
           // tslint:disable:no-console
           console.error(err);

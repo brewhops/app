@@ -20,7 +20,7 @@
               </tr>
               <tr v-if="this.task && this.task.exception_reason" class="important">
                 <td>Exception Reason</td>
-                <td>{{ task.exception_reason }}</td>
+                <td>{{ this.task.exception_reason }}</td>
               </tr>
               <tr>
                 <td>Status</td>
