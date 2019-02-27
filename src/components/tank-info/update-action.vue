@@ -1,5 +1,5 @@
 <template>
-  <div id="updateAction">
+  <form id="updateAction">
     <h2>Update Action</h2>
     <div class="col-2">
       <select v-model="action">
@@ -13,10 +13,15 @@
         >
       </select>
     </div>
-    <div>
-      <button @click="submit">Submit</button>
+    <div v-if="this.action === this.exception" class="col-1 inputGroup">
+      <input v-model="reason" type="string" required />
+      <label>Reason for exception.</label>
+      <span>{{ feedback.reason }}</span>
     </div>
-  </div>
+    <div>
+      <button>Submit</button>
+    </div>
+  </form>
 </template>
 
 <script lang="ts">
@@ -25,10 +30,13 @@ import Cookie from 'js-cookie';
 import moment, { unix } from 'moment';
 import { Action, Task, BrewhopsCookie } from '../../types';
 import { HttpResponse } from 'vue-resource/types/vue_resource';
+import { ACTION } from '../../utils';
 
 interface IUpdateAction {
   actions: Action[];
   action: string | number;
+  exception: number;
+  reason: string;
 }
 
 export default Vue.extend({
@@ -50,7 +58,9 @@ export default Vue.extend({
   data(): IUpdateAction {
     return {
       actions: [],
-      action: ''
+      action: '',
+      exception: ACTION.EXCEPTION,
+      reason: ''
     };
   },
   async beforeMount() {
@@ -76,9 +86,15 @@ export default Vue.extend({
         Authorization: `Bearer ${cookie.token}`
       };
 
+      // if there is a current task to edit
       if (this.activeTask && this.activeTask.action_id !== this.action) {
         const task: Task = this.activeTask;
         task.completed_on = moment().toISOString();
+
+        if (this.action === this.exception && this.reason) {
+          task.exception_reason = this.reason;
+        }
+
         try {
           const response = await this.$http.patch(`${process.env.API}/tasks`, task, { headers });
         } catch (err) {
@@ -87,14 +103,19 @@ export default Vue.extend({
         }
       }
 
+      // if there is no current task
       if ((!this.activeTask || this.activeTask.action_id !== this.action) && this.action) {
-        const task: Task = {
+        let task: Task = {
           added_on: moment().toISOString(),
           assigned: true,
           batch_id: this.batch ? this.batch.id : undefined,
           action_id: Number(this.action),
           employee_id: Number(cookie.id)
         };
+
+        if (this.action === this.exception && this.reason) {
+          task.exception_reason = this.reason;
+        }
 
         try {
           const response = await this.$http.post(`${process.env.API}/tasks`, task, { headers });
