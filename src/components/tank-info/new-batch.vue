@@ -154,7 +154,7 @@ export default Vue.extend({
       try {
         const batchResponse = await this.$http.get(`${process.env.API}/batches/`);
         const batches = batchResponse.data.filter((batch: Batch) => batch.name === this.batch_name);
-        console.log(batches);
+
         const task: Task = {
           employee_id,
           batch_id: batches[0].id,

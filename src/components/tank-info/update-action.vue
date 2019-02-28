@@ -18,7 +18,7 @@
       <label>Reason for exception.</label>
     </div>
     <div>
-      <button>Submit</button>
+      <button @click="submit">Submit</button>
     </div>
   </form>
 </template>
@@ -96,7 +96,6 @@ export default Vue.extend({
 
         try {
           const response = await this.$http.patch(`${process.env.API}/tasks`, task, { headers });
-          this.$emit('newDataCallback');
         } catch (err) {
           // tslint:disable:no-console
           console.error(err);
@@ -119,11 +118,12 @@ export default Vue.extend({
 
         try {
           const response = await this.$http.post(`${process.env.API}/tasks`, task, { headers });
-          this.$emit('newDataCallback');
         } catch (err) {
           console.error(err);
         }
       }
+
+      this.$emit('newDataCallback');
     }
   }
 });
