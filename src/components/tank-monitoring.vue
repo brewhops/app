@@ -197,7 +197,7 @@ export default Vue.extend({
           for (const action of actions) {
             if (tank.action_id === action.id) {
               tank.action = action.name;
-              tank.action_id = `action${action.id}`;
+              tank.action_id = action.classname;
             }
           }
         }
@@ -298,65 +298,51 @@ export default Vue.extend({
       }
     }
 
-    .action1 {
+    .primary-fermentation {
       background: White;
       color: Black;
       border: 1px solid Black;
     }
 
-    .action2 {
-      background: rgb(0, 167, 255);
+    .primary-adjunct-add {
+      background: rgb(255, 255, 255);
+      color: Black;
+      border: 1px solid Black;
+    }
+
+    .free-rise {
+      background: rgb(247, 203, 175);
       color: Black;
     }
 
-    .action3  {
-      background: rgb(255, 255, 3);
+    .cap {
+      background: rgb(255, 253, 56);
       color: Black;
     }
 
-    .action4  {
-      background: rgb(224, 218, 233);
+    .adjunct-add  {
+      background: rgb(148, 206, 88);
       color: Black;
     }
 
-    .action5 {
-      background: rgb(135, 201, 71);
+    .exception {
+      background: rgb(252, 13, 27);
       color: Black;
     }
 
-    .action6 {
-      background: rgb(255, 184, 2);
+    .wait-for-diacetyl {
+      background: rgb(253, 191, 45);
       color: Black;
     }
 
-    .action7 {
-      background: rgb(0, 167, 238);
+    .crashed {
+      background: rgb(29, 177, 237);
       color: Black;
     }
 
-    .action8 {
-      background: rgb(255, 0, 1);
-      color: Black;
-    }
-
-    .action9 {
-      background: rgb(222, 96, 13);
-      color: Black;
-    }
-
-    .action10 {
-      background: rgb(255, 255, 3);
-      color: Black;
-    }
-
-    .action11 {
-      background: rgb(252, 207, 171);
-      color: Black;
-    }
-
-    .action12 {
-      background: rgb(128,0,128);
-      color: White;
+    .yeast-pull {
+      background: rgb(127, 95, 17);
+      color: rgb(253, 251, 55);
     }
 
     .broken {

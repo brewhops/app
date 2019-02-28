@@ -16,3 +16,7 @@ export enum TANK_STATUS {
   TRANSFERRING = 'transferring',
   COMPLETED = 'completed'
 }
+
+export enum ACTION {
+  PRIMARY_FERMENTATION = 1
+}
