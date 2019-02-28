@@ -26,7 +26,7 @@
         </div>
         <div class="col-1 inputGroup">
           <h4>Yeast Generation</h4>
-          <input v-model="generation" type="number" step="0.01" required />
+          <input v-model="generation" type="number" step="1" required />
           <label>Yeast Generation</label>
         </div>
         <span>{{ feedback.generation }}</span>
