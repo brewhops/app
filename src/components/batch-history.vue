@@ -233,9 +233,15 @@ export default Vue.extend({
     justify-content center
     grid-template-columns repeat(2, 48vw)
     +less-than(tablet) {
+      justify-content center
       grid-template-columns 92vw
     }
     .chart {
+      +less-than(tablet) {
+        margin-left 3vw
+        margin-right 5vw
+
+      }
       margin-left 5vw
       margin-right 5vw
     }
@@ -244,6 +250,18 @@ export default Vue.extend({
   table {
     border-collapse: collapse;
     border: 1px solid black;
+    @media screen and (max-width: 510px){
+      font-size: 14px
+    }
+    @media screen and (max-width: 470px){
+      font-size: 12px
+    }
+    @media screen and (max-width: 414px){
+      font-size 11px
+    }
+    @media screen and (max-width: 380px){
+      font-size 9.5px
+    }
     tr {
       td, th {
         padding: 10px;
