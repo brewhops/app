@@ -23,77 +23,82 @@
         </div>
       </div>
       <div v-if="batch_id && batch">
-        <data-table
-          v-bind:title="''"
-          v-bind:data="[batch]"
-          v-bind:headers="batch_titles"
-          v-bind:fields="[
-            b => b.volume,
-            b => b.bright,
-            b => b.generation,
-            b => formatDate(b.started_on),
-            b => formatDate(b.completed_on)
-          ]"
-        />
-      </div>
-      <div id="charts" v-if="versions && batch_id">
-        <chart
-          class="chart"
-          v-bind:title="'pH'"
-          v-bind:date="getData('measured_on')"
-          v-bind:data="getData('ph')"
-        />
-        <chart
-          class="chart"
-          v-bind:title="'ABV'"
-          v-bind:date="getData('measured_on')"
-          v-bind:data="getData('abv')"
-        />
-        <chart
-          class="chart"
-          v-bind:title="'SG'"
-          v-bind:date="getData('measured_on')"
-          v-bind:data="getData('sg')"
-        />
-        <chart
-          class="chart"
-          v-bind:title="'Tempurature'"
-          v-bind:date="getData('measured_on')"
-          v-bind:data="getData('temperature')"
-        />
-      </div>
-
-      <div class="tables">
-        <div v-if="batch_id && tasks && batch">
+        <div>
           <data-table
-            v-bind:title="'Tasks'"
-            v-bind:data="tasks"
-            v-bind:headers="task_titles"
+            v-bind:title="''"
+            v-bind:data="[batch]"
+            v-bind:headers="batch_titles"
             v-bind:fields="[
-              t => actions.filter(a => a.id == t.action_id)[0].name,
-              t => employees.filter(e => e.id == t.employee_id)[0].first_name,
-              t => formatDate(t.added_on),
-              t => formatDate(t.completed_on)
+              b => b.volume,
+              b => b.bright,
+              b => b.generation,
+              b => formatDate(b.started_on),
+              b => formatDate(b.completed_on)
             ]"
           />
         </div>
-
-        <div v-if="batch_id && versions && batch">
-          <data-table
-            v-bind:title="'Version'"
-            v-bind:data="versions"
-            v-bind:headers="version_titles"
-            v-bind:fields="[
-              v => formatDate(v.measured_on),
-              v => v.sg,
-              v => v.ph,
-              v => v.abv,
-              v => v.temperature,
-              v => v.pressure
-            ]"
+        <div id="charts">
+          <chart
+            class="chart"
+            v-bind:title="'pH'"
+            v-bind:date="getData('measured_on')"
+            v-bind:data="getData('ph')"
+          />
+          <chart
+            class="chart"
+            v-bind:title="'ABV'"
+            v-bind:date="getData('measured_on')"
+            v-bind:data="getData('abv')"
+          />
+          <chart
+            class="chart"
+            v-bind:title="'SG'"
+            v-bind:date="getData('measured_on')"
+            v-bind:data="getData('sg')"
+          />
+          <chart
+            class="chart"
+            v-bind:title="'Tempurature'"
+            v-bind:date="getData('measured_on')"
+            v-bind:data="getData('temperature')"
           />
         </div>
+
+        <div class="tables">
+          <div>
+            <data-table
+              v-bind:title="'Tasks'"
+              v-bind:data="tasks"
+              v-bind:headers="task_titles"
+              v-bind:fields="[
+                t => actions.filter(a => a.id == t.action_id)[0].name,
+                t => getEmployeeName(employees.filter(e => e.id == t.employee_id)[0]),
+                t => formatDate(t.added_on),
+                t => formatDate(t.completed_on)
+              ]"
+            />
+          </div>
+          <div>
+            <data-table
+              v-bind:title="'Version'"
+              v-bind:data="versions"
+              v-bind:headers="version_titles"
+              v-bind:fields="[
+                v => formatDate(v.measured_on),
+                v => v.sg,
+                v => v.ph,
+                v => v.abv,
+                v => v.temperature,
+                v => v.pressure
+              ]"
+            />
+          </div>
+        </div>
       </div>
+      <div v-else-if="loading" class="center">
+        <loader></loader>
+      </div>
+      <div v-else />
     </div>
   </div>
 </template>
@@ -107,6 +112,7 @@ import moment from 'moment';
 import { Batch, Version, Task, Employee, Action } from '../types';
 import { Moment } from 'moment';
 import chart from './chart.vue';
+import loader from './loader.vue';
 import NavbarComponent from './navbar.vue';
 import dataTable from './data-table.vue';
 
@@ -122,11 +128,12 @@ interface IHistoryState {
   tasks: Task[];
   employees: Employee[];
   actions: Action[];
+  loading: boolean;
 }
 
 export default Vue.extend({
   name: 'batch-history',
-  components: { navbar: NavbarComponent, chart: chart, dataTable: dataTable },
+  components: { navbar: NavbarComponent, chart: chart, dataTable: dataTable, loader: loader },
   data(): IHistoryState {
     return {
       batch_titles: ['Volume', 'Bright', 'Generation', 'Date Started', 'Date Completed'],
@@ -148,7 +155,8 @@ export default Vue.extend({
       versions: [],
       tasks: [],
       employees: [],
-      actions: []
+      actions: [],
+      loading: false
     };
   },
   async beforeMount() {
@@ -178,6 +186,9 @@ export default Vue.extend({
       }
       router.push('/');
     },
+    getEmployeeName(employee: Employee) {
+      return `${employee.first_name} ${employee.last_name}`;
+    },
     getData(key: string) {
       return this.versions.map(v => v[key]);
     },
@@ -185,6 +196,7 @@ export default Vue.extend({
       return date ? moment(date).format('MM-DD-YYYY') : '';
     },
     async batchChoose() {
+      this.loading = true;
       // filter out all the batches that aren't ours, and set that one element
       // to our batch object
       this.batch = this.batches.filter(e => e.id === this.batch_id)[0];
@@ -211,9 +223,11 @@ export default Vue.extend({
           .sort((a: Version, b: Version) => {
             return moment.utc(a.measured_on).diff(moment.utc(b.measured_on));
           });
+        this.loading = false;
       } catch (err) {
         // tslint:disable-next-line:no-console
         console.error(err);
+        this.loading = false;
       }
     },
     downloadCSV() {
@@ -227,28 +241,44 @@ export default Vue.extend({
       }
     },
     generateCSV() {
-      const rows = this.versions.map((v: Version) => [
-        v.measured_on,
-        v.sg,
-        v.ph,
-        v.abv,
-        v.temperature,
-        v.pressure
-      ]);
       const csvHeader = 'data:text/csv;charset=utf-8,';
-      const batchHeader = `${this.batch_titles.toString()}\r\n`;
-      const versionsHeader = `${this.version_titles.toString()}\r\n`;
-      const batchContent = `${[
-        this.batch.volume,
-        this.batch.bright,
-        this.batch.generation,
-        this.batch.started_on,
-        this.batch.completed_on
-      ].toString()}\r\n`;
-      const versionContent = `${rows.map(row => `${row.join(',')},`).join('\r\n')}`;
-      const csvContent = `${csvHeader}${batchHeader}${batchContent}${versionsHeader}${versionContent}`;
+      let dates = this.versions.map(v => v.measured_on).concat(this.tasks.map(t => t.added_on));
+      dates.sort((a: string | Moment, b: string | Moment) => {
+        return moment.utc(a).diff(moment.utc(b));
+      });
+      const content = dates.map(date => {
+        let tasksOnDate = this.tasks.filter(t => t.added_on === date);
+        let versionsOnDate = this.versions.filter(v => v.measured_on === date);
+        let result: (string | number | undefined | Moment)[][] = [
+          Array(Math.max(tasksOnDate.length, versionsOnDate.length))
+        ].map(e => Array(9).map(a => ''));
 
-      return csvContent;
+        result.forEach(r => (r[0] = date));
+
+        const versionRows = versionsOnDate
+          .map((v: Version) => [
+            String(v.sg),
+            String(v.abv),
+            String(v.ph),
+            String(v.temperature),
+            String(v.pressure)
+          ])
+          .forEach((v, i) => result[i].splice(1, v.length, ...v));
+
+        const taskRows = tasksOnDate
+          .map((t: Task) => [
+            String(this.actions.filter(a => a.id == t.action_id)[0].name),
+            String(this.getEmployeeName(this.employees.filter(e => e.id == t.employee_id)[0]))
+          ])
+          .forEach((t, i) => result[i].splice(6, t.length, ...t));
+
+        return result;
+      });
+      const batchHeader = `${this.batch_titles}`;
+      const versionsHeader = `${this.version_titles.filter(s => s.indexOf('Date') == -1)}`;
+      const tasksHeader = `${this.task_titles.filter(s => s.indexOf('Date') == -1)}`;
+      const versionContent = `${content.map(con => `${con.join(',')},`).join('\r\n')}`;
+      return `${csvHeader}Date,${versionsHeader},${tasksHeader}\n${versionContent}`;
     }
   }
 });
