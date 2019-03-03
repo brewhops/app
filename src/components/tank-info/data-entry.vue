@@ -2,19 +2,6 @@
   <div>
     <form id="dataEntry" @submit.prevent="submit">
       <h2>Data Entry</h2>
-      <span id="actionSelect">
-        <h4>Action</h4>
-        <select v-model="action">
-          <option value="">Select an Action</option>
-          <option
-            v-for="action_option in model.actions"
-            v-bind:key="action_option.id"
-            v-bind:value="action_option.id"
-          >
-            {{ action_option.name }}</option
-          >
-        </select>
-      </span>
       <div id="formFields" class="grid">
         <div class="col-3">
           <span>
