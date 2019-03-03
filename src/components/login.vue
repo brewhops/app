@@ -29,7 +29,6 @@ import CryptoJS from 'crypto-js';
 import Cookie from 'js-cookie';
 
 interface ILoginState {
-  mobile: boolean;
   isAdmin: boolean;
   username: string;
   password: string;
@@ -44,7 +43,6 @@ export default Vue.extend({
   name: 'login',
   data(): ILoginState {
     return {
-      mobile: false,
       isAdmin: false,
       username: '',
       password: '',
@@ -101,16 +99,7 @@ export default Vue.extend({
     }
   },
   beforeMount(): void {
-    if (
-      /iPhone|iPad|iPod|Android|webOS|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(
-        navigator.userAgent
-      )
-    ) {
-      this.mobile = true;
-      this.submitLink = '/home-mobile';
-    } else {
-      this.submitLink = '/home';
-    }
+    this.submitLink = '/home';
 
     // if the cookie has login information in it already
     // then send us straight to the home page
@@ -138,11 +127,7 @@ export default Vue.extend({
     },
     // redirect over to the home page
     sendToHome(): void {
-      if (this.mobile) {
-        router.push('home-mobile');
-      } else {
-        router.push('home');
-      }
+      router.push('home');
     },
     createCookie(id, username, admin, token): void {
       if (!Cookie.getJSON('loggedIn')) {
