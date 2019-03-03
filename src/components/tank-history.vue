@@ -1,7 +1,7 @@
 <template lang="html">
   <div>
-    <div class="header" v-if="!mobile">
-      <a v-on:click="logout">Logout</a>
+    <div class="header">
+      <router-link to="login">Logout</router-link>
       <h2>Tank History</h2>
     </div>
     <navbar v-bind:activeState="[false, false, true, false]" />
@@ -101,9 +101,6 @@ export default Vue.extend({
   methods: {
     logout,
     home() {
-      if (this.mobile) {
-        router.push('/home-mobile');
-      }
       router.push('/');
     },
     formatDate(date: string | null) {
