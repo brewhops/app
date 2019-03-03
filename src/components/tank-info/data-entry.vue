@@ -1,11 +1,20 @@
 <template>
   <div>
-    <div class="header" v-if="mobile">
-      <router-link to="/home-mobile">Home</router-link>
-      <h2>Data Entry</h2>
-    </div>
     <form id="dataEntry" @submit.prevent="submit">
-      <h2 v-if="!mobile">Data Entry</h2>
+      <h2>Data Entry</h2>
+      <span id="actionSelect">
+        <h4>Action</h4>
+        <select v-model="action">
+          <option value="">Select an Action</option>
+          <option
+            v-for="action_option in model.actions"
+            v-bind:key="action_option.id"
+            v-bind:value="action_option.id"
+          >
+            {{ action_option.name }}</option
+          >
+        </select>
+      </span>
       <div id="formFields" class="grid">
         <div class="col-3">
           <span>
@@ -97,7 +106,6 @@ interface IDataEntryState {
   temp: string;
   time: string;
   update?: any;
-  mobile?: any;
   admin: boolean;
   sortTanks?: any;
   debugging?: any;
@@ -137,7 +145,6 @@ export default Vue.extend({
       time: '',
 
       update: true,
-      mobile: false,
       admin: false
     };
   },
@@ -146,14 +153,6 @@ export default Vue.extend({
       router.push('/');
     }
     this.admin = Cookie.getJSON('loggedIn').admin;
-
-    if (
-      /iPhone|iPad|iPod|Android|webOS|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(
-        navigator.userAgent
-      )
-    ) {
-      this.mobile = true;
-    }
 
     // set the time with the required dateime format eg "2018-05-10T15:08"
     this.time = moment().format('YYYY-MM-DDTHH:mm');
@@ -241,8 +240,9 @@ export default Vue.extend({
 <style lang="stylus" scoped>
 @import '../../styles/breakpoints'
 
-#batchName
+#actionSelect
   text-align center
+  margin-bottom 20px
 
 #dataEntry
   padding 15px
@@ -250,10 +250,6 @@ export default Vue.extend({
   display flex
   flex-direction column
   align-items center
-  +less-than(tablet)
-    width 90vw
-  margin auto
-  min-width 350px
   max-width 500px
   button
     margin-top 30px
