@@ -14,7 +14,11 @@
           <h2>Info</h2>
           <table class="table">
             <tbody>
-              <tr scope="row" v-if="tankInfo.action !== ''" class="important">
+              <tr
+                scope="row"
+                v-if="tankInfo.action !== '' && tankInfo.action !== 'No Action'"
+                class="important"
+              >
                 <td>Action</td>
                 <td>{{ tankInfo.action }}</td>
               </tr>
