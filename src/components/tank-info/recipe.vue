@@ -23,10 +23,6 @@ import Vue from 'vue';
 import router from '../../router/index.js';
 import Cookie from 'js-cookie';
 
-interface IRecipeState {
-  mobile: boolean;
-}
-
 export default Vue.extend({
   name: 'recipe',
   props: {
@@ -35,23 +31,10 @@ export default Vue.extend({
       required: true
     }
   },
-  data(): IRecipeState {
-    return {
-      mobile: false
-    };
-  },
   beforeMount(): void {
     // if the user is not logged in send them to the login page
     if (!Cookie.getJSON('loggedIn')) {
       router.push('/');
-    }
-
-    if (
-      /iPhone|iPad|iPod|Android|webOS|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(
-        navigator.userAgent
-      )
-    ) {
-      this.mobile = true;
     }
   }
 });

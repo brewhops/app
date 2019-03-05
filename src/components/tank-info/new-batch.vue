@@ -53,7 +53,6 @@ interface INewBatchState {
   batch_name: string;
   volume: string;
   generation: string;
-  mobile: boolean;
   feedback: {
     batch_name: string;
     recipe: string;
@@ -78,7 +77,6 @@ export default Vue.extend({
       batch_name: '',
       volume: '',
       generation: '',
-      mobile: false,
       feedback: {
         batch_name: '',
         recipe: '',
@@ -91,14 +89,6 @@ export default Vue.extend({
     // if the user is not logged in send them to the login page
     if (!Cookie.getJSON('loggedIn')) {
       router.push('/');
-    }
-
-    if (
-      /iPhone|iPad|iPod|Android|webOS|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(
-        navigator.userAgent
-      )
-    ) {
-      this.mobile = true;
     }
 
     try {

@@ -160,7 +160,6 @@ interface ITankInfoState {
   action?: Action;
   doneLink?: any;
   home?: any;
-  mobile?: any;
   debugging?: string;
 }
 
@@ -197,7 +196,6 @@ export default Vue.extend({
       },
       doneLink: '',
       home: '',
-      mobile: false,
       debugging: '',
       tank: undefined,
       task: undefined,
@@ -214,18 +212,8 @@ export default Vue.extend({
       router.push('/');
     }
 
-    if (
-      /iPhone|iPad|iPod|Android|webOS|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(
-        navigator.userAgent
-      )
-    ) {
-      this.mobile = true;
-      this.doneLink = '/data-entry';
-      this.home = '/home-mobile';
-    } else {
-      this.doneLink = '/home';
-      this.home = '/home';
-    }
+    this.doneLink = '/home';
+    this.home = '/home';
 
     try {
       const response = await this.$http.get(

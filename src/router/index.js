@@ -40,11 +40,6 @@ export default new Router({
       path: '/tank-info/:tankID'
     },
     {
-      component: homeMobile,
-      name: 'home-mobile',
-      path: '/home-mobile'
-    },
-    {
       component: batchHistory,
       name: 'batch-history',
       path: '/batch-history'

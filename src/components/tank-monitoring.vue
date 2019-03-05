@@ -20,7 +20,7 @@
               </tr>
             </table>
 
-            <div v-if="tank.action" class="tank-action">
+            <div v-if="tank.action && tank.action !== 'No Action'" class="tank-action">
               {{ tank.action }}
             </div>
           </div>
@@ -327,8 +327,8 @@ export default Vue.extend({
     }
 
     .exception {
-      background: rgb(252, 13, 27);
-      color: Black;
+      background: Red;
+      color: White;
     }
 
     .wait-for-diacetyl {
@@ -344,6 +344,11 @@ export default Vue.extend({
     .yeast-pull {
       background: rgb(127, 95, 17);
       color: rgb(253, 251, 55);
+    }
+
+    .no-action {
+      background: Teal
+      color: White
     }
 
     .broken {
