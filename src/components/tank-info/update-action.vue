@@ -85,45 +85,47 @@ export default Vue.extend({
         Authorization: `Bearer ${cookie.token}`
       };
 
-      // if there is a current task to edit
-      if (this.activeTask && this.activeTask.action_id !== this.action) {
-        const task: Task = this.activeTask;
-        task.completed_on = moment().toISOString();
+      if (this.action) {
+        // if there is a current task to edit
+        if (this.activeTask && this.activeTask.action_id !== this.action) {
+          const task: Task = this.activeTask;
+          task.completed_on = moment().toISOString();
 
-        if (this.action === this.exception && this.reason) {
-          task.exception_reason = this.reason;
+          if (this.action === this.exception && this.reason) {
+            task.exception_reason = this.reason;
+          }
+
+          try {
+            const response = await this.$http.patch(`${process.env.API}/tasks`, task, { headers });
+          } catch (err) {
+            // tslint:disable:no-console
+            console.error(err);
+          }
         }
 
-        try {
-          const response = await this.$http.patch(`${process.env.API}/tasks`, task, { headers });
-        } catch (err) {
-          // tslint:disable:no-console
-          console.error(err);
+        // if there is no current task
+        if (!this.activeTask || this.activeTask.action_id !== this.action) {
+          let task: Task = {
+            added_on: moment().toISOString(),
+            assigned: true,
+            batch_id: this.batch ? this.batch.id : undefined,
+            action_id: Number(this.action),
+            employee_id: Number(cookie.id)
+          };
+
+          if (this.action === this.exception && this.reason) {
+            task.exception_reason = this.reason;
+          }
+
+          try {
+            const response = await this.$http.post(`${process.env.API}/tasks`, task, { headers });
+          } catch (err) {
+            console.error(err);
+          }
         }
+
+        this.$emit('newDataCallback');
       }
-
-      // if there is no current task
-      if ((!this.activeTask || this.activeTask.action_id !== this.action) && this.action) {
-        let task: Task = {
-          added_on: moment().toISOString(),
-          assigned: true,
-          batch_id: this.batch ? this.batch.id : undefined,
-          action_id: Number(this.action),
-          employee_id: Number(cookie.id)
-        };
-
-        if (this.action === this.exception && this.reason) {
-          task.exception_reason = this.reason;
-        }
-
-        try {
-          const response = await this.$http.post(`${process.env.API}/tasks`, task, { headers });
-        } catch (err) {
-          console.error(err);
-        }
-      }
-
-      this.$emit('newDataCallback');
     }
   }
 });
