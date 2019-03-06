@@ -12,7 +12,7 @@
       <div id="info-content">
         <div id="tank">
           <h2>Info</h2>
-          <tank-status v-bind:tankInfo="tankInfo" />
+          <tank-status v-bind:tankInfo="tankInfo" v-bind:task="task" />
           <recipe id="recipe" v-bind:recipe="recipe" />
         </div>
 
@@ -80,17 +80,11 @@ import chart from '../chart.vue';
 import dataEntry from './data-entry.vue';
 import navbar from '../navbar.vue';
 import newBatch from './new-batch.vue';
-<<<<<<< HEAD:src/components/tank-info.vue
-import tankStatus from './tank-status.vue';
-import loader from './loader.vue';
-import { logout } from '../utils';
-import router from '../router';
-=======
 import updateAction from './update-action.vue';
+import tankStatus from './tank-status.vue';
 import loader from '../loader.vue';
 import { logout } from '../../utils';
 import router from '../../router';
->>>>>>> dev:src/components/tank-info/tank-info.vue
 import Cookie from 'js-cookie';
 
 import moment, { unix, months, Moment } from 'moment';
@@ -118,11 +112,8 @@ export default Vue.extend({
     chart,
     dataEntry,
     newBatch,
-<<<<<<< HEAD:src/components/tank-info.vue
     tankStatus,
-=======
     updateAction,
->>>>>>> dev:src/components/tank-info/tank-info.vue
     loader
   },
   data(): ITankInfoState {

@@ -1,57 +1,65 @@
 <template>
   <table class="table">
     <tbody>
-      <tr scope="row" v-if="this.tankInfo.action !== ''" class="important">
+      <tr
+        scope="row"
+        v-if="tankInfo.action !== '' && tankInfo.action !== 'No Action'"
+        class="important"
+      >
         <td>Action</td>
-        <td>{{ this.tankInfo.action }}</td>
+        <td>{{ tankInfo.action }}</td>
+      </tr>
+      <tr v-if="task && task.exception_reason" class="important">
+        <td>Exception Reason</td>
+        <td>{{ this.task.exception_reason }}</td>
       </tr>
       <tr>
         <td>Status</td>
-        <td>{{ this.tankInfo.status }}</td>
+        <td>{{ tankInfo.status }}</td>
       </tr>
       <tr>
         <td>Brand ID</td>
-        <td>{{ this.tankInfo.recipe_id }}</td>
+        <td>{{ tankInfo.recipe_id }}</td>
       </tr>
       <tr>
         <td>Batch Name</td>
-        <td>{{ this.tankInfo.batch_name }}</td>
+        <td>{{ tankInfo.batch_name }}</td>
       </tr>
       <tr>
         <td>Generation</td>
-        <td>{{ this.tankInfo.generation }}</td>
+        <td>{{ tankInfo.generation }}</td>
       </tr>
       <tr>
         <td>Volume</td>
-        <td>{{ this.tankInfo.volume }}</td>
+        <td>{{ tankInfo.volume }}</td>
       </tr>
       <tr>
         <td>Bright</td>
-        <td>{{ this.tankInfo.bright }}</td>
+        <td>{{ tankInfo.bright }}</td>
       </tr>
       <tr>
         <td>Temperature</td>
-        <td>{{ this.tankInfo.temp }}º F</td>
+        <td>{{ tankInfo.temp }}º F</td>
       </tr>
       <tr>
         <td>Specific Gravity</td>
-        <td>{{ this.tankInfo.SG }}</td>
+        <td>{{ tankInfo.SG }}</td>
       </tr>
       <tr>
         <td>pH</td>
-        <td>{{ this.tankInfo.pH }}</td>
+        <td>{{ tankInfo.pH }}</td>
       </tr>
       <tr>
         <td>Pressure</td>
-        <td>{{ this.tankInfo.pressure }}</td>
+        <td>{{ tankInfo.pressure }}</td>
       </tr>
       <tr>
         <td>ABV</td>
-        <td>{{ this.tankInfo.ABV }}%</td>
+        <td>{{ tankInfo.ABV }}%</td>
       </tr>
       <tr>
         <td>Time Last Updated</td>
-        <td>{{ this.tankInfo.time }}</td>
+        <td>{{ tankInfo.time }}</td>
       </tr>
     </tbody>
   </table>
@@ -68,7 +76,7 @@ interface ITankStatusState {}
 
 export default Vue.extend({
   name: 'tank-status',
-  props: ['tankInfo']
+  props: ['tankInfo', 'task']
 });
 </script>
 
