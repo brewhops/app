@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="header" v-if="!mobile">
+    <div class="header">
       <a v-on:click="logout">Logout</a>
       <h2>Home</h2>
     </div>
@@ -19,33 +19,16 @@ import { logout } from '../utils';
 import Cookie from 'js-cookie';
 import NavbarComponent from './navbar.vue';
 
-interface IHomePageState {
-  mobile: boolean;
-}
-
 export default Vue.extend({
   name: 'home',
   components: {
     tankMonitoring,
     navbar: NavbarComponent
   },
-  data(): IHomePageState {
-    return {
-      mobile: false
-    };
-  },
   beforeMount() {
     // if the user is not logged in send them to the login page
     if (!Cookie.getJSON('loggedIn')) {
       router.push('/');
-    }
-
-    if (
-      /iPhone|iPad|iPod|Android|webOS|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(
-        navigator.userAgent
-      )
-    ) {
-      this.mobile = true;
     }
   },
   methods: { logout }

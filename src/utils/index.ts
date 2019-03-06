@@ -18,5 +18,6 @@ export enum TANK_STATUS {
 }
 
 export enum ACTION {
-  PRIMARY_FERMENTATION = 1
+  PRIMARY_FERMENTATION = 1,
+  EXCEPTION = 6
 }

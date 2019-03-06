@@ -1,15 +1,19 @@
 <template>
   <div class="element">
     <h2>Create New Brand</h2>
-    <input v-model.lazy="recipe_name" placeholder="Brand Name" />
-    <span>{{ feedback.brandID }}</span>
-    <input v-model.lazy="airplane_code" placeholder="Airport Code" />
-    <input v-model="yeast" placeholder="Yeast" />
-    <!-- TODO: Validate Yeast?? maybe-->
-    <span>{{ feedback.yeast }}</span>
-    <div class="inline" v-for="x in hopNumbers" v-bind:key="x">
-      <input v-model="dryHopAdjunct[x - 1]" placeholder="Dry Hop/Adjunct" />
-      <input v-model="rate[x - 1]" placeholder="Rate" />
+    <div id="full">
+      <input v-model.lazy="recipe_name" placeholder="Brand Name" />
+      <span>{{ feedback.brandID }}</span>
+      <input v-model.lazy="airplane_code" placeholder="Airport Code" />
+      <input v-model="yeast" placeholder="Yeast" />
+      <!-- TODO: Validate Yeast?? maybe-->
+      <span>{{ feedback.yeast }}</span>
+    </div>
+    <div id="half">
+      <div class="inline" v-for="x in hopNumbers" v-bind:key="x">
+        <input id="halfsizeleft" v-model="dryHopAdjunct[x - 1]" placeholder="Dry Hop/Adjunct" />
+        <input id="halfsizeright" v-model="rate[x - 1]" placeholder="Rate" />
+      </div>
     </div>
     <button type="button" v-on:click="hopNumbers += 1">Add Another Row</button>
     <button v-on:click="recipe_submit">Submit</button>
@@ -107,4 +111,27 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="stylus" scoped></style>
+<style lang="stylus" scoped>
+
+
+
+
+#full{
+  @media screen and (max-width:555px ) {
+    width 90%
+  }
+}
+#half {
+  @media screen and (max-width:555px ) {
+    width 90%
+  }
+}
+
+#halfsizeleft
+  width 50%
+  padding-right 7px
+
+#halfsizeright
+  width 50%
+  padding-left 7px
+</style>
