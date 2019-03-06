@@ -8,15 +8,23 @@
     <div class="title">
       <h3>Tank {{ tankInfo.name }}</h3>
     </div>
-    <div v-if="this.tank" id="content">
-      <div v-if="this.tank.in_use" id="info-content">
+    <div v-if="tank && this.tank.in_use && recipe && batch" id="content">
+      <div id="info-content">
         <div id="tank">
           <h2>Info</h2>
           <table class="table">
             <tbody>
-              <tr scope="row" v-if="tankInfo.action !== ''" class="important">
+              <tr
+                scope="row"
+                v-if="tankInfo.action !== '' && tankInfo.action !== 'No Action'"
+                class="important"
+              >
                 <td>Action</td>
                 <td>{{ tankInfo.action }}</td>
+              </tr>
+              <tr v-if="this.task && this.task.exception_reason" class="important">
+                <td>Exception Reason</td>
+                <td>{{ this.task.exception_reason }}</td>
               </tr>
               <tr>
                 <td>Status</td>
@@ -73,6 +81,13 @@
         </div>
 
         <div id="entry">
+          <update-action
+            v-bind:tank="tank"
+            v-bind:batch="batch"
+            v-bind:activeTask="task"
+            @newDataCallback="loadData"
+          >
+          </update-action>
           <data-entry
             v-bind:tank="tank"
             v-bind:batch="batch"
@@ -83,11 +98,7 @@
           </data-entry>
         </div>
       </div>
-      <div v-else id="new-batch">
-        <new-batch :tank="this.tank" />
-      </div>
-
-      <div v-if="this.tank.in_use" v-show="versions.length > 0" id="data">
+      <div v-show="versions.length > 0" id="data">
         <h2>Batch History</h2>
         <div id="charts">
           <chart
@@ -117,7 +128,10 @@
         </div>
       </div>
     </div>
-    <div v-else class="center">
+    <div v-if="tank && !this.tank.in_use" id="new-batch">
+      <new-batch :tank="this.tank" />
+    </div>
+    <div v-if="!tank || !recipe || !batch" class="center">
       <loader></loader>
     </div>
   </div>
@@ -126,17 +140,18 @@
 <script lang="ts">
 import Vue from 'vue';
 import recipe from './recipe.vue';
-import chart from './chart.vue';
+import chart from '../chart.vue';
 import dataEntry from './data-entry.vue';
-import navbar from './navbar.vue';
+import navbar from '../navbar.vue';
 import newBatch from './new-batch.vue';
-import loader from './loader.vue';
-import { logout } from '../utils';
-import router from '../router';
+import updateAction from './update-action.vue';
+import loader from '../loader.vue';
+import { logout } from '../../utils';
+import router from '../../router';
 import Cookie from 'js-cookie';
 
 import moment, { unix, months, Moment } from 'moment';
-import { Batch, Tank, Task, Action, Version, Recipe } from '../types';
+import { Batch, Tank, Task, Action, Version, Recipe } from '../../types';
 
 // tslint:disable: no-any
 interface ITankInfoState {
@@ -149,7 +164,6 @@ interface ITankInfoState {
   action?: Action;
   doneLink?: any;
   home?: any;
-  mobile?: any;
   debugging?: string;
 }
 
@@ -161,6 +175,7 @@ export default Vue.extend({
     chart,
     dataEntry,
     newBatch,
+    updateAction,
     loader
   },
   data(): ITankInfoState {
@@ -185,7 +200,6 @@ export default Vue.extend({
       },
       doneLink: '',
       home: '',
-      mobile: false,
       debugging: '',
       tank: undefined,
       task: undefined,
@@ -202,18 +216,8 @@ export default Vue.extend({
       router.push('/');
     }
 
-    if (
-      /iPhone|iPad|iPod|Android|webOS|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(
-        navigator.userAgent
-      )
-    ) {
-      this.mobile = true;
-      this.doneLink = '/data-entry';
-      this.home = '/home-mobile';
-    } else {
-      this.doneLink = '/home';
-      this.home = '/home';
-    }
+    this.doneLink = '/home';
+    this.home = '/home';
 
     try {
       const response = await this.$http.get(
@@ -228,13 +232,12 @@ export default Vue.extend({
         status: tank.status,
         in_use: tank.in_use
       };
+      await this.loadData();
     } catch (err) {
       // tslint:disable-next-line:no-console
       console.error(err);
       this.debugging = 'Debugging Flag: Response error, cant access tanks page';
     }
-
-    await this.loadData();
   },
   methods: {
     logout,
@@ -242,9 +245,13 @@ export default Vue.extend({
       return this.versions.map((v: Version) => v[key]);
     },
     async loadData() {
-      await this.loadBatchData();
-      await this.loadTaskData();
-      await this.loadHistoryData();
+      try {
+        await this.loadBatchData();
+        await this.loadTaskData();
+        await this.loadHistoryData();
+      } catch (err) {
+        console.error(err);
+      }
     },
     async loadBatchData() {
       try {
@@ -264,7 +271,7 @@ export default Vue.extend({
           batch = openBatches.sort((a: Batch, b: Batch) => {
             return moment.utc(b.started_on).diff(moment.utc(a.started_on));
           })[0];
-        } else if (openBatches.length == 1) {
+        } else if (openBatches.length === 1) {
           // Found only open batch
           batch = openBatches[0];
         }
@@ -359,6 +366,7 @@ export default Vue.extend({
           this.versions = (response.data as Version[])
             .map((v: Version) => {
               v.measured_on = moment(v.measured_on);
+
               return v;
             })
             .sort((a: Version, b: Version) => {
@@ -395,7 +403,7 @@ export default Vue.extend({
 </script>
 
 <style lang="stylus" scoped>
-@import '../styles/breakpoints'
+@import '../../styles/breakpoints'
 
 .title
   display flex
@@ -456,6 +464,12 @@ export default Vue.extend({
       margin-right 1vw
   h2
     text-align center
+
+#entry
+  display flex
+  flex-direction column
+  justify-content center
+  align-items center
 
 #tank
   text-align center

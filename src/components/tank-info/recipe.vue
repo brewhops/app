@@ -1,6 +1,6 @@
 <template>
   <div v-show="recipe" id="recipe">
-    <h2>{{ name }}</h2>
+    <h2>{{ this.recipe.name }}</h2>
     <table class="table">
       <thead>
         <tr>
@@ -9,7 +9,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in ingredients" v-bind:key="item.ingredient">
+        <tr v-for="item in this.recipe.instructions" v-bind:key="item.ingredient">
           <td>{{ item.ingredient }}</td>
           <td>{{ item.ratio }}</td>
         </tr>
@@ -20,46 +20,21 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import router from '../router/index.js';
+import router from '../../router/index.js';
 import Cookie from 'js-cookie';
-
-interface IRecipeState {
-  name: string;
-  mobile: boolean;
-  ingredients: object;
-}
 
 export default Vue.extend({
   name: 'recipe',
-  props: ['recipe'],
-  data(): IRecipeState {
-    return {
-      mobile: false,
-      name: '',
-      ingredients: {}
-    };
+  props: {
+    recipe: {
+      type: Object,
+      required: true
+    }
   },
   beforeMount(): void {
     // if the user is not logged in send them to the login page
     if (!Cookie.getJSON('loggedIn')) {
       router.push('/');
-    }
-
-    if (
-      /iPhone|iPad|iPod|Android|webOS|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(
-        navigator.userAgent
-      )
-    ) {
-      this.mobile = true;
-    }
-  },
-  watch: {
-    // tslint:disable-next-line:object-literal-shorthand
-    async recipe() {
-      const { name, instructions } = this.recipe;
-
-      this.name = name;
-      this.ingredients = instructions;
     }
   }
 });

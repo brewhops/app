@@ -26,7 +26,7 @@
         </div>
         <div class="col-1 inputGroup">
           <h4>Yeast Generation</h4>
-          <input v-model="generation" type="number" step="0.01" required />
+          <input v-model="generation" type="number" step="1" required />
           <label>Yeast Generation</label>
         </div>
         <span>{{ feedback.generation }}</span>
@@ -40,12 +40,12 @@
 <script lang="ts">
 import Vue from 'vue';
 import moment from 'moment';
-import router from '../router';
+import router from '../../router';
 import Cookie from 'js-cookie';
-import loader from './loader.vue';
-import { Recipe, Batch, Tank, Task } from '../types';
+import loader from '../loader.vue';
+import { Recipe, Batch, Tank, Task } from '../../types';
 import { isMoment } from 'moment';
-import { TANK_STATUS, ACTION } from '../utils';
+import { TANK_STATUS, ACTION } from '../../utils';
 
 interface INewBatchState {
   recipes: Recipe[];
@@ -53,7 +53,6 @@ interface INewBatchState {
   batch_name: string;
   volume: string;
   generation: string;
-  mobile: boolean;
   feedback: {
     batch_name: string;
     recipe: string;
@@ -78,7 +77,6 @@ export default Vue.extend({
       batch_name: '',
       volume: '',
       generation: '',
-      mobile: false,
       feedback: {
         batch_name: '',
         recipe: '',
@@ -91,14 +89,6 @@ export default Vue.extend({
     // if the user is not logged in send them to the login page
     if (!Cookie.getJSON('loggedIn')) {
       router.push('/');
-    }
-
-    if (
-      /iPhone|iPad|iPod|Android|webOS|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(
-        navigator.userAgent
-      )
-    ) {
-      this.mobile = true;
     }
 
     try {
@@ -154,7 +144,7 @@ export default Vue.extend({
       try {
         const batchResponse = await this.$http.get(`${process.env.API}/batches/`);
         const batches = batchResponse.data.filter((batch: Batch) => batch.name === this.batch_name);
-        console.log(batches);
+
         const task: Task = {
           employee_id,
           batch_id: batches[0].id,
@@ -185,7 +175,7 @@ export default Vue.extend({
 </script>
 
 <style lang="stylus" scoped>
-@import '../styles/breakpoints'
+@import '../../styles/breakpoints'
 
 #create-new-batch
   padding 15px
