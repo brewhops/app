@@ -1,7 +1,7 @@
 <template lang="html">
   <div>
-    <div class="header" v-if="!mobile">
-      <a v-on:click="logout">Logout</a>
+    <div class="header">
+      <router-link to="login">Logout</router-link>
       <h2>Batch History</h2>
     </div>
     <navbar v-bind:activeState="[false, true, false, false]" />
@@ -181,9 +181,6 @@ export default Vue.extend({
   methods: {
     logout,
     home() {
-      if (this.mobile) {
-        router.push('/home-mobile');
-      }
       router.push('/');
     },
     getEmployeeName(employee: Employee) {
@@ -291,6 +288,7 @@ export default Vue.extend({
   justify-items: center;
   text-align: center;
   min-height: 60vh;
+  z-index: -1
 
   p {
     color: Teal;
@@ -302,9 +300,15 @@ export default Vue.extend({
     justify-content center
     grid-template-columns repeat(2, 48vw)
     +less-than(tablet) {
+      justify-content center
       grid-template-columns 92vw
     }
     .chart {
+      +less-than(tablet) {
+        margin-left 3vw
+        margin-right 5vw
+
+      }
       margin-left 5vw
       margin-right 5vw
     }
@@ -313,6 +317,18 @@ export default Vue.extend({
   table {
     border-collapse: collapse;
     border: 1px solid black;
+    @media screen and (max-width: 510px){
+      font-size: 14px
+    }
+    @media screen and (max-width: 470px){
+      font-size: 12px
+    }
+    @media screen and (max-width: 414px){
+      font-size 11px
+    }
+    @media screen and (max-width: 380px){
+      font-size 9.5px
+    }
     tr {
       td, th {
         padding: 10px;

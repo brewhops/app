@@ -116,10 +116,17 @@ export default Vue.extend({
   width 80%
   margin auto
   align-items flex-start
-  +less-than(tablet)
+  overflow-x: hidden;
+  align-content center
+  +less-than(1400px)
     width 98%
+    align-content center
     grid-template-rows auto
-    grid-template-columns auto
+    grid-template-columns 1fr
+    justify-content center
+  +less-than(400px)
+    grid-template-rows auto
+    grid-template-columns center 80vw
 
 
 .element

@@ -4,11 +4,8 @@ import login from '@/components/login';
 import admin from '@/components/admin/admin';
 import home from '@/components/home';
 import tankMonitoring from '@/components/tank-monitoring';
-import tankInfo from '@/components/tank-info';
+import tankInfo from '@/components/tank-info/tank-info';
 import homeMobile from '@/components/home-mobile';
-import dataEntry from '@/components/data-entry';
-import dataSubmission from '@/components/data-submission';
-import recipe from '@/components/recipe';
 import batchHistory from '@/components/batch-history';
 import tankHistory from '@/components/tank-history';
 
@@ -41,26 +38,6 @@ export default new Router({
       component: tankInfo,
       name: 'tank-info',
       path: '/tank-info/:tankID'
-    },
-    {
-      component: homeMobile,
-      name: 'home-mobile',
-      path: '/home-mobile'
-    },
-    {
-      component: dataEntry,
-      name: 'data-entry',
-      path: '/data-entry'
-    },
-    {
-      component: dataSubmission,
-      name: 'data-submission',
-      path: '/data-submission'
-    },
-    {
-      component: recipe,
-      name: 'recipe',
-      path: '/recipe'
     },
     {
       component: batchHistory,
