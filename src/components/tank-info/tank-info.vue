@@ -77,7 +77,7 @@
             </tbody>
           </table>
 
-          <recipe id="recipe" v-bind:recipe="recipe"></recipe>
+          <recipe id="recipe" v-bind:recipe="recipe" v-bind:volume="batch.volume"></recipe>
         </div>
 
         <div id="entry">
