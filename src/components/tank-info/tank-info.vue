@@ -131,7 +131,7 @@
     <div v-if="tank && !this.tank.in_use" id="new-batch">
       <new-batch :tank="this.tank" />
     </div>
-    <div v-if="!tank || !recipe || !batch" class="center">
+    <div v-if="!tank && !recipe && !batch" class="center">
       <loader></loader>
     </div>
   </div>
