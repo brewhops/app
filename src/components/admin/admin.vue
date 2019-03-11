@@ -17,6 +17,7 @@
         @update="this.tankUpdate"
       ></update-tank>
       <create-user :employees="this.employees"></create-user>
+      <edit-user :employees="this.employees"></edit-user>
       <create-brand></create-brand>
     </div>
   </div>
@@ -31,6 +32,7 @@ import Navbar from '../navbar.vue';
 import CreateTank from './create-tank.vue';
 import UpdateTank from './update-tank.vue';
 import CreateUser from './create-user.vue';
+import EditUser from './edit-user.vue';
 import CreateBrand from './create-brand.vue';
 import { Employee, Tank, BrewhopsCookie } from '../../types';
 import { TANK_STATUS } from '../../utils';
@@ -50,6 +52,7 @@ export default Vue.extend({
     'create-tank': CreateTank,
     'update-tank': UpdateTank,
     'create-user': CreateUser,
+    'edit-user': EditUser,
     'create-brand': CreateBrand
   },
   data(): IAdminState {
@@ -79,7 +82,8 @@ export default Vue.extend({
     // get users from heroku
     try {
       const response = await this.$http.get(`${process.env.API}/employees`);
-      this.employees = response.data.map(emp => emp.username);
+      this.employees = response.data as Employee[];
+      console.log(this.employees);
     } catch (err) {
       this.debugging = 'Debugging Flag: Response error, cant access employees page';
     }
