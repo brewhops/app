@@ -183,7 +183,7 @@ export default Vue.extend({
       td, th {
         padding: 10px;
         @media screen and (max-width: 630px){
-          padding: 5px
+          padding: .5em
         }
         border-left: 1px solid black;
       }
