@@ -13,7 +13,7 @@
         <div id="tank">
           <h2>Info</h2>
           <tank-status v-bind:tankInfo="tankInfo" v-bind:task="task" />
-          <recipe id="recipe" v-bind:recipe="recipe" />
+          <recipe id="recipe" v-bind:recipe="recipe" v-bind:volume="tankInfo.volume" />
         </div>
 
         <div id="entry">
