@@ -2,6 +2,9 @@ import { Moment } from 'moment';
 
 export type Employee = {
   username: string;
+  id: number;
+  first_name: string;
+  last_name: string;
 };
 
 export type Tank = {
@@ -40,15 +43,15 @@ export type Batch = {
 };
 
 export type Task = {
-  id?: number;
-  added_on?: string;
-  completed_on?: string;
-  assigned?: boolean;
-  batch_id: number;
-  action_id: number;
+    id?: number;
+    added_on?: string | Moment;
+    completed_on?: string | Moment;
+    assigned?: boolean;
+    batch_id: number;
+    action_id: number;
   exception_reason?: string;
-  employee_id?: number;
-  update_user?: number;
+    employee_id?: number;
+    update_user?: number;
 };
 
 export type Version = {

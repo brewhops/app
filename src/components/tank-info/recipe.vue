@@ -4,14 +4,16 @@
     <table class="table">
       <thead>
         <tr>
-          <th>Ingredient</th>
-          <th>Ratio</th>
+          <th>Dry Hop/Adjunct</th>
+          <th>Rate</th>
+          <th>Weight</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="item in this.recipe.instructions" v-bind:key="item.ingredient">
           <td>{{ item.ingredient }}</td>
           <td>{{ item.ratio }}</td>
+          <td>{{ Number(item.ratio) * volume }}</td>
         </tr>
       </tbody>
     </table>
@@ -28,6 +30,10 @@ export default Vue.extend({
   props: {
     recipe: {
       type: Object,
+      required: true
+    },
+    volume: {
+      type: Number,
       required: true
     }
   },
