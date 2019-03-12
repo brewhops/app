@@ -10,12 +10,12 @@
       <span>{{ feedback.yeast }}</span>
     </div>
     <div id="half">
-      <div class="inline" v-for="x in hopNumbers" v-bind:key="x">
-        <input id="halfsizeleft" v-model="dryHopAdjunct[x - 1]" placeholder="Dry Hop/Adjunct" />
-        <input id="halfsizeright" v-model="rate[x - 1]" placeholder="Rate" />
+      <div class="inline" v-for="(instruction, index) in instructions" v-bind:key="index">
+        <input id="halfsizeleft" v-model="instruction.ingredient" placeholder="Dry Hop/Adjunct" />
+        <input id="halfsizeright" v-model="instruction.ratio" placeholder="Rate" />
       </div>
     </div>
-    <button type="button" v-on:click="hopNumbers += 1">Add Another Row</button>
+    <button type="button" v-on:click="addInstrction()">Add Another Row</button>
     <button v-on:click="recipe_submit">Submit</button>
     <span>{{ feedback.server.brand }}</span>
   </div>
@@ -26,13 +26,16 @@ import Vue from 'vue';
 import Cookie from 'js-cookie';
 import { Tank, BrewhopsCookie } from '../../types';
 
+interface IIngredient {
+  ingredient: string;
+  ratio: string;
+}
+
 interface ICreateBatchState {
   brandID: string;
   airplane_code: string;
-  dryHopAdjunct: string[];
-  rate: string[];
+  instructions: IIngredient[];
   recipe_name: string;
-  hopNumbers: number;
   yeast: string;
   feedback: {
     brandID: string;
@@ -51,10 +54,8 @@ export default Vue.extend({
     return {
       brandID: '',
       airplane_code: '',
-      dryHopAdjunct: [],
-      rate: [],
+      instructions: [],
       recipe_name: '',
-      hopNumbers: 4,
       yeast: '',
       feedback: {
         brandID: '',
@@ -63,6 +64,11 @@ export default Vue.extend({
         }
       }
     };
+  },
+  mounted() {
+    for (let i = 0; i < 4; i++) {
+      this.addInstrction();
+    }
   },
   watch: {
     brandID() {
@@ -75,16 +81,15 @@ export default Vue.extend({
     }
   },
   methods: {
+    addInstrction() {
+      this.instructions.push({
+        ingredient: '',
+        ratio: ''
+      });
+    },
     async recipe_submit() {
       // Now only add to recipe the values that aren't empty or null
-      const instructions = {};
-      if (this.dryHopAdjunct) {
-        for (const x in this.dryHopAdjunct) {
-          if (!(this.dryHopAdjunct[x] === '' || this.dryHopAdjunct === null)) {
-            instructions[this.dryHopAdjunct[x]] = this.rate[x];
-          }
-        }
-      }
+      const instructions = this.instructions.filter(e => e.ingredient !== '' && e.ratio !== '');
 
       const recipe = {
         airplane_code: this.airplane_code,
