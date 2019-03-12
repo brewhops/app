@@ -12,72 +12,8 @@
       <div id="info-content">
         <div id="tank">
           <h2>Info</h2>
-          <table class="table">
-            <tbody>
-              <tr
-                scope="row"
-                v-if="tankInfo.action !== '' && tankInfo.action !== 'No Action'"
-                class="important"
-              >
-                <td>Action</td>
-                <td>{{ tankInfo.action }}</td>
-              </tr>
-              <tr v-if="this.task && this.task.exception_reason" class="important">
-                <td>Exception Reason</td>
-                <td>{{ this.task.exception_reason }}</td>
-              </tr>
-              <tr>
-                <td>Status</td>
-                <td>{{ tankInfo.status }}</td>
-              </tr>
-              <tr>
-                <td>Brand ID</td>
-                <td>{{ tankInfo.recipe_id }}</td>
-              </tr>
-              <tr>
-                <td>Batch Name</td>
-                <td>{{ tankInfo.batch_name }}</td>
-              </tr>
-              <tr>
-                <td>Generation</td>
-                <td>{{ tankInfo.generation }}</td>
-              </tr>
-              <tr>
-                <td>Volume</td>
-                <td>{{ tankInfo.volume }}</td>
-              </tr>
-              <tr>
-                <td>Bright</td>
-                <td>{{ tankInfo.bright }}</td>
-              </tr>
-              <tr>
-                <td>Temperature</td>
-                <td>{{ tankInfo.temp }}º F</td>
-              </tr>
-              <tr>
-                <td>Specific Gravity</td>
-                <td>{{ tankInfo.SG }}</td>
-              </tr>
-              <tr>
-                <td>pH</td>
-                <td>{{ tankInfo.pH }}</td>
-              </tr>
-              <tr>
-                <td>Pressure</td>
-                <td>{{ tankInfo.pressure }}</td>
-              </tr>
-              <tr>
-                <td>ABV</td>
-                <td>{{ tankInfo.ABV }}%</td>
-              </tr>
-              <tr>
-                <td>Time Last Updated</td>
-                <td>{{ tankInfo.time }}</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <recipe id="recipe" v-bind:recipe="recipe"></recipe>
+          <tank-status v-bind:tankInfo="tankInfo" v-bind:task="task" />
+          <recipe id="recipe" v-bind:recipe="recipe" v-bind:volume="tankInfo.volume" />
         </div>
 
         <div id="entry">
@@ -145,6 +81,7 @@ import dataEntry from './data-entry.vue';
 import navbar from '../navbar.vue';
 import newBatch from './new-batch.vue';
 import updateAction from './update-action.vue';
+import tankStatus from './tank-status.vue';
 import loader from '../loader.vue';
 import { logout } from '../../utils';
 import router from '../../router';
@@ -175,6 +112,7 @@ export default Vue.extend({
     chart,
     dataEntry,
     newBatch,
+    tankStatus,
     updateAction,
     loader
   },
@@ -482,8 +420,4 @@ export default Vue.extend({
   h2, h3, h4
     text-align center
   grid-area tank
-
-.important
-  color red
-  font-weight bold
 </style>

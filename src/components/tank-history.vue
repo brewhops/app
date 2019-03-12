@@ -170,9 +170,21 @@ export default Vue.extend({
   table {
     border-collapse: collapse;
     border: 1px solid black;
+    @media screen and (max-width: 630px){
+      font-size: 14px
+    }
+    @media screen and (max-width: 470px){
+      font-size 10px
+    }
+    @media screen and (max-width: 395px){
+      font-size 9px
+    }
     tr {
       td, th {
         padding: 10px;
+        @media screen and (max-width: 630px){
+          padding: .5em
+        }
         border-left: 1px solid black;
       }
     }
