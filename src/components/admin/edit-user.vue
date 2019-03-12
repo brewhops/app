@@ -10,12 +10,21 @@
   </div>
   <div v-else class="element">
     <h2>Edit {{ name }}</h2>
-    <input v-model.lazy="first_name" placeholder="First Name" />
-    <span>{{ feedback.first_name }}</span>
-    <input v-model.lazy="last_name" placeholder="Last Name" />
-    <span>{{ feedback.last_name }}</span>
-    <input v-model.lazy="username" placeholder="Username" />
-    <span>{{ feedback.username }}</span>
+    <table>
+      <tr>
+        <td><h4>Name:</h4></td>
+        <td>
+          <h4>{{ name }}</h4>
+        </td>
+      </tr>
+      <tr>
+        <td><h4>Username:</h4></td>
+        <td>
+          <h4>{{ username }}</h4>
+        </td>
+      </tr>
+    </table>
+
     <input v-model.lazy="password" placeholder="Password" type="password" />
     <span>{{ feedback.password }}</span>
     <input v-model.lazy="passwordcheck" placeholder="Re-enter password" type="password" />
@@ -88,7 +97,7 @@ export default Vue.extend({
   computed: {
     name: function() {
       if (this.employee) {
-        return `${this.employee.first_name} ${this.employee.last_name}`;
+        return `${this.first_name} ${this.last_name}`;
       }
     }
   },
@@ -206,5 +215,9 @@ export default Vue.extend({
 
 <style lang="stylus" scoped>
 #edit-user
-    width 80%
+  width 80%
+h4
+  text-align left
+table
+  width 80%
 </style>
