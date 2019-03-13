@@ -115,6 +115,7 @@ import chart from './chart.vue';
 import loader from './loader.vue';
 import NavbarComponent from './navbar.vue';
 import dataTable from './data-table.vue';
+import { orderBy } from 'natural-orderby';
 
 interface IHistoryState {
   batch_titles: string[];
@@ -171,8 +172,7 @@ export default Vue.extend({
       const actions = await this.$http.get(`${process.env.API}/actions/`);
       this.employees = <Employee[]>employees.data;
       this.actions = <Action[]>actions.data;
-      this.batches = <Batch[]>response.data;
-      this.batches.sort((a: any, b: any) => a.id - b.id);
+      this.batches = orderBy(<Batch[]>response.data, (b: Batch) => b.name, 'desc');
     } catch (err) {
       // tslint:disable-next-line:no-console
       console.error(err);

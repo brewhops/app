@@ -53,6 +53,7 @@ import Cookie from 'js-cookie';
 import moment from 'moment';
 import navbar from './navbar.vue';
 import { Tank } from '../types';
+import { orderBy } from 'natural-orderby';
 
 // tslint:disable: no-any
 
@@ -91,8 +92,7 @@ export default Vue.extend({
 
     try {
       const response = await this.$http.get(`${process.env.API}/tanks/`);
-      this.tanks = <Tank[]>response.data;
-      this.tanks.sort((a: any, b: any) => a.id - b.id);
+      this.tanks = orderBy(<Tank[]>response.data, (t: Tank) => t.name, 'asc');
     } catch (err) {
       // tslint:disable-next-line:no-console
       console.error(err);
