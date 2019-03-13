@@ -188,6 +188,7 @@ export default Vue.extend({
             }
           );
           if (response.ok) {
+            this.$emit('update');
             this.feedback.server.user = 'User succesfully edited.';
             setTimeout(async () => (this.feedback.server.user = ``), 5000);
           }

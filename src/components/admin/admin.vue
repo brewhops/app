@@ -16,8 +16,8 @@
         :statuses="this.tankStatuses"
         @update="this.tankUpdate"
       ></update-tank>
-      <create-user :employees="this.employees"></create-user>
-      <edit-user :employees="this.employees"></edit-user>
+      <create-user :employees="this.employees" @update="this.usersUpdate"></create-user>
+      <edit-user :employees="this.employees" @update="this.usersUpdate"></edit-user>
       <create-brand></create-brand>
     </div>
   </div>
@@ -101,6 +101,14 @@ export default Vue.extend({
       try {
         const response = await this.$http.get(`${process.env.API}/tanks`);
         this.tanks = response.data as Tank[];
+      } catch (err) {
+        console.error(err);
+      }
+    },
+    async usersUpdate() {
+      try {
+        const response = await this.$http.get(`${process.env.API}/employees`);
+        this.employees = response.data as Employee[];
       } catch (err) {
         console.error(err);
       }
