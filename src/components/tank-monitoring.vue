@@ -43,6 +43,7 @@ import loader from './loader.vue';
 import { logout } from '../utils';
 import Cookie from 'js-cookie';
 import moment from 'moment';
+import { orderBy } from 'natural-orderby';
 
 import { Action, Batch, Recipe, Tank, Task, Version } from '../types';
 import { HttpResponse } from 'vue-resource/types/vue_resource';
@@ -92,7 +93,7 @@ export default Vue.extend({
       ]);
       const [tanksResponse, batchResponse, actionsResponse, recipeResponse] = data;
 
-      const tanks: Tank[] = (tanksResponse.data as Tank[]).sort(this.sortTanks);
+      const tanks: Tank[] = orderBy(tanksResponse.data as Tank[], (t: Tank) => t.name, 'asc');
 
       this.tanks = await Promise.all(
         tanks.map((tankInfo: Tank) =>
@@ -104,8 +105,6 @@ export default Vue.extend({
           )
         )
       );
-
-      this.tanks.sort(this.sortITanks);
     } catch (err) {
       // tslint:disable-next-line:no-console
       console.error(err);
@@ -117,12 +116,6 @@ export default Vue.extend({
       // send us over to the tank info page and set the id on the url
       // to be the tankID that we clicked on.
       router.push({ name: 'tank-info', params: { tankID } });
-    },
-    sortITanks(a: ITank, b: ITank) {
-      return <number>a.id - <number>b.id;
-    },
-    sortTanks(a: Tank, b: Tank) {
-      return <number>a.id - <number>b.id;
     },
     async createTankModel(
       tankInfo: Tank,
