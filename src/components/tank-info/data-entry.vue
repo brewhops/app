@@ -57,6 +57,7 @@
           <!-- <label>Time Measured</label> -->
         </div>
       </div>
+      <input type="file" @change="readAlcolyzerData" />
       <button>Submit</button>
       <button v-if="admin" v-on:click="completeBatch">Complete Batch</button>
     </form>
@@ -82,6 +83,7 @@ import {
 } from '../../types';
 import { HttpResponse } from 'vue-resource/types/vue_resource';
 import { TANK_STATUS } from '../../utils/index';
+import { TextDecoder } from 'util';
 
 // tslint:disable:no-any no-console
 interface IDataEntryState {
@@ -159,6 +161,22 @@ export default Vue.extend({
       this.volume = '';
       this.SG = '';
       this.temp = '';
+    },
+    async readAlcolyzerData(event) {
+      event.preventDefault();
+      const reader = new FileReader();
+      const file = event.target.files[0];
+
+      reader.onload = () => {
+        if (reader.result) {
+          let strs = (reader.result as string).split('\n');
+          while (!strs.slice(-1)[0]) strs.pop();
+          [, this.time, , , , this.pH, this.SG, this.ABV] = strs.slice(-1)[0].split(',');
+        }
+      };
+
+      if (file.type != 'text/csv') alert('File type not supported');
+      else reader.readAsText(file);
     },
     // tslint:disable-next-line:max-func-body-length
     async submit(event) {
