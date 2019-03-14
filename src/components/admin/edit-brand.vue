@@ -129,7 +129,7 @@ export default Vue.extend({
       }
     },
     populateBrand() {
-      if (this.brand) {
+      if (this.brand && this.brand.id) {
         const { id, name, airplane_code, yeast, instructions } = this.brand;
         console.log(this.brand);
         this.brandID = id.toString(10);
