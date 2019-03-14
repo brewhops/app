@@ -49,6 +49,7 @@
     "express": "^4.16.4",
     "js-cookie": "^2.2.0",
     "moment": "^2.22.1",
+    "natural-orderby": "^2.0.1",
     "serve-static": "^1.13.2",
     "source-map-loader": "^0.2.4",
     "stylus": "^0.54.5",
