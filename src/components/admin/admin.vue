@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="this.brands && this.employees && this.tanks">
     <div class="header">
       <a v-on:click="logout">Logout</a>
       <h2>Ninkasi Admin</h2>
@@ -19,7 +19,11 @@
       <create-user :employees="this.employees" @update="this.usersUpdate"></create-user>
       <edit-user :employees="this.employees" @update="this.usersUpdate"></edit-user>
       <create-brand></create-brand>
+      <edit-brand :brands="this.brands" @update="this.brandsUpdate"></edit-brand>
     </div>
+  </div>
+  <div v-else>
+    <loader></loader>
   </div>
 </template>
 
@@ -34,13 +38,16 @@ import UpdateTank from './update-tank.vue';
 import CreateUser from './create-user.vue';
 import EditUser from './edit-user.vue';
 import CreateBrand from './create-brand.vue';
-import { Employee, Tank, BrewhopsCookie } from '../../types';
+import EditBrand from './edit-brand.vue';
+import Loader from '../loader.vue';
+import { Employee, Tank, Recipe, BrewhopsCookie } from '../../types';
 import { TANK_STATUS } from '../../utils';
 // tslint:disable: no-console
 
 interface IAdminState {
   employees: Employee[];
   tanks: Tank[];
+  brands: Recipe[];
   tankStatuses: string[];
   debugging: string;
 }
@@ -53,12 +60,15 @@ export default Vue.extend({
     'update-tank': UpdateTank,
     'create-user': CreateUser,
     'edit-user': EditUser,
-    'create-brand': CreateBrand
+    'create-brand': CreateBrand,
+    'edit-brand': EditBrand,
+    Loader
   },
   data(): IAdminState {
     return {
       employees: [],
       tanks: [],
+      brands: [],
       tankStatuses: [
         TANK_STATUS.BUSY,
         TANK_STATUS.BROKEN,
@@ -79,20 +89,12 @@ export default Vue.extend({
       router.push('/');
     }
 
-    // get users from heroku
     try {
-      const response = await this.$http.get(`${process.env.API}/employees`);
-      this.employees = response.data as Employee[];
+      await this.tankUpdate();
+      await this.usersUpdate();
+      await this.brandsUpdate();
     } catch (err) {
-      this.debugging = 'Debugging Flag: Response error, cant access employees page';
-    }
-
-    // get tank numebrs
-    try {
-      const response = await this.$http.get(`${process.env.API}/tanks`);
-      this.tanks = response.data as Tank[];
-    } catch (err) {
-      this.debugging = 'Debugging Flag: Response error, cant access tanks page';
+      console.error(err);
     }
   },
   methods: {
@@ -109,6 +111,14 @@ export default Vue.extend({
       try {
         const response = await this.$http.get(`${process.env.API}/employees`);
         this.employees = response.data as Employee[];
+      } catch (err) {
+        console.error(err);
+      }
+    },
+    async brandsUpdate() {
+      try {
+        const response = await this.$http.get(`${process.env.API}/recipes`);
+        this.brands = response.data as Recipe[];
       } catch (err) {
         console.error(err);
       }

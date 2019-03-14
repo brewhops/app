@@ -29,7 +29,12 @@ export type Recipe = {
   name: string;
   airplane_code: string;
   yeast: number;
-  instructions: object;
+  instructions: Ingredient[];
+};
+
+export type Ingredient = {
+  ingredient: string;
+  ratio: string;
 };
 
 export type Batch = {
@@ -52,7 +57,7 @@ export type Task = {
     assigned?: boolean;
     batch_id: number;
     action_id: number;
-  exception_reason?: string;
+    exception_reason?: string;
     employee_id?: number;
     update_user?: number;
 };

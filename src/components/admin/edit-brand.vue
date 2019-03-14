@@ -1,6 +1,15 @@
 <template>
-  <div class="element">
-    <h2>Create New Brand</h2>
+  <div v-if="!brand" class="element">
+    <h2>Edit Brand</h2>
+    <select id="edit-brand" v-on:change="populateBrand" v-model="brand">
+      <option disabled value="">Select Brand</option>
+      <option v-for="brand in brands" v-bind:key="brand.brandID" :value="brand">{{
+        brand.name
+      }}</option>
+    </select>
+  </div>
+  <div v-else class="element">
+    <h2>Edit {{ recipe_name }}</h2>
     <div id="full">
       <input v-model.lazy="recipe_name" placeholder="Brand Name" />
       <span>{{ feedback.brandID }}</span>
@@ -15,8 +24,9 @@
         <input id="halfsizeright" v-model="instruction.ratio" placeholder="Rate" />
       </div>
     </div>
-    <button type="button" v-on:click="addInstrction()">Add Another Row</button>
+    <button type="button" v-on:click="addInstruction()">Add Another Row</button>
     <button v-on:click="recipe_submit">Submit</button>
+    <button v-on:click="clearBrand">Select a Brand</button>
     <span>{{ feedback.server.brand }}</span>
   </div>
 </template>
@@ -24,9 +34,10 @@
 <script lang="ts">
 import Vue from 'vue';
 import Cookie from 'js-cookie';
-import { Tank, Ingredient, BrewhopsCookie } from '../../types';
+import { Tank, Recipe, Ingredient, BrewhopsCookie } from '../../types';
 
-interface ICreateBrandState {
+interface IEditBrandState {
+  brand?: Recipe;
   brandID: string;
   airplane_code: string;
   instructions: Ingredient[];
@@ -43,9 +54,11 @@ interface ICreateBrandState {
 // tslint:disable: no-console
 
 export default Vue.extend({
-  name: 'create-brand',
-  data(): ICreateBrandState {
+  name: 'edit-brand',
+  props: ['brands'],
+  data(): IEditBrandState {
     return {
+      brand: undefined,
       brandID: '',
       airplane_code: '',
       instructions: [],
@@ -96,7 +109,7 @@ export default Vue.extend({
       };
 
       try {
-        const response = await this.$http.post(`${process.env.API}/recipes`, recipe, { headers });
+        const response = await this.$http.patch(`${process.env.API}/recipes`, recipe, { headers });
         if (response.ok) {
           this.feedback.server.brand = 'Created a new brand.';
           setTimeout(async () => (this.feedback.server.brand = ``), 5000);
@@ -105,6 +118,21 @@ export default Vue.extend({
         console.error(err);
         this.feedback.server.brand = 'Failed to create new brand.';
       }
+    },
+    populateBrand() {
+      console.log('in populate brands');
+      if (this.brand) {
+        const { id, name, airplane_code, yeast, instructions } = this.brand;
+        console.log(this.brand);
+        this.brandID = id.toString(10);
+        this.recipe_name = name;
+        this.airplane_code = airplane_code;
+        this.yeast = yeast.toString(10);
+        this.instructions = instructions;
+      }
+    },
+    clearBrand() {
+      this.brand = undefined;
     }
   }
 });
@@ -112,8 +140,8 @@ export default Vue.extend({
 
 <style lang="stylus" scoped>
 
-
-
+#edit-brand
+  width 80%
 
 #full{
   @media screen and (max-width:555px ) {
