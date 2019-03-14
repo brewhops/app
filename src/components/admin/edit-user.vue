@@ -1,7 +1,7 @@
 <template>
   <div v-if="!employee" class="element">
     <h2>Edit User</h2>
-    <select id="edit-user" v-on:change="populateEmployee" v-model="employee">
+    <select class="dropdown" v-on:change="populateEmployee" v-model="employee">
       <option disabled value="">Select Employee</option>
       <option v-for="emp in employees" v-bind:key="emp.id" :value="emp">{{
         `${emp.first_name} ${emp.last_name}`
@@ -215,8 +215,6 @@ export default Vue.extend({
 </script>
 
 <style lang="stylus" scoped>
-#edit-user
-  width 80%
 h4
   text-align left
 table

@@ -1,7 +1,7 @@
 <template>
   <div v-if="!brand" class="element">
     <h2>Edit Brand</h2>
-    <select id="edit-brand" v-on:change="populateBrand" v-model="brand">
+    <select class="dropdown" v-on:change="populateBrand" v-model="brand">
       <option disabled value="">Select Brand</option>
       <option v-for="brand in brands" v-bind:key="brand.brandID" :value="brand">{{
         brand.name
@@ -147,9 +147,6 @@ export default Vue.extend({
 </script>
 
 <style lang="stylus" scoped>
-
-#edit-brand
-  width 80%
 
 #full{
   @media screen and (max-width:555px ) {
