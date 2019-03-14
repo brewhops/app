@@ -88,6 +88,7 @@ export default Vue.extend({
       const recipe = {
         airplane_code: this.airplane_code,
         instructions: JSON.stringify(instructions),
+        yeast: this.yeast,
         name: this.recipe_name
       };
 
@@ -98,6 +99,7 @@ export default Vue.extend({
       try {
         const response = await this.$http.post(`${process.env.API}/recipes`, recipe, { headers });
         if (response.ok) {
+          this.$emit('update');
           this.feedback.server.brand = 'Created a new brand.';
           setTimeout(async () => (this.feedback.server.brand = ``), 5000);
         }

@@ -18,7 +18,7 @@
       ></update-tank>
       <create-user :employees="this.employees" @update="this.usersUpdate"></create-user>
       <edit-user :employees="this.employees" @update="this.usersUpdate"></edit-user>
-      <create-brand></create-brand>
+      <create-brand @update="this.brandsUpdate"></create-brand>
       <edit-brand :brands="this.brands" @update="this.brandsUpdate"></edit-brand>
     </div>
   </div>

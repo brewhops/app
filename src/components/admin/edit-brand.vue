@@ -24,9 +24,11 @@
         <input id="halfsizeright" v-model="instruction.ratio" placeholder="Rate" />
       </div>
     </div>
-    <button type="button" v-on:click="addInstruction()">Add Another Row</button>
-    <button v-on:click="recipe_submit">Submit</button>
-    <button v-on:click="clearBrand">Select a Brand</button>
+    <div>
+      <button type="button" v-on:click="addInstruction()">Add Another Row</button>
+      <button v-on:click="recipe_submit">Submit</button>
+      <button v-on:click="clearBrand">Select a Brand</button>
+    </div>
     <span>{{ feedback.server.brand }}</span>
   </div>
 </template>
@@ -98,7 +100,9 @@ export default Vue.extend({
       // Now only add to recipe the values that aren't empty or null
       const instructions = this.instructions.filter(e => e.ingredient !== '' && e.ratio !== '');
 
-      const recipe = {
+      const brand = {
+        id: parseInt(this.brandID),
+        yeast: parseInt(this.yeast),
         airplane_code: this.airplane_code,
         instructions: JSON.stringify(instructions),
         name: this.recipe_name
@@ -109,18 +113,22 @@ export default Vue.extend({
       };
 
       try {
-        const response = await this.$http.patch(`${process.env.API}/recipes`, recipe, { headers });
+        const response = await this.$http.patch(
+          `${process.env.API}/recipes/id/${brand.id}`,
+          brand,
+          { headers }
+        );
         if (response.ok) {
-          this.feedback.server.brand = 'Created a new brand.';
+          this.$emit('update');
+          this.feedback.server.brand = `Edited brand ${this.recipe_name}.`;
           setTimeout(async () => (this.feedback.server.brand = ``), 5000);
         }
       } catch (err) {
         console.error(err);
-        this.feedback.server.brand = 'Failed to create new brand.';
+        this.feedback.server.brand = `Failed to edit brand ${this.recipe_name}.`;
       }
     },
     populateBrand() {
-      console.log('in populate brands');
       if (this.brand) {
         const { id, name, airplane_code, yeast, instructions } = this.brand;
         console.log(this.brand);
