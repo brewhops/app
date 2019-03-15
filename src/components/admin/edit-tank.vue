@@ -1,20 +1,23 @@
 <template>
-  <div class="element">
-    <h2>Update Tank Status</h2>
-    <select v-model="tank_id" class="dropdown">
-      <option disabled value="">Tank Number</option>
+  <div v-if="!tank" class="element">
+    <h2>Edit Tank</h2>
+    <select v-model="tank_id" v-on:change="populateTank" class="dropdown">
+      <option disabled value="">Select Tank</option>
       <option v-for="tank in tanks" v-bind:key="tank.id" :value="tank.id">{{ tank.name }}</option>
     </select>
-
+  </div>
+  <div v-else class="element">
+    <h2>Edit {{ this.tank.name }}</h2>
+    <input v-model="tank_name" placeholder="Tank Name" type="string" />
     <select v-model="status" class="dropdown">
       <option disabled value="">Status on Tank</option>
       <option v-for="status in statuses" v-bind:key="status" :value="status">{{ status }}</option>
     </select>
-
     <div>
       <p>{{ feedback.server.tank }}</p>
     </div>
-    <button v-on:click="tank_update">Submit</button>
+    <button v-on:click="tankUpdate">Submit</button>
+    <button v-on:click="clearTank">Select a Tank</button>
   </div>
 </template>
 
@@ -25,7 +28,9 @@ import { Tank, BrewhopsCookie } from '../../types';
 import { emit } from 'cluster';
 
 interface IUpdateTankState {
+  tank?: Tank;
   tank_id: string;
+  tank_name: string;
   status: string;
   feedback: {
     server: {
@@ -37,11 +42,13 @@ interface IUpdateTankState {
 // tslint:disable: no-console
 
 export default Vue.extend({
-  name: 'create-tank',
+  name: 'edit-tank',
   props: ['tanks', 'statuses'],
   data(): IUpdateTankState {
     return {
+      tank: undefined,
       tank_id: '',
+      tank_name: '',
       status: '',
       feedback: {
         server: {
@@ -51,14 +58,13 @@ export default Vue.extend({
     };
   },
   methods: {
-    async tank_update() {
-      const currentTank: Tank = this.tanks.filter((tank: Tank) => tank.id === this.tank_id);
-
-      if (currentTank) {
-        const { id, name, status } = currentTank[0];
+    async tankUpdate() {
+      if (this.tank) {
+        const { id } = this.tank;
         const tank = {
-          name,
-          status: this.status
+          name: this.tank_name,
+          status: this.status,
+          update_user: Cookie.getJSON('loggedIn').id
         };
 
         const headers = {
@@ -71,7 +77,10 @@ export default Vue.extend({
           });
           if (response.ok) {
             this.feedback.server.tank = `Tank ${name} succesfully updated.`;
-            setTimeout(async () => (this.feedback.server.tank = ``), 5000);
+            setTimeout(async () => {
+              this.feedback.server.tank = ``;
+              this.clearTank();
+            }, 5000);
           }
           this.$emit('update');
         } catch (err) {
@@ -79,6 +88,20 @@ export default Vue.extend({
           this.feedback.server.tank = `Failed to update ${name}.`;
         }
       }
+    },
+    populateTank() {
+      if (this.tank_id) {
+        this.tank = this.tanks.filter(tank => tank.id === this.tank_id)[0];
+        if (this.tank) {
+          const { name, status } = this.tank;
+          this.status = status;
+          this.tank_name = name;
+        }
+      }
+    },
+    clearTank() {
+      this.tank = undefined;
+      this.tank_id = '';
     }
   }
 });

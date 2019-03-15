@@ -34,7 +34,7 @@ import router from '../../router';
 import { logout } from '../../utils';
 import Navbar from '../navbar.vue';
 import CreateTank from './create-tank.vue';
-import UpdateTank from './update-tank.vue';
+import UpdateTank from './edit-tank.vue';
 import CreateUser from './create-user.vue';
 import EditUser from './edit-user.vue';
 import CreateBrand from './create-brand.vue';

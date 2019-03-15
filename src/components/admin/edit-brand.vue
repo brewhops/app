@@ -1,9 +1,9 @@
 <template>
   <div v-if="!brand" class="element">
     <h2>Edit Brand</h2>
-    <select class="dropdown" v-on:change="populateBrand" v-model="brand">
+    <select class="dropdown" v-on:change="populateBrand" v-model="brandID">
       <option disabled value="">Select Brand</option>
-      <option v-for="brand in brands" v-bind:key="brand.brandID" :value="brand">{{
+      <option v-for="(brand, idx) in brands" v-bind:key="idx" :value="brand.id">{{
         brand.name
       }}</option>
     </select>
@@ -79,16 +79,6 @@ export default Vue.extend({
       this.addInstruction();
     }
   },
-  watch: {
-    brandID() {
-      const brandID = this.brandID;
-      if (brandID && brandID.match('^[0-9A-z]+$')) {
-        this.feedback.brandID = '';
-      } else {
-        this.feedback.brandID = 'Brand ID can only be numbers and dashes';
-      }
-    }
-  },
   methods: {
     addInstruction() {
       this.instructions.push({
@@ -105,7 +95,8 @@ export default Vue.extend({
         yeast: parseInt(this.yeast),
         airplane_code: this.airplane_code,
         instructions: JSON.stringify(instructions),
-        name: this.recipe_name
+        name: this.recipe_name,
+        update_user: Cookie.getJSON('loggedIn').id
       };
 
       const headers = {
@@ -121,7 +112,10 @@ export default Vue.extend({
         if (response.ok) {
           this.$emit('update');
           this.feedback.server.brand = `Edited brand ${this.recipe_name}.`;
-          setTimeout(async () => (this.feedback.server.brand = ``), 5000);
+          setTimeout(async () => {
+            this.feedback.server.brand = ``;
+            this.clearBrand();
+          }, 5000);
         }
       } catch (err) {
         console.error(err);
@@ -129,18 +123,21 @@ export default Vue.extend({
       }
     },
     populateBrand() {
-      if (this.brand && this.brand.id) {
-        const { id, name, airplane_code, yeast, instructions } = this.brand;
-        console.log(this.brand);
-        this.brandID = id.toString(10);
-        this.recipe_name = name;
-        this.airplane_code = airplane_code;
-        this.yeast = yeast.toString(10);
-        this.instructions = instructions;
+      if (this.brandID) {
+        this.brand = this.brands.filter(brand => brand.id === this.brandID)[0];
+        if (this.brand) {
+          const { id, name, airplane_code, yeast, instructions } = this.brand;
+          console.log(this.brand);
+          this.recipe_name = name;
+          this.airplane_code = airplane_code;
+          this.yeast = yeast.toString(10);
+          this.instructions = instructions;
+        }
       }
     },
     clearBrand() {
       this.brand = undefined;
+      this.brandID = '';
     }
   }
 });

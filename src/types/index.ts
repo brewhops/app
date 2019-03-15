@@ -15,6 +15,7 @@ export type Tank = {
   name: string;
   status: string;
   in_use: boolean;
+  update_user: number;
 };
 
 export type Action = {
@@ -30,6 +31,7 @@ export type Recipe = {
   airplane_code: string;
   yeast: number;
   instructions: Ingredient[];
+  update_user?: number;
 };
 
 export type Ingredient = {
