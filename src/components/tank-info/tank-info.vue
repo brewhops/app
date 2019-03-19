@@ -40,25 +40,25 @@
           <chart
             class="chart"
             v-bind:title="'pH'"
-            v-bind:date="getData('measured_on')"
+            v-bind:date="getData('measured_on', 'Date')"
             v-bind:data="getData('ph')"
           />
           <chart
             class="chart"
             v-bind:title="'ABV'"
-            v-bind:date="getData('measured_on')"
+            v-bind:date="getData('measured_on', 'Date')"
             v-bind:data="getData('abv')"
           />
           <chart
             class="chart"
             v-bind:title="'SG'"
-            v-bind:date="getData('measured_on')"
-            v-bind:data="getData('sg')"
+            v-bind:date="getFermentationDate()"
+            v-bind:data="getFermentationData()"
           />
           <chart
             class="chart"
             v-bind:title="'Tempurature'"
-            v-bind:date="getData('measured_on')"
+            v-bind:date="getData('measured_on', 'Date')"
             v-bind:data="getData('temperature')"
           />
         </div>
@@ -102,6 +102,7 @@ interface ITankInfoState {
   doneLink?: any;
   home?: any;
   debugging?: string;
+  fermentationData: any[];
 }
 
 export default Vue.extend({
@@ -143,6 +144,7 @@ export default Vue.extend({
       task: undefined,
       batch: undefined,
       versions: [],
+      fermentationData: [],
       recipe: undefined,
       action: undefined
     };
@@ -179,14 +181,28 @@ export default Vue.extend({
   },
   methods: {
     logout,
-    getData(key: string) {
-      return this.versions.map((v: Version) => v[key]);
+    getData(key: string, title?: string) {
+      return [
+        [
+          title === undefined ? this.batch!.name : title,
+          ...this.versions.map((v: Version) => v[key])
+        ]
+      ];
+    },
+    getFermentationData() {
+      return this.fermentationData.map(elm => elm.data);
+    },
+    getFermentationDate() {
+      return this.fermentationData.map(elm => elm.date);
     },
     async loadData() {
       try {
         await this.loadBatchData();
-        await this.loadTaskData();
-        await this.loadHistoryData();
+        const methods = await Promise.all([
+          this.loadTaskData(),
+          this.loadHistoryData(),
+          this.loadFermentationData(this.tankInfo.id)
+        ]);
       } catch (err) {
         console.error(err);
       }
@@ -335,6 +351,42 @@ export default Vue.extend({
           console.error(err);
         }
       }
+    },
+    async loadFermentationData(tankId) {
+      const response = await this.$http.get(`${process.env.API}/batches/tank/${tankId}`);
+
+      const previousBatches: Batch[] = (response.data as Batch[])
+        .sort((a: Batch, b: Batch) => {
+          return moment.utc(b.started_on).diff(moment.utc(a.started_on));
+        })
+        .slice(0, 10);
+
+      const startDate = moment(this.batch!.started_on);
+      this.fermentationData = await Promise.all(
+        previousBatches.map(async (batch, i) => {
+          const response = await this.$http.get(`${process.env.API}/versions/batch/${batch.id}`);
+
+          const versions = (response.data as Version[])
+            .map((v: Version) => {
+              v.measured_on = moment(v.measured_on);
+              return v;
+            })
+            .sort((a: Version, b: Version) => {
+              return moment.utc(a.measured_on).diff(moment.utc(b.measured_on));
+            });
+
+          const sg = versions.map(v => v.sg);
+          const date = versions.map(v => v.measured_on) as Moment[];
+          const days = date.map(d =>
+            moment(startDate).add(moment.duration(d.diff(date[0])).asMilliseconds(), 'ms')
+          );
+
+          return {
+            data: [batch.name, ...sg],
+            date: [`Days${i}`, ...days]
+          };
+        })
+      );
     }
   }
 });
