@@ -201,7 +201,7 @@ export default Vue.extend({
         const methods = await Promise.all([
           this.loadTaskData(),
           this.loadHistoryData(),
-          this.loadFermentationData(this.tankInfo.id)
+          this.loadFermentationData(this.batch!.id, this.batch!.recipe_id)
         ]);
       } catch (err) {
         console.error(err);
@@ -352,14 +352,18 @@ export default Vue.extend({
         }
       }
     },
-    async loadFermentationData(tankId) {
-      const response = await this.$http.get(`${process.env.API}/batches/tank/${tankId}`);
+    async loadFermentationData(batchId, recipeId) {
+      const response = await this.$http.get(`${process.env.API}/batches/recipe/${recipeId}`);
 
-      const previousBatches: Batch[] = (response.data as Batch[])
-        .sort((a: Batch, b: Batch) => {
-          return moment.utc(b.started_on).diff(moment.utc(a.started_on));
-        })
-        .slice(0, 10);
+      let previousBatches: Batch[] = (response.data as Batch[]).sort((a: Batch, b: Batch) => {
+        return moment.utc(b.started_on).diff(moment.utc(a.started_on));
+      });
+      let currentBatchIdx;
+      previousBatches.some((b, i) => {
+        currentBatchIdx = i;
+        return b.id === batchId;
+      });
+      previousBatches = previousBatches.splice(currentBatchIdx, 10);
 
       const startDate = moment(this.batch!.started_on);
       this.fermentationData = await Promise.all(

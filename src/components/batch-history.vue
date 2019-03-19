@@ -211,36 +211,39 @@ export default Vue.extend({
       // to our batch object
       this.batch = this.batches.filter(e => e.id === this.batch_id)[0];
 
-      this.loadFermentationData(this.batch.tank_id);
-
       // when the user chooses a batch, get the info on that batch
-      try {
-        const batchResponse = await this.$http.get(
-          `${process.env.API}/versions/batch/${this.batch_id}`
-        );
-        const taskResponse = await this.$http.get(
-          `${process.env.API}/tasks/batch/${this.batch_id}`
-        );
+      const [versions, tasks, ...arr] = await Promise.all([
+        (async () => {
+          const batchResponse = await this.$http.get(
+            `${process.env.API}/versions/batch/${this.batch_id}`
+          );
 
-        this.tasks = (taskResponse.data as Task[]).map((t: Task) => {
-          t.added_on = moment(t.added_on);
-          return t;
-        });
+          return (batchResponse.data as Version[])
+            .map((v: Version) => {
+              v.measured_on = moment(v.measured_on);
+              return v;
+            })
+            .sort((a: Version, b: Version) => {
+              return moment.utc(a.measured_on).diff(moment.utc(b.measured_on));
+            });
+        })(),
+        (async () => {
+          const taskResponse = await this.$http.get(
+            `${process.env.API}/tasks/batch/${this.batch_id}`
+          );
 
-        this.versions = (batchResponse.data as Version[])
-          .map((v: Version) => {
-            v.measured_on = moment(v.measured_on);
-            return v;
-          })
-          .sort((a: Version, b: Version) => {
-            return moment.utc(a.measured_on).diff(moment.utc(b.measured_on));
+          return (taskResponse.data as Task[]).map((t: Task) => {
+            t.added_on = moment(t.added_on);
+            return t;
           });
-        this.loading = false;
-      } catch (err) {
-        // tslint:disable-next-line:no-console
-        console.error(err);
-        this.loading = false;
-      }
+        })(),
+        this.loadFermentationData(this.batch.id, this.batch.recipe_id)
+      ]);
+
+      this.versions = versions;
+      this.tasks = tasks;
+
+      this.loading = false;
     },
     downloadCSV() {
       let link = document.getElementById('csvDownload');
@@ -292,14 +295,18 @@ export default Vue.extend({
       const versionContent = `${content.map(con => `${con.join(',')},`).join('\r\n')}`;
       return `${csvHeader}Date,${versionsHeader},${tasksHeader}\n${versionContent}`;
     },
-    async loadFermentationData(tankId) {
-      const response = await this.$http.get(`${process.env.API}/batches/tank/${tankId}`);
+    async loadFermentationData(batchId, recipeId) {
+      const response = await this.$http.get(`${process.env.API}/batches/recipe/${recipeId}`);
 
-      const previousBatches: Batch[] = (response.data as Batch[])
-        .sort((a: Batch, b: Batch) => {
-          return moment.utc(b.started_on).diff(moment.utc(a.started_on));
-        })
-        .slice(0, 10);
+      let previousBatches: Batch[] = (response.data as Batch[]).sort((a: Batch, b: Batch) => {
+        return moment.utc(b.started_on).diff(moment.utc(a.started_on));
+      });
+      let currentBatchIdx;
+      previousBatches.some((b, i) => {
+        currentBatchIdx = i;
+        return b.id === batchId;
+      });
+      previousBatches = previousBatches.splice(currentBatchIdx, 10);
 
       const startDate = moment(this.batch!.started_on);
       this.fermentationData = await Promise.all(
