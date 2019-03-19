@@ -41,25 +41,25 @@
           <chart
             class="chart"
             v-bind:title="'pH'"
-            v-bind:date="getData('measured_on')"
+            v-bind:date="getData('measured_on', 'Date')"
             v-bind:data="getData('ph')"
           />
           <chart
             class="chart"
             v-bind:title="'ABV'"
-            v-bind:date="getData('measured_on')"
+            v-bind:date="getData('measured_on', 'Date')"
             v-bind:data="getData('abv')"
           />
           <chart
             class="chart"
             v-bind:title="'SG'"
-            v-bind:date="getData('measured_on')"
-            v-bind:data="getData('sg')"
+            v-bind:date="getFermentationDate()"
+            v-bind:data="getFermentationData()"
           />
           <chart
             class="chart"
             v-bind:title="'Tempurature'"
-            v-bind:date="getData('measured_on')"
+            v-bind:date="getData('measured_on', 'Date')"
             v-bind:data="getData('temperature')"
           />
         </div>
@@ -130,6 +130,7 @@ interface IHistoryState {
   employees: Employee[];
   actions: Action[];
   loading: boolean;
+  fermentationData: any[];
 }
 
 export default Vue.extend({
@@ -157,7 +158,8 @@ export default Vue.extend({
       tasks: [],
       employees: [],
       actions: [],
-      loading: false
+      loading: false,
+      fermentationData: []
     };
   },
   async beforeMount() {
@@ -186,8 +188,19 @@ export default Vue.extend({
     getEmployeeName(employee: Employee) {
       return `${employee.first_name} ${employee.last_name}`;
     },
-    getData(key: string) {
-      return this.versions.map(v => v[key]);
+    getData(key: string, title?: string) {
+      return [
+        [
+          title === undefined ? this.batch!.name : title,
+          ...this.versions.map((v: Version) => v[key])
+        ]
+      ];
+    },
+    getFermentationData() {
+      return this.fermentationData.map(elm => elm.data);
+    },
+    getFermentationDate() {
+      return this.fermentationData.map(elm => elm.date);
     },
     formatDate(date: string | null) {
       return date ? moment(date).format('MM-DD-YYYY') : '';
@@ -197,6 +210,8 @@ export default Vue.extend({
       // filter out all the batches that aren't ours, and set that one element
       // to our batch object
       this.batch = this.batches.filter(e => e.id === this.batch_id)[0];
+
+      this.loadFermentationData(this.batch.tank_id);
 
       // when the user chooses a batch, get the info on that batch
       try {
@@ -276,6 +291,42 @@ export default Vue.extend({
       const tasksHeader = `${this.task_titles.filter(s => s.indexOf('Date') == -1)}`;
       const versionContent = `${content.map(con => `${con.join(',')},`).join('\r\n')}`;
       return `${csvHeader}Date,${versionsHeader},${tasksHeader}\n${versionContent}`;
+    },
+    async loadFermentationData(tankId) {
+      const response = await this.$http.get(`${process.env.API}/batches/tank/${tankId}`);
+
+      const previousBatches: Batch[] = (response.data as Batch[])
+        .sort((a: Batch, b: Batch) => {
+          return moment.utc(b.started_on).diff(moment.utc(a.started_on));
+        })
+        .slice(0, 10);
+
+      const startDate = moment(this.batch!.started_on);
+      this.fermentationData = await Promise.all(
+        previousBatches.map(async (batch, i) => {
+          const response = await this.$http.get(`${process.env.API}/versions/batch/${batch.id}`);
+
+          const versions = (response.data as Version[])
+            .map((v: Version) => {
+              v.measured_on = moment(v.measured_on);
+              return v;
+            })
+            .sort((a: Version, b: Version) => {
+              return moment.utc(a.measured_on).diff(moment.utc(b.measured_on));
+            });
+
+          const sg = versions.map(v => v.sg);
+          const date = versions.map(v => v.measured_on) as Moment[];
+          const days = date.map(d =>
+            moment(startDate).add(moment.duration(d.diff(date[0])).asMilliseconds(), 'ms')
+          );
+
+          return {
+            data: [batch.name, ...sg],
+            date: [`Days${i}`, ...days]
+          };
+        })
+      );
     }
   }
 });
