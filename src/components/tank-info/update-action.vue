@@ -105,7 +105,7 @@ export default Vue.extend({
 
         // if there is no current task
         if (!this.activeTask || this.activeTask.action_id !== this.action) {
-          let task: Task = {
+          const task: Task = {
             added_on: moment().toISOString(),
             assigned: true,
             batch_id: this.batch ? this.batch.id : undefined,
@@ -131,6 +131,8 @@ export default Vue.extend({
 });
 </script>
 <style lang="stylus" scoped>
+@import '../../styles/breakpoints'
+
 #updateAction
   padding 15px
   grid-area entry
