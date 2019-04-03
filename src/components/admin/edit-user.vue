@@ -1,9 +1,9 @@
 <template>
   <div v-if="!employee" class="element">
     <h2>Edit User</h2>
-    <select id="edit-user" v-on:change="populateEmployee" v-model="employee">
+    <select class="dropdown" v-on:change="populateEmployee" v-model="employee_id">
       <option disabled value="">Select Employee</option>
-      <option v-for="emp in employees" v-bind:key="emp.id" :value="emp">{{
+      <option v-for="(emp, idx) in employees" v-bind:key="idx" :value="emp.id">{{
         `${emp.first_name} ${emp.last_name}`
       }}</option>
     </select>
@@ -50,6 +50,7 @@ import { Tank, BrewhopsCookie, Employee } from '../../types';
 
 interface IEditUserState {
   employee?: Employee;
+  employee_id: string;
   first_name: string;
   last_name: string;
   username: string;
@@ -76,6 +77,7 @@ export default Vue.extend({
   data(): IEditUserState {
     return {
       employee: undefined,
+      employee_id: '',
       first_name: '',
       last_name: '',
       username: '',
@@ -190,7 +192,10 @@ export default Vue.extend({
           if (response.ok) {
             this.$emit('update');
             this.feedback.server.user = 'User succesfully edited.';
-            setTimeout(async () => (this.feedback.server.user = ``), 5000);
+            setTimeout(async () => {
+              this.feedback.server.user = ``;
+              this.clearUser();
+            }, 5000);
           }
         } catch (err) {
           console.error(err);
@@ -199,24 +204,26 @@ export default Vue.extend({
       }
     },
     populateEmployee() {
-      if (this.employee) {
-        const { first_name, last_name, password, admin, username, phone } = this.employee;
-        this.first_name = first_name;
-        this.last_name = last_name;
-        this.username = username;
-        this.admin = admin;
+      if (this.employee_id) {
+        this.employee = this.employees.filter(emp => emp.id === this.employee_id)[0];
+        if (this.employee) {
+          const { first_name, last_name, password, admin, username, phone } = this.employee;
+          this.first_name = first_name;
+          this.last_name = last_name;
+          this.username = username;
+          this.admin = admin;
+        }
       }
     },
     clearUser() {
       this.employee = undefined;
+      this.employee_id = '';
     }
   }
 });
 </script>
 
 <style lang="stylus" scoped>
-#edit-user
-  width 80%
 h4
   text-align left
 table

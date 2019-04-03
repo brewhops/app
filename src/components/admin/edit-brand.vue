@@ -1,6 +1,15 @@
 <template>
-  <div class="element">
-    <h2>Create New Brand</h2>
+  <div v-if="!brand" class="element">
+    <h2>Edit Brand</h2>
+    <select class="dropdown" v-on:change="populateBrand" v-model="brandID">
+      <option disabled value="">Select Brand</option>
+      <option v-for="(brand, idx) in brands" v-bind:key="idx" :value="brand.id">{{
+        brand.name
+      }}</option>
+    </select>
+  </div>
+  <div v-else class="element">
+    <h2>Edit {{ recipe_name }}</h2>
     <div id="full">
       <input v-model.lazy="recipe_name" placeholder="Brand Name" />
       <span>{{ feedback.brandID }}</span>
@@ -15,8 +24,11 @@
         <input id="halfsizeright" v-model="instruction.ratio" placeholder="Rate" />
       </div>
     </div>
-    <button type="button" v-on:click="addInstrction()">Add Another Row</button>
-    <button v-on:click="recipe_submit">Submit</button>
+    <div>
+      <button type="button" v-on:click="addInstruction()">Add Another Row</button>
+      <button v-on:click="recipe_submit">Submit</button>
+      <button v-on:click="clearBrand">Select a Brand</button>
+    </div>
     <span>{{ feedback.server.brand }}</span>
   </div>
 </template>
@@ -24,9 +36,10 @@
 <script lang="ts">
 import Vue from 'vue';
 import Cookie from 'js-cookie';
-import { Tank, Ingredient, BrewhopsCookie } from '../../types';
+import { Tank, Recipe, Ingredient, BrewhopsCookie } from '../../types';
 
-interface ICreateBrandState {
+interface IEditBrandState {
+  brand?: Recipe;
   brandID: string;
   airplane_code: string;
   instructions: Ingredient[];
@@ -43,9 +56,11 @@ interface ICreateBrandState {
 // tslint:disable: no-console
 
 export default Vue.extend({
-  name: 'create-brand',
-  data(): ICreateBrandState {
+  name: 'edit-brand',
+  props: ['brands'],
+  data(): IEditBrandState {
     return {
+      brand: undefined,
       brandID: '',
       airplane_code: '',
       instructions: [],
@@ -64,16 +79,6 @@ export default Vue.extend({
       this.addInstruction();
     }
   },
-  watch: {
-    brandID() {
-      const brandID = this.brandID;
-      if (brandID && brandID.match('^[0-9A-z]+$')) {
-        this.feedback.brandID = '';
-      } else {
-        this.feedback.brandID = 'Brand ID can only be numbers and dashes';
-      }
-    }
-  },
   methods: {
     addInstruction() {
       this.instructions.push({
@@ -85,11 +90,13 @@ export default Vue.extend({
       // Now only add to recipe the values that aren't empty or null
       const instructions = this.instructions.filter(e => e.ingredient !== '' && e.ratio !== '');
 
-      const recipe = {
+      const brand = {
+        id: parseInt(this.brandID),
+        yeast: parseInt(this.yeast),
         airplane_code: this.airplane_code,
         instructions: JSON.stringify(instructions),
-        yeast: this.yeast,
-        name: this.recipe_name
+        name: this.recipe_name,
+        update_user: Cookie.getJSON('loggedIn').id
       };
 
       const headers = {
@@ -97,25 +104,46 @@ export default Vue.extend({
       };
 
       try {
-        const response = await this.$http.post(`${process.env.API}/recipes`, recipe, { headers });
+        const response = await this.$http.patch(
+          `${process.env.API}/recipes/id/${brand.id}`,
+          brand,
+          { headers }
+        );
         if (response.ok) {
           this.$emit('update');
-          this.feedback.server.brand = 'Created a new brand.';
-          setTimeout(async () => (this.feedback.server.brand = ``), 5000);
+          this.feedback.server.brand = `Edited brand ${this.recipe_name}.`;
+          setTimeout(async () => {
+            this.feedback.server.brand = ``;
+            this.clearBrand();
+          }, 5000);
         }
       } catch (err) {
         console.error(err);
-        this.feedback.server.brand = 'Failed to create new brand.';
+        this.feedback.server.brand = `Failed to edit brand ${this.recipe_name}.`;
       }
+    },
+    populateBrand() {
+      if (this.brandID) {
+        this.brand = this.brands.filter(brand => brand.id === this.brandID)[0];
+        if (this.brand) {
+          const { id, name, airplane_code, yeast, instructions } = this.brand;
+          console.log(this.brand);
+          this.recipe_name = name;
+          this.airplane_code = airplane_code;
+          this.yeast = yeast.toString(10);
+          this.instructions = instructions;
+        }
+      }
+    },
+    clearBrand() {
+      this.brand = undefined;
+      this.brandID = '';
     }
   }
 });
 </script>
 
 <style lang="stylus" scoped>
-
-
-
 
 #full{
   @media screen and (max-width:555px ) {

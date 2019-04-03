@@ -1,9 +1,17 @@
 <template>
   <table class="table">
     <tbody>
-      <tr scope="row" v-if="this.tankInfo.action !== ''" class="important">
+      <tr
+        scope="row"
+        v-if="tankInfo.action !== '' && tankInfo.action !== 'No Action'"
+        class="important"
+      >
         <td>Action</td>
-        <td>{{ this.tankInfo.action }}</td>
+        <td>{{ tankInfo.action }}</td>
+      </tr>
+      <tr v-if="this.task && this.task.exception_reason" class="important">
+        <td>Exception Reason</td>
+        <td>{{ this.task.exception_reason }}</td>
       </tr>
       <tr>
         <td>Status</td>
@@ -63,12 +71,9 @@ import Cookie from 'js-cookie';
 
 import moment, { unix, months, Moment } from 'moment';
 
-// tslint:disable: no-any
-interface ITankStatusState {}
-
 export default Vue.extend({
   name: 'tank-status',
-  props: ['tankInfo']
+  props: ['tankInfo', 'task']
 });
 </script>
 
