@@ -58,7 +58,7 @@
           />
           <chart
             class="chart"
-            v-bind:title="'Tempurature'"
+            v-bind:title="'Temperature'"
             v-bind:date="getData('measured_on')"
             v-bind:data="getData('temperature')"
           />
@@ -67,6 +67,7 @@
         <div class="tables">
           <div>
             <data-table
+              class="table"
               v-bind:title="'Tasks'"
               v-bind:data="tasks"
               v-bind:headers="task_titles"
@@ -80,6 +81,8 @@
           </div>
           <div>
             <data-table
+              id="table"
+              class="table"
               v-bind:title="'Version'"
               v-bind:data="versions"
               v-bind:headers="version_titles"
@@ -288,14 +291,14 @@ export default Vue.extend({
   justify-items: center;
   text-align: center;
   min-height: 60vh;
-  z-index: -1
+  z-index: -1;
 
   p {
     color: Teal;
     font-weight: bold;
   }
 
-  #charts, .tables {
+  #charts{
     display grid
     justify-content center
     grid-template-columns repeat(2, 48vw)
@@ -314,9 +317,8 @@ export default Vue.extend({
     }
   }
 
-  table {
+  tables {
     border-collapse: collapse;
-    border: 1px solid black;
     @media screen and (max-width: 510px){
       font-size: 14px
     }

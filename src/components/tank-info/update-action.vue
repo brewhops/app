@@ -132,7 +132,7 @@ export default Vue.extend({
 </script>
 <style lang="stylus" scoped>
 #updateAction
-  padding 15px
+  padding 10vw
   grid-area entry
   display flex
   flex-direction column
@@ -142,7 +142,6 @@ export default Vue.extend({
   +less-than(tablet)
     width 90vw
   margin auto
-  min-width 350px
   max-width 500px
   button
     margin-top 30px
