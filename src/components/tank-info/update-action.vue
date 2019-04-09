@@ -134,7 +134,7 @@ export default Vue.extend({
 @import '../../styles/breakpoints'
 
 #updateAction
-  padding 10vw
+  padding 15px
   grid-area entry
   display flex
   flex-direction column
