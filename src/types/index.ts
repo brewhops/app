@@ -1,10 +1,13 @@
 import { Moment } from 'moment';
 
 export type Employee = {
-  username: string;
-  id: number;
+  id?: number;
   first_name: string;
   last_name: string;
+  username: string;
+  password?: string;
+  phone: string;
+  admin: boolean;
 };
 
 export type Tank = {
@@ -12,6 +15,7 @@ export type Tank = {
   name: string;
   status: string;
   in_use: boolean;
+  update_user?: number;
 };
 
 export type Action = {
@@ -22,11 +26,17 @@ export type Action = {
 };
 
 export type Recipe = {
-  id: number;
+  id?: number;
   name: string;
   airplane_code: string;
   yeast: number;
-  instructions: object;
+  instructions: Ingredient[];
+  update_user?: number;
+};
+
+export type Ingredient = {
+  ingredient: string;
+  ratio: string;
 };
 
 export type Batch = {
@@ -49,7 +59,7 @@ export type Task = {
     assigned?: boolean;
     batch_id: number;
     action_id: number;
-  exception_reason?: string;
+    exception_reason?: string;
     employee_id?: number;
     update_user?: number;
 };

@@ -41,25 +41,25 @@
           <chart
             class="chart"
             v-bind:title="'pH'"
-            v-bind:date="getData('measured_on')"
+            v-bind:date="getData('measured_on', 'Date')"
             v-bind:data="getData('ph')"
           />
           <chart
             class="chart"
             v-bind:title="'ABV'"
-            v-bind:date="getData('measured_on')"
+            v-bind:date="getData('measured_on', 'Date')"
             v-bind:data="getData('abv')"
           />
           <chart
             class="chart"
             v-bind:title="'SG'"
-            v-bind:date="getData('measured_on')"
-            v-bind:data="getData('sg')"
+            v-bind:date="getFermentationDate()"
+            v-bind:data="getFermentationData()"
           />
           <chart
             class="chart"
             v-bind:title="'Temperature'"
-            v-bind:date="getData('measured_on')"
+            v-bind:date="getData('measured_on', 'Date')"
             v-bind:data="getData('temperature')"
           />
         </div>
@@ -118,6 +118,7 @@ import chart from './chart.vue';
 import loader from './loader.vue';
 import NavbarComponent from './navbar.vue';
 import dataTable from './data-table.vue';
+import { orderBy } from 'natural-orderby';
 
 interface IHistoryState {
   batch_titles: string[];
@@ -132,6 +133,7 @@ interface IHistoryState {
   employees: Employee[];
   actions: Action[];
   loading: boolean;
+  fermentationData: any[];
 }
 
 export default Vue.extend({
@@ -159,7 +161,8 @@ export default Vue.extend({
       tasks: [],
       employees: [],
       actions: [],
-      loading: false
+      loading: false,
+      fermentationData: []
     };
   },
   async beforeMount() {
@@ -174,8 +177,7 @@ export default Vue.extend({
       const actions = await this.$http.get(`${process.env.API}/actions/`);
       this.employees = <Employee[]>employees.data;
       this.actions = <Action[]>actions.data;
-      this.batches = <Batch[]>response.data;
-      this.batches.sort((a: any, b: any) => a.id - b.id);
+      this.batches = orderBy(<Batch[]>response.data, (b: Batch) => b.name, 'desc');
     } catch (err) {
       // tslint:disable-next-line:no-console
       console.error(err);
@@ -189,8 +191,19 @@ export default Vue.extend({
     getEmployeeName(employee: Employee) {
       return `${employee.first_name} ${employee.last_name}`;
     },
-    getData(key: string) {
-      return this.versions.map(v => v[key]);
+    getData(key: string, title?: string) {
+      return [
+        [
+          title === undefined ? this.batch!.name : title,
+          ...this.versions.map((v: Version) => v[key])
+        ]
+      ];
+    },
+    getFermentationData() {
+      return this.fermentationData.map(elm => elm.data);
+    },
+    getFermentationDate() {
+      return this.fermentationData.map(elm => elm.date);
     },
     formatDate(date: string | null) {
       return date ? moment(date).format('MM-DD-YYYY') : '';
@@ -202,33 +215,38 @@ export default Vue.extend({
       this.batch = this.batches.filter(e => e.id === this.batch_id)[0];
 
       // when the user chooses a batch, get the info on that batch
-      try {
-        const batchResponse = await this.$http.get(
-          `${process.env.API}/versions/batch/${this.batch_id}`
-        );
-        const taskResponse = await this.$http.get(
-          `${process.env.API}/tasks/batch/${this.batch_id}`
-        );
+      const [versions, tasks, ...arr] = await Promise.all([
+        (async () => {
+          const batchResponse = await this.$http.get(
+            `${process.env.API}/versions/batch/${this.batch_id}`
+          );
 
-        this.tasks = (taskResponse.data as Task[]).map((t: Task) => {
-          t.added_on = moment(t.added_on);
-          return t;
-        });
+          return (batchResponse.data as Version[])
+            .map((v: Version) => {
+              v.measured_on = moment(v.measured_on);
+              return v;
+            })
+            .sort((a: Version, b: Version) => {
+              return moment.utc(a.measured_on).diff(moment.utc(b.measured_on));
+            });
+        })(),
+        (async () => {
+          const taskResponse = await this.$http.get(
+            `${process.env.API}/tasks/batch/${this.batch_id}`
+          );
 
-        this.versions = (batchResponse.data as Version[])
-          .map((v: Version) => {
-            v.measured_on = moment(v.measured_on);
-            return v;
-          })
-          .sort((a: Version, b: Version) => {
-            return moment.utc(a.measured_on).diff(moment.utc(b.measured_on));
+          return (taskResponse.data as Task[]).map((t: Task) => {
+            t.added_on = moment(t.added_on);
+            return t;
           });
-        this.loading = false;
-      } catch (err) {
-        // tslint:disable-next-line:no-console
-        console.error(err);
-        this.loading = false;
-      }
+        })(),
+        this.loadFermentationData(this.batch.id, this.batch.recipe_id)
+      ]);
+
+      this.versions = versions;
+      this.tasks = tasks;
+
+      this.loading = false;
     },
     downloadCSV() {
       let link = document.getElementById('csvDownload');
@@ -279,6 +297,46 @@ export default Vue.extend({
       const tasksHeader = `${this.task_titles.filter(s => s.indexOf('Date') == -1)}`;
       const versionContent = `${content.map(con => `${con.join(',')},`).join('\r\n')}`;
       return `${csvHeader}Date,${versionsHeader},${tasksHeader}\n${versionContent}`;
+    },
+    async loadFermentationData(batchId, recipeId) {
+      const response = await this.$http.get(`${process.env.API}/batches/recipe/${recipeId}`);
+
+      let previousBatches: Batch[] = (response.data as Batch[]).sort((a: Batch, b: Batch) => {
+        return moment.utc(b.started_on).diff(moment.utc(a.started_on));
+      });
+      let currentBatchIdx;
+      previousBatches.some((b, i) => {
+        currentBatchIdx = i;
+        return b.id === batchId;
+      });
+      previousBatches = previousBatches.splice(currentBatchIdx, 10);
+
+      const startDate = moment(this.batch!.started_on);
+      this.fermentationData = await Promise.all(
+        previousBatches.map(async (batch, i) => {
+          const response = await this.$http.get(`${process.env.API}/versions/batch/${batch.id}`);
+
+          const versions = (response.data as Version[])
+            .map((v: Version) => {
+              v.measured_on = moment(v.measured_on);
+              return v;
+            })
+            .sort((a: Version, b: Version) => {
+              return moment.utc(a.measured_on).diff(moment.utc(b.measured_on));
+            });
+
+          const sg = versions.map(v => v.sg);
+          const date = versions.map(v => v.measured_on) as Moment[];
+          const days = date.map(d =>
+            moment(startDate).add(moment.duration(d.diff(date[0])).asMilliseconds(), 'ms')
+          );
+
+          return {
+            data: [batch.name, ...sg],
+            date: [`Days${i}`, ...days]
+          };
+        })
+      );
     }
   }
 });

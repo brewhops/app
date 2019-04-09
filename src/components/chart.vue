@@ -4,6 +4,7 @@
 import Vue from 'vue';
 import c3 from 'c3';
 import 'c3/c3.min.css';
+import 'polyfill-array-includes';
 
 // tslint:disable: no-any
 
@@ -13,6 +14,7 @@ interface IChart {
   watch: any;
 
   data?: any;
+
   x?: any;
   y?: any;
   zoom?: any;
@@ -24,27 +26,45 @@ interface IChart {
   type?: any;
   tick?: any;
   format?: any;
+
+  focusItems: any[];
 }
 
 export default Vue.extend({
   name: 'chart',
   props: ['title', 'date', 'data'],
   data() {
-    return {};
+    return {} as IChart;
   },
   watch: {
     // when the data array changes, redraw the chart
     data() {
-      this.data.unshift(this.title);
-      this.date.unshift('Date');
+      this.buildChart();
+    },
+    date() {
+      this.buildChart();
+    }
+  },
+  methods: {
+    buildChart() {
+      this.focusItems = [];
+      const zippedNames = this.date.map((a, i) => [a[0], this.data[i][0]]);
+
       // create our chart
-      c3.generate({
+      const chart = c3.generate({
         // bind it to this instance of the component
         bindto: this.$el,
+        title: {
+          text: this.title
+        },
         data: {
-          x: 'Date',
-          xFormat: '%m/%d/%Y %H:%M',
-          columns: [this.date, this.data]
+          xs: zippedNames.reduce((map, elm) => {
+            map[elm[1]] = elm[0];
+            return map;
+          }, {}),
+          //xFormat: '%m/%d/%Y %H:%M',
+          order: 'desc',
+          columns: [...this.date, ...this.data]
         },
         axis: {
           x: {
@@ -69,8 +89,31 @@ export default Vue.extend({
         // allow the user to zoom in and scroll around on the map
         zoom: {
           enabled: true
+        },
+        legend: {
+          item: {
+            onclick: id => {
+              if (this.focusItems.includes(id)) {
+                this.focusItems = this.focusItems.filter(v => v !== id);
+              } else {
+                this.focusItems.push(id);
+              }
+              chart.focus(this.focusItems);
+            },
+            onmouseover: id => {
+              chart.focus([id, ...this.focusItems]);
+            },
+            onmouseout: id => {
+              chart.focus(this.focusItems);
+            }
+          }
         }
       });
+
+      if (zippedNames.length > 0) {
+        this.focusItems.push(zippedNames[0][1]);
+        chart.focus(this.focusItems);
+      }
     }
   }
 });
