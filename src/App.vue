@@ -1,13 +1,12 @@
 <template>
-<div id="app">
-  <router-view/>
-</div>
+  <div id="app">
+    <router-view />
+  </div>
 </template>
 
-<script>
-export default {
-  name: 'App',
-};
+<script lang="ts">
+import Vue from 'vue';
+export default {};
 </script>
 
 <style lang="stylus">
@@ -112,6 +111,7 @@ input, .dropdown
 
 select
   margin 10px 0
+  width 100%
 
 .checkbox
   display flex
@@ -187,5 +187,4 @@ table
       grid-column span 3
     .col-span-8
       grid-column span 8
-
 </style>

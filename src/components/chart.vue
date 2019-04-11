@@ -1,30 +1,70 @@
-<template>
-</template>
+<template> </template>
 
-<script>
-// import the c3 javascript code
-const c3 = require('c3')
-// import the c3 css code
-// if you dont specify a starting location, webpack will look in the node_modules folder
-import 'c3/c3.min.css'
+<script lang="ts">
+import Vue from 'vue';
+import c3 from 'c3';
+import 'c3/c3.min.css';
+import 'polyfill-array-includes';
 
-export default {
+// tslint:disable: no-any
+
+interface IChart {
+  name: any;
+  props: any;
+  watch: any;
+
+  data?: any;
+
+  x?: any;
+  y?: any;
+  zoom?: any;
+  enabled?;
+  xFormat?: any;
+  columns?: any;
+  axis?: any;
+  // tslint:disable-next-line:no-reserved-keywords
+  type?: any;
+  tick?: any;
+  format?: any;
+
+  focusItems: any[];
+}
+
+export default Vue.extend({
   name: 'chart',
-  props: ['date', 'data'],
+  props: ['title', 'date', 'data'],
   data() {
-    return {};
+    return {} as IChart;
   },
   watch: {
     // when the data array changes, redraw the chart
-    data: function() {
+    data() {
+      this.buildChart();
+    },
+    date() {
+      this.buildChart();
+    }
+  },
+  methods: {
+    buildChart() {
+      this.focusItems = [];
+      const zippedNames = this.date.map((a, i) => [a[0], this.data[i][0]]);
+
       // create our chart
-      c3.generate({
+      const chart = c3.generate({
         // bind it to this instance of the component
         bindto: this.$el,
+        title: {
+          text: this.title
+        },
         data: {
-          x: 'Date', //bind the x axis to the 'Date' data set
-          xFormat: '%m/%d/%Y %H:%M',
-          columns: [ this.date, this.data ]
+          xs: zippedNames.reduce((map, elm) => {
+            map[elm[1]] = elm[0];
+            return map;
+          }, {}),
+          //xFormat: '%m/%d/%Y %H:%M',
+          order: 'desc',
+          columns: [...this.date, ...this.data]
         },
         axis: {
           x: {
@@ -36,23 +76,47 @@ export default {
               // count: 4 if you want to set the ticks to a fixed ammount
             }
           },
-          y : {
+          y: {
             tick: {
               // round the numbers on the y axis to a max of 10 decimal places
               // this gets the y axis numbers behaving and not getting too long
-              format: function(d) { return +d.toFixed(10) }
+              format(d) {
+                return +d.toFixed(10);
+              }
             }
           }
         },
         // allow the user to zoom in and scroll around on the map
         zoom: {
-            enabled: true
+          enabled: true
         },
+        legend: {
+          item: {
+            onclick: id => {
+              if (this.focusItems.includes(id)) {
+                this.focusItems = this.focusItems.filter(v => v !== id);
+              } else {
+                this.focusItems.push(id);
+              }
+              chart.focus(this.focusItems);
+            },
+            onmouseover: id => {
+              chart.focus([id, ...this.focusItems]);
+            },
+            onmouseout: id => {
+              chart.focus(this.focusItems);
+            }
+          }
+        }
       });
-    },
+
+      if (zippedNames.length > 0) {
+        this.focusItems.push(zippedNames[0][1]);
+        chart.focus(this.focusItems);
+      }
+    }
   }
-};
+});
 </script>
 
-<style lang="css" scoped>
-</style>
+<style lang="css" scoped></style>

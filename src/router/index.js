@@ -1,69 +1,53 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import login from '@/components/login'
-import admin from '@/components/admin'
-import home from '@/components/home'
-import tankMonitoring from '@/components/tank-monitoring'
-import tankInfo from '@/components/tank-info'
-import homeMobile from '@/components/home-mobile'
-import dataEntry from '@/components/data-entry'
-import dataSubmission from '@/components/data-submission'
-import recipe from '@/components/recipe'
-import history from '@/components/history'
+import Vue from 'vue';
+import Router from 'vue-router';
+import login from '@/components/login';
+import admin from '@/components/admin/admin';
+import home from '@/components/home';
+import tankMonitoring from '@/components/tank-monitoring';
+import tankInfo from '@/components/tank-info/tank-info';
+import homeMobile from '@/components/home-mobile';
+import batchHistory from '@/components/batch-history';
+import tankHistory from '@/components/tank-history';
 
-Vue.use(Router)
+Vue.use(Router);
 
+// tslint:disable-next-line:no-default-export
 export default new Router({
   routes: [
     {
-      path: '/',
+      component: login,
       name: 'login',
-      component: login
+      path: '/'
     },
     {
-      path: '/admin',
+      component: admin,
       name: 'admin',
-      component: admin
+      path: '/admin'
     },
     {
-      path: '/home',
+      component: home,
       name: 'home',
-      component: home
+      path: '/home'
     },
     {
-      path: '/tank-monitoring',
+      component: tankMonitoring,
       name: 'tank-monitoring',
-      component: tankMonitoring
+      path: '/tank-monitoring'
     },
     {
-      path: '/tank-info/:tankID',
+      component: tankInfo,
       name: 'tank-info',
-      component: tankInfo
+      path: '/tank-info/:tankID'
     },
     {
-      path: '/home-mobile',
-      name: 'home-mobile',
-      component: homeMobile
-    },
-    {
-      path: '/data-entry',
-      name: 'data-entry',
-      component: dataEntry
-    },
-    {
-      path: '/data-submission',
-      name: 'data-submission',
-      component: dataSubmission
-    },
-    {
-      path: '/recipe',
-      name: 'recipe',
-      component: recipe
-    },
-    {
-      path: '/history',
+      component: batchHistory,
       name: 'batch-history',
-      component: history
+      path: '/batch-history'
+    },
+    {
+      component: tankHistory,
+      name: 'tank-history',
+      path: '/tank-history'
     }
   ]
-})
+});

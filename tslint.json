@@ -1,0 +1,10 @@
+{
+  "extends": ["@osu-cass/tslint-config"],
+  "rules": {
+    "no-invalid-this": false,
+    "no-default-export": false,
+    "no-this-assignment": false,
+    "no-for-in": false,
+    "variable-name": false
+  }
+}
