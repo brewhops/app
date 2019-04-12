@@ -1,24 +1,8 @@
 <template>
   <div>
-    <form id="dataEntry" @submit.prevent="submit">
+    <form class="dataEntry" @submit.prevent="submit">
       <h2>Data Entry</h2>
-      <div id="formFields" class="grid">
-        <div class="col-3">
-          <span>
-            <h4>Tank</h4>
-            {{ this.tank.name }}
-          </span>
-        </div>
-        <div class="col-3">
-          <span id="batchName">
-            <h4>Batch:</h4>
-            {{ this.batch.name }}
-          </span>
-        </div>
-        <div class="col-3">
-          <h4>Recipe</h4>
-          {{ this.recipe.name }}
-        </div>
+      <div class="formFields grid">
         <div class="col-3 inputGroup">
           <input v-model="pH" type="number" step="0.01" required />
           <label>pH</label>
@@ -28,38 +12,33 @@
           <label>ABV</label>
         </div>
         <div class="col-3 inputGroup">
-          <input v-model="bright" type="number" step="0.1" required />
-          <label>Bright</label>
-        </div>
-        <div class="col-3 inputGroup">
           <input v-model="pressure" type="number" step="0.01" required />
           <label>Pressure</label>
         </div>
         <div class="col-3 inputGroup">
-          <input v-model="generation" type="number" required />
-          <label>Generation</label>
-        </div>
-        <div class="col-3 inputGroup">
-          <input v-model="volume" type="number" step="0.01" required />
-          <label>Volume</label>
-        </div>
-        <div class="col-2 inputGroup">
           <input v-model="SG" type="number" step="0.000001" required />
           <label>Specific Gravity</label>
         </div>
-        <div class="col-2 inputGroup">
+        <div class="col-3 inputGroup">
           <input v-model="temp" type="number" step="0.1" required />
           <label>Temperature</label>
         </div>
-        <div class="col-1 time inputGroup">
+        <div class="col-3 time inputGroup">
           <datepicker placeholder="Select Date" v-model="time"></datepicker>
           <!-- <input v-model="time" type="datetime-local" /> -->
           <!-- <label>Time Measured</label> -->
         </div>
       </div>
-      <input type="file" @change="readAlcolyzerData" />
       <button>Submit</button>
-      <button v-if="admin" v-on:click="completeBatch">Complete Batch</button>
+    </form>
+    <form class="dataEntry" v-if="admin" @submit.prevent="completeBatch">
+      <div class="formFields grid">
+        <div class="col-2 inputGroup">
+          <input v-model="bright" type="number" step="0.01" required />
+          <label>Bright</label>
+        </div>
+        <button class="col-2">Complete Batch</button>
+      </div>
     </form>
   </div>
 </template>
@@ -254,7 +233,7 @@ export default Vue.extend({
   text-align center
   margin-bottom 20px
 
-#dataEntry
+.dataEntry
   padding 15px
   grid-area entry
   display flex
@@ -264,7 +243,7 @@ export default Vue.extend({
   button
     margin-top 30px
 
-  #formFields
+  .formFields
     .time
       display block
     text-align center
