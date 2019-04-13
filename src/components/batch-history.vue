@@ -56,17 +56,16 @@
             v-bind:date="fermentationData.map(elm => elm.date)"
             v-bind:data="fermentationData.map(elm => elm.data)"
           />
-          <chart
-            class="chart"
-            v-bind:title="'Tempurature'"
-            v-bind:date="tempData.map(elm => elm.date)"
-            v-bind:data="tempData.map(elm => elm.data)"
-          />
+          <chart class="chart" <<<<<<< HEAD v-bind:title="'Temperature'"
+          v-bind:date="getData('measured_on', 'Date')" v-bind:data="getData('temperature')" =======
+          v-bind:title="'Tempurature'" v-bind:date="tempData.map(elm => elm.date)"
+          v-bind:data="tempData.map(elm => elm.data)" >>>>>>> dev />
         </div>
 
         <div class="tables">
           <div>
             <data-table
+              class="table"
               v-bind:title="'Tasks'"
               v-bind:data="tasks"
               v-bind:headers="task_titles"
@@ -80,6 +79,8 @@
           </div>
           <div>
             <data-table
+              id="table"
+              class="table"
               v-bind:title="'Version'"
               v-bind:data="versions"
               v-bind:headers="version_titles"
@@ -369,14 +370,14 @@ export default Vue.extend({
   justify-items: center;
   text-align: center;
   min-height: 60vh;
-  z-index: -1
+  z-index: -1;
 
   p {
     color: Teal;
     font-weight: bold;
   }
 
-  #charts, .tables {
+  #charts{
     display grid
     justify-content center
     grid-template-columns repeat(2, 48vw)
@@ -395,9 +396,8 @@ export default Vue.extend({
     }
   }
 
-  table {
+  tables {
     border-collapse: collapse;
-    border: 1px solid black;
     @media screen and (max-width: 510px){
       font-size: 14px
     }
@@ -408,12 +408,18 @@ export default Vue.extend({
       font-size 11px
     }
     @media screen and (max-width: 380px){
-      font-size 9.5px
+      font-size 10px
+      }
+    @media screen and (max-width: 345px){
+         font-size 9px
     }
     tr {
       td, th {
         padding: 10px;
         border-left: 1px solid black;
+        @media screen and (max-width: 414px){
+          padding: 5px
+        }
       }
     }
   }
