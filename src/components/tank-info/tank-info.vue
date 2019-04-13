@@ -40,26 +40,26 @@
           <chart
             class="chart"
             v-bind:title="'pH'"
-            v-bind:date="getData('measured_on', 'Date')"
-            v-bind:data="getData('ph')"
+            v-bind:date="pHData.map(elm => elm.date)"
+            v-bind:data="pHData.map(elm => elm.data)"
           />
           <chart
             class="chart"
             v-bind:title="'ABV'"
-            v-bind:date="getData('measured_on', 'Date')"
-            v-bind:data="getData('abv')"
+            v-bind:date="abvData.map(elm => elm.date)"
+            v-bind:data="abvData.map(elm => elm.data)"
           />
           <chart
             class="chart"
             v-bind:title="'SG'"
-            v-bind:date="getFermentationDate()"
-            v-bind:data="getFermentationData()"
+            v-bind:date="fermentationData.map(elm => elm.date)"
+            v-bind:data="fermentationData.map(elm => elm.data)"
           />
           <chart
             class="chart"
             v-bind:title="'Tempurature'"
-            v-bind:date="getData('measured_on', 'Date')"
-            v-bind:data="getData('temperature')"
+            v-bind:date="tempData.map(elm => elm.date)"
+            v-bind:data="tempData.map(elm => elm.data)"
           />
         </div>
       </div>
@@ -103,6 +103,9 @@ interface ITankInfoState {
   home?: any;
   debugging?: string;
   fermentationData: any[];
+  pHData: any[];
+  abvData: any[];
+  tempData: any[];
 }
 
 export default Vue.extend({
@@ -145,6 +148,9 @@ export default Vue.extend({
       batch: undefined,
       versions: [],
       fermentationData: [],
+      pHData: [],
+      abvData: [],
+      tempData: [],
       recipe: undefined,
       action: undefined
     };
@@ -189,19 +195,13 @@ export default Vue.extend({
         ]
       ];
     },
-    getFermentationData() {
-      return this.fermentationData.map(elm => elm.data);
-    },
-    getFermentationDate() {
-      return this.fermentationData.map(elm => elm.date);
-    },
     async loadData() {
       try {
         await this.loadBatchData();
         const methods = await Promise.all([
           this.loadTaskData(),
           this.loadHistoryData(),
-          this.loadFermentationData(this.batch!.id, this.batch!.recipe_id)
+          this.loadGraphData(this.batch!.id, this.batch!.recipe_id)
         ]);
       } catch (err) {
         console.error(err);
@@ -352,7 +352,7 @@ export default Vue.extend({
         }
       }
     },
-    async loadFermentationData(batchId, recipeId) {
+    async loadGraphData(batchId, recipeId) {
       const response = await this.$http.get(`${process.env.API}/batches/recipe/${recipeId}`);
 
       let previousBatches: Batch[] = (response.data as Batch[]).sort((a: Batch, b: Batch) => {
@@ -366,7 +366,7 @@ export default Vue.extend({
       previousBatches = previousBatches.splice(currentBatchIdx, 10);
 
       const startDate = moment(this.batch!.started_on);
-      this.fermentationData = await Promise.all(
+      const formattedData = await Promise.all(
         previousBatches.map(async (batch, i) => {
           const response = await this.$http.get(`${process.env.API}/versions/batch/${batch.id}`);
 
@@ -380,17 +380,40 @@ export default Vue.extend({
             });
 
           const sg = versions.map(v => v.sg);
+          const ph = versions.map(v => v.ph);
+          const abv = versions.map(v => v.abv);
+          const temp = versions.map(v => v.temperature);
+
           const date = versions.map(v => v.measured_on) as Moment[];
           const days = date.map(d =>
             moment(startDate).add(moment.duration(d.diff(date[0])).asMilliseconds(), 'ms')
           );
 
           return {
-            data: [batch.name, ...sg],
-            date: [`Days${i}`, ...days]
+            sg: {
+              data: [batch.name, ...sg],
+              date: [`Days${i}`, ...days]
+            },
+            ph: {
+              data: [batch.name, ...ph],
+              date: [`Days${i}`, ...days]
+            },
+            abv: {
+              data: [batch.name, ...abv],
+              date: [`Days${i}`, ...days]
+            },
+            temp: {
+              data: [batch.name, ...temp],
+              date: [`Days${i}`, ...days]
+            }
           };
         })
       );
+
+      this.fermentationData = formattedData.map(e => e.sg);
+      this.pHData = formattedData.map(e => e.ph);
+      this.abvData = formattedData.map(e => e.abv);
+      this.tempData = formattedData.map(e => e.temp);
     }
   }
 });
