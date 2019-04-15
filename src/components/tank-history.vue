@@ -173,12 +173,16 @@ export default Vue.extend({
     @media screen and (max-width: 630px){
       font-size: 14px
     }
-    @media screen and (max-width: 470px){
-      font-size 10px
+    @media screen and (max-width: 500px){
+      font-size:10px
     }
     @media screen and (max-width: 395px){
       font-size 9px
     }
+    @media screen and (max-width: 330px){
+      font-size 8px
+    }
+
     tr {
       td, th {
         padding: 10px;
