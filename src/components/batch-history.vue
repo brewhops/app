@@ -364,7 +364,7 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="stylus">
+<style lang="stylus" scoped>
 @import '../styles/breakpoints'
 #content {
   display: grid;
@@ -377,34 +377,7 @@ export default Vue.extend({
     color: Teal;
     font-weight: bold;
   }
-
-  #charts{
-    display grid
-    justify-content center
-    grid-template-columns repeat(2, 48vw)
-    +less-than(tablet) {
-      justify-content center
-      grid-template-columns 92vw
-    }
-    .chart {
-      +less-than(tablet) {
-        margin-left 3vw
-        margin-right 5vw
-
-      }
-      margin-left 5vw
-      margin-right 5vw
-    }
-  }
-
-  table {
-    +less-than(tablet) {
-      justify-content center
-      grid-template-columns 92vw
-    }
-
-    border-collapse: collapse;
-    tr {
+    & /deep/ tr {
       td, th {
     @media screen and (max-width: 540px){
       font-size: 14px
@@ -427,6 +400,33 @@ export default Vue.extend({
       border-left: 1px solid black;
       }
     }
-  }
+
 }
+  #charts{
+    display grid
+    justify-content center
+    grid-template-columns repeat(2, 48vw)
+    +less-than(tablet) {
+      justify-content center
+      grid-template-columns 92vw
+    }
+    .chart {
+      +less-than(tablet) {
+        margin-left 3vw
+        margin-right 5vw
+
+      }
+      margin-left 5vw
+      margin-right 5vw
+    }
+  }
+
+  table {
+    background-color: red;
+    +less-than(tablet) {
+      justify-content center
+      grid-template-columns 92vw
+    border-collapse: collapse;
+    }
+  }
 </style>
