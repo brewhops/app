@@ -23,8 +23,9 @@
         </div>
       </div>
       <div v-if="batch_id && batch">
-        <div>
+        <div class="tables">
           <data-table
+            class="table"
             v-bind:title="''"
             v-bind:data="[batch]"
             v-bind:headers="batch_titles"
@@ -56,10 +57,11 @@
             v-bind:date="fermentationData.map(elm => elm.date)"
             v-bind:data="fermentationData.map(elm => elm.data)"
           />
-          <chart class="chart" <<<<<<< HEAD v-bind:title="'Temperature'"
-          v-bind:date="getData('measured_on', 'Date')" v-bind:data="getData('temperature')" =======
-          v-bind:title="'Tempurature'" v-bind:date="tempData.map(elm => elm.date)"
-          v-bind:data="tempData.map(elm => elm.data)" >>>>>>> dev />
+          <chart
+            v-bind:title="'Temperature'"
+            v-bind:date="tempData.map(elm => elm.date)"
+            v-bind:data="tempData.map(elm => elm.data)"
+          />
         </div>
 
         <div class="tables">
@@ -79,7 +81,6 @@
           </div>
           <div>
             <data-table
-              id="table"
               class="table"
               v-bind:title="'Version'"
               v-bind:data="versions"
@@ -376,7 +377,31 @@ export default Vue.extend({
     color: Teal;
     font-weight: bold;
   }
+    & /deep/ tr {
+      td, th {
+    @media screen and (max-width: 540px){
+      font-size: 14px
+      padding: 5px
+    }
+    @media screen and (max-width: 480px){
+      font-size: 12px
+    }
+    @media screen and (max-width: 414px){
+      font-size 12px
+    }
+    @media screen and (max-width: 360px){
+      font-size 11px
+    }
+    @media screen and (max-width: 325px){
+      padding: 4px
+      font-size 9px
+    }
+      padding: 10px;
+      border-left: 1px solid black;
+      }
+    }
 
+}
   #charts{
     display grid
     justify-content center
@@ -396,32 +421,12 @@ export default Vue.extend({
     }
   }
 
-  tables {
+  table {
+    background-color: red;
+    +less-than(tablet) {
+      justify-content center
+      grid-template-columns 92vw
     border-collapse: collapse;
-    @media screen and (max-width: 510px){
-      font-size: 14px
-    }
-    @media screen and (max-width: 470px){
-      font-size: 12px
-    }
-    @media screen and (max-width: 414px){
-      font-size 11px
-    }
-    @media screen and (max-width: 380px){
-      font-size 10px
-      }
-    @media screen and (max-width: 345px){
-         font-size 9px
-    }
-    tr {
-      td, th {
-        padding: 10px;
-        border-left: 1px solid black;
-        @media screen and (max-width: 414px){
-          padding: 5px
-        }
-      }
     }
   }
-}
 </style>
