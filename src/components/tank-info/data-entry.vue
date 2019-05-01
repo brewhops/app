@@ -32,13 +32,7 @@
       <button>Submit</button>
     </form>
     <form class="dataEntry" v-if="admin" @submit.prevent="completeBatch">
-      <div class="formFields grid">
-        <div class="col-2 inputGroup">
-          <input v-model="bright" type="number" step="0.01" required />
-          <label>Bright</label>
-        </div>
-        <button class="col-2">Complete Batch</button>
-      </div>
+      <button class="col-2">Complete Batch</button>
     </form>
   </div>
 </template>
@@ -134,10 +128,7 @@ export default Vue.extend({
     async reset() {
       this.pH = '';
       this.ABV = '';
-      this.bright = '';
       this.pressure = '';
-      this.generation = '';
-      this.volume = '';
       this.SG = '';
       this.temp = '';
     },

@@ -70,10 +70,6 @@
     <div v-if="!tank && !recipe && !batch" class="center">
       <loader></loader>
     </div>
-    <form class="dataEntry" v-if="admin" @submit.prevent="completeBatch">
-      <input type="file" @change="readAlcolyzerData" />
-      <button>Submit</button>
-    </form>
   </div>
 </template>
 

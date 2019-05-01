@@ -29,15 +29,7 @@
       <div v-else class="text-center">
         No tanks exist yet
       </div>
-      <form class="dataEntry" @submit.prevent="submit">
-        <div class="col-3 inputGroup">
-          <input type="file" placeholder="Upload From CSV" @change="readAlcolyzerData" />
-        </div>
-        <div class="col-3 inputGroup">
-          <datepicker placeholder="Select Date" v-model="goal_time"></datepicker>
-        </div>
-        <button class="col-3">Submit</button>
-      </form>
+      <bulk-entry v-bind:tanks="tanks" />
     </div>
     <div v-else class="center">
       <loader></loader>
@@ -49,6 +41,7 @@
 import Vue from 'vue';
 import router from '../router';
 import loader from './loader.vue';
+import bulkEntry from './bulk-entry.vue';
 import { logout } from '../utils';
 import Cookie from 'js-cookie';
 import moment from 'moment';
@@ -104,6 +97,7 @@ export default Vue.extend({
   name: 'tank-monitoring',
   components: {
     loader,
+    bulkEntry,
     Datepicker
   },
   data(): ITankMonitoringState {
@@ -154,90 +148,6 @@ export default Vue.extend({
       // to be the tankID that we clicked on.
       router.push({ name: 'tank-info', params: { tankID } });
     },
-    async readAlcolyzerData(event) {
-      event.preventDefault();
-      const file = event.target.files[0];
-
-      if (file.type != 'text/csv') alert('File type not supported');
-      else this.file = file;
-    },
-    async updateTanks(readings: IDataEntryState[]) {
-      const cookie: BrewhopsCookie = Cookie.getJSON('loggedIn');
-      const headers = {
-        Authorization: `Bearer ${cookie.token}`
-      };
-      if (!this.tanks) return;
-      const condition = tank =>
-        readings.filter(r => Number(r.id) === tank.id && tank.status != 'available')[0];
-      const batchesToUpdate = this.tanks
-        .filter(tank => condition(tank))
-        .map(tank => {
-          let reading = condition(tank);
-          return { batch: tank.batch, reading: reading };
-        });
-      await Promise.all(
-        batchesToUpdate.map(({ batch, reading }) =>
-          (async () => {
-            const requestObject: BatchUpdateOrCreate = {
-              recipe_id: Number(batch.recipe_id),
-              tank_id: Number(batch.tank_id),
-              batch_id: Number(batch.id),
-              volume: Number(batch.volume),
-              bright: Number(batch.bright),
-              generation: Number(batch.generation),
-              name: batch.name,
-              ph: Number(reading.pH),
-              abv: Number(reading.ABV),
-              pressure: Number(0),
-              temperature: Number(reading.temp),
-              sg: Number(reading.SG),
-              measured_on: moment(this.goal_time).toISOString(),
-              update_user: Number(cookie.id)
-            };
-            const response = await this.$http.post(
-              `${process.env.API}/batches/update`,
-              requestObject,
-              {
-                headers
-              }
-            );
-            return response;
-          })()
-        )
-      ).then(values => {
-        console.log(values);
-      });
-    },
-    // tslint:disable-next-line:max-func-body-length
-    async submit(event) {
-      let readings: IDataEntryState[] = [];
-      const reader = new FileReader();
-
-      reader.onload = () => {
-        if (reader.result) {
-          let strs = (reader.result as string).split('\n');
-          let lastTime: string;
-          // go to the last line with content and read the time
-          while (!strs.slice(-1)[0]) strs.pop();
-          [, lastTime, , , , , ,] = strs.slice(-1)[0].split(',');
-          // if date picker is filled use it, otherwise most recent time
-          if (!this.goal_time) this.goal_time = lastTime;
-          else this.goal_time = moment(this.goal_time).format('M/D/YYYY');
-          // take only reading from desired time
-          readings = strs
-            .map((entry: string) => {
-              let line: IDataEntryState = { pH: '', ABV: '', SG: '', id: '', temp: '', time: '' };
-              [, line.time, , line.id, , line.pH, line.SG, line.ABV] = entry.split(',');
-              return line;
-            })
-            .filter(entry => entry.time === this.goal_time);
-        }
-        if (readings.length !== 0) this.updateTanks(readings);
-      };
-
-      if (this.file) reader.readAsText(this.file);
-      else alert('No file specifed');
-    },
     async createTankModel(
       tankInfo: Tank,
       batches: Batch[],
@@ -262,11 +172,17 @@ export default Vue.extend({
 
       if (batch) {
         tank.batch = {};
+        tank.batch.tank_id = tank.id;
         // add in our batchesID to the tank info box
         tank.batch.id = batch.id;
         tank.batch.name = batch.name;
         // add the recipeID to the tank info box
         tank.recipe_id = batch.recipe_id;
+        tank.batch.recipe_id = batch.recipe_id;
+
+        tank.batch.volume = batch.volume;
+        tank.batch.bright = batch.bright;
+        tank.batch.generation = batch.generation;
 
         // Set recipe information
         for (const recipe of recipes) {
