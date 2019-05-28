@@ -89,29 +89,34 @@ export default Vue.extend({
       event.preventDefault();
       const file = event.target.files[0];
 
-      console.log(file.type);
       if (
         file.type !== 'text/csv' &&
         file.type !== 'text/plain' &&
         file.type !== 'application/vnd.ms-excel'
-      )
+      ) {
         alert('File type not supported');
-      else this.file = file;
+      } else {
+        this.file = file;
+      }
     },
     async updateTanks(readings: IDataEntryState[]) {
       const cookie: BrewhopsCookie = Cookie.getJSON('loggedIn');
       const headers = {
         Authorization: `Bearer ${cookie.token}`
       };
+
       if (!this.tanks) return;
+
       const condition = tank =>
-        readings.filter(r => Number(r.id) === tank.id && tank.status != 'available')[0];
+        readings.filter(r => r.id === tank.name.slice(1) && tank.status != 'available')[0];
+
       const batchesToUpdate = this.tanks
         .filter(tank => condition(tank))
         .map(tank => {
           let reading = condition(tank);
-          return { batch: tank.batch, reading: reading };
+          return { tank: tank, batch: tank.batch, reading: reading };
         });
+
       await Promise.all(
         batchesToUpdate.map(({ batch, reading }) =>
           (async () => {
@@ -140,7 +145,7 @@ export default Vue.extend({
         if (values) {
           let success: string = '';
           values.map((val, i) => {
-            success += `${batchesToUpdate[i].batch.tank_id}, `;
+            success += `${batchesToUpdate[i].tank.name}, `;
           });
           this.update_text = `tanks updated: ${success.slice(0, -2)}`;
         } else {
