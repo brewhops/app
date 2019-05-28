@@ -89,7 +89,13 @@ export default Vue.extend({
       event.preventDefault();
       const file = event.target.files[0];
 
-      if (file.type != 'text/csv') alert('File type not supported');
+      console.log(file.type);
+      if (
+        file.type !== 'text/csv' &&
+        file.type !== 'text/plain' &&
+        file.type !== 'application/vnd.ms-excel'
+      )
+        alert('File type not supported');
       else this.file = file;
     },
     async updateTanks(readings: IDataEntryState[]) {
