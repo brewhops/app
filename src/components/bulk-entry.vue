@@ -75,6 +75,7 @@ export default Vue.extend({
     loader,
     Datepicker
   },
+
   data(): IBulkEntryState {
     return {
       update_text: '',
@@ -82,8 +83,10 @@ export default Vue.extend({
       // contents of a square is tankName, pressure, recipeName, temperature, batchNumber, Status
     };
   },
+
   // tslint:disable-next-line:max-func-body-length
   async beforeMount() {},
+
   methods: {
     async readAlcolyzerData(event) {
       event.preventDefault();
@@ -99,6 +102,7 @@ export default Vue.extend({
         this.file = file;
       }
     },
+
     async updateTanks(readings: IDataEntryState[]) {
       const cookie: BrewhopsCookie = Cookie.getJSON('loggedIn');
       const headers = {
@@ -117,7 +121,7 @@ export default Vue.extend({
           return { tank: tank, batch: tank.batch, reading: reading };
         });
 
-      await Promise.all(
+      const values = await Promise.all(
         batchesToUpdate.map(({ batch, reading }) =>
           (async () => {
             const requestObject: BatchUpdateOrCreate = {
@@ -141,18 +145,18 @@ export default Vue.extend({
             });
           })()
         )
-      ).then(values => {
-        if (values) {
-          let success: string = '';
-          values.map((val, i) => {
-            success += `${batchesToUpdate[i].tank.name}, `;
-          });
-          this.update_text = `tanks updated: ${success.slice(0, -2)}`;
-        } else {
-          this.update_text = 'updates failed';
-        }
-      });
+      );
+
+      if (values) {
+        const success = <string>values.reduce((sum, val, i) => {
+          return `${sum}${batchesToUpdate[i].tank.name}, `;
+        }, '');
+        this.update_text = `tanks updated: ${success.slice(0, -2)}`;
+      } else {
+        this.update_text = 'updates failed';
+      }
     },
+
     // tslint:disable-next-line:max-func-body-length
     async submit(event) {
       let readings: IDataEntryState[] = [];
@@ -161,13 +165,17 @@ export default Vue.extend({
       reader.onload = () => {
         if (reader.result) {
           let strs = (reader.result as string).split('\n');
-          let lastTime: string;
+
           // go to the last line with content and read the time
           while (!strs.slice(-1)[0]) strs.pop();
+
+          let lastTime: string;
           [, lastTime, , , , , ,] = strs.slice(-1)[0].split(',');
+
           // if date picker is filled use it, otherwise most recent time
           if (!this.goal_time) this.goal_time = moment(lastTime).format('MM/DD/YYYY');
           else this.goal_time = moment(this.goal_time).format('MM/DD/YYYY');
+
           // take only reading from desired time
           readings = strs
             .map((entry: string) => {
@@ -178,6 +186,7 @@ export default Vue.extend({
             })
             .filter(entry => entry.time === this.goal_time);
         }
+
         if (readings.length !== 0) this.updateTanks(readings);
       };
 
