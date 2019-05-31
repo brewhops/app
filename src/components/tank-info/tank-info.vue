@@ -57,7 +57,7 @@
           />
           <chart
             class="chart"
-            v-bind:title="'Tempurature'"
+            v-bind:title="'Temperature'"
             v-bind:date="tempData.map(elm => elm.date)"
             v-bind:data="tempData.map(elm => elm.data)"
           />
