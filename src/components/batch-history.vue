@@ -66,11 +66,18 @@
 
         <div class="tables">
           <div>
-            <data-table class="table" v-bind:title="'Tasks'" v-bind:data="tasks"
-            v-bind:headers="task_titles" v-bind:fields="[ t => actions.filter(a => a.id ===
-            t.action_id)[0].name, t => getEmployeeName(employees.filter(e => e.id ===
-            t.employee_id)[0]) || "N/A", t => formatDate(t.added_on), t =>
-            formatDate(t.completed_on) ]" />
+            <data-table
+              class="table"
+              v-bind:title="'Tasks'"
+              v-bind:data="tasks"
+              v-bind:headers="task_titles"
+              v-bind:fields="[
+                t => actions.filter(a => a.id === t.action_id)[0].name,
+                t => getEmployeeName(employees.filter(e => e.id === t.employee_id)[0]),
+                t => formatDate(t.added_on),
+                t => formatDate(t.completed_on)
+              ]"
+            />
           </div>
           <div>
             <data-table
@@ -187,7 +194,7 @@ export default Vue.extend({
       router.push('/');
     },
     getEmployeeName(employee: Employee) {
-      let name;
+      let name = 'N/A';
       if (employee && employee.first_name && employee.last_name)
         name = `${employee.first_name} ${employee.last_name}`;
       return name;
