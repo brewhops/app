@@ -190,7 +190,7 @@ export default Vue.extend({
     getData(key: string, title?: string) {
       return [
         [
-          title === undefined ? this.batch!.name : title,
+          title === undefined && this.batch ? this.batch.name : title,
           ...this.versions.map((v: Version) => v[key])
         ]
       ];
@@ -201,7 +201,10 @@ export default Vue.extend({
         const methods = await Promise.all([
           this.loadTaskData(),
           this.loadHistoryData(),
-          this.loadGraphData(this.batch!.id, this.batch!.recipe_id)
+          this.loadGraphData(
+            this.batch ? this.batch.id : undefined,
+            this.batch ? this.batch.recipe_id : undefined
+          )
         ]);
       } catch (err) {
         console.error(err);
@@ -361,11 +364,12 @@ export default Vue.extend({
       let currentBatchIdx;
       previousBatches.some((b, i) => {
         currentBatchIdx = i;
+
         return b.id === batchId;
       });
       previousBatches = previousBatches.splice(currentBatchIdx, 10);
 
-      const startDate = moment(this.batch!.started_on);
+      const startDate = this.batch ? moment(this.batch.started_on) : undefined;
       const formattedData = await Promise.all(
         previousBatches.map(async (batch, i) => {
           const response = await this.$http.get(`${process.env.API}/versions/batch/${batch.id}`);
@@ -373,6 +377,7 @@ export default Vue.extend({
           const versions = (response.data as Version[])
             .map((v: Version) => {
               v.measured_on = moment(v.measured_on);
+
               return v;
             })
             .sort((a: Version, b: Version) => {

@@ -39,13 +39,13 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import moment from 'moment';
+import moment, { isMoment } from 'moment';
 import router from '../../router';
 import Cookie from 'js-cookie';
 import loader from '../loader.vue';
 import { Recipe, Batch, Tank, Task } from '../../types';
-import { isMoment } from 'moment';
 import { TANK_STATUS, ACTION } from '../../utils';
+import { HttpOptions } from 'vue-resource/types/vue_resource';
 
 interface INewBatchState {
   recipes: Recipe[];
@@ -104,10 +104,10 @@ export default Vue.extend({
         const employeeId: number = Cookie.getJSON('id');
         const batch: Batch = {
           name: this.batch_name,
-          generation: parseInt(this.generation),
-          volume: parseInt(this.volume),
+          generation: parseInt(this.generation, 10),
+          volume: parseInt(this.volume, 10),
           bright: 0,
-          recipe_id: parseInt(this.recipe_id),
+          recipe_id: parseInt(this.recipe_id, 10),
           tank_id: this.tank.id
         };
 
@@ -156,6 +156,7 @@ export default Vue.extend({
         console.log(err);
       }
     },
+    // tslint:disable-next-line:no-any
     async updateTank(employeeId: number, headers: any) {
       const { id, ...tank } = this.tank;
       tank.in_use = true;

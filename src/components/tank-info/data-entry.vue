@@ -64,8 +64,6 @@ interface IDataEntryState {
   ABV: string;
   bright: string;
   pressure: string;
-  generation: string;
-  volume: string;
   SG: string;
   temp: string;
   time: string;
@@ -105,8 +103,6 @@ export default Vue.extend({
       ABV: '',
       bright: '',
       pressure: '',
-      generation: '',
-      volume: '',
       SG: '',
       temp: '',
       time: '',
@@ -139,13 +135,13 @@ export default Vue.extend({
 
       reader.onload = () => {
         if (reader.result) {
-          let strs = (reader.result as string).split('\n');
+          const strs = (reader.result as string).split('\n');
           while (!strs.slice(-1)[0]) strs.pop();
           [, this.time, , , , this.pH, this.SG, this.ABV] = strs.slice(-1)[0].split(',');
         }
       };
 
-      if (file.type != 'text/csv') alert('File type not supported');
+      if (file.type !== 'text/csv') alert('File type not supported');
       else reader.readAsText(file);
     },
     // tslint:disable-next-line:max-func-body-length
@@ -159,9 +155,9 @@ export default Vue.extend({
         recipe_id: Number(this.recipe.id),
         tank_id: Number(this.tank.id),
         batch_id: Number(this.batch.id),
-        volume: Number(this.volume),
-        bright: Number(this.bright),
-        generation: Number(this.generation),
+        volume: Number(this.batch.volume),
+        bright: Number(this.batch.bright),
+        generation: Number(this.batch.generation),
         name: this.batch.name,
         ph: Number(this.pH),
         abv: Number(this.ABV),
