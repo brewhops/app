@@ -166,25 +166,69 @@ export default Vue.extend({
         if (reader.result) {
           let strs = (reader.result as string).split('\n');
 
-          // go to the last line with content and read the time
-          while (!strs.slice(-1)[0]) strs.pop();
+          // Map of property key to possible columns
+          const columnDict = {
+            pH: ['pH'],
+            ABV: ['Alcohol (% v/v)'],
+            SG: ['Apparent Specific Gravity'],
+            id: ['Sample Name'],
+            temp: ['Temperature'],
+            time: ['Date']
+          };
 
-          let lastTime: string;
-          [, lastTime, , , , , ,] = strs.slice(-1)[0].split(',');
+          // Produces an object that maps possible columns to object property key
+          const propertyLookup = Object.keys(columnDict)
+            .map(key =>
+              columnDict[key].map(e => {
+                return { key: e, value: key };
+              })
+            )
+            .reduce((map, objArr) => {
+              return objArr.reduce((map, obj) => {
+                map[obj.key] = obj.value;
+                return map;
+              }, map);
+            }, {});
+
+          // Map headers to property values
+          const headers = strs[4]
+            .split(',')
+            .map(e => (e in propertyLookup ? propertyLookup[e] : undefined));
+
+          const parsedReadings = strs.slice(5).map((entry: string) => {
+            const emptyLine: IDataEntryState = {
+              pH: '',
+              ABV: '',
+              SG: '',
+              id: '',
+              temp: '',
+              time: ''
+            };
+
+            const line = entry
+              .split(',')
+              .reduce((line: IDataEntryState, value: string, idx: number) => {
+                if (headers[idx]) {
+                  line[headers[idx]] = value;
+                }
+                return line;
+              }, emptyLine);
+
+            line.time = moment(line.time).format('MM/DD/YYYY');
+            return line;
+          });
 
           // if date picker is filled use it, otherwise most recent time
-          if (!this.goal_time) this.goal_time = moment(lastTime).format('MM/DD/YYYY');
-          else this.goal_time = moment(this.goal_time).format('MM/DD/YYYY');
-
-          // take only reading from desired time
-          readings = strs
-            .map((entry: string) => {
-              let line: IDataEntryState = { pH: '', ABV: '', SG: '', id: '', temp: '', time: '' };
-              [, line.time, , line.id, , line.pH, line.SG, line.ABV] = entry.split(',');
-              line.time = moment(line.time).format('MM/DD/YYYY');
-              return line;
+          const lastTime = Math.max.apply(
+            Math,
+            parsedReadings.map(function(o) {
+              return o.time;
             })
-            .filter(entry => entry.time === this.goal_time);
+          );
+          this.goal_time = this.goal_time ? moment(this.goal_time).format('MM/DD/YYYY') : lastTime;
+
+          // Set the readings
+          readings = parsedReadings.filter(entry => entry.time === this.goal_time);
         }
 
         if (readings.length !== 0) this.updateTanks(readings);
