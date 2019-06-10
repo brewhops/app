@@ -5,6 +5,7 @@
     "no-default-export": false,
     "no-this-assignment": false,
     "no-for-in": false,
-    "variable-name": false
+    "variable-name": false,
+    "no-console": false
   }
 }

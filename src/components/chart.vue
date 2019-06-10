@@ -50,6 +50,22 @@ export default Vue.extend({
       this.focusItems = [];
       const zippedNames = this.date.map((a, i) => [a[0], this.data[i][0]]);
 
+      const nameCount = {};
+      const xs = zippedNames.reduce((map, elm, idx) => {
+        // Handle possibility of duplicate names
+        let name;
+        if (!(elm[1] in nameCount)) {
+          name = elm[1];
+          nameCount[elm[1]] = 1;
+        } else {
+          name = `${elm[1]} - ${nameCount[elm[1]] + 1}`;
+          nameCount[elm[1]] += 1;
+        }
+        map[name] = elm[0];
+        return map;
+      }, {});
+      const columns = [...this.date, ...this.data];
+
       // create our chart
       const chart = c3.generate({
         // bind it to this instance of the component
@@ -58,13 +74,10 @@ export default Vue.extend({
           text: this.title
         },
         data: {
-          xs: zippedNames.reduce((map, elm) => {
-            map[elm[1]] = elm[0];
-            return map;
-          }, {}),
+          xs: xs,
           //xFormat: '%m/%d/%Y %H:%M',
           order: 'desc',
-          columns: [...this.date, ...this.data]
+          columns: columns
         },
         axis: {
           x: {

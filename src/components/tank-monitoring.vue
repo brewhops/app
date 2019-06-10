@@ -29,6 +29,7 @@
       <div v-else class="text-center">
         No tanks exist yet
       </div>
+      <bulk-entry v-bind:tanks="tanks" />
     </div>
     <div v-else class="center">
       <loader></loader>
@@ -40,12 +41,23 @@
 import Vue from 'vue';
 import router from '../router';
 import loader from './loader.vue';
+import bulkEntry from './bulk-entry.vue';
 import { logout } from '../utils';
 import Cookie from 'js-cookie';
 import moment from 'moment';
+import Datepicker from 'vuejs-datepicker';
 import { orderBy } from 'natural-orderby';
 
-import { Action, Batch, Recipe, Tank, Task, Version } from '../types';
+import {
+  Action,
+  Batch,
+  Recipe,
+  Tank,
+  Task,
+  Version,
+  BrewhopsCookie,
+  BatchUpdateOrCreate
+} from '../types';
 import { HttpResponse } from 'vue-resource/types/vue_resource';
 
 // tslint:disable: max-func-body-length no-any
@@ -63,18 +75,35 @@ interface ITank {
   status?: string;
 }
 
+// tslint:disable:no-any no-console
+interface IDataEntryState {
+  pH: string;
+  ABV: string;
+  SG: string;
+  id: string;
+  temp: string;
+  time: string;
+  update?: any;
+}
+
 interface ITankMonitoringState {
   tanks?: ITank[];
+  file?: any;
+  goal_time?: string;
+  //alcolyzerData?: IDataEntryState[];
 }
 
 export default Vue.extend({
   name: 'tank-monitoring',
   components: {
-    loader
+    loader,
+    bulkEntry,
+    Datepicker
   },
   data(): ITankMonitoringState {
     return {
-      tanks: undefined
+      tanks: undefined,
+      goal_time: undefined
       // contents of a square is tankName, pressure, recipeName, temperature, batchNumber, Status
     };
   },
@@ -83,6 +112,8 @@ export default Vue.extend({
     if (!Cookie.getJSON('loggedIn')) {
       router.push('/');
     }
+
+    this.file = null;
 
     try {
       const data: HttpResponse[] = await Promise.all([
@@ -141,11 +172,17 @@ export default Vue.extend({
 
       if (batch) {
         tank.batch = {};
+        tank.batch.tank_id = tank.id;
         // add in our batchesID to the tank info box
         tank.batch.id = batch.id;
         tank.batch.name = batch.name;
         // add the recipeID to the tank info box
         tank.recipe_id = batch.recipe_id;
+        tank.batch.recipe_id = batch.recipe_id;
+
+        tank.batch.volume = batch.volume;
+        tank.batch.bright = batch.bright;
+        tank.batch.generation = batch.generation;
 
         // Set recipe information
         for (const recipe of recipes) {
@@ -216,6 +253,14 @@ export default Vue.extend({
 
 .text-center
   text-align center
+
+.dataEntry {
+  padding 15px
+  grid-area entry
+  display flex
+  justify-content center
+  align-items center
+}
 
 #tankInfo {
   grid-area: info;
