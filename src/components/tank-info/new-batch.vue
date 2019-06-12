@@ -121,10 +121,10 @@ export default Vue.extend({
           });
           await this.updateTank(employeeId, headers);
           await this.createInitialTask(employeeId);
+          router.push('/');
         } catch (err) {
           console.error(err);
         }
-        router.push('/');
       } else {
         if (!this.recipe_id) {
           this.feedback.recipe = 'Select a recipe.';
