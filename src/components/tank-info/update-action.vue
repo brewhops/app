@@ -1,5 +1,5 @@
 <template>
-  <form id="updateAction">
+  <form id="updateAction" @submit.prevent="submit">
     <h2>Update Action</h2>
     <div class="col-2">
       <select v-model="action">
@@ -18,7 +18,7 @@
       <label>Reason for exception.</label>
     </div>
     <div>
-      <button @click="submit">Submit</button>
+      <button>Submit</button>
     </div>
   </form>
 </template>

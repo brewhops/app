@@ -1,7 +1,7 @@
 <template>
   <div v-if="this.tank">
     <h2>Create new batch</h2>
-    <form id="create-new-batch">
+    <form id="create-new-batch" @submit.prevent="createBatch">
       <div class="grid">
         <div class="col-1 inputGroup">
           <h4>Batch Name</h4>
@@ -31,7 +31,8 @@
         </div>
         <span>{{ feedback.generation }}</span>
       </div>
-      <button v-on:click="createBatch">Submit</button>
+      <span>{{ feedback.status }}</span>
+      <button>Submit</button>
     </form>
   </div>
   <loader v-else></loader>
@@ -54,6 +55,7 @@ interface INewBatchState {
   volume: string;
   generation: string;
   feedback: {
+    status: string;
     batch_name: string;
     recipe: string;
     volume: string;
@@ -78,6 +80,7 @@ export default Vue.extend({
       volume: '',
       generation: '',
       feedback: {
+        status: '',
         batch_name: '',
         recipe: '',
         volume: '',
@@ -99,8 +102,14 @@ export default Vue.extend({
     }
   },
   methods: {
-    async createBatch() {
-      if (this.recipe_id && this.batch_name && this.volume && this.generation) {
+    async createBatch(e) {
+      if (
+        this.tank.status === TANK_STATUS.AVAILABLE &&
+        this.recipe_id &&
+        this.batch_name &&
+        this.volume &&
+        this.generation
+      ) {
         const employeeId: number = Cookie.getJSON('id');
         const batch: Batch = {
           name: this.batch_name,
@@ -121,10 +130,10 @@ export default Vue.extend({
           });
           await this.updateTank(employeeId, headers);
           await this.createInitialTask(employeeId);
+          router.push('/');
         } catch (err) {
           console.error(err);
         }
-        router.push('/');
       } else {
         if (!this.recipe_id) {
           this.feedback.recipe = 'Select a recipe.';
@@ -137,6 +146,9 @@ export default Vue.extend({
         }
         if (!this.generation) {
           this.feedback.generation = 'Enter the yeast generation of the batch';
+        }
+        if (this.tank.status !== TANK_STATUS.AVAILABLE) {
+          this.feedback.status = `Unable to create batch. Tank status: ${this.tank.status}`;
         }
       }
     },
