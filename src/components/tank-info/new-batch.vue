@@ -1,7 +1,7 @@
 <template>
   <div v-if="this.tank">
     <h2>Create new batch</h2>
-    <form id="create-new-batch">
+    <form id="create-new-batch" @submit.prevent="createBatch">
       <div class="grid">
         <div class="col-1 inputGroup">
           <h4>Batch Name</h4>
@@ -32,7 +32,7 @@
         <span>{{ feedback.generation }}</span>
       </div>
       <span>{{ feedback.status }}</span>
-      <button v-on:click="createBatch">Submit</button>
+      <button>Submit</button>
     </form>
   </div>
   <loader v-else></loader>
@@ -102,7 +102,7 @@ export default Vue.extend({
     }
   },
   methods: {
-    async createBatch() {
+    async createBatch(e) {
       if (
         this.tank.status === TANK_STATUS.AVAILABLE &&
         this.recipe_id &&
