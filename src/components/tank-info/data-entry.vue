@@ -190,22 +190,32 @@ export default Vue.extend({
 
         const confirmation = confirm('Are you sure you want to close the batch?');
         if (confirmation) {
-          await this.$http.delete(`${process.env.API}/batches/close/${this.batch.id}`, { headers });
+          try {
+            await this.$http.delete(`${process.env.API}/batches/close/${this.batch.id}`, {
+              headers
+            });
 
-          const { id, ...tank } = this.tank;
-          tank.status = TANK_STATUS.AVAILABLE;
-          tank.in_use = false;
-          tank.update_user = cookie.id;
-          await this.$http.patch(`${process.env.API}/tanks/id/${this.tank.id}`, tank, { headers });
+            const { id, ...tank } = this.tank;
+            tank.status = TANK_STATUS.AVAILABLE;
+            tank.in_use = false;
+            tank.update_user = cookie.id;
+            await this.$http.patch(`${process.env.API}/tanks/id/${this.tank.id}`, tank, {
+              headers
+            });
 
-          if (this.activeTask) {
-            const task: Task = this.activeTask;
-            task.completed_on = moment().toISOString();
-            task.update_user = Number(cookie.id);
-            const response = await this.$http.patch(`${process.env.API}/tasks`, task, { headers });
+            if (this.activeTask) {
+              const task: Task = this.activeTask;
+              task.completed_on = moment().toISOString();
+              task.update_user = Number(cookie.id);
+              const response = await this.$http.patch(`${process.env.API}/tasks`, task, {
+                headers
+              });
+            }
+
+            router.push('/');
+          } catch (err) {
+            console.error(err);
           }
-
-          router.push('/');
         }
       }
     }
