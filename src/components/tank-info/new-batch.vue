@@ -31,6 +31,7 @@
         </div>
         <span>{{ feedback.generation }}</span>
       </div>
+      <span>{{ feedback.status }}</span>
       <button v-on:click="createBatch">Submit</button>
     </form>
   </div>
@@ -54,6 +55,7 @@ interface INewBatchState {
   volume: string;
   generation: string;
   feedback: {
+    status: string;
     batch_name: string;
     recipe: string;
     volume: string;
@@ -78,6 +80,7 @@ export default Vue.extend({
       volume: '',
       generation: '',
       feedback: {
+        status: '',
         batch_name: '',
         recipe: '',
         volume: '',
@@ -100,7 +103,13 @@ export default Vue.extend({
   },
   methods: {
     async createBatch() {
-      if (this.recipe_id && this.batch_name && this.volume && this.generation) {
+      if (
+        this.tank.status === TANK_STATUS.AVAILABLE &&
+        this.recipe_id &&
+        this.batch_name &&
+        this.volume &&
+        this.generation
+      ) {
         const employeeId: number = Cookie.getJSON('id');
         const batch: Batch = {
           name: this.batch_name,
@@ -137,6 +146,9 @@ export default Vue.extend({
         }
         if (!this.generation) {
           this.feedback.generation = 'Enter the yeast generation of the batch';
+        }
+        if (this.tank.status !== TANK_STATUS.AVAILABLE) {
+          this.feedback.status = `Unable to create batch. Tank status: ${this.tank.status}`;
         }
       }
     },
