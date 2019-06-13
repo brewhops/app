@@ -52,7 +52,7 @@ import { logout } from '../utils';
 import Cookie from 'js-cookie';
 import moment from 'moment';
 import navbar from './navbar.vue';
-import { Tank } from '../types';
+import { Tank } from '../types/index';
 import { orderBy } from 'natural-orderby';
 
 // tslint:disable: no-any
@@ -91,7 +91,7 @@ export default Vue.extend({
     }
 
     try {
-      const response = await this.$http.get(`${process.env.API}/tanks/`);
+      const response = await this.$http.get(`${process.env.VUE_APP_API}/tanks/`);
       this.tanks = orderBy(<Tank[]>response.data, (t: Tank) => t.name, 'asc');
     } catch (err) {
       // tslint:disable-next-line:no-console
@@ -114,7 +114,7 @@ export default Vue.extend({
       // when the user chooses a batch, get the info on that batch
       try {
         const tankResponse = await this.$http.get(
-          `${process.env.API}/batches/tank/${this.tank_id}`
+          `${process.env.VUE_APP_API}/batches/tank/${this.tank_id}`
         );
 
         this.histories = tankResponse.data;

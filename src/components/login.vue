@@ -24,7 +24,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import router from '../router/index.js';
+import router from '../router';
 import CryptoJS from 'crypto-js';
 import Cookie from 'js-cookie';
 
@@ -71,7 +71,9 @@ export default Vue.extend({
         this.feedback.username = 'username must only be digits and letters';
       } else {
         try {
-          const response = await this.$http.get(`${process.env.API}/employees/admin/${username}`);
+          const response = await this.$http.get(
+            `${process.env.VUE_APP_API}/employees/admin/${username}`
+          );
           this.isAdmin = response.data;
         } catch (err) {
           // tslint:disable-next-line:no-console
@@ -114,7 +116,7 @@ export default Vue.extend({
       const password = CryptoJS.SHA3(pw).toString();
 
       try {
-        const response = await this.$http.post(`${process.env.API}/employees/login/`, {
+        const response = await this.$http.post(`${process.env.VUE_APP_API}/employees/login/`, {
           username,
           password
         });
@@ -129,7 +131,7 @@ export default Vue.extend({
     sendToHome(): void {
       router.push('home');
     },
-    createCookie(id, username, admin, token): void {
+    createCookie(id: any, username: any, admin: any, token: any): void {
       if (!Cookie.getJSON('loggedIn')) {
         // tslint:disable-next-line:no-backbone-get-set-outside-model
         Cookie.set('loggedIn', {

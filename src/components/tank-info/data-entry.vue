@@ -39,7 +39,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import router from '../../router';
+import router from '@/router';
 import Cookie from 'js-cookie';
 import moment, { unix } from 'moment';
 import Datepicker from 'vuejs-datepicker';
@@ -53,10 +53,9 @@ import {
   Task,
   BrewhopsCookie,
   BatchUpdateOrCreate
-} from '../../types';
+} from '@/types/index';
 import { HttpResponse } from 'vue-resource/types/vue_resource';
 import { TANK_STATUS } from '../../utils/index';
-import { TextDecoder } from 'util';
 
 // tslint:disable:no-any no-console
 interface IDataEntryState {
@@ -128,7 +127,7 @@ export default Vue.extend({
       this.SG = '';
       this.temp = '';
     },
-    async readAlcolyzerData(event) {
+    async readAlcolyzerData(event: any) {
       event.preventDefault();
       const reader = new FileReader();
       const file = event.target.files[0];
@@ -145,7 +144,7 @@ export default Vue.extend({
       else reader.readAsText(file);
     },
     // tslint:disable-next-line:max-func-body-length
-    async submit(event) {
+    async submit(event: any) {
       const cookie: BrewhopsCookie = Cookie.getJSON('loggedIn');
       const headers = {
         Authorization: `Bearer ${cookie.token}`
@@ -169,9 +168,13 @@ export default Vue.extend({
       };
 
       try {
-        const response = await this.$http.post(`${process.env.API}/batches/update`, requestObject, {
-          headers
-        });
+        const response = await this.$http.post(
+          `${process.env.VUE_APP_API}/batches/update`,
+          requestObject,
+          {
+            headers
+          }
+        );
         this.$emit('newDataCallback');
         this.reset();
         event.target.reset();
@@ -179,7 +182,7 @@ export default Vue.extend({
         console.error(err);
       }
     },
-    async completeBatch(event) {
+    async completeBatch(event: any) {
       event.preventDefault();
 
       if (this.admin) {
@@ -191,7 +194,7 @@ export default Vue.extend({
         const confirmation = confirm('Are you sure you want to close the batch?');
         if (confirmation) {
           try {
-            await this.$http.delete(`${process.env.API}/batches/close/${this.batch.id}`, {
+            await this.$http.delete(`${process.env.VUE_APP_API}/batches/close/${this.batch.id}`, {
               headers
             });
 
@@ -199,7 +202,7 @@ export default Vue.extend({
             tank.status = TANK_STATUS.AVAILABLE;
             tank.in_use = false;
             tank.update_user = cookie.id;
-            await this.$http.patch(`${process.env.API}/tanks/id/${this.tank.id}`, tank, {
+            await this.$http.patch(`${process.env.VUE_APP_API}/tanks/id/${this.tank.id}`, tank, {
               headers
             });
 
@@ -207,7 +210,7 @@ export default Vue.extend({
               const task: Task = this.activeTask;
               task.completed_on = moment().toISOString();
               task.update_user = Number(cookie.id);
-              const response = await this.$http.patch(`${process.env.API}/tasks`, task, {
+              const response = await this.$http.patch(`${process.env.VUE_APP_API}/tasks`, task, {
                 headers
               });
             }

@@ -36,7 +36,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Cookie from 'js-cookie';
-import { Tank, Recipe, Ingredient, BrewhopsCookie } from '../../types';
+import { Tank, Recipe, Ingredient, BrewhopsCookie } from '@/types/index';
 
 interface IEditBrandState {
   brand?: Recipe;
@@ -105,7 +105,7 @@ export default Vue.extend({
 
       try {
         const response = await this.$http.patch(
-          `${process.env.API}/recipes/id/${brand.id}`,
+          `${process.env.VUE_APP_API}/recipes/id/${brand.id}`,
           brand,
           { headers }
         );
@@ -124,7 +124,9 @@ export default Vue.extend({
     },
     populateBrand() {
       if (this.brandID) {
-        this.brand = this.brands.filter(brand => brand.id === this.brandID)[0];
+        this.brand = this.brands.filter(
+          (brand: Recipe) => brand.id === parseInt(this.brandID, 10)
+        )[0];
         if (this.brand) {
           const { id, name, airplane_code, yeast, instructions } = this.brand;
           console.log(this.brand);

@@ -2,25 +2,15 @@
 .DS_STORE
 .AppleDouble
 
-#ignore PDF's while we are working on them
-#PDF's can still be pushed and should be when they are at a major working version
-*.pdf
+node_modules
+/dist
 
-# ignores for latex intermediate files
-*.fls
-*.out
-*.aux
-*.gz
-*.toc
-*.log
-*.fdb*
-*.bbl
-*.blg
+# local env files
+.env
+.env.local
+.env.*.local
 
-#Project ignores
-
-.DS_Store
-node_modules/
+# Log files
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -32,4 +22,4 @@ yarn-error.log*
 *.ntvs*
 *.njsproj
 *.sln
-
+*.sw?

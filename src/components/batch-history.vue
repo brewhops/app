@@ -111,7 +111,7 @@ import router from '../router';
 import { logout } from '../utils';
 import Cookie from 'js-cookie';
 import moment from 'moment';
-import { Batch, Version, Task, Employee, Action } from '../types';
+import { Batch, Version, Task, Employee, Action } from '../types/index';
 import { Moment } from 'moment';
 import chart from './chart.vue';
 import loader from './loader.vue';
@@ -177,9 +177,9 @@ export default Vue.extend({
     }
 
     try {
-      const response = await this.$http.get(`${process.env.API}/batches/`);
-      const employees = await this.$http.get(`${process.env.API}/employees/`);
-      const actions = await this.$http.get(`${process.env.API}/actions/`);
+      const response = await this.$http.get(`${process.env.VUE_APP_API}/batches/`);
+      const employees = await this.$http.get(`${process.env.VUE_APP_API}/employees/`);
+      const actions = await this.$http.get(`${process.env.VUE_APP_API}/actions/`);
       this.employees = <Employee[]>employees.data;
       this.actions = <Action[]>actions.data;
       this.batches = orderBy(<Batch[]>response.data, (b: Batch) => b.name, 'desc');
@@ -220,7 +220,7 @@ export default Vue.extend({
       const [versions, tasks, ...arr] = await Promise.all([
         (async () => {
           const batchResponse = await this.$http.get(
-            `${process.env.API}/versions/batch/${this.batch_id}`
+            `${process.env.VUE_APP_API}/versions/batch/${this.batch_id}`
           );
 
           return (batchResponse.data as Version[])
@@ -234,7 +234,7 @@ export default Vue.extend({
         })(),
         (async () => {
           const taskResponse = await this.$http.get(
-            `${process.env.API}/tasks/batch/${this.batch_id}`
+            `${process.env.VUE_APP_API}/tasks/batch/${this.batch_id}`
           );
 
           return (taskResponse.data as Task[]).map((t: Task) => {
@@ -263,7 +263,7 @@ export default Vue.extend({
     generateCSV() {
       const csvHeader = 'data:text/csv;charset=utf-8,';
       let dates = this.versions.map(v => v.measured_on).concat(this.tasks.map(t => t.added_on));
-      dates.sort((a: string | Moment, b: string | Moment) => {
+      dates.sort((a: string | Moment | undefined, b: string | Moment | undefined) => {
         return moment.utc(a).diff(moment.utc(b));
       });
       const content = dates.map(date => {
@@ -300,13 +300,15 @@ export default Vue.extend({
       const versionContent = `${content.map(con => `${con.join(',')},`).join('\r\n')}`;
       return `${csvHeader}Date,${versionsHeader},${tasksHeader}\n${versionContent}`;
     },
-    async loadGraphData(batchId, recipeId) {
-      const response = await this.$http.get(`${process.env.API}/batches/recipe/${recipeId}`);
+    async loadGraphData(batchId: any, recipeId: any) {
+      const response = await this.$http.get(
+        `${process.env.VUE_APP_API}/batches/recipe/${recipeId}`
+      );
 
       let previousBatches: Batch[] = (response.data as Batch[]).sort((a: Batch, b: Batch) => {
         return moment.utc(b.started_on).diff(moment.utc(a.started_on));
       });
-      let currentBatchIdx;
+      let currentBatchIdx: any;
       previousBatches.some((b, i) => {
         currentBatchIdx = i;
         return b.id === batchId;
@@ -316,7 +318,9 @@ export default Vue.extend({
       const startDate = moment(this.batch!.started_on);
       const formattedData = await Promise.all(
         previousBatches.map(async (batch, i) => {
-          const response = await this.$http.get(`${process.env.API}/versions/batch/${batch.id}`);
+          const response = await this.$http.get(
+            `${process.env.VUE_APP_API}/versions/batch/${batch.id}`
+          );
 
           const versions = (response.data as Version[])
             .map((v: Version) => {

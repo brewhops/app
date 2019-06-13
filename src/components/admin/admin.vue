@@ -30,8 +30,8 @@
 <script lang="ts">
 import Vue from 'vue';
 import Cookie from 'js-cookie';
-import router from '../../router';
-import { logout } from '../../utils';
+import router from '@/router';
+import { logout, TANK_STATUS } from '@/utils';
 import Navbar from '../navbar.vue';
 import CreateTank from './create-tank.vue';
 import UpdateTank from './edit-tank.vue';
@@ -40,8 +40,7 @@ import EditUser from './edit-user.vue';
 import CreateBrand from './create-brand.vue';
 import EditBrand from './edit-brand.vue';
 import Loader from '../loader.vue';
-import { Employee, Tank, Recipe, BrewhopsCookie } from '../../types';
-import { TANK_STATUS } from '../../utils';
+import { Employee, Tank, Recipe, BrewhopsCookie } from '@/types/index';
 // tslint:disable: no-console
 
 interface IAdminState {
@@ -101,7 +100,7 @@ export default Vue.extend({
     logout,
     async tankUpdate() {
       try {
-        const response = await this.$http.get(`${process.env.API}/tanks`);
+        const response = await this.$http.get(`${process.env.VUE_APP_API}/tanks`);
         this.tanks = response.data as Tank[];
       } catch (err) {
         console.error(err);
@@ -109,7 +108,7 @@ export default Vue.extend({
     },
     async usersUpdate() {
       try {
-        const response = await this.$http.get(`${process.env.API}/employees`);
+        const response = await this.$http.get(`${process.env.VUE_APP_API}/employees`);
         this.employees = response.data as Employee[];
       } catch (err) {
         console.error(err);
@@ -117,7 +116,7 @@ export default Vue.extend({
     },
     async brandsUpdate() {
       try {
-        const response = await this.$http.get(`${process.env.API}/recipes`);
+        const response = await this.$http.get(`${process.env.VUE_APP_API}/recipes`);
         this.brands = response.data as Recipe[];
       } catch (err) {
         console.error(err);

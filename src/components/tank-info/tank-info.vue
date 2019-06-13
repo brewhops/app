@@ -83,12 +83,12 @@ import newBatch from './new-batch.vue';
 import updateAction from './update-action.vue';
 import tankStatus from './tank-status.vue';
 import loader from '../loader.vue';
-import { logout } from '../../utils';
-import router from '../../router';
+import { logout } from '@/utils';
+import router from '@/router';
 import Cookie from 'js-cookie';
 
 import moment, { unix, months, Moment } from 'moment';
-import { Batch, Tank, Task, Action, Version, Recipe } from '../../types';
+import { Batch, Tank, Task, Action, Version, Recipe } from '@/types/index';
 
 // tslint:disable: no-any
 interface ITankInfoState {
@@ -167,7 +167,7 @@ export default Vue.extend({
 
     try {
       const response = await this.$http.get(
-        `${process.env.API}/tanks/id/${this.$route.params.tankID}`
+        `${process.env.VUE_APP_API}/tanks/id/${this.$route.params.tankID}`
       );
       const tank: Tank = response.data as Tank;
       this.tank = tank;
@@ -202,8 +202,8 @@ export default Vue.extend({
           this.loadTaskData(),
           this.loadHistoryData(),
           this.loadGraphData(
-            this.batch ? this.batch.id : undefined,
-            this.batch ? this.batch.recipe_id : undefined
+            this.batch ? <string>this.batch.id : '',
+            this.batch ? this.batch.recipe_id.toString() : ''
           )
         ]);
       } catch (err) {
@@ -213,7 +213,7 @@ export default Vue.extend({
     async loadBatchData() {
       try {
         const response = await this.$http.get(
-          `${process.env.API}/batches/tank/${this.tankInfo.id}`
+          `${process.env.VUE_APP_API}/batches/tank/${this.tankInfo.id}`
         );
 
         const openBatches: Batch[] = (response.data as Batch[]).filter(
@@ -258,7 +258,7 @@ export default Vue.extend({
         if (batch) {
           // Get the recipe
           const recipeResponse = await this.$http.get(
-            `${process.env.API}/recipes/id/${batch.recipe_id}`
+            `${process.env.VUE_APP_API}/recipes/id/${batch.recipe_id}`
           );
           recipe = recipeResponse.data;
         }
@@ -271,7 +271,9 @@ export default Vue.extend({
     async loadTaskData() {
       if (this.batch) {
         try {
-          const response = await this.$http.get(`${process.env.API}/tasks/batch/${this.batch.id}`);
+          const response = await this.$http.get(
+            `${process.env.VUE_APP_API}/tasks/batch/${this.batch.id}`
+          );
           const batchTasks: Task[] = response.data as Task[];
 
           const activeTasks: Task[] = batchTasks.filter((t: Task) => !t.completed_on);
@@ -295,7 +297,7 @@ export default Vue.extend({
           if (task) {
             // get the action name associated with the task
             const actionResponse = await this.$http.get(
-              `${process.env.API}/actions/id/${task.action_id}`
+              `${process.env.VUE_APP_API}/actions/id/${task.action_id}`
             );
             action = actionResponse.data as Action;
 
@@ -316,7 +318,7 @@ export default Vue.extend({
       if (this.batch) {
         try {
           const response = await this.$http.get(
-            `${process.env.API}/versions/batch/${this.tankInfo.batch_id}`
+            `${process.env.VUE_APP_API}/versions/batch/${this.tankInfo.batch_id}`
           );
 
           this.versions = [];
@@ -355,8 +357,10 @@ export default Vue.extend({
         }
       }
     },
-    async loadGraphData(batchId, recipeId) {
-      const response = await this.$http.get(`${process.env.API}/batches/recipe/${recipeId}`);
+    async loadGraphData(batchId: string, recipeId: string) {
+      const response = await this.$http.get(
+        `${process.env.VUE_APP_API}/batches/recipe/${recipeId}`
+      );
 
       let previousBatches: Batch[] = (response.data as Batch[]).sort((a: Batch, b: Batch) => {
         return moment.utc(b.started_on).diff(moment.utc(a.started_on));
@@ -367,12 +371,14 @@ export default Vue.extend({
 
         return b.id === batchId;
       });
-      previousBatches = previousBatches.splice(currentBatchIdx, 10);
+      previousBatches = currentBatchIdx ? previousBatches.splice(currentBatchIdx, 10) : [];
 
       const startDate = this.batch ? moment(this.batch.started_on) : undefined;
       const formattedData = await Promise.all(
         previousBatches.map(async (batch, i) => {
-          const response = await this.$http.get(`${process.env.API}/versions/batch/${batch.id}`);
+          const response = await this.$http.get(
+            `${process.env.VUE_APP_API}/versions/batch/${batch.id}`
+          );
 
           const versions = (response.data as Version[])
             .map((v: Version) => {

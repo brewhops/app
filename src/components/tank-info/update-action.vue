@@ -27,7 +27,7 @@
 import Vue from 'vue';
 import Cookie from 'js-cookie';
 import moment, { unix } from 'moment';
-import { Action, Task, BrewhopsCookie } from '../../types';
+import { Action, Task, BrewhopsCookie } from '../../types/index';
 import { HttpResponse } from 'vue-resource/types/vue_resource';
 import { ACTION } from '../../utils';
 
@@ -68,7 +68,7 @@ export default Vue.extend({
         Authorization: `Bearer ${Cookie.getJSON('loggedIn').token}`
       };
       const actionsResponse: HttpResponse = await this.$http.get(
-        `${process.env.API}/actions`,
+        `${process.env.VUE_APP_API}/actions`,
         headers
       );
       const actions: Action[] = actionsResponse.data;
@@ -96,7 +96,9 @@ export default Vue.extend({
           }
 
           try {
-            const response = await this.$http.patch(`${process.env.API}/tasks`, task, { headers });
+            const response = await this.$http.patch(`${process.env.VUE_APP_API}/tasks`, task, {
+              headers
+            });
           } catch (err) {
             // tslint:disable:no-console
             console.error(err);
@@ -118,7 +120,9 @@ export default Vue.extend({
           }
 
           try {
-            const response = await this.$http.post(`${process.env.API}/tasks`, task, { headers });
+            const response = await this.$http.post(`${process.env.VUE_APP_API}/tasks`, task, {
+              headers
+            });
           } catch (err) {
             console.error(err);
           }
