@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "start": "node server.js",
-    "postinstall": "npm run build",
+    "postinstall": "if test \"$NODE_ENV\" = \"production\" ; then npm run build ; fi ",
     "dev": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "build": "vue-cli-service build",
+    "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
     "c3": "^0.7.1",
@@ -30,14 +31,20 @@
     "@commitlint/cli": "^7.2.1",
     "@commitlint/config-conventional": "^7.1.1",
     "@types/crypto-js": "^3.1.43",
+    "@types/jest": "^24.0.14",
     "@types/js-cookie": "^2.2.2",
     "@vue/cli-plugin-babel": "^3.8.0",
     "@vue/cli-plugin-typescript": "^3.8.0",
+    "@vue/cli-plugin-unit-jest": "^3.8.0",
     "@vue/cli-service": "^3.8.0",
+    "@vue/test-utils": "^1.0.0-beta.29",
+    "babel-core": "7.0.0-bridge.0",
     "husky": "^2.4.1",
+    "jest": "^24.8.0",
     "lint-staged": "^8.2.1",
     "prettier": "^1.18.2",
     "stylus-loader": "^3.0.2",
+    "ts-jest": "^24.0.2",
     "typescript": "^3.4.3",
     "vue-property-decorator": "^8.1.1",
     "vue-template-compiler": "^2.6.10"
@@ -71,5 +78,42 @@
       "prettier --single-quote --print-width 100 --write",
       "git add"
     ]
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "jsx",
+      "json",
+      "vue",
+      "ts",
+      "tsx"
+    ],
+    "transform": {
+      "^.+\\.vue$": "vue-jest",
+      ".+\\.(css|styl|less|sass|scss|svg|png|jpg|ttf|woff|woff2)$": "jest-transform-stub",
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "transformIgnorePatterns": [
+      "/node_modules/"
+    ],
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/src/$1"
+    },
+    "snapshotSerializers": [
+      "jest-serializer-vue"
+    ],
+    "testMatch": [
+      "**/tests/unit/**/*.spec.(js|jsx|ts|tsx)|**/__tests__/*.(js|jsx|ts|tsx)"
+    ],
+    "testURL": "http://localhost/",
+    "watchPlugins": [
+      "jest-watch-typeahead/filename",
+      "jest-watch-typeahead/testname"
+    ],
+    "globals": {
+      "ts-jest": {
+        "babelConfig": true
+      }
+    }
   }
 }
