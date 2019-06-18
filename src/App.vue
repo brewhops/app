@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <!-- TODO: add routes as SPA -->
     <router-view />
   </div>
 </template>
