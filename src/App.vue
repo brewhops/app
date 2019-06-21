@@ -5,7 +5,7 @@
       <router-link class="option" to="/batch-history">Batch History</router-link>
       <router-link class="option" to="/tank-history">Tank History</router-link>
       <router-link v-if="this.admin" class="option" to="/admin">Settings</router-link>
-      <a class="option" v-on:click="logout">Logout</a>
+      <a class="option" v-on:click="logout">Log Out</a>
     </nav>
     <router-view />
   </div>
@@ -225,7 +225,7 @@ table
   text-decoration none
   padding 5px
   margin 5px
-  font-size 16pt
+  font-size 14pt
   +less-than(tablet){
     font-size 12pt
   }
