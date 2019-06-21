@@ -34,7 +34,7 @@ import {
   BrewhopsCookie,
   BatchUpdateOrCreate,
   KeyAccessor
-} from '../types/index';
+} from '@/types/index';
 import { HttpResponse } from 'vue-resource/types/vue_resource';
 
 // tslint:disable: max-func-body-length no-any

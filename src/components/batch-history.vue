@@ -111,7 +111,7 @@ import router from '../router';
 import { logout } from '../utils';
 import Cookie from 'js-cookie';
 import moment from 'moment';
-import { Batch, Version, Task, Employee, Action } from '../types/index';
+import { Batch, Version, Task, Employee, Action } from '@/types/index';
 import { Moment } from 'moment';
 import chart from './chart.vue';
 import loader from './loader.vue';

@@ -52,7 +52,7 @@ import { logout } from '../utils';
 import Cookie from 'js-cookie';
 import moment from 'moment';
 import navbar from './navbar.vue';
-import { Tank } from '../types/index';
+import { Tank } from '@/types/index';
 import { orderBy } from 'natural-orderby';
 
 // tslint:disable: no-any
