@@ -42,7 +42,6 @@ import Vue from 'vue';
 import router from '@/router';
 import loader from './loader.vue';
 import bulkEntry from './bulk-entry.vue';
-import { logout } from '@/utils';
 import Cookie from 'js-cookie';
 import moment from 'moment';
 import Datepicker from 'vuejs-datepicker';
@@ -142,7 +141,6 @@ export default Vue.extend({
     }
   },
   methods: {
-    logout,
     showTankInfo(tankID: any) {
       // send us over to the tank info page and set the id on the url
       // to be the tankID that we clicked on.

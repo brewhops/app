@@ -1,10 +1,5 @@
 <template>
   <div>
-    <div class="header">
-      <a v-on:click="logout">Logout</a>
-      <h2>Tank Data</h2>
-    </div>
-    <navbar v-bind:activeState="[false, false, false, false]" />
     <div class="title">
       <h3>Tank {{ tankInfo.name }}</h3>
     </div>
@@ -75,15 +70,13 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import recipe from './recipe.vue';
-import chart from '../chart.vue';
-import dataEntry from './data-entry.vue';
-import navbar from '../navbar.vue';
-import newBatch from './new-batch.vue';
-import updateAction from './update-action.vue';
-import tankStatus from './tank-status.vue';
-import loader from '../loader.vue';
-import { logout } from '@/utils';
+import recipe from '@/components/tank-info/recipe.vue';
+import chart from '@/components/chart.vue';
+import dataEntry from '@/components/tank-info/data-entry.vue';
+import newBatch from '@/components/tank-info/new-batch.vue';
+import updateAction from '@/components/tank-info/update-action.vue';
+import tankStatus from '@/components/tank-info/tank-status.vue';
+import loader from '@/components/loader.vue';
 import router from '@/router';
 import Cookie from 'js-cookie';
 
@@ -111,7 +104,6 @@ interface ITankInfoState {
 export default Vue.extend({
   name: 'tank-info',
   components: {
-    navbar,
     recipe,
     chart,
     dataEntry,
@@ -186,7 +178,6 @@ export default Vue.extend({
     }
   },
   methods: {
-    logout,
     getData(key: string, title?: string) {
       return [
         [
@@ -431,7 +422,7 @@ export default Vue.extend({
 </script>
 
 <style lang="stylus" scoped>
-@import '../../styles/breakpoints'
+@import '../styles/breakpoints'
 
 .title
   display flex

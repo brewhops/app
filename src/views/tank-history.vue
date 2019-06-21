@@ -1,13 +1,8 @@
 <template lang="html">
   <div>
-    <div class="header">
-      <router-link to="login">Logout</router-link>
-      <h2>Tank History</h2>
-    </div>
-    <navbar v-bind:activeState="[false, false, true, false]" />
     <div id="content">
       <div>
-        <h2>Tank</h2>
+        <h2>Tank History</h2>
         <select v-model="tank_id" v-on:change="tankChoose">
           <option disabled value="">Tank</option>
           <option v-for="(tank, idx) in tanks" v-bind:key="idx" v-bind:value="tank.id">{{
@@ -48,10 +43,9 @@
 <script lang="ts">
 import Vue from 'vue';
 import router from '@/router';
-import { logout } from '@/utils';
+
 import Cookie from 'js-cookie';
 import moment from 'moment';
-import navbar from './navbar.vue';
 import { Tank } from '@/types/index';
 import { orderBy } from 'natural-orderby';
 
@@ -67,9 +61,6 @@ interface ITankHistoryState {
 
 export default Vue.extend({
   name: 'tank-history',
-  components: {
-    navbar
-  },
   data(): ITankHistoryState {
     return {
       mobile: false,
@@ -99,7 +90,6 @@ export default Vue.extend({
     }
   },
   methods: {
-    logout,
     home() {
       router.push('/');
     },

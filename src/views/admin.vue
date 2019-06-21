@@ -1,10 +1,5 @@
 <template>
   <div v-if="this.brands && this.employees && this.tanks">
-    <div class="header">
-      <a v-on:click="logout">Logout</a>
-      <h2>Ninkasi Admin</h2>
-    </div>
-    <navbar v-bind:activeState="[false, false, false, true]" />
     <div id="content">
       <create-tank
         :tanks="this.tanks"
@@ -31,15 +26,14 @@
 import Vue from 'vue';
 import Cookie from 'js-cookie';
 import router from '@/router';
-import { logout, TANK_STATUS } from '@/utils';
-import Navbar from '../navbar.vue';
-import CreateTank from './create-tank.vue';
-import UpdateTank from './edit-tank.vue';
-import CreateUser from './create-user.vue';
-import EditUser from './edit-user.vue';
-import CreateBrand from './create-brand.vue';
-import EditBrand from './edit-brand.vue';
-import Loader from '../loader.vue';
+import { TANK_STATUS } from '@/utils';
+import CreateTank from '@/components/admin/create-tank.vue';
+import UpdateTank from '@/components/admin/edit-tank.vue';
+import CreateUser from '@/components/admin/create-user.vue';
+import EditUser from '@/components/admin/edit-user.vue';
+import CreateBrand from '@/components/admin/create-brand.vue';
+import EditBrand from '@/components/admin/edit-brand.vue';
+import Loader from '@/components/loader.vue';
 import { Employee, Tank, Recipe, BrewhopsCookie } from '@/types/index';
 // tslint:disable: no-console
 
@@ -54,7 +48,6 @@ interface IAdminState {
 export default Vue.extend({
   name: 'admin',
   components: {
-    navbar: Navbar,
     'create-tank': CreateTank,
     'update-tank': UpdateTank,
     'create-user': CreateUser,
@@ -97,7 +90,6 @@ export default Vue.extend({
     }
   },
   methods: {
-    logout,
     async tankUpdate() {
       try {
         const response = await this.$http.get(`${process.env.VUE_APP_API}/tanks`);
@@ -127,7 +119,7 @@ export default Vue.extend({
 </script>
 
 <style lang="stylus" scoped>
-@import '../../styles/breakpoints'
+@import '../styles/breakpoints'
 
 #content
   display grid
