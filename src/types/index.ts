@@ -81,7 +81,7 @@ export type Version = KeyAccessor & {
 };
 
 export type BrewhopsCookie = {
-  id: string | number;
+  id: string;
   username: string;
   admin: boolean;
   token: string;

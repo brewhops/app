@@ -41,7 +41,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import moment, { isMoment } from 'moment';
-import router from '../../router';
+import router from '@/router';
 import Cookie from 'js-cookie';
 import loader from '../loader.vue';
 import { Recipe, Batch, Tank, Task } from '@/types/index';

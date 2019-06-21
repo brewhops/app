@@ -27,9 +27,9 @@
 import Vue from 'vue';
 import Cookie from 'js-cookie';
 import moment, { unix } from 'moment';
-import { Action, Task, BrewhopsCookie } from '../../types/index';
+import { Action, Task, BrewhopsCookie } from '@/types/index';
 import { HttpResponse } from 'vue-resource/types/vue_resource';
-import { ACTION } from '../../utils';
+import { ACTION } from '@/utils';
 
 interface IUpdateAction {
   actions: Action[];

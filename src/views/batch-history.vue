@@ -1,13 +1,8 @@
 <template lang="html">
   <div>
-    <div class="header">
-      <router-link to="login">Logout</router-link>
-      <h2>Batch History</h2>
-    </div>
-    <navbar v-bind:activeState="[false, true, false, false]" />
     <div id="content">
       <div>
-        <h2>Batch</h2>
+        <h2>Batch History</h2>
         <div>
           <select v-model="batch_id" v-on:change="batchChoose">
             <option disabled value="">Batch</option>
@@ -107,16 +102,14 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import router from '../router';
-import { logout } from '../utils';
+import router from '@/router';
 import Cookie from 'js-cookie';
 import moment from 'moment';
-import { Batch, Version, Task, Employee, Action } from '../types/index';
+import { Batch, Version, Task, Employee, Action } from '@/types/index';
 import { Moment } from 'moment';
-import chart from './chart.vue';
-import loader from './loader.vue';
-import NavbarComponent from './navbar.vue';
-import dataTable from './data-table.vue';
+import chart from '@/components/chart.vue';
+import loader from '@/components/loader.vue';
+import dataTable from '@/components/data-table.vue';
 import { orderBy } from 'natural-orderby';
 
 interface IHistoryState {
@@ -140,7 +133,7 @@ interface IHistoryState {
 
 export default Vue.extend({
   name: 'batch-history',
-  components: { navbar: NavbarComponent, chart: chart, dataTable: dataTable, loader: loader },
+  components: { chart: chart, dataTable: dataTable, loader: loader },
   data(): IHistoryState {
     return {
       batch_titles: ['Volume', 'Bright', 'Generation', 'Date Started', 'Date Completed'],
@@ -189,7 +182,6 @@ export default Vue.extend({
     }
   },
   methods: {
-    logout,
     home() {
       router.push('/');
     },

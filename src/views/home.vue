@@ -1,10 +1,5 @@
 <template>
   <div>
-    <div class="header">
-      <a v-on:click="logout">Logout</a>
-      <h2>Home</h2>
-    </div>
-    <navbar v-bind:activeState="[true, false, false, false]" />
     <div id="content">
       <tank-monitoring></tank-monitoring>
     </div>
@@ -13,25 +8,19 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import tankMonitoring from './tank-monitoring.vue';
-import router from '../router';
-import { logout } from '../utils';
+import tankMonitoring from '@/components/tank-monitoring.vue';
+import router from '@/router';
 import Cookie from 'js-cookie';
-import NavbarComponent from './navbar.vue';
 
 export default Vue.extend({
   name: 'home',
-  components: {
-    tankMonitoring,
-    navbar: NavbarComponent
-  },
+  components: { tankMonitoring },
   beforeMount() {
     // if the user is not logged in send them to the login page
     if (!Cookie.getJSON('loggedIn')) {
       router.push('/');
     }
-  },
-  methods: { logout }
+  }
 });
 </script>
 

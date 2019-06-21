@@ -1,8 +1,5 @@
 <template>
   <div>
-    <div class="header">
-      <h2>Ninkasi Brew Hops</h2>
-    </div>
     <div class="column-1">
       <div id="login">
         <img src="../assets/logo.png" class="logo-med" />
@@ -24,7 +21,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import router from '../router';
+import router from '@/router';
 import CryptoJS from 'crypto-js';
 import Cookie from 'js-cookie';
 

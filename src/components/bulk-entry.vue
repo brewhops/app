@@ -16,9 +16,9 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import router from '../router';
+import router from '@/router';
 import loader from './loader.vue';
-import { logout } from '../utils';
+
 import Cookie from 'js-cookie';
 import moment from 'moment';
 import Datepicker from 'vuejs-datepicker';
@@ -34,7 +34,7 @@ import {
   BrewhopsCookie,
   BatchUpdateOrCreate,
   KeyAccessor
-} from '../types/index';
+} from '@/types/index';
 import { HttpResponse } from 'vue-resource/types/vue_resource';
 
 // tslint:disable: max-func-body-length no-any

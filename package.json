@@ -30,6 +30,7 @@
   "devDependencies": {
     "@commitlint/cli": "^7.2.1",
     "@commitlint/config-conventional": "^7.1.1",
+    "@types/c3": "^0.7.0",
     "@types/crypto-js": "^3.1.43",
     "@types/jest": "^24.0.14",
     "@types/js-cookie": "^2.2.2",
@@ -58,6 +59,10 @@
     "> 1%",
     "last 2 versions"
   ],
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+  ]},
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged",
@@ -78,6 +83,9 @@
       "prettier --single-quote --print-width 100 --write",
       "git add"
     ]
+  },
+  "babel": {  
+    "presets": ["@vue/app"]
   },
   "jest": {
     "moduleFileExtensions": [
