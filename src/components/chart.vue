@@ -5,6 +5,7 @@ import Vue from 'vue';
 import c3 from 'c3';
 import 'c3/c3.min.css';
 import 'polyfill-array-includes';
+import { KeyAccessor } from '@/types/index';
 
 // tslint:disable: no-any
 
@@ -18,7 +19,7 @@ interface IChart {
   x?: any;
   y?: any;
   zoom?: any;
-  enabled?;
+  enabled?: any;
   xFormat?: any;
   columns?: any;
   axis?: any;
@@ -48,10 +49,10 @@ export default Vue.extend({
   methods: {
     buildChart() {
       this.focusItems = [];
-      const zippedNames = this.date.map((a, i) => [a[0], this.data[i][0]]);
+      const zippedNames = this.date.map((a: any, i: any) => [a[0], this.data[i][0]]);
 
-      const nameCount = {};
-      const xs = zippedNames.reduce((map, elm, idx) => {
+      const nameCount: KeyAccessor = {};
+      const xs = zippedNames.reduce((map: any, elm: any, idx: any) => {
         // Handle possibility of duplicate names
         let name;
         if (!(elm[1] in nameCount)) {
@@ -69,10 +70,7 @@ export default Vue.extend({
       // create our chart
       const chart = c3.generate({
         // bind it to this instance of the component
-        bindto: this.$el,
-        title: {
-          text: this.title
-        },
+        bindto: <HTMLElement>this.$el,
         data: {
           xs: xs,
           //xFormat: '%m/%d/%Y %H:%M',
@@ -93,8 +91,8 @@ export default Vue.extend({
             tick: {
               // round the numbers on the y axis to a max of 10 decimal places
               // this gets the y axis numbers behaving and not getting too long
-              format(d) {
-                return +d.toFixed(10);
+              format(d: number) {
+                return d.toString();
               }
             }
           }
@@ -105,7 +103,7 @@ export default Vue.extend({
         },
         legend: {
           item: {
-            onclick: id => {
+            onclick: (id: any) => {
               if (this.focusItems.includes(id)) {
                 this.focusItems = this.focusItems.filter(v => v !== id);
               } else {
@@ -113,10 +111,10 @@ export default Vue.extend({
               }
               chart.focus(this.focusItems);
             },
-            onmouseover: id => {
+            onmouseover: (id: any) => {
               chart.focus([id, ...this.focusItems]);
             },
-            onmouseout: id => {
+            onmouseout: (id: any) => {
               chart.focus(this.focusItems);
             }
           }

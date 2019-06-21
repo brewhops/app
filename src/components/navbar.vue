@@ -20,7 +20,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Cookie from 'js-cookie';
-import router from '../router';
+import router from '@/router';
 
 interface INavbarState {
   admin: false;

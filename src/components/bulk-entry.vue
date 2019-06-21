@@ -16,9 +16,9 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import router from '../router';
+import router from '@/router';
 import loader from './loader.vue';
-import { logout } from '../utils';
+import { logout } from '@/utils';
 import Cookie from 'js-cookie';
 import moment from 'moment';
 import Datepicker from 'vuejs-datepicker';

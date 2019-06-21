@@ -14,8 +14,8 @@
 <script lang="ts">
 import Vue from 'vue';
 import tankMonitoring from './tank-monitoring.vue';
-import router from '../router';
-import { logout } from '../utils';
+import router from '@/router';
+import { logout } from '@/utils';
 import Cookie from 'js-cookie';
 import NavbarComponent from './navbar.vue';
 

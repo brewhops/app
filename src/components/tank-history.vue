@@ -47,8 +47,8 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import router from '../router';
-import { logout } from '../utils';
+import router from '@/router';
+import { logout } from '@/utils';
 import Cookie from 'js-cookie';
 import moment from 'moment';
 import navbar from './navbar.vue';

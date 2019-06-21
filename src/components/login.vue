@@ -24,7 +24,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import router from '../router';
+import router from '@/router';
 import CryptoJS from 'crypto-js';
 import Cookie from 'js-cookie';
 
