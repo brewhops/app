@@ -2,7 +2,6 @@ import Cookie from 'js-cookie';
 import router from '@/router';
 
 export function isLoggedIn(): boolean {
-  console.log(`isLoggedIn: ${Cookie.getJSON()}`);
   if (Cookie.getJSON('loggedIn')) {
     return Cookie.getJSON('loggedIn');
   } else {
@@ -11,7 +10,6 @@ export function isLoggedIn(): boolean {
 }
 
 export function isAdmin(): boolean {
-  console.log(`isAdmin: ${Cookie.getJSON()}`);
   if(Cookie.getJSON('loggedIn')) {
     return Cookie.getJSON('loggedIn').admin;
   } else {

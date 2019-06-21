@@ -24,7 +24,7 @@ const routes = [
     name: 'admin',
     path: '/admin',
     meta: {
-      title: 'Settings'
+      title: 'Brewhops - Settings'
     }
   },
   {
@@ -32,7 +32,7 @@ const routes = [
     name: 'home',
     path: '/home',
     meta: {
-      title: 'Home'
+      title: 'Brewhops - Home'
     }
   },
   {
@@ -40,7 +40,7 @@ const routes = [
     name: 'tank-info',
     path: '/tank-info/:tankID',
     meta: {
-      title: 'Tank Info'
+      title: 'Brewhops - Tank Information'
     }
   },
   {
@@ -48,7 +48,7 @@ const routes = [
     name: 'batch-history',
     path: '/batch-history',
     meta: {
-      title: 'Batch History'
+      title: 'Brewhops - Batch History'
     }
   },
   {
@@ -56,7 +56,7 @@ const routes = [
     name: 'tank-history',
     path: '/tank-history',
     meta: {
-      title: 'Tank History'
+      title: 'Brewhops - Tank History'
     }
   }
 ]
