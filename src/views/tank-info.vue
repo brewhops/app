@@ -17,16 +17,14 @@
             v-bind:batch="batch"
             v-bind:activeTask="task"
             @newDataCallback="loadData"
-          >
-          </update-action>
+          ></update-action>
           <data-entry
             v-bind:tank="tank"
             v-bind:batch="batch"
             v-bind:recipe="recipe"
             v-bind:activeTask="task"
             @newDataCallback="loadData"
-          >
-          </data-entry>
+          ></data-entry>
         </div>
       </div>
       <div v-show="versions.length > 0" id="data">
@@ -193,8 +191,8 @@ export default Vue.extend({
           this.loadTaskData(),
           this.loadHistoryData(),
           this.loadGraphData(
-            this.batch ? <string>this.batch.id : '',
-            this.batch ? this.batch.recipe_id.toString() : ''
+            this.batch ? this.batch.id : undefined,
+            this.batch ? this.batch.recipe_id : undefined
           )
         ]);
       } catch (err) {
@@ -348,157 +346,194 @@ export default Vue.extend({
         }
       }
     },
-    async loadGraphData(batchId: string, recipeId: string) {
-      const response = await this.$http.get(
-        `${process.env.VUE_APP_API}/batches/recipe/${recipeId}`
-      );
+    async loadGraphData(batchId: any, recipeId: any) {
+      let previousBatches: Batch[] = [];
+      try {
+        const { data } = await this.$http.get(
+          `${process.env.VUE_APP_API}/batches/recipe/${recipeId}`
+        );
+        previousBatches = <Batch[]>data.sort((a: Batch, b: Batch) => {
+          return moment.utc(b.started_on).diff(moment.utc(a.started_on));
+        });
+      } catch (err) {
+        console.error(err);
+      }
 
-      let previousBatches: Batch[] = (response.data as Batch[]).sort((a: Batch, b: Batch) => {
-        return moment.utc(b.started_on).diff(moment.utc(a.started_on));
-      });
-      let currentBatchIdx;
+      let currentBatchIdx: any;
       previousBatches.some((b, i) => {
         currentBatchIdx = i;
 
         return b.id === batchId;
       });
-      previousBatches = currentBatchIdx ? previousBatches.splice(currentBatchIdx, 10) : [];
+
+      previousBatches = previousBatches.splice(currentBatchIdx, 10);
 
       const startDate = this.batch ? moment(this.batch.started_on) : undefined;
-      const formattedData = await Promise.all(
-        previousBatches.map(async (batch, i) => {
-          const response = await this.$http.get(
-            `${process.env.VUE_APP_API}/versions/batch/${batch.id}`
-          );
 
-          const versions = (response.data as Version[])
-            .map((v: Version) => {
-              v.measured_on = moment(v.measured_on);
+      let formattedData: any[] = [];
 
-              return v;
-            })
-            .sort((a: Version, b: Version) => {
-              return moment.utc(a.measured_on).diff(moment.utc(b.measured_on));
-            });
+      try {
+        formattedData = await Promise.all(
+          previousBatches.map(async (batch, i) => {
+            const response = await this.$http.get(
+              `${process.env.VUE_APP_API}/versions/batch/${batch.id}`
+            );
 
-          const sg = versions.map(v => v.sg);
-          const ph = versions.map(v => v.ph);
-          const abv = versions.map(v => v.abv);
-          const temp = versions.map(v => v.temperature);
+            const versions = (response.data as Version[])
+              .map((v: Version) => {
+                v.measured_on = moment(v.measured_on);
 
-          const date = versions.map(v => v.measured_on) as Moment[];
-          const days = date.map(d =>
-            moment(startDate).add(moment.duration(d.diff(date[0])).asMilliseconds(), 'ms')
-          );
+                return v;
+              })
+              .sort((a: Version, b: Version) => {
+                return moment.utc(a.measured_on).diff(moment.utc(b.measured_on));
+              });
 
-          return {
-            sg: {
-              data: [batch.name, ...sg],
-              date: [`Days${i}`, ...days]
-            },
-            ph: {
-              data: [batch.name, ...ph],
-              date: [`Days${i}`, ...days]
-            },
-            abv: {
-              data: [batch.name, ...abv],
-              date: [`Days${i}`, ...days]
-            },
-            temp: {
-              data: [batch.name, ...temp],
-              date: [`Days${i}`, ...days]
-            }
-          };
-        })
-      );
+            const sg = versions.map(v => v.sg);
+            const ph = versions.map(v => v.ph);
+            const abv = versions.map(v => v.abv);
+            const temp = versions.map(v => v.temperature);
 
-      this.fermentationData = formattedData.map(e => e.sg);
-      this.pHData = formattedData.map(e => e.ph);
-      this.abvData = formattedData.map(e => e.abv);
-      this.tempData = formattedData.map(e => e.temp);
+            const date = versions.map(v => v.measured_on) as Moment[];
+            const days = date.map(d =>
+              moment(startDate).add(moment.duration(d.diff(date[0])).asMilliseconds(), 'ms')
+            );
+
+            return {
+              sg: {
+                data: [batch.name, ...sg],
+                date: [`Days${i}`, ...days]
+              },
+              ph: {
+                data: [batch.name, ...ph],
+                date: [`Days${i}`, ...days]
+              },
+              abv: {
+                data: [batch.name, ...abv],
+                date: [`Days${i}`, ...days]
+              },
+              temp: {
+                data: [batch.name, ...temp],
+                date: [`Days${i}`, ...days]
+              }
+            };
+          })
+        );
+      } catch (err) {
+        console.error(err);
+      }
+
+      this.fermentationData = formattedData.map((e: any) => e.sg);
+      this.pHData = formattedData.map((e: any) => e.ph);
+      this.abvData = formattedData.map((e: any) => e.abv);
+      this.tempData = formattedData.map((e: any) => e.temp);
     }
   }
 });
 </script>
 
 <style lang="stylus" scoped>
-@import '../styles/breakpoints'
+@import '../styles/breakpoints';
 
-.title
-  display flex
-  width 100vw
-  justify-content center
-  align-items center
+.title {
+  display: flex;
+  width: 100vw;
+  justify-content: center;
+  align-items: center;
+}
 
-.center
-  display flex
-  width 100vw
-  height 90vh
-  justify-content center
-  align-items center
+.center {
+  display: flex;
+  width: 100vw;
+  height: 90vh;
+  justify-content: center;
+  align-items: center;
+}
 
-#info-content
-  display grid
-  grid-template-columns 45vw 45vw
+#info-content {
+  display: grid;
+  grid-template-columns: 45vw 45vw;
+  grid-template-areas: 'tank entry';
+  width: 90vw;
+  margin: auto;
 
-  grid-template-areas "tank entry"
-  width 90vw
-  margin auto
+  +less-than(tablet) {
+    grid-template-columns: 90vw;
+    grid-template-areas: 'tank' 'entry' 'recipe';
+  }
 
-  +less-than(tablet)
-    grid-template-columns 90vw
-    grid-template-areas "tank" "entry" "recipe"
+  +less-than(mobile) {
+    grid-template-columns: 90vw;
+    grid-template-areas: 'tank' 'recipe';
+  }
+}
 
-  +less-than(mobile)
-    grid-template-columns 90vw
-    grid-template-areas "tank" "recipe"
+#new-batch {
+  display: grid;
+  grid-template-columns: auto;
+  justify-content: center;
+  margin: auto;
+  margin-top: 30px;
+}
 
-#new-batch
-  display: grid
-  grid-template-columns: auto
-  justify-content: center
-  margin: auto
-  margin-top: 30px
+#recipe {
+  margin-top: 30px;
+}
 
-#recipe
-  margin-top 30px
+#entry {
+  +less-than(tablet) {
+    margin: auto;
+  }
+}
 
-#entry
-  +less-than(tablet)
-    margin auto
+#data {
+  justify-content: center;
+  width: 90vw;
+  margin: auto;
+  margin-top: 30px;
 
-#data
-  justify-content center
-  width 90vw
-  margin auto
-  margin-top 30px
-  #charts
-    display grid
-    justify-content center
-    grid-template-columns repeat(2, 43vw)
-    +less-than(tablet)
-      grid-template-columns 90vw
-    .chart
-      margin-left 1vw
-      margin-right 1vw
-  h2
-    text-align center
+  #charts {
+    display: grid;
+    justify-content: center;
+    grid-template-columns: repeat(2, 43vw);
 
-#entry
-  display flex
-  flex-direction column
-  justify-content center
-  align-items center
+    +less-than(tablet) {
+      grid-template-columns: 90vw;
+    }
 
-#tank
-  text-align center
-  justify-content center
-  padding 15px
-  table
-    text-align left
-    margin auto
-    margin-top 30px
-  h2, h3, h4
-    text-align center
-  grid-area tank
+    .chart {
+      margin-left: 1vw;
+      margin-right: 1vw;
+    }
+  }
+
+  h2 {
+    text-align: center;
+  }
+}
+
+#entry {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#tank {
+  text-align: center;
+  justify-content: center;
+  padding: 15px;
+
+  table {
+    text-align: left;
+    margin: auto;
+    margin-top: 30px;
+  }
+
+  h2, h3, h4 {
+    text-align: center;
+  }
+
+  grid-area: tank;
+}
 </style>
