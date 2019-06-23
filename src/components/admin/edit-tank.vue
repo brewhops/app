@@ -24,8 +24,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Cookie from 'js-cookie';
-import { Tank, BrewhopsCookie } from '../../types';
-import { emit } from 'cluster';
+import { Tank, BrewhopsCookie } from '@/types/index';
 
 interface IUpdateTankState {
   tank?: Tank;
@@ -72,9 +71,13 @@ export default Vue.extend({
         };
 
         try {
-          const response = await this.$http.patch(`${process.env.API}/tanks/id/${id}`, tank, {
-            headers
-          });
+          const response = await this.$http.patch(
+            `${process.env.VUE_APP_API}/tanks/id/${id}`,
+            tank,
+            {
+              headers
+            }
+          );
           if (response.ok) {
             this.feedback.server.tank = `Tank ${name} succesfully updated.`;
             setTimeout(async () => {
@@ -91,7 +94,7 @@ export default Vue.extend({
     },
     populateTank() {
       if (this.tank_id) {
-        this.tank = this.tanks.filter(tank => tank.id === this.tank_id)[0];
+        this.tank = this.tanks.filter((tank: Tank) => tank.id === parseInt(this.tank_id, 10))[0];
         if (this.tank) {
           const { name, status } = this.tank;
           this.status = status;

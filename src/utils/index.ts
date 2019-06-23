@@ -1,7 +1,23 @@
 import Cookie from 'js-cookie';
-import router from '../router';
+import router from '@/router';
 
-export function logout() {
+export function isLoggedIn(): boolean {
+  if (Cookie.getJSON('loggedIn')) {
+    return Cookie.getJSON('loggedIn');
+  } else {
+    return false;
+  }
+}
+
+export function isAdmin(): boolean {
+  if(Cookie.getJSON('loggedIn')) {
+    return Cookie.getJSON('loggedIn').admin;
+  } else {
+    return false
+  }
+}
+
+export function logout(): void {
   if (Cookie.getJSON('loggedIn')) {
     Cookie.remove('loggedIn');
   }

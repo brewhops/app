@@ -1,12 +1,35 @@
 <template>
   <div id="app">
+    <nav v-if="$route.name !== 'login'" class="navbar">
+      <router-link class="option" to="/home">Home</router-link>
+      <router-link class="option" to="/batch-history">Batch History</router-link>
+      <router-link class="option" to="/tank-history">Tank History</router-link>
+      <router-link v-if="this.admin" class="option" to="/admin">Settings</router-link>
+      <a class="option" v-on:click="logout">Log Out</a>
+    </nav>
     <router-view />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-export default {};
+import Cookie from 'js-cookie';
+import { logout, isLoggedIn, isAdmin } from '@/utils';
+
+export default Vue.extend({
+  name: 'home',
+  data() {
+    return {
+      admin: isAdmin()
+    };
+  },
+  beforeUpdate() {
+    this.admin = isAdmin();
+  },
+  methods: {
+    logout
+  }
+});
 </script>
 
 <style lang="stylus">
@@ -187,4 +210,32 @@ table
       grid-column span 3
     .col-span-8
       grid-column span 8
+
+.navbar {
+  display flex
+  position sticky
+  top 0
+  background-color #00aaa6
+  justify-content center
+  z-index 1
+}
+
+.option {
+  color #ffffff
+  text-decoration none
+  padding 5px
+  margin 5px
+  font-size 14pt
+  +less-than(tablet){
+    font-size 12pt
+  }
+}
+
+/* onclick color: 267f7d */
+.option:hover {
+  background-color: #00ccc7;
+}
+.active {
+  background-color: #267f7d;
+}
 </style>

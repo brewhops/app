@@ -16,9 +16,9 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import router from '../router';
+import router from '@/router';
 import loader from './loader.vue';
-import { logout } from '../utils';
+
 import Cookie from 'js-cookie';
 import moment from 'moment';
 import Datepicker from 'vuejs-datepicker';
@@ -32,8 +32,9 @@ import {
   Task,
   Version,
   BrewhopsCookie,
-  BatchUpdateOrCreate
-} from '../types';
+  BatchUpdateOrCreate,
+  KeyAccessor
+} from '@/types/index';
 import { HttpResponse } from 'vue-resource/types/vue_resource';
 
 // tslint:disable: max-func-body-length no-any
@@ -52,7 +53,7 @@ interface ITank {
 }
 
 // tslint:disable:no-any no-console
-interface IDataEntryState {
+interface IDataEntryState extends KeyAccessor {
   pH: string;
   ABV: string;
   SG: string;
@@ -65,7 +66,7 @@ interface IDataEntryState {
 interface IBulkEntryState {
   update_text: string;
   file?: any;
-  goal_time?: string;
+  goal_time?: string | number;
 }
 
 export default Vue.extend({
@@ -88,7 +89,7 @@ export default Vue.extend({
   async beforeMount() {},
 
   methods: {
-    async readAlcolyzerData(event) {
+    async readAlcolyzerData(event: any) {
       event.preventDefault();
       const file = event.target.files[0];
 
@@ -111,18 +112,18 @@ export default Vue.extend({
 
       if (!this.tanks) return;
 
-      const condition = tank =>
+      const condition = (tank: Tank) =>
         readings.filter(r => r.id === tank.name.slice(1) && tank.status != 'available')[0];
 
       const batchesToUpdate = this.tanks
-        .filter(tank => condition(tank))
-        .map(tank => {
+        .filter((tank: any) => condition(tank))
+        .map((tank: any) => {
           let reading = condition(tank);
           return { tank: tank, batch: tank.batch, reading: reading };
         });
 
       const values = await Promise.all(
-        batchesToUpdate.map(({ batch, reading }) =>
+        batchesToUpdate.map(({ batch, reading }: any) =>
           (async () => {
             const requestObject: BatchUpdateOrCreate = {
               recipe_id: Number(batch.recipe_id),
@@ -140,9 +141,13 @@ export default Vue.extend({
               measured_on: moment(this.goal_time).toISOString(),
               update_user: Number(cookie.id)
             };
-            return await this.$http.post(`${process.env.API}/batches/update`, requestObject, {
-              headers
-            });
+            return await this.$http.post(
+              `${process.env.VUE_APP_API}/batches/update`,
+              requestObject,
+              {
+                headers
+              }
+            );
           })()
         )
       );
@@ -158,7 +163,7 @@ export default Vue.extend({
     },
 
     // tslint:disable-next-line:max-func-body-length
-    async submit(event) {
+    async submit(event: any) {
       let readings: IDataEntryState[] = [];
       const reader = new FileReader();
 
@@ -167,7 +172,7 @@ export default Vue.extend({
           let strs = (reader.result as string).split('\n');
 
           // Map of property key to possible columns
-          const columnDict = {
+          const columnDict: KeyAccessor = {
             pH: ['pH'],
             ABV: ['Alcohol (% v/v)'],
             SG: ['Apparent Specific Gravity'],
@@ -179,12 +184,12 @@ export default Vue.extend({
           // Produces an object that maps possible columns to object property key
           const propertyLookup = Object.keys(columnDict)
             .map(key =>
-              columnDict[key].map(e => {
+              columnDict[key].map((e: any) => {
                 return { key: e, value: key };
               })
             )
             .reduce((map, objArr) => {
-              return objArr.reduce((map, obj) => {
+              return objArr.reduce((map: any, obj: any) => {
                 map[obj.key] = obj.value;
                 return map;
               }, map);
@@ -221,7 +226,7 @@ export default Vue.extend({
           // if date picker is filled use it, otherwise most recent time
           const lastTime = Math.max.apply(
             Math,
-            parsedReadings.map(function(o) {
+            parsedReadings.map((o: any) => {
               return o.time;
             })
           );

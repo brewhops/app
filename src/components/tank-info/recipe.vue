@@ -22,7 +22,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import router from '../../router/index.js';
+import router from '@/router';
 import Cookie from 'js-cookie';
 
 export default Vue.extend({
