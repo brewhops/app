@@ -27,7 +27,7 @@
           <td>{{ history.generation }}</td>
           <td>{{ formatDate(history.started_on) }}</td>
           <td>{{ formatDate(history.completed_on) }}</td>
-          <td>{{ history.update_user }}</td>
+          <td>{{ getEmployeeName(employees.filter(e => e.id === history.update_user)[0]) }}</td>
         </tr>
       </table>
 
@@ -46,7 +46,7 @@ import router from '@/router';
 
 import Cookie from 'js-cookie';
 import moment from 'moment';
-import { Tank } from '@/types/index';
+import { Tank, Employee } from '@/types/index';
 import { orderBy } from 'natural-orderby';
 
 // tslint:disable: no-any
@@ -57,6 +57,7 @@ interface ITankHistoryState {
   tanks: Tank[];
   tank: Tank;
   histories: any[];
+  employees: Employee[];
 }
 
 export default Vue.extend({
@@ -72,7 +73,8 @@ export default Vue.extend({
         status: '',
         in_use: false
       },
-      histories: []
+      histories: [],
+      employees: []
     };
   },
   async beforeMount() {
@@ -96,6 +98,12 @@ export default Vue.extend({
     formatDate(date: string | null) {
       return date ? moment(date).format('MM-DD-YYYY') : '';
     },
+    getEmployeeName(employee: Employee) {
+      let name = 'N/A';
+      if (employee && employee.first_name && employee.last_name)
+        name = `${employee.first_name} ${employee.last_name}`;
+      return name;
+    },
     async tankChoose() {
       // filter out all the tanks that aren't ours, and set that one element
       // to our tank object
@@ -106,8 +114,10 @@ export default Vue.extend({
         const tankResponse = await this.$http.get(
           `${process.env.VUE_APP_API}/batches/tank/${this.tank_id}`
         );
+        const employeesResponse = await this.$http.get(`${process.env.VUE_APP_API}/employees`);
 
         this.histories = tankResponse.data;
+        this.employees = employeesResponse.data;
       } catch (err) {
         // tslint:disable-next-line:no-console
         console.error(err);
