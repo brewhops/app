@@ -6,6 +6,7 @@ import home from '@/views/home.vue';
 import tankInfo from '@/views/tank-info.vue';
 import batchHistory from '@/views/batch-history.vue';
 import tankHistory from '@/views/tank-history.vue';
+import error from '@/views/error.vue';
 import { KeyAccessor } from '@/types/index';
 
 Vue.use(Router);
@@ -57,6 +58,14 @@ const routes = [
     path: '/tank-history',
     meta: {
       title: 'Brewhops - Tank History'
+    }
+  },
+  {
+    component: error,
+    name: 'error',
+    path: '*',
+    meta: {
+      title: 'Brewhops - Not Found'
     }
   }
 ]
