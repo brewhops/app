@@ -48,7 +48,7 @@ html, body
   margin 0
 
 h1, h2, h3, h4, h5, h6
-  color Teal
+  color Black
   font-weight bold
   margin 0
 
@@ -74,7 +74,7 @@ a
 
 //************* buttons *************//
 button
-  background Teal
+  background Black
   color white
   padding 10px 30px
   font-size 1em
@@ -92,13 +92,13 @@ button
     transition box-shadow 0.2s
     box-shadow none
   &:active
-    background darken(Teal, 30%)
+    background darken(Black, 30%)
 
 //************* header ***********//
 .header
   font-family sans-serif
   width 100vw
-  background Teal
+  background Black
   text-align center
   box-shadow Shadow
   h2, a
@@ -123,14 +123,14 @@ input, .dropdown
   font-size 1em
   display block
   width 100%
-  color Teal
+  color Black
   font-weight bold
   outline none
   border none
   border-bottom 1px solid #cccccc
   background none
   &:focus
-    border-bottom 2px solid Teal
+    border-bottom 2px solid Black
 
 select
   margin 10px 0
@@ -215,7 +215,7 @@ table
   display flex
   position sticky
   top 0
-  background-color #00aaa6
+  background-color Black
   justify-content center
   z-index 1
 }
@@ -233,9 +233,9 @@ table
 
 /* onclick color: 267f7d */
 .option:hover {
-  background-color: #00ccc7;
+  background-color: #808080;
 }
 .active {
-  background-color: #267f7d;
+  background-color: 	#484848;
 }
 </style>

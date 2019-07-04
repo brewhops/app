@@ -373,7 +373,7 @@ export default Vue.extend({
   z-index: -1;
 
   p {
-    color: Teal;
+    color: Black;
     font-weight: bold;
   }
     & /deep/ tr {

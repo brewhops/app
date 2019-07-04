@@ -304,7 +304,7 @@ export default Vue.extend({
     }
 
     .tank {
-      background: Teal;
+      background: Black;
       width: 100%;
       height: 100%;
       min-height 128px;
@@ -385,7 +385,7 @@ export default Vue.extend({
     }
 
     .no-action {
-      background: Teal
+      background: Black
       color: White
     }
 

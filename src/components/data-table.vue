@@ -22,10 +22,10 @@ export default Vue.extend({
 </script>
 
 <style lang="stylus" scoped>
-p {
-  color: Teal;
-  font-weight: bold;
-}
+p
+  color Black
+  font-weight bold
+
 
 table {
   border-collapse: collapse;

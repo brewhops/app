@@ -163,7 +163,7 @@ export default Vue.extend({
   min-height: 60vh;
 
   p {
-    color: Teal;
+    color: Black;
     font-weight: bold;
   }
 

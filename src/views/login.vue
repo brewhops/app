@@ -2,7 +2,7 @@
   <div>
     <div class="column-1">
       <div id="login">
-        <img src="../assets/logo.png" class="logo-med" />
+        <img src="../assets/logoDraft.svg" class="logo-med" />
         <h2>Login</h2>
         <input v-model.lazy="username" v-on:keyup.enter="submit" placeholder="username" />
         <span>{{ feedback.username }}</span>
