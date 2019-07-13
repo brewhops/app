@@ -45,8 +45,8 @@
 import Vue from 'vue';
 import Cookie from 'js-cookie';
 import CryptoJS from 'crypto-js';
-import router from '../../router/index.js';
-import { Tank, BrewhopsCookie, Employee } from '../../types';
+import router from '@/router';
+import { Tank, BrewhopsCookie, Employee } from '@/types/index';
 
 interface IEditUserState {
   employee?: Employee;
@@ -68,8 +68,6 @@ interface IEditUserState {
     };
   };
 }
-
-// tslint:disable: no-console
 
 export default Vue.extend({
   name: 'edit-user',
@@ -97,7 +95,7 @@ export default Vue.extend({
     };
   },
   computed: {
-    name: function() {
+    name(): string | undefined {
       if (this.employee) {
         return `${this.first_name} ${this.last_name}`;
       }
@@ -183,7 +181,7 @@ export default Vue.extend({
 
         try {
           const response = await this.$http.patch(
-            `${process.env.API}/employees/id/${this.employee.id}`,
+            `${process.env.VUE_APP_API}/employees/id/${this.employee.id}`,
             user,
             {
               headers
@@ -205,7 +203,9 @@ export default Vue.extend({
     },
     populateEmployee() {
       if (this.employee_id) {
-        this.employee = this.employees.filter(emp => emp.id === this.employee_id)[0];
+        this.employee = this.employees.filter(
+          (emp: Employee) => emp.id === parseInt(this.employee_id, 10)
+        )[0];
         if (this.employee) {
           const { first_name, last_name, password, admin, username, phone } = this.employee;
           this.first_name = first_name;

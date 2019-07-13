@@ -41,11 +41,11 @@
 <script lang="ts">
 import Vue from 'vue';
 import moment, { isMoment } from 'moment';
-import router from '../../router';
+import router from '@/router';
 import Cookie from 'js-cookie';
 import loader from '../loader.vue';
-import { Recipe, Batch, Tank, Task } from '../../types';
-import { TANK_STATUS, ACTION } from '../../utils';
+import { Recipe, Batch, Tank, Task } from '@/types/index';
+import { TANK_STATUS, ACTION } from '@/utils';
 import { HttpOptions } from 'vue-resource/types/vue_resource';
 
 interface INewBatchState {
@@ -95,14 +95,14 @@ export default Vue.extend({
     }
 
     try {
-      const recipeResponse = await this.$http.get(`${process.env.API}/recipes`);
+      const recipeResponse = await this.$http.get(`${process.env.VUE_APP_API}/recipes`);
       this.recipes = <Recipe[]>recipeResponse.data;
     } catch (err) {
       console.error(err);
     }
   },
   methods: {
-    async createBatch(e) {
+    async createBatch(e: any) {
       if (
         this.tank.status === TANK_STATUS.AVAILABLE &&
         this.recipe_id &&
@@ -125,9 +125,13 @@ export default Vue.extend({
         };
 
         try {
-          const batchResponse = await this.$http.post(`${process.env.API}/batches/new`, batch, {
-            headers
-          });
+          const batchResponse = await this.$http.post(
+            `${process.env.VUE_APP_API}/batches/new`,
+            batch,
+            {
+              headers
+            }
+          );
           await this.updateTank(employeeId, headers);
           await this.createInitialTask(employeeId);
           router.push('/');
@@ -154,7 +158,7 @@ export default Vue.extend({
     },
     async createInitialTask(employee_id: number) {
       try {
-        const batchResponse = await this.$http.get(`${process.env.API}/batches/`);
+        const batchResponse = await this.$http.get(`${process.env.VUE_APP_API}/batches/`);
         const batches = batchResponse.data.filter((batch: Batch) => batch.name === this.batch_name);
 
         const task: Task = {
@@ -163,7 +167,7 @@ export default Vue.extend({
           action_id: ACTION.PRIMARY_FERMENTATION,
           added_on: new Date().toUTCString()
         };
-        const taskResponse = await this.$http.post(`${process.env.API}/tasks/`, task);
+        const taskResponse = await this.$http.post(`${process.env.VUE_APP_API}/tasks/`, task);
       } catch (err) {
         console.log(err);
       }
@@ -176,9 +180,13 @@ export default Vue.extend({
       tank.status = TANK_STATUS.BREWING;
 
       try {
-        const tankResponse = await this.$http.patch(`${process.env.API}/tanks/id/${id}`, tank, {
-          headers
-        });
+        const tankResponse = await this.$http.patch(
+          `${process.env.VUE_APP_API}/tanks/id/${id}`,
+          tank,
+          {
+            headers
+          }
+        );
       } catch (err) {
         console.error(err);
       }

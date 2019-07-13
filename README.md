@@ -1,21 +1,26 @@
-# ninkasi-brewhops
+# app
 
-> A web app to allow ninkasi brewing to better track and manage brewery data
-
-## Build Setup
-
-``` bash
-# install dependencies
-npm install
-
-# serve with hot reload at localhost:8080
-npm run dev
-
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
+## Installs dependencies
+```
+npm i
 ```
 
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+### Compiles and hot-reloads for development
+```
+npm run dev
+```
+
+### Compiles and minifies for production 
+```
+npm run build
+```
+
+### Runs unit tests
+```
+npm run test
+```
+
+### Lints and fixes files
+```
+npm run lint
+```

@@ -24,7 +24,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Cookie from 'js-cookie';
-import { Tank, Ingredient, BrewhopsCookie } from '../../types';
+import { Tank, Ingredient, BrewhopsCookie } from 'src/types/index';
 
 interface ICreateBrandState {
   brandID: string;
@@ -97,7 +97,9 @@ export default Vue.extend({
       };
 
       try {
-        const response = await this.$http.post(`${process.env.API}/recipes`, recipe, { headers });
+        const response = await this.$http.post(`${process.env.VUE_APP_API}/recipes`, recipe, {
+          headers
+        });
         if (response.ok) {
           this.$emit('update');
           this.feedback.server.brand = 'Created a new brand.';

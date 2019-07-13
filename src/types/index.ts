@@ -1,5 +1,9 @@
 import { Moment } from 'moment';
 
+export type KeyAccessor = {
+  [key: string]: any;
+}
+
 export type Employee = {
   id?: number;
   first_name: string;
@@ -64,7 +68,7 @@ export type Task = {
     update_user?: number;
 };
 
-export type Version = {
+export type Version = KeyAccessor & {
   id?: number;
   sg: number;
   ph: number;
@@ -77,7 +81,7 @@ export type Version = {
 };
 
 export type BrewhopsCookie = {
-  id: string | number;
+  id: string;
   username: string;
   admin: boolean;
   token: string;

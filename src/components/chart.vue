@@ -1,32 +1,16 @@
-<template> </template>
+<template></template>
 
 <script lang="ts">
 import Vue from 'vue';
-import c3 from 'c3';
+import c3, { ChartConfiguration } from 'c3';
 import 'c3/c3.min.css';
 import 'polyfill-array-includes';
+import { KeyAccessor } from '@/types/index';
+import { Axis, XAxisConfiguration, YAxisConfiguration } from 'c3';
 
 // tslint:disable: no-any
 
-interface IChart {
-  name: any;
-  props: any;
-  watch: any;
-
-  data?: any;
-
-  x?: any;
-  y?: any;
-  zoom?: any;
-  enabled?;
-  xFormat?: any;
-  columns?: any;
-  axis?: any;
-  // tslint:disable-next-line:no-reserved-keywords
-  type?: any;
-  tick?: any;
-  format?: any;
-
+interface IChartState {
   focusItems: any[];
 }
 
@@ -34,7 +18,7 @@ export default Vue.extend({
   name: 'chart',
   props: ['title', 'date', 'data'],
   data() {
-    return {} as IChart;
+    return <IChartState>{};
   },
   watch: {
     // when the data array changes, redraw the chart
@@ -48,10 +32,10 @@ export default Vue.extend({
   methods: {
     buildChart() {
       this.focusItems = [];
-      const zippedNames = this.date.map((a, i) => [a[0], this.data[i][0]]);
+      const zippedNames = this.date.map((a: any, i: any) => [a[0], this.data[i][0]]);
 
-      const nameCount = {};
-      const xs = zippedNames.reduce((map, elm, idx) => {
+      const nameCount: KeyAccessor = {};
+      const xs = zippedNames.reduce((map: any, elm: any, idx: any) => {
         // Handle possibility of duplicate names
         let name;
         if (!(elm[1] in nameCount)) {
@@ -66,38 +50,38 @@ export default Vue.extend({
       }, {});
       const columns = [...this.date, ...this.data];
 
-      // create our chart
-      const chart = c3.generate({
+      const x: XAxisConfiguration = {
+        type: 'timeseries', // the x axis has a timeseries data type
+        tick: {
+          // the format shown when the mouse hovers over that dot
+          format: '%m/%d'
+          // fit: false, if you want to keep the x axis ticks from sticking to the data points
+          // count: 4 if you want to set the ticks to a fixed ammount
+        }
+      };
+
+      const y: YAxisConfiguration = {
+        tick: {
+          // round the numbers on the y axis to a max of 10 decimal places
+          // this gets the y axis numbers behaving and not getting too long
+          format(d) {
+            return d.toString();
+          }
+        }
+      };
+
+      const config: ChartConfiguration = {
         // bind it to this instance of the component
-        bindto: this.$el,
-        title: {
-          text: this.title
-        },
+        bindto: <HTMLElement>this.$el,
         data: {
-          xs: xs,
+          xs,
           //xFormat: '%m/%d/%Y %H:%M',
           order: 'desc',
-          columns: columns
+          columns
         },
         axis: {
-          x: {
-            type: 'timeseries', // the x axis has a timeseries data type
-            tick: {
-              // the format shown when the mouse hovers over that dot
-              format: '%m/%d %H:%M'
-              // fit: false, if you want to keep the x axis ticks from sticking to the data points
-              // count: 4 if you want to set the ticks to a fixed ammount
-            }
-          },
-          y: {
-            tick: {
-              // round the numbers on the y axis to a max of 10 decimal places
-              // this gets the y axis numbers behaving and not getting too long
-              format(d) {
-                return +d.toFixed(10);
-              }
-            }
-          }
+          x,
+          y
         },
         // allow the user to zoom in and scroll around on the map
         zoom: {
@@ -121,7 +105,10 @@ export default Vue.extend({
             }
           }
         }
-      });
+      };
+
+      // create our chart
+      const chart = c3.generate(config);
 
       if (zippedNames.length > 0) {
         this.focusItems.push(zippedNames[0][1]);
