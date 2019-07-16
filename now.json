@@ -9,5 +9,8 @@
     {"src": "^/css/(.*)", "dest": "/dist/css/$1"},
     {"src": "^/img/(.*)", "dest": "/dist/img/$1"},
     {"src": ".*", "dest": "/dist/index.html"}
-  ]
+  ],
+  "env": {
+    "VUE_APP_API": "https://api.brewhops.now.sh"
+  }
 }
