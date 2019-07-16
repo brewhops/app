@@ -1,6 +1,7 @@
 {
   "version": 2,
   "name": "app",
+  "alias": "app.brewhops.now.sh",
   "builds": [
       { "src": "package.json", "use": "@now/static-build" }
   ],
