@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "app",
+  "alias": "app",
+  "build": {
+    "env": {
+      "VUE_APP_API": "@vue_app_api"
+    }
+  }
+}
