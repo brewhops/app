@@ -157,7 +157,7 @@ export default Vue.extend({
 
     try {
       const response = await this.$http.get(
-        `${process.env.VUE_APP_API}/tanks/id/${this.$route.params.tankID/}`
+        `${process.env.VUE_APP_API}/tanks/id/${this.$route.params.tankID}/`
       );
       const tank: Tank = response.data as Tank;
       this.tank = tank;
