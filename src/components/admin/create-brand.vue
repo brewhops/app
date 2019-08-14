@@ -97,7 +97,7 @@ export default Vue.extend({
       };
 
       try {
-        const response = await this.$http.post(`${process.env.VUE_APP_API}/recipes`, recipe, {
+        const response = await this.$http.post(`${process.env.VUE_APP_API}/recipes/`, recipe, {
           headers
         });
         if (response.ok) {

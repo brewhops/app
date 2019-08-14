@@ -151,7 +151,7 @@ export default Vue.extend({
       };
 
       try {
-        const response = await this.$http.post(`${process.env.VUE_APP_API}/employees`, user, {
+        const response = await this.$http.post(`${process.env.VUE_APP_API}/employees/`, user, {
           headers
         });
         if (response.ok) {

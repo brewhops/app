@@ -105,7 +105,7 @@ export default Vue.extend({
 
       try {
         const response = await this.$http.patch(
-          `${process.env.VUE_APP_API}/recipes/id/${brand.id}`,
+          `${process.env.VUE_APP_API}/recipes/id/${brand.id}/`,
           brand,
           { headers }
         );

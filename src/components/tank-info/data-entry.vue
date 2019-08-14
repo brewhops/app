@@ -210,7 +210,7 @@ export default Vue.extend({
               const task: Task = this.activeTask;
               task.completed_on = moment().toISOString();
               task.update_user = Number(cookie.id);
-              const response = await this.$http.patch(`${process.env.VUE_APP_API}/tasks`, task, {
+              const response = await this.$http.patch(`${process.env.VUE_APP_API}/tasks/`, task, {
                 headers
               });
             }
