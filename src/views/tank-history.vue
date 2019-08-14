@@ -114,7 +114,7 @@ export default Vue.extend({
         const tankResponse = await this.$http.get(
           `${process.env.VUE_APP_API}/batches/tank/${this.tank_id}`
         );
-        const employeesResponse = await this.$http.get(`${process.env.VUE_APP_API}/employees`);
+        const employeesResponse = await this.$http.get(`${process.env.VUE_APP_API}/employees/`);
 
         this.histories = tankResponse.data;
         this.employees = employeesResponse.data;

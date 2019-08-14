@@ -169,7 +169,7 @@ export default Vue.extend({
 
       try {
         const response = await this.$http.post(
-          `${process.env.VUE_APP_API}/batches/update`,
+          `${process.env.VUE_APP_API}/batches/update/`,
           requestObject,
           {
             headers
@@ -194,7 +194,7 @@ export default Vue.extend({
         const confirmation = confirm('Are you sure you want to close the batch?');
         if (confirmation) {
           try {
-            await this.$http.delete(`${process.env.VUE_APP_API}/batches/close/${this.batch.id}`, {
+            await this.$http.delete(`${process.env.VUE_APP_API}/batches/close/${this.batch.id}/`, {
               headers
             });
 
@@ -202,7 +202,7 @@ export default Vue.extend({
             tank.status = TANK_STATUS.AVAILABLE;
             tank.in_use = false;
             tank.update_user = cookie.id;
-            await this.$http.patch(`${process.env.VUE_APP_API}/tanks/id/${this.tank.id}`, tank, {
+            await this.$http.patch(`${process.env.VUE_APP_API}/tanks/id/${this.tank.id}/`, tank, {
               headers
             });
 

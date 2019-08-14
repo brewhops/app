@@ -212,7 +212,7 @@ export default Vue.extend({
       const [versions, tasks, ...arr] = await Promise.all([
         (async () => {
           const batchResponse = await this.$http.get(
-            `${process.env.VUE_APP_API}/versions/batch/${this.batch_id}`
+            `${process.env.VUE_APP_API}/versions/batch/${this.batch_id}/`
           );
 
           return (batchResponse.data as Version[])
@@ -226,7 +226,7 @@ export default Vue.extend({
         })(),
         (async () => {
           const taskResponse = await this.$http.get(
-            `${process.env.VUE_APP_API}/tasks/batch/${this.batch_id}`
+            `${process.env.VUE_APP_API}/tasks/batch/${this.batch_id}/`
           );
 
           return (taskResponse.data as Task[]).map((t: Task) => {
@@ -294,7 +294,7 @@ export default Vue.extend({
     },
     async loadGraphData(batchId: any, recipeId: any) {
       const response = await this.$http.get(
-        `${process.env.VUE_APP_API}/batches/recipe/${recipeId}`
+        `${process.env.VUE_APP_API}/batches/recipe/${recipeId}/`
       );
 
       let previousBatches: Batch[] = (response.data as Batch[]).sort((a: Batch, b: Batch) => {
@@ -311,7 +311,7 @@ export default Vue.extend({
       const formattedData = await Promise.all(
         previousBatches.map(async (batch, i) => {
           const response = await this.$http.get(
-            `${process.env.VUE_APP_API}/versions/batch/${batch.id}`
+            `${process.env.VUE_APP_API}/versions/batch/${batch.id}/`
           );
 
           const versions = (response.data as Version[])
