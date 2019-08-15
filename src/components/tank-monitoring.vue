@@ -116,10 +116,10 @@ export default Vue.extend({
 
     try {
       const data: HttpResponse[] = await Promise.all([
-        this.$http.get(`${process.env.VUE_APP_API}/tanks`),
-        this.$http.get(`${process.env.VUE_APP_API}/batches`),
-        this.$http.get(`${process.env.VUE_APP_API}/actions`),
-        this.$http.get(`${process.env.VUE_APP_API}/recipes`)
+        this.$http.get(`${process.env.VUE_APP_API}/tanks/`),
+        this.$http.get(`${process.env.VUE_APP_API}/batches/`),
+        this.$http.get(`${process.env.VUE_APP_API}/actions/`),
+        this.$http.get(`${process.env.VUE_APP_API}/recipes/`)
       ]);
       const [tanksResponse, batchResponse, actionsResponse, recipeResponse] = data;
 
@@ -192,7 +192,7 @@ export default Vue.extend({
         // Get version information if tank is in use
         if (tankInfo.in_use) {
           const versionsResponse = await this.$http.get(
-            `${process.env.VUE_APP_API}/versions/batch/${batch.id}`
+            `${process.env.VUE_APP_API}/versions/batch/${batch.id}/`
           );
           const versions: Version[] = (versionsResponse.data as Version[])
             .map((v: Version) => {
@@ -214,7 +214,7 @@ export default Vue.extend({
 
         // Get task information
         const tasksResponse = await this.$http.get(
-          `${process.env.VUE_APP_API}/tasks/batch/${batch.id}`
+          `${process.env.VUE_APP_API}/tasks/batch/${batch.id}/`
         );
         const activeTasks: Task[] = (tasksResponse.data as Task[]).filter(
           (t: Task) => !t.completed_on

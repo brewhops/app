@@ -72,7 +72,7 @@ export default Vue.extend({
         };
 
         try {
-          const response = await this.$http.post(`${process.env.VUE_APP_API}/tanks`, tank, {
+          const response = await this.$http.post(`${process.env.VUE_APP_API}/tanks/`, tank, {
             headers
           });
           if (response.ok) {

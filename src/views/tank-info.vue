@@ -157,7 +157,7 @@ export default Vue.extend({
 
     try {
       const response = await this.$http.get(
-        `${process.env.VUE_APP_API}/tanks/id/${this.$route.params.tankID}`
+        `${process.env.VUE_APP_API}/tanks/id/${this.$route.params.tankID}/`
       );
       const tank: Tank = response.data as Tank;
       this.tank = tank;
@@ -202,7 +202,7 @@ export default Vue.extend({
     async loadBatchData() {
       try {
         const response = await this.$http.get(
-          `${process.env.VUE_APP_API}/batches/tank/${this.tankInfo.id}`
+          `${process.env.VUE_APP_API}/batches/tank/${this.tankInfo.id}/`
         );
 
         const openBatches: Batch[] = (response.data as Batch[]).filter(
@@ -247,7 +247,7 @@ export default Vue.extend({
         if (batch) {
           // Get the recipe
           const recipeResponse = await this.$http.get(
-            `${process.env.VUE_APP_API}/recipes/id/${batch.recipe_id}`
+            `${process.env.VUE_APP_API}/recipes/id/${batch.recipe_id}/`
           );
           recipe = recipeResponse.data;
         }
@@ -261,7 +261,7 @@ export default Vue.extend({
       if (this.batch) {
         try {
           const response = await this.$http.get(
-            `${process.env.VUE_APP_API}/tasks/batch/${this.batch.id}`
+            `${process.env.VUE_APP_API}/tasks/batch/${this.batch.id}/`
           );
           const batchTasks: Task[] = response.data as Task[];
 
@@ -286,7 +286,7 @@ export default Vue.extend({
           if (task) {
             // get the action name associated with the task
             const actionResponse = await this.$http.get(
-              `${process.env.VUE_APP_API}/actions/id/${task.action_id}`
+              `${process.env.VUE_APP_API}/actions/id/${task.action_id}/`
             );
             action = actionResponse.data as Action;
 
@@ -307,7 +307,7 @@ export default Vue.extend({
       if (this.batch) {
         try {
           const response = await this.$http.get(
-            `${process.env.VUE_APP_API}/versions/batch/${this.tankInfo.batch_id}`
+            `${process.env.VUE_APP_API}/versions/batch/${this.tankInfo.batch_id}/`
           );
 
           this.versions = [];
@@ -350,7 +350,7 @@ export default Vue.extend({
       let previousBatches: Batch[] = [];
       try {
         const { data } = await this.$http.get(
-          `${process.env.VUE_APP_API}/batches/recipe/${recipeId}`
+          `${process.env.VUE_APP_API}/batches/recipe/${recipeId}/`
         );
         previousBatches = <Batch[]>data.sort((a: Batch, b: Batch) => {
           return moment.utc(b.started_on).diff(moment.utc(a.started_on));
@@ -376,7 +376,7 @@ export default Vue.extend({
         formattedData = await Promise.all(
           previousBatches.map(async (batch, i) => {
             const response = await this.$http.get(
-              `${process.env.VUE_APP_API}/versions/batch/${batch.id}`
+              `${process.env.VUE_APP_API}/versions/batch/${batch.id}/`
             );
 
             const versions = (response.data as Version[])

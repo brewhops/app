@@ -69,7 +69,7 @@ export default Vue.extend({
       } else {
         try {
           const response = await this.$http.get(
-            `${process.env.VUE_APP_API}/employees/admin/${username}`
+            `${process.env.VUE_APP_API}/employees/admin/${username}/`
           );
           this.isAdmin = response.data;
         } catch (err) {

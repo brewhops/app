@@ -92,7 +92,7 @@ export default Vue.extend({
   methods: {
     async tankUpdate() {
       try {
-        const response = await this.$http.get(`${process.env.VUE_APP_API}/tanks`);
+        const response = await this.$http.get(`${process.env.VUE_APP_API}/tanks/`);
         this.tanks = response.data as Tank[];
       } catch (err) {
         console.error(err);
@@ -100,7 +100,7 @@ export default Vue.extend({
     },
     async usersUpdate() {
       try {
-        const response = await this.$http.get(`${process.env.VUE_APP_API}/employees`);
+        const response = await this.$http.get(`${process.env.VUE_APP_API}/employees/`);
         this.employees = response.data as Employee[];
       } catch (err) {
         console.error(err);
@@ -108,7 +108,7 @@ export default Vue.extend({
     },
     async brandsUpdate() {
       try {
-        const response = await this.$http.get(`${process.env.VUE_APP_API}/recipes`);
+        const response = await this.$http.get(`${process.env.VUE_APP_API}/recipes/`);
         this.brands = response.data as Recipe[];
       } catch (err) {
         console.error(err);
