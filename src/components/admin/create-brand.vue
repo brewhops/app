@@ -44,6 +44,7 @@ interface ICreateBrandState {
 
 export default Vue.extend({
   name: 'create-brand',
+  props: ['client_id', 'token'],
   data(): ICreateBrandState {
     return {
       brandID: '',
@@ -84,8 +85,8 @@ export default Vue.extend({
     async recipe_submit() {
       // Now only add to recipe the values that aren't empty or null
       const instructions = this.instructions.filter(e => e.ingredient !== '' && e.ratio !== '');
-
       const recipe = {
+        client_id: this.client_id,
         airplane_code: this.airplane_code,
         instructions: JSON.stringify(instructions),
         yeast: this.yeast,
@@ -93,7 +94,7 @@ export default Vue.extend({
       };
 
       const headers = {
-        Authorization: `Bearer ${Cookie.getJSON('loggedIn').token}`
+        Authorization: `Bearer ${this.token}`
       };
 
       try {
@@ -115,9 +116,6 @@ export default Vue.extend({
 </script>
 
 <style lang="stylus" scoped>
-
-
-
 
 #full{
   @media screen and (max-width:555px ) {

@@ -4,17 +4,40 @@
       <create-tank
         :tanks="this.tanks"
         :statuses="this.tankStatuses"
+        :token="this.token"
+        :client_id="this.client_id"
         @update="this.tankUpdate"
       ></create-tank>
       <update-tank
         :tanks="this.tanks"
         :statuses="this.tankStatuses"
+        :token="this.token"
+        :client_id="this.client_id"
         @update="this.tankUpdate"
       ></update-tank>
-      <create-user :employees="this.employees" @update="this.usersUpdate"></create-user>
-      <edit-user :employees="this.employees" @update="this.usersUpdate"></edit-user>
-      <create-brand @update="this.brandsUpdate"></create-brand>
-      <edit-brand :brands="this.brands" @update="this.brandsUpdate"></edit-brand>
+      <create-user
+        :employees="this.employees"
+        :token="this.token"
+        :client_id="this.client_id"
+        @update="this.usersUpdate"
+      ></create-user>
+      <edit-user
+        :employees="this.employees"
+        :token="this.token"
+        :client_id="this.client_id"
+        @update="this.usersUpdate"
+      ></edit-user>
+      <create-brand
+        :token="this.token"
+        :client_id="this.client_id"
+        @update="this.brandsUpdate"
+      ></create-brand>
+      <edit-brand
+        :brands="this.brands"
+        :token="this.token"
+        :client_id="this.client_id"
+        @update="this.brandsUpdate"
+      ></edit-brand>
     </div>
   </div>
   <div v-else>
@@ -43,6 +66,8 @@ interface IAdminState {
   brands: Recipe[];
   tankStatuses: string[];
   debugging: string;
+  client_id: number;
+  token: string;
 }
 
 export default Vue.extend({
@@ -69,7 +94,9 @@ export default Vue.extend({
         TANK_STATUS.TRANSFERRING,
         TANK_STATUS.COMPLETED
       ],
-      debugging: ''
+      debugging: '',
+      client_id: 0,
+      token: ''
     };
   },
   async beforeMount() {
@@ -77,9 +104,12 @@ export default Vue.extend({
     // send them to the login page
     if (!Cookie.getJSON('loggedIn') || !Cookie.getJSON('loggedIn').admin) {
       // tslint:disable-next-line:no-console
-      console.log(Cookie.getJSON('loggedIn'));
       router.push('/');
     }
+
+    const { token, client_id } = Cookie.getJSON('loggedIn');
+    this.token = token;
+    this.client_id = client_id;
 
     try {
       await this.tankUpdate();

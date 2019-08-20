@@ -6,6 +6,7 @@ export type KeyAccessor = {
 
 export type Employee = {
   id?: number;
+  client_id: number;
   first_name: string;
   last_name: string;
   username: string;
@@ -16,6 +17,7 @@ export type Employee = {
 
 export type Tank = {
   id?: number | string;
+  client_id: number;
   name: string;
   status: string;
   in_use: boolean;
@@ -24,6 +26,7 @@ export type Tank = {
 
 export type Action = {
   id: number;
+  client_id: number;
   name: string;
   description: string;
   classname: string;
@@ -31,6 +34,7 @@ export type Action = {
 
 export type Recipe = {
   id?: number;
+  client_id: number;
   name: string;
   airplane_code: string;
   yeast: number;
@@ -45,6 +49,7 @@ export type Ingredient = {
 
 export type Batch = {
   id?: string | number;
+  client_id: number;
   name: string;
   generation: number;
   volume: number;
@@ -58,6 +63,7 @@ export type Batch = {
 
 export type Task = {
     id?: number;
+    client_id: number;
     added_on?: string | Moment;
     completed_on?: string | Moment;
     assigned?: boolean;
@@ -70,6 +76,7 @@ export type Task = {
 
 export type Version = KeyAccessor & {
   id?: number;
+  client_id: number;
   sg: number;
   ph: number;
   abv: number;
@@ -85,6 +92,7 @@ export type BrewhopsCookie = {
   username: string;
   admin: boolean;
   token: string;
+  client_id: number;
 };
 
 export type ActionUpdate = {

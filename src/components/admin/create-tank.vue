@@ -42,7 +42,7 @@ interface ICreateTankState {
 
 export default Vue.extend({
   name: 'create-tank',
-  props: ['tanks', 'statuses'],
+  props: ['tanks', 'statuses', 'client_id', 'token'],
   data(): ICreateTankState {
     return {
       tank_name: '',
@@ -62,13 +62,14 @@ export default Vue.extend({
 
       if (tankExists.length === 0) {
         const tank: Tank = {
+          client_id: this.client_id,
           name: this.tank_name,
           status: this.status,
           in_use: this.in_use
         };
 
         const headers = {
-          Authorization: `Bearer ${Cookie.getJSON('loggedIn').token}`
+          Authorization: `Bearer ${this.token}`
         };
 
         try {

@@ -24,6 +24,7 @@ import Vue from 'vue';
 import router from '@/router';
 import CryptoJS from 'crypto-js';
 import Cookie from 'js-cookie';
+import { BrewhopsCookie } from '../types/index';
 
 interface ILoginState {
   isAdmin: boolean;
@@ -99,9 +100,6 @@ export default Vue.extend({
   },
   beforeMount(): void {
     this.submitLink = '/home';
-
-    // if the cookie has login information in it already
-    // then send us straight to the home page
     if (Cookie.getJSON('loggedIn')) {
       this.sendToHome();
     }
@@ -109,7 +107,6 @@ export default Vue.extend({
   methods: {
     async submit(): Promise<void> {
       const { username, password: pw } = this;
-
       const password = CryptoJS.SHA3(pw).toString();
 
       try {
@@ -117,26 +114,20 @@ export default Vue.extend({
           username,
           password
         });
-        const { id, token } = response.data;
-        this.createCookie(id, this.username, this.isAdmin, token);
+        const { id, token, client_id } = response.data;
+        this.createCookie({ id, username: this.username, admin: this.isAdmin, token, client_id });
         this.sendToHome();
       } catch (err) {
         this.feedback.password = 'Invalid Login';
       }
     },
-    // redirect over to the home page
     sendToHome(): void {
       router.push('home');
     },
-    createCookie(id: any, username: any, admin: any, token: any): void {
+    createCookie(cookie: BrewhopsCookie): void {
       if (!Cookie.getJSON('loggedIn')) {
-        // tslint:disable-next-line:no-backbone-get-set-outside-model
-        Cookie.set('loggedIn', {
-          id,
-          username,
-          admin,
-          token
-        });
+        // TODO: create configurable expiration
+        Cookie.set('loggedIn', { ...cookie }, { expires: 7 });
       }
     }
   }

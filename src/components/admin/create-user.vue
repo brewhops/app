@@ -54,7 +54,7 @@ interface ICreateUserState {
 
 export default Vue.extend({
   name: 'create-tank',
-  props: ['employees'],
+  props: ['employees', 'client_id', 'token'],
   data(): ICreateUserState {
     return {
       first_name: '',
@@ -138,6 +138,7 @@ export default Vue.extend({
   methods: {
     async login_submit() {
       const user = {
+        client_id: this.client_id,
         first_name: this.first_name,
         last_name: this.last_name,
         username: this.username,
@@ -147,7 +148,7 @@ export default Vue.extend({
       };
 
       const headers = {
-        Authorization: `Bearer ${Cookie.getJSON('loggedIn').token}`
+        Authorization: `Bearer ${this.token}`
       };
 
       try {
