@@ -15,7 +15,7 @@ export default Vue.extend({
 </script>
 
 <style lang="stylus" scoped>
-@import '../styles/colors'
+@import '../../styles/colors'
 
 .lds-ring
   display inline-block

@@ -59,6 +59,7 @@ import { TANK_STATUS } from '../../utils/index';
 
 // tslint:disable:no-any no-console
 interface IDataEntryState {
+  client_id: number | undefined;
   pH: string;
   ABV: string;
   bright: string;
@@ -98,6 +99,7 @@ export default Vue.extend({
   },
   data(): IDataEntryState {
     return {
+      client_id: undefined,
       pH: '',
       ABV: '',
       bright: '',
@@ -114,7 +116,9 @@ export default Vue.extend({
     if (!Cookie.getJSON('loggedIn')) {
       router.push('/');
     }
-    this.admin = Cookie.getJSON('loggedIn').admin;
+    const { admin, client_id } = Cookie.getJSON('loggedIn');
+    this.admin = admin;
+    this.client_id = client_id;
 
     // set the time with the required dateime format eg "2018-05-10T15:08"
     this.time = moment().format('YYYY-MM-DDTHH:mm');
@@ -151,6 +155,7 @@ export default Vue.extend({
       };
 
       const requestObject: BatchUpdateOrCreate = {
+        client_id: this.client_id,
         recipe_id: Number(this.recipe.id),
         tank_id: Number(this.tank.id),
         batch_id: Number(this.batch.id),

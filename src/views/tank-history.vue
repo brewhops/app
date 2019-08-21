@@ -68,6 +68,7 @@ export default Vue.extend({
       tank_id: '',
       tanks: [],
       tank: {
+        client_id: undefined,
         id: -1,
         name: '',
         status: '',

@@ -40,8 +40,8 @@
 <script lang="ts">
 import Vue from 'vue';
 import router from '@/router';
-import loader from './loader.vue';
-import bulkEntry from './bulk-entry.vue';
+import Loader from '@/components/shared/loader.vue';
+import BulkEntry from './bulk-entry.vue';
 import Cookie from 'js-cookie';
 import moment from 'moment';
 import Datepicker from 'vuejs-datepicker';
@@ -95,8 +95,8 @@ interface ITankMonitoringState {
 export default Vue.extend({
   name: 'tank-monitoring',
   components: {
-    loader,
-    bulkEntry,
+    Loader,
+    BulkEntry,
     Datepicker
   },
   data(): ITankMonitoringState {
@@ -242,7 +242,7 @@ export default Vue.extend({
 </script>
 
 <style lang="stylus" scoped>
-@import '../styles/breakpoints';
+@import '../../styles/breakpoints';
 
 .center
   display flex

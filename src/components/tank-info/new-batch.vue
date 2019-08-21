@@ -43,12 +43,13 @@ import Vue from 'vue';
 import moment, { isMoment } from 'moment';
 import router from '@/router';
 import Cookie from 'js-cookie';
-import loader from '../loader.vue';
+import loader from '@/components/shared/loader.vue';
 import { Recipe, Batch, Tank, Task } from '@/types/index';
 import { TANK_STATUS, ACTION } from '@/utils';
 import { HttpOptions } from 'vue-resource/types/vue_resource';
 
 interface INewBatchState {
+  client_id: number | undefined;
   recipes: Recipe[];
   recipe_id: string;
   batch_name: string;
@@ -74,6 +75,7 @@ export default Vue.extend({
   },
   data(): INewBatchState {
     return {
+      client_id: undefined,
       recipes: [],
       recipe_id: '',
       batch_name: '',
@@ -94,6 +96,9 @@ export default Vue.extend({
       router.push('/');
     }
 
+    const { client_id } = Cookie.getJSON('loggedIn');
+    this.client_id = client_id;
+
     try {
       const recipeResponse = await this.$http.get(`${process.env.VUE_APP_API}/recipes/`);
       this.recipes = <Recipe[]>recipeResponse.data;
@@ -112,6 +117,7 @@ export default Vue.extend({
       ) {
         const employeeId: number = Cookie.getJSON('id');
         const batch: Batch = {
+          client_id: this.client_id,
           name: this.batch_name,
           generation: parseInt(this.generation, 10),
           volume: parseInt(this.volume, 10),
@@ -163,6 +169,7 @@ export default Vue.extend({
 
         const task: Task = {
           employee_id,
+          client_id: this.client_id,
           batch_id: batches[0].id,
           action_id: ACTION.PRIMARY_FERMENTATION,
           added_on: new Date().toUTCString()

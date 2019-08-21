@@ -107,9 +107,9 @@ import Cookie from 'js-cookie';
 import moment from 'moment';
 import { Batch, Version, Task, Employee, Action } from '@/types/index';
 import { Moment } from 'moment';
-import chart from '@/components/chart.vue';
-import loader from '@/components/loader.vue';
-import dataTable from '@/components/data-table.vue';
+import Chart from '@/components/tank-info/chart.vue';
+import Loader from '@/components/shared/loader.vue';
+import DataTable from '@/components/shared/data-table.vue';
 import { orderBy } from 'natural-orderby';
 
 interface IHistoryState {
@@ -133,7 +133,7 @@ interface IHistoryState {
 
 export default Vue.extend({
   name: 'batch-history',
-  components: { chart: chart, dataTable: dataTable, loader: loader },
+  components: { Chart, DataTable, Loader },
   data(): IHistoryState {
     return {
       batch_titles: ['Volume', 'Bright', 'Generation', 'Date Started', 'Date Completed'],
@@ -143,6 +143,7 @@ export default Vue.extend({
       batch_id: '',
       batches: [],
       batch: {
+        client_id: undefined,
         name: '',
         generation: 0,
         volume: 0,

@@ -17,7 +17,7 @@ export type Employee = {
 
 export type Tank = {
   id?: number | string;
-  client_id: number;
+  client_id: number | undefined;
   name: string;
   status: string;
   in_use: boolean;
@@ -49,7 +49,7 @@ export type Ingredient = {
 
 export type Batch = {
   id?: string | number;
-  client_id: number;
+  client_id: number | undefined;
   name: string;
   generation: number;
   volume: number;
@@ -63,7 +63,7 @@ export type Batch = {
 
 export type Task = {
     id?: number;
-    client_id: number;
+    client_id: number | undefined;
     added_on?: string | Moment;
     completed_on?: string | Moment;
     assigned?: boolean;
@@ -76,7 +76,7 @@ export type Task = {
 
 export type Version = KeyAccessor & {
   id?: number;
-  client_id: number;
+  client_id: number | undefined;
   sg: number;
   ph: number;
   abv: number;

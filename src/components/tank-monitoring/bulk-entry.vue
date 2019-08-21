@@ -17,7 +17,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import router from '@/router';
-import loader from './loader.vue';
+import Loader from '@/components/shared/loader.vue';
 
 import Cookie from 'js-cookie';
 import moment from 'moment';
@@ -64,6 +64,7 @@ interface IDataEntryState extends KeyAccessor {
 }
 
 interface IBulkEntryState {
+  client_id: number;
   update_text: string;
   file?: any;
   goal_time?: string | number;
@@ -73,21 +74,21 @@ export default Vue.extend({
   name: 'bulk-entry',
   props: ['tanks'],
   components: {
-    loader,
+    Loader,
     Datepicker
   },
-
   data(): IBulkEntryState {
     return {
+      client_id: -1,
       update_text: '',
       goal_time: undefined
       // contents of a square is tankName, pressure, recipeName, temperature, batchNumber, Status
     };
   },
-
   // tslint:disable-next-line:max-func-body-length
-  async beforeMount() {},
-
+  async beforeMount() {
+    this.client_id = Cookie.getJSON('loggedIn').client_id;
+  },
   methods: {
     async readAlcolyzerData(event: any) {
       event.preventDefault();
@@ -126,6 +127,7 @@ export default Vue.extend({
         batchesToUpdate.map(({ batch, reading }: any) =>
           (async () => {
             const requestObject: BatchUpdateOrCreate = {
+              client_id: this.client_id,
               recipe_id: Number(batch.recipe_id),
               tank_id: Number(batch.tank_id),
               batch_id: Number(batch.id),
@@ -247,7 +249,7 @@ export default Vue.extend({
 </script>
 
 <style lang="stylus" scoped>
-@import '../styles/breakpoints';
+@import '../../styles/breakpoints';
 
 .center
   display flex

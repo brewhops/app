@@ -56,7 +56,7 @@ import CreateUser from '@/components/admin/create-user.vue';
 import EditUser from '@/components/admin/edit-user.vue';
 import CreateBrand from '@/components/admin/create-brand.vue';
 import EditBrand from '@/components/admin/edit-brand.vue';
-import Loader from '@/components/loader.vue';
+import Loader from '@/components/shared/loader.vue';
 import { Employee, Tank, Recipe, BrewhopsCookie } from '@/types/index';
 // tslint:disable: no-console
 
@@ -73,12 +73,12 @@ interface IAdminState {
 export default Vue.extend({
   name: 'admin',
   components: {
-    'create-tank': CreateTank,
-    'update-tank': UpdateTank,
-    'create-user': CreateUser,
-    'edit-user': EditUser,
-    'create-brand': CreateBrand,
-    'edit-brand': EditBrand,
+    CreateTank,
+    UpdateTank,
+    CreateUser,
+    EditUser,
+    CreateBrand,
+    EditBrand,
     Loader
   },
   data(): IAdminState {

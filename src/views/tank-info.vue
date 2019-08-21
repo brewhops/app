@@ -69,12 +69,12 @@
 <script lang="ts">
 import Vue from 'vue';
 import recipe from '@/components/tank-info/recipe.vue';
-import chart from '@/components/chart.vue';
+import chart from '@/components/tank-info/chart.vue';
 import dataEntry from '@/components/tank-info/data-entry.vue';
 import newBatch from '@/components/tank-info/new-batch.vue';
 import updateAction from '@/components/tank-info/update-action.vue';
 import tankStatus from '@/components/tank-info/tank-status.vue';
-import loader from '@/components/loader.vue';
+import loader from '@/components/shared/loader.vue';
 import router from '@/router';
 import Cookie from 'js-cookie';
 

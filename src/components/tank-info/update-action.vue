@@ -32,6 +32,7 @@ import { HttpResponse } from 'vue-resource/types/vue_resource';
 import { ACTION } from '@/utils';
 
 interface IUpdateAction {
+  client_id: number | undefined;
   actions: Action[];
   action: string | number;
   exception: number;
@@ -56,6 +57,7 @@ export default Vue.extend({
   },
   data(): IUpdateAction {
     return {
+      client_id: undefined,
       actions: [],
       action: '',
       exception: ACTION.EXCEPTION,
@@ -64,8 +66,10 @@ export default Vue.extend({
   },
   async beforeMount() {
     try {
+      const { token, client_id } = Cookie.getJSON('loggedIn');
+      this.client_id = client_id;
       const headers = {
-        Authorization: `Bearer ${Cookie.getJSON('loggedIn').token}`
+        Authorization: `Bearer ${token}`
       };
       const actionsResponse: HttpResponse = await this.$http.get(
         `${process.env.VUE_APP_API}/actions/`,
@@ -108,6 +112,7 @@ export default Vue.extend({
         // if there is no current task
         if (!this.activeTask || this.activeTask.action_id !== this.action) {
           const task: Task = {
+            client_id: this.client_id,
             added_on: moment().toISOString(),
             assigned: true,
             batch_id: this.batch ? this.batch.id : undefined,
