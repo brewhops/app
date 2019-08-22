@@ -12,6 +12,7 @@
           {{ action_option.name }}</option
         >
       </select>
+      <datepicker placeholder="Select Date" v-model="date"></datepicker>
     </div>
     <div v-if="this.action === this.exception" class="col-1 inputGroup">
       <input v-model="reason" type="string" required />
@@ -30,12 +31,14 @@ import moment, { unix } from 'moment';
 import { Action, Task, BrewhopsCookie } from '@/types/index';
 import { HttpResponse } from 'vue-resource/types/vue_resource';
 import { ACTION } from '@/utils';
+import Datepicker from 'vuejs-datepicker';
 
 interface IUpdateAction {
   actions: Action[];
   action: string | number;
   exception: number;
   reason: string;
+  date: string;
 }
 
 export default Vue.extend({
@@ -54,15 +57,20 @@ export default Vue.extend({
       required: true
     }
   },
+  components: {
+    Datepicker
+  },
   data(): IUpdateAction {
     return {
       actions: [],
       action: '',
       exception: ACTION.EXCEPTION,
-      reason: ''
+      reason: '',
+      date: ''
     };
   },
   async beforeMount() {
+    this.date = moment().format('YYYY-MM-DDTHH:mm');
     try {
       const headers = {
         Authorization: `Bearer ${Cookie.getJSON('loggedIn').token}`
@@ -90,6 +98,7 @@ export default Vue.extend({
         if (this.activeTask && this.activeTask.action_id !== this.action) {
           const task: Task = this.activeTask;
           task.completed_on = moment().toISOString();
+          task.updated_action_on = this.date;
 
           if (this.action === this.exception && this.reason) {
             task.exception_reason = this.reason;

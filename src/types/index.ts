@@ -60,6 +60,7 @@ export type Task = {
     id?: number;
     added_on?: string | Moment;
     completed_on?: string | Moment;
+    updated_action_on?: string;
     assigned?: boolean;
     batch_id: number;
     action_id: number;
