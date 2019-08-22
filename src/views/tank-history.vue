@@ -112,9 +112,9 @@ export default Vue.extend({
       // when the user chooses a batch, get the info on that batch
       try {
         const tankResponse = await this.$http.get(
-          `${process.env.VUE_APP_API}/batches/tank/${this.tank_id}`
+          `${process.env.VUE_APP_API}/batches/tank/${this.tank_id}/`
         );
-        const employeesResponse = await this.$http.get(`${process.env.VUE_APP_API}/employees`);
+        const employeesResponse = await this.$http.get(`${process.env.VUE_APP_API}/employees/`);
 
         this.histories = tankResponse.data;
         this.employees = employeesResponse.data;

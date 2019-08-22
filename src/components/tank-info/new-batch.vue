@@ -95,7 +95,7 @@ export default Vue.extend({
     }
 
     try {
-      const recipeResponse = await this.$http.get(`${process.env.VUE_APP_API}/recipes`);
+      const recipeResponse = await this.$http.get(`${process.env.VUE_APP_API}/recipes/`);
       this.recipes = <Recipe[]>recipeResponse.data;
     } catch (err) {
       console.error(err);
@@ -126,7 +126,7 @@ export default Vue.extend({
 
         try {
           const batchResponse = await this.$http.post(
-            `${process.env.VUE_APP_API}/batches/new`,
+            `${process.env.VUE_APP_API}/batches/new/`,
             batch,
             {
               headers
@@ -181,7 +181,7 @@ export default Vue.extend({
 
       try {
         const tankResponse = await this.$http.patch(
-          `${process.env.VUE_APP_API}/tanks/id/${id}`,
+          `${process.env.VUE_APP_API}/tanks/id/${id}/`,
           tank,
           {
             headers

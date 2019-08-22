@@ -142,7 +142,7 @@ export default Vue.extend({
               update_user: Number(cookie.id)
             };
             return await this.$http.post(
-              `${process.env.VUE_APP_API}/batches/update`,
+              `${process.env.VUE_APP_API}/batches/update/`,
               requestObject,
               {
                 headers

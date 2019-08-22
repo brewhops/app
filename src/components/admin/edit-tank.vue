@@ -72,7 +72,7 @@ export default Vue.extend({
 
         try {
           const response = await this.$http.patch(
-            `${process.env.VUE_APP_API}/tanks/id/${id}`,
+            `${process.env.VUE_APP_API}/tanks/id/${id}/`,
             tank,
             {
               headers

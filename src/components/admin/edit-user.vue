@@ -181,7 +181,7 @@ export default Vue.extend({
 
         try {
           const response = await this.$http.patch(
-            `${process.env.VUE_APP_API}/employees/id/${this.employee.id}`,
+            `${process.env.VUE_APP_API}/employees/id/${this.employee.id}/`,
             user,
             {
               headers

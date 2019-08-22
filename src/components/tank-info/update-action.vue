@@ -68,7 +68,7 @@ export default Vue.extend({
         Authorization: `Bearer ${Cookie.getJSON('loggedIn').token}`
       };
       const actionsResponse: HttpResponse = await this.$http.get(
-        `${process.env.VUE_APP_API}/actions`,
+        `${process.env.VUE_APP_API}/actions/`,
         headers
       );
       const actions: Action[] = actionsResponse.data;
@@ -96,7 +96,7 @@ export default Vue.extend({
           }
 
           try {
-            const response = await this.$http.patch(`${process.env.VUE_APP_API}/tasks`, task, {
+            const response = await this.$http.patch(`${process.env.VUE_APP_API}/tasks/`, task, {
               headers
             });
           } catch (err) {
@@ -120,7 +120,7 @@ export default Vue.extend({
           }
 
           try {
-            const response = await this.$http.post(`${process.env.VUE_APP_API}/tasks`, task, {
+            const response = await this.$http.post(`${process.env.VUE_APP_API}/tasks/`, task, {
               headers
             });
           } catch (err) {
