@@ -9,6 +9,10 @@
         <td>Action</td>
         <td>{{ tankInfo.action }}</td>
       </tr>
+      <tr>
+        <td>Updated On</td>
+        <td>{{ this.task.action_updated_on }}</td>
+      </tr>
       <tr v-if="this.task && this.task.exception_reason" class="important">
         <td>Exception Reason</td>
         <td>{{ this.task.exception_reason }}</td>
