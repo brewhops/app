@@ -11,7 +11,7 @@
       </tr>
       <tr>
         <td>Updated On</td>
-        <td>{{ this.task.action_updated_on }}</td>
+        <td>{{ this.task.added_on }}</td>
       </tr>
       <tr v-if="this.task && this.task.exception_reason" class="important">
         <td>Exception Reason</td>

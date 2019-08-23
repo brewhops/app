@@ -97,8 +97,7 @@ export default Vue.extend({
         // if there is a current task to edit
         if (this.activeTask && this.activeTask.action_id !== this.action) {
           const task: Task = this.activeTask;
-          task.completed_on = moment().toISOString();
-          task.updated_action_on = this.date;
+          task.completed_on = moment(this.date).toISOString();
 
           if (this.action === this.exception && this.reason) {
             task.exception_reason = this.reason;
@@ -117,7 +116,7 @@ export default Vue.extend({
         // if there is no current task
         if (!this.activeTask || this.activeTask.action_id !== this.action) {
           const task: Task = {
-            added_on: moment().toISOString(),
+            added_on: moment(this.date).toISOString(),
             assigned: true,
             batch_id: this.batch ? this.batch.id : undefined,
             action_id: Number(this.action),
