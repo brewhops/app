@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "build": "vue-cli-service build --mode production",
     "test": "vue-cli-service test:unit",
     "deploy": "now --target production -e NODE_ENV=\"production-live\"",
     "deploy-staging": "now --target production -e NODE_ENV=\"production\""
