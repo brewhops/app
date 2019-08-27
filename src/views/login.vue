@@ -99,8 +99,7 @@ export default Vue.extend({
   },
   beforeMount(): void {
     this.submitLink = '/home';
-    console.log(process.env.VUE_APP_DEPLOYMENT);
-    console.log(process.env.NODE_ENV);
+
     // if the cookie has login information in it already
     // then send us straight to the home page
     if (Cookie.getJSON('loggedIn')) {
