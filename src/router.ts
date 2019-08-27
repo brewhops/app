@@ -44,6 +44,11 @@ const routes = [
     meta: { title: 'Brewhops - Tank History' },
     component: () => import('@/views/tank-history.vue'),
   }
+  ,
+  {
+    path: '/test',
+    component: () => process.env.NODE_ENV
+  }
 ]
 
 // tslint:disable-next-line:no-default-export
