@@ -19,7 +19,7 @@ const routes = [
     path: '/admin',
     meta: { title: 'Brewhops - Settings' },
     component: () => import('@/views/admin.vue'),
-  },
+  },  
   {
     name: 'home',
     path: '/home',
