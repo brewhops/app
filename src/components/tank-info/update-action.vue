@@ -70,7 +70,7 @@ export default Vue.extend({
     };
   },
   async beforeMount() {
-    this.date = moment().format('YYYY-MM-DDTHH:mm');
+    this.date = moment().toISOString();
     try {
       const headers = {
         Authorization: `Bearer ${Cookie.getJSON('loggedIn').token}`
