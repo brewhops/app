@@ -7,13 +7,10 @@ module.exports = {
   productionSourceMap: false,
   configureWebpack: config => {
     // enables code splitting for higher performance in production
-    if (config.mode === 'production') {
-      config.optimization = {
-        splitChunks: {
-          chunks: 'all'
-        }
+    config.optimization = {
+      splitChunks: {
+        chunks: 'all'
       }
-
     }
   }
 }
