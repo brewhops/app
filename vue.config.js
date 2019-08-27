@@ -1,3 +1,7 @@
+const dotenv = require('dotenv');
+
+dotenv.config();
+
 /* determines whether the version of the app should point 
  * to production or 'staging' instance of the api
  */
