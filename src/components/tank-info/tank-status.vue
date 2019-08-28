@@ -9,9 +9,13 @@
         <td>Action</td>
         <td>{{ tankInfo.action }}</td>
       </tr>
-      <tr v-if="this.task && this.task.exception_reason" class="important">
+      <tr class="important">
+        <td>Action Updated On</td>
+        <td>{{ this.tankInfo.actionTime }}</td>
+      </tr>
+      <tr v-if="this.tankInfo && this.tankInfo.actionExceptionReason" class="important">
         <td>Exception Reason</td>
-        <td>{{ this.task.exception_reason }}</td>
+        <td>{{ this.tankInfo.actionExceptionReason }}</td>
       </tr>
       <tr>
         <td>Status</td>
@@ -58,7 +62,7 @@
         <td>{{ this.tankInfo.ABV }}%</td>
       </tr>
       <tr>
-        <td>Time Last Updated</td>
+        <td>Data Updated On</td>
         <td>{{ this.tankInfo.time }}</td>
       </tr>
     </tbody>

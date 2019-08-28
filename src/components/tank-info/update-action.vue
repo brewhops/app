@@ -12,6 +12,7 @@
           {{ action_option.name }}</option
         >
       </select>
+      <datepicker placeholder="Select Date" v-model="date"></datepicker>
     </div>
     <div v-if="this.action === this.exception" class="col-1 inputGroup">
       <input v-model="reason" type="string" required />
@@ -30,12 +31,14 @@ import moment, { unix } from 'moment';
 import { Action, Task, BrewhopsCookie } from '@/types/index';
 import { HttpResponse } from 'vue-resource/types/vue_resource';
 import { ACTION } from '@/utils';
+import Datepicker from 'vuejs-datepicker';
 
 interface IUpdateAction {
   actions: Action[];
   action: string | number;
   exception: number;
   reason: string;
+  date: string;
 }
 
 export default Vue.extend({
@@ -54,15 +57,20 @@ export default Vue.extend({
       required: true
     }
   },
+  components: {
+    Datepicker
+  },
   data(): IUpdateAction {
     return {
       actions: [],
       action: '',
       exception: ACTION.EXCEPTION,
-      reason: ''
+      reason: '',
+      date: ''
     };
   },
   async beforeMount() {
+    this.date = moment().toISOString();
     try {
       const headers = {
         Authorization: `Bearer ${Cookie.getJSON('loggedIn').token}`
@@ -89,7 +97,7 @@ export default Vue.extend({
         // if there is a current task to edit
         if (this.activeTask && this.activeTask.action_id !== this.action) {
           const task: Task = this.activeTask;
-          task.completed_on = moment().toISOString();
+          task.completed_on = moment(this.date).toISOString();
 
           if (this.action === this.exception && this.reason) {
             task.exception_reason = this.reason;
@@ -108,7 +116,7 @@ export default Vue.extend({
         // if there is no current task
         if (!this.activeTask || this.activeTask.action_id !== this.action) {
           const task: Task = {
-            added_on: moment().toISOString(),
+            added_on: moment(this.date).toISOString(),
             assigned: true,
             batch_id: this.batch ? this.batch.id : undefined,
             action_id: Number(this.action),
