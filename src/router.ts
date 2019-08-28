@@ -1,63 +1,48 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import login from '@/views/login.vue';
-import admin from '@/views/admin.vue';
-import home from '@/views/home.vue';
-import tankInfo from '@/views/tank-info.vue';
-import batchHistory from '@/views/batch-history.vue';
-import tankHistory from '@/views/tank-history.vue';
 import { KeyAccessor } from '@/types/index';
 
 Vue.use(Router);
 
+/*
+ * () => import('path/to/component') is for lazy loading
+ */
 const routes = [
   {
-    component: login,
     name: 'login',
     path: '/',
-    meta: {
-      title: 'Brewhops'
-    }
+    meta: { title: 'Brewhops' },
+    component: () => import('@/views/login.vue'),
   },
   {
-    component: admin,
     name: 'admin',
     path: '/admin',
-    meta: {
-      title: 'Brewhops - Settings'
-    }
-  },
+    meta: { title: 'Brewhops - Settings' },
+    component: () => import('@/views/admin.vue'),
+  },  
   {
-    component: home,
     name: 'home',
     path: '/home',
-    meta: {
-      title: 'Brewhops - Home'
-    }
+    meta: { title: 'Brewhops - Home' },
+    component: () => import('@/views/home.vue'),
   },
   {
-    component: tankInfo,
     name: 'tank-info',
     path: '/tank-info/:tankID',
-    meta: {
-      title: 'Brewhops - Tank Information'
-    }
+    meta: { title: 'Brewhops - Tank Information' },
+    component: () => import('@/views/tank-info.vue'),
   },
   {
-    component: batchHistory,
     name: 'batch-history',
     path: '/batch-history',
-    meta: {
-      title: 'Brewhops - Batch History'
-    }
+    meta: { title: 'Brewhops - Batch History' },
+    component: () => import('@/views/batch-history.vue'),
   },
   {
-    component: tankHistory,
     name: 'tank-history',
     path: '/tank-history',
-    meta: {
-      title: 'Brewhops - Tank History'
-    }
+    meta: { title: 'Brewhops - Tank History' },
+    component: () => import('@/views/tank-history.vue'),
   }
 ]
 

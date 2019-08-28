@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "test": "vue-cli-service test:unit"
+    "test": "vue-cli-service test:unit",
+    "deploy": "now --target production -b VUE_APP_DEPLOYMENT=production-live",
+    "deploy-staging": "now --target production"
   },
   "dependencies": {
     "c3": "^0.7.1",

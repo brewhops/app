@@ -3,7 +3,8 @@
   "name": "app",
   "build": {
     "env": {
-      "VUE_APP_API": "@vue_app_api"
+      "VUE_APP_API_PROD": "@vue_app_api_prod",
+      "VUE_APP_API_STAGING": "@vue_app_api_staging"
     }
   }
 }

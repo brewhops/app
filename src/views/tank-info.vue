@@ -291,7 +291,8 @@ export default Vue.extend({
             action = actionResponse.data as Action;
 
             this.tankInfo.action = action.name;
-            this.tankInfo.time = moment(task.added_on).format('MM/DD/YY H:mm');
+            this.tankInfo.actionTime = moment(task.added_on).format('MM/DD/YY H:mm');
+            this.tankInfo.actionExceptionReason = task.exception_reason;
           } else {
             this.tankInfo.action = '';
           }
