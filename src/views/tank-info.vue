@@ -291,7 +291,7 @@ export default Vue.extend({
             action = actionResponse.data as Action;
 
             this.tankInfo.action = action.name;
-            this.tankInfo.actionTime = moment(task.added_on).format('MM/DD/YY H:mm');
+            this.tankInfo.actionTime = moment(task.added_on).format('MM/DD/YY h:mm a');
             this.tankInfo.actionExceptionReason = task.exception_reason;
           } else {
             this.tankInfo.action = '';
@@ -333,7 +333,7 @@ export default Vue.extend({
             this.tankInfo.pressure = lastVersion.pressure;
             // use a lowercase h to change the hours from 24 to 12
             // the mm sets the minute with a leading 0
-            this.tankInfo.time = (lastVersion.measured_on as Moment).format('MM/DD/YY H:mm');
+            this.tankInfo.time = (lastVersion.measured_on as Moment).format('MM/DD/YY h:mm a');
           } else {
             this.tankInfo.ABV = '';
             this.tankInfo.pH = '';
