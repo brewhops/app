@@ -125,6 +125,7 @@
       "ts-jest": {
         "tsConfig": "tsconfig.json"
       }
-    }
+    },
+    "collectCoverage": true
   }
 }
