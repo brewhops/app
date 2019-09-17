@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <nav v-if="$route.name !== 'login'" class="navbar">
+    <nav v-if="this.loggedIn" class="navbar">
       <router-link class="option" to="/home">Home</router-link>
       <router-link class="option" to="/batch-history">Batch History</router-link>
       <router-link class="option" to="/tank-history">Tank History</router-link>
@@ -20,11 +20,13 @@ export default Vue.extend({
   name: 'home',
   data() {
     return {
-      admin: isAdmin()
+      admin: isAdmin(),
+      loggedIn: isLoggedIn()
     };
   },
   beforeUpdate() {
     this.admin = isAdmin();
+    this.loggedIn = isLoggedIn();
   },
   methods: {
     logout
