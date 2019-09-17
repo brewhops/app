@@ -4,7 +4,6 @@ import { Recipe } from '@/types/index'
 
 describe('recipe.vue', () => {
   let propsData: any;
-  let wrapper: Wrapper<RecipeComponent>;
 
   beforeAll(() => {
     const recipe: Recipe = {
@@ -20,15 +19,13 @@ describe('recipe.vue', () => {
     propsData = { recipe, volume: 10 };
   })
 
-  beforeEach(() => {
-    wrapper = shallowMount(RecipeComponent, { propsData });
-  })
-
   it('renders recipe component', () => {
+    const wrapper = shallowMount(RecipeComponent, { propsData });
     expect(wrapper).toMatchSnapshot();
   });
 
   it('displays correctly computed weight', () => {
+    const wrapper = shallowMount(RecipeComponent, { propsData });
     expect(wrapper.find('tbody :nth-child(3)').text()).toEqual('5');
   });
 
