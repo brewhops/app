@@ -3,6 +3,7 @@
 .AppleDouble
 
 node_modules
+coverage
 dist
 
 # local env files

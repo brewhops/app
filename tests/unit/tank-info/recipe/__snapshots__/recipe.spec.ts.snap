@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`recipe.vue renders recipe component 1`] = `
+<div id="recipe">
+  <h2>Spicy Hops Beer</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Dry Hop/Adjunct</th>
+        <th>Rate</th>
+        <th>Weight</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Spicy Hops</td>
+        <td>.5</td>
+        <td>5</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
