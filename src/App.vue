@@ -121,7 +121,7 @@ button
 
 
 //************* inputs *************//
-input, .dropdown
+input
   padding 10px 0
   box-sizing border-box
   font-size 1em
@@ -168,7 +168,18 @@ select
     font-size 14px
 
 .dropdown
-  min-height 30px
+  padding 2px
+  cursor pointer
+  box-sizing border-box
+  font-size 1em
+  display block
+  width 100%
+  color Teal
+  border 1px solid Teal
+  background none
+  margin-top 25px
+  &:focus
+    border-bottom 2px solid Teal
 
 .inline
   display flex
