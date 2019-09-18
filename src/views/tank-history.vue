@@ -1,16 +1,17 @@
 <template lang="html">
-  <div>
-    <div id="content">
-      <div>
-        <h2>Tank History</h2>
-        <select v-model="tank_id" v-on:change="tankChoose">
-          <option disabled value="">Tank</option>
-          <option v-for="(tank, idx) in tanks" v-bind:key="idx" v-bind:value="tank.id">{{
-            tank.name
-          }}</option>
-        </select>
-      </div>
-      <table v-if="tank_id && histories && tank">
+  <div class="content grid">
+    <div class="paper selector">
+      <h3>Select Tank</h3>
+      <select v-model="tank_id" v-on:change="tankChoose" class="dropdown">
+        <option disabled value="">Tank</option>
+        <option v-for="(tank, idx) in tanks" v-bind:key="idx" v-bind:value="tank.id">{{
+          tank.name
+        }}</option>
+      </select>
+    </div>
+    <div v-if="tank_id && histories && tank" class="col-12 paper">
+      <h2>Tank History</h2>
+      <table class="col-11">
         <tr>
           <th>Name</th>
           <th>Volume</th>
@@ -31,7 +32,7 @@
         </tr>
       </table>
 
-      <a id="csvDownload" @click="downloadCSV()">
+      <a id="csvDownload" @click="downloadCSV()" class="col-11">
         <button v-if="tank_id" type="button" name="button">
           Download
         </button>
@@ -156,41 +157,43 @@ export default Vue.extend({
 </script>
 
 <style lang="stylus" scoped>
-#content {
-  display: grid;
-  justify-items: center;
-  text-align: center;
-  min-height: 60vh;
+@import '../styles/breakpoints';
 
-  p {
-    color: Teal;
-    font-weight: bold;
+.content
+  text-align center
+
+.selector
+  +greater-than(tablet)
+    grid-column 5 / span 4
+
+p {
+  color: Teal;
+  font-weight: bold;
+}
+
+table {
+  border-collapse: collapse;
+  border: 1px solid black;
+  @media screen and (max-width: 630px){
+    font-size: 14px
+  }
+  @media screen and (max-width: 500px){
+    font-size:10px
+  }
+  @media screen and (max-width: 395px){
+    font-size 9px
+  }
+  @media screen and (max-width: 330px){
+    font-size 8px
   }
 
-  table {
-    border-collapse: collapse;
-    border: 1px solid black;
-    @media screen and (max-width: 630px){
-      font-size: 14px
-    }
-    @media screen and (max-width: 500px){
-      font-size:10px
-    }
-    @media screen and (max-width: 395px){
-      font-size 9px
-    }
-    @media screen and (max-width: 330px){
-      font-size 8px
-    }
-
-    tr {
-      td, th {
-        padding: 10px;
-        @media screen and (max-width: 630px){
-          padding: .5em
-        }
-        border-left: 1px solid black;
+  tr {
+    td, th {
+      padding: 10px;
+      @media screen and (max-width: 630px){
+        padding: .5em
       }
+      border-left: 1px solid black;
     }
   }
 }

@@ -39,6 +39,7 @@ export default Vue.extend({
 @import './styles/colors'
 @import './styles/mixins'
 @import './styles/breakpoints'
+@import './styles/components/paper'
 
 //************* globals *************//
 html, body
@@ -200,19 +201,34 @@ table
 //************** grids *************//
 .grid
   display grid
+  padding 10px 0
   grid-gap 25px 10px
-  +greater-than(mobile)
+  +greater-than(tablet)
     grid-template-columns repeat(12, 1fr)
     .col-1
-      grid-column span 12
+      grid-column span 1
     .col-2
-      grid-column span 6
+      grid-column span 2
     .col-3
-      grid-column span 4
-    .col-4
       grid-column span 3
-    .col-span-8
+    .col-4
+      grid-column span 4
+    .col-5
+      grid-column span 5
+    .col-6
+      grid-column span 6
+    .col-7
+      grid-column span 7
+    .col-8
       grid-column span 8
+    .col-9
+      grid-column span 9
+    .col-10
+      grid-column span 10
+    .col-11
+      grid-column span 11
+    .col-12
+      grid-column span 12
 
 .navbar {
   display flex
@@ -223,6 +239,11 @@ table
   justify-content center
   z-index 1
 }
+
+.content
+  margin auto
+  margin-top 20px
+  width 98%
 
 .option {
   color #ffffff

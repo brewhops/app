@@ -1,16 +1,15 @@
 <template>
-  <div v-if="this.tank">
+  <div v-if="this.tank" class="paper content">
     <h2>Create new batch</h2>
-    <form id="create-new-batch" @submit.prevent="createBatch">
+    <form @submit.prevent="createBatch">
       <div class="grid">
-        <div class="col-1 inputGroup">
-          <h4>Batch Name</h4>
-          <input v-model="batch_name" type="string" placeholder="Name" />
+        <div class="col-6 inputGroup">
+          <input v-model="batch_name" type="string" required />
+          <label>Batch Name</label>
           <span>{{ feedback.name }}</span>
         </div>
-        <div class="col-1">
-          <h4>Recipe</h4>
-          <select v-model="recipe_id">
+        <div class="col-6">
+          <select v-model="recipe_id" class="dropdown">
             <option value="">Select a Recipe</option>
             <option v-for="recipe in recipes" v-bind:key="recipe.id" v-bind:value="recipe.id">
               {{ recipe.name }}
@@ -18,14 +17,13 @@
           </select>
           <span>{{ feedback.recipe }}</span>
         </div>
-        <div class="col-1 inputGroup">
-          <h4>Volume</h4>
+        <div class="col-6 inputGroup">
           <input v-model="volume" type="number" step="0.01" required />
           <label>Volume</label>
           <span>{{ feedback.generation }}</span>
         </div>
-        <div class="col-1 inputGroup">
-          <h4>Yeast Generation</h4>
+        <h4>Yeast Generation</h4>
+        <div class="col-6 inputGroup">
           <input v-model="generation" type="number" step="1" required />
           <label>Yeast Generation</label>
         </div>
@@ -186,21 +184,6 @@ export default Vue.extend({
 </script>
 
 <style lang="stylus" scoped>
-@import '../../styles/breakpoints'
-
-#create-new-batch
-  padding 15px
-  display flex
-  flex-direction column
-  justify-content center
-  align-items center
-  text-align center
-  width: 70vw
-  +less-than(tablet)
-    width 90vw
-  button
-    margin-top 30px
-
-h2, h3, h4
-  text-align center
+.content
+  padding 20px
 </style>

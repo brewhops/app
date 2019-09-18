@@ -1,8 +1,8 @@
 <template>
-  <form id="updateAction" @submit.prevent="submit">
+  <form id="updateAction" @submit.prevent="submit" class="paper">
     <h2>Update Action</h2>
     <div class="col-2">
-      <select v-model="action">
+      <select v-model="action" class="dropdown">
         <option value="">Select an Action</option>
         <option
           v-for="action_option in actions"
@@ -136,16 +136,11 @@ export default Vue.extend({
 
 #updateAction
   padding 15px
-  grid-area entry
   display flex
   flex-direction column
-  justify-content center
+  justify-content flex-start
   align-items center
   text-align center
-  +less-than(tablet)
-    width 90vw
-  margin auto
-  max-width 500px
   button
     margin-top 30px
 </style>
