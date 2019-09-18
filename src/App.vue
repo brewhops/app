@@ -55,6 +55,7 @@ h1, h2, h3, h4, h5, h6
   color Teal
   font-weight bold
   margin 0
+  text-align center
 
 h1
   font-size 2em
@@ -67,6 +68,12 @@ h3
   padding 2vh
 h4
   font-size 1.2em
+  padding 1vh
+h5
+  font-size 1em
+  padding 1vh
+h6
+  font-size 0.9em
   padding 1vh
 
 a
@@ -97,6 +104,11 @@ button
     box-shadow none
   &:active
     background darken(Teal, 30%)
+
+.btn-center
+  display block
+  margin auto
+  margin-top 30px
 
 //************* header ***********//
 .header

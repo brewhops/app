@@ -28,7 +28,7 @@
         </div>
       </div>
       <span>{{ feedback.status }}</span>
-      <button>Submit</button>
+      <button class="btn-center">Submit</button>
     </form>
   </div>
   <loader v-else></loader>
