@@ -20,14 +20,12 @@
         <div class="col-6 inputGroup">
           <input v-model="volume" type="number" step="0.01" required />
           <label>Volume</label>
-          <span>{{ feedback.generation }}</span>
         </div>
-        <h4>Yeast Generation</h4>
         <div class="col-6 inputGroup">
           <input v-model="generation" type="number" step="1" required />
           <label>Yeast Generation</label>
+          <span>{{ feedback.generation }}</span>
         </div>
-        <span>{{ feedback.generation }}</span>
       </div>
       <span>{{ feedback.status }}</span>
       <button>Submit</button>
