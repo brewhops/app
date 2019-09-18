@@ -1,6 +1,6 @@
 <template lang="html">
   <div>
-    <p>{{ title }}</p>
+    <h5>{{ title }}</h5>
     <table>
       <tr>
         <th v-for="header in headers">{{ header }}</th>
@@ -22,19 +22,20 @@ export default Vue.extend({
 </script>
 
 <style lang="stylus" scoped>
-p {
-  color: Teal;
-  font-weight: bold;
-}
+@import '../styles/colors'
 
-table {
-  border-collapse: collapse;
-  border: 1px solid black;
-  tr {
-    td, th {
-      padding: 10px;
-      border-left: 1px solid black;
-    }
-  }
-}
+table
+  margin auto
+  border-collapse collapse
+  margin 10px auto
+  th, td
+    padding 10px
+  th
+    background darken(Teal, 20%)
+    color white
+    border-bottom 1px solid black
+  tr:nth-child(odd)
+    background hsl(TealH, TealS - (lightness(Teal) / .8), TealL + 40)
+  tr:nth-child(even)
+    background lighten(Teal, 80%)
 </style>

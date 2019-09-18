@@ -197,6 +197,10 @@ select
 //************** tables *************//
 table
   margin auto
+  border-collapse collapse
+  margin 10px auto
+  th, td
+    padding 10px
 
 //************** grids *************//
 .grid
