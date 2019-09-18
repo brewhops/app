@@ -217,6 +217,7 @@ table
 .navbar {
   display flex
   position sticky
+  height 50px
   top 0
   background-color #00aaa6
   justify-content center
@@ -226,8 +227,8 @@ table
 .option {
   color #ffffff
   text-decoration none
-  padding 5px
-  margin 5px
+  line-height 50px
+  padding 0 10px
   font-size 14pt
   +less-than(tablet){
     font-size 12pt
