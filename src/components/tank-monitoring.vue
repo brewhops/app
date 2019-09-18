@@ -264,71 +264,30 @@ export default Vue.extend({
   }
 
   #tankContents {
-    display: grid;
-    justify-content: center;
-    grid-gap: 10px;
-    color: white;
-    font-weight: 300;
-    margin: 5px;
-    grid-auto-rows: minmax(128px, max-content);
+    display grid
+    grid-template-columns repeat(auto-fill, minmax(200px, 1fr));
+    grid-gap 10px
+    color white
+    font-weight 300
 
-    +greater-than(desktop) {
-      grid-template-columns: repeat(4, 250px);
-    }
-
-    +between(laptop, desktop) {
-      grid-template-columns: repeat(4, 220px);
-    }
-
-    +less-than(laptop) {
-      grid-template-columns: repeat(3, 200px);
-    }
-
-    +less-than(tablet) {
-      grid-template-columns: repeat(2, 200px);
-    }
-
-    +less-than(mobile) {
-      grid-template-columns: repeat(1, 250px);
+    table {
+      background Teal
+      width 100%
+      margin 0
+      min-height 170px
+      td:nth-child(2) {
+        text-align: right;
+      }
+      tr:last-child {
+        td {
+          text-align center
+        }
+      }
     }
 
     a {
       text-decoration: none;
       color: white;
-    }
-
-    .tank {
-      background: Teal;
-      width: 100%;
-      height: 100%;
-      min-height 128px;
-
-      table {
-        width: 100%;
-        padding-left: 5px;
-        padding-right: 7px;
-
-        td:nth-child(2) {
-          text-align: right;
-        }
-
-        td {
-          padding: 3px;
-        }
-      }
-
-      .tank-name {
-        padding: 8px;
-        font-size: 20px;
-      }
-
-      .tank-action {
-        padding-left: 10px;
-        padding-right: 10px;
-        margin-top: 10px;
-        margin-bottom: 8px;
-        text-align: center;
-      }
     }
 
     .primary-fermentation {
