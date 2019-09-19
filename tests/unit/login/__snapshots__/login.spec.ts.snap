@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`login.vue renders login page 1`] = `
+<div>
+  <div class="column-1">
+    <div id="login"><img src="../assets/logo.png" class="logo-med">
+      <h2>Login</h2> <input placeholder="username"> <span></span> <input placeholder="password" type="password"> <span></span> <button>Submit</button>
+    </div>
+  </div>
+</div>
+`;
