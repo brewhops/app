@@ -1,7 +1,11 @@
 <template lang="html">
-  <div class="content grid">
-    <div class="paper selector">
-      <h3>Batch</h3>
+  <div>
+    <div id="content">
+      <editVersion
+        v-bind:version="editableVersion"
+        @editted-version="this.editVersionCloseHook"
+      ></editVersion>
+
       <div>
         <select v-model="batch_id" v-on:change="batchChoose" class="dropdown">
           <option disabled value="">Batch</option>
@@ -130,6 +134,7 @@ import { Moment } from 'moment';
 import chart from '@/components/chart.vue';
 import loader from '@/components/loader.vue';
 import dataTable from '@/components/data-table.vue';
+import editVersion from '@/components/edit-version.vue';
 import { orderBy } from 'natural-orderby';
 
 interface IHistoryState {
@@ -149,11 +154,12 @@ interface IHistoryState {
   pHData: any[];
   abvData: any[];
   tempData: any[];
+  editableVersion?: Version;
 }
 
 export default Vue.extend({
   name: 'batch-history',
-  components: { chart: chart, dataTable: dataTable, loader: loader },
+  components: { chart: chart, dataTable: dataTable, loader: loader, editVersion: editVersion },
   data(): IHistoryState {
     return {
       batch_titles: ['Volume', 'Bright', 'Generation', 'Date Started', 'Date Completed'],
@@ -180,7 +186,8 @@ export default Vue.extend({
       fermentationData: [],
       pHData: [],
       abvData: [],
-      tempData: []
+      tempData: [],
+      editableVersion: undefined
     };
   },
   async beforeMount() {
@@ -210,11 +217,21 @@ export default Vue.extend({
     home() {
       router.push('/');
     },
-    async editVersion(version) {
-      console.log('Edit: ', version);
+    async editVersion(version: Version) {
+      console.log('Edit');
+      this.editableVersion = version;
     },
-    async deleteVersion(version) {
-      console.log('Delete: ', version);
+    async editVersionCloseHook(version: Version) {
+      this.editableVersion = undefined;
+      console.log('closed');
+    },
+    async deleteVersion(version: Version) {
+      const confirmation = confirm(
+        `Are you sure you want to delete the version from ${this.formatDate(version.measured_on)}?`
+      );
+      if (confirmation) {
+        console.log('Delete');
+      }
     },
     getEmployeeName(employee: Employee) {
       let name = 'N/A';
@@ -230,7 +247,7 @@ export default Vue.extend({
         ]
       ];
     },
-    formatDate(date: string | null) {
+    formatDate(date: string | Moment | undefined) {
       return date ? moment(date).format('MM-DD-YYYY') : '';
     },
     async batchChoose() {

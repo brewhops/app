@@ -4,10 +4,10 @@ import Cookie from 'js-cookie';
 import App from './App.vue';
 import router from './router';
 import store from './store';
-
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import VModal from 'vue-js-modal' 
 
 library.add(faEdit)
 library.add(faTrash)
@@ -15,6 +15,7 @@ Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 Vue.config.productionTip = false;
 
+Vue.use(VModal)
 Vue.use(VueResource);
 
 Vue.http.interceptors.push((request: any) => {
