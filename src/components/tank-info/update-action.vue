@@ -72,12 +72,8 @@ export default Vue.extend({
   async beforeMount() {
     this.date = moment().toISOString();
     try {
-      const headers = {
-        Authorization: `Bearer ${Cookie.getJSON('loggedIn').token}`
-      };
       const actionsResponse: HttpResponse = await this.$http.get(
-        `${process.env.VUE_APP_API}/actions/`,
-        headers
+        `${process.env.VUE_APP_API}/actions/`
       );
       const actions: Action[] = actionsResponse.data;
       this.actions = actions;
@@ -89,9 +85,6 @@ export default Vue.extend({
   methods: {
     async submit() {
       const cookie: BrewhopsCookie = Cookie.getJSON('loggedIn');
-      const headers = {
-        Authorization: `Bearer ${cookie.token}`
-      };
 
       if (this.action) {
         // if there is a current task to edit
@@ -104,9 +97,7 @@ export default Vue.extend({
           }
 
           try {
-            const response = await this.$http.patch(`${process.env.VUE_APP_API}/tasks/`, task, {
-              headers
-            });
+            const response = await this.$http.patch(`${process.env.VUE_APP_API}/tasks/`, task);
           } catch (err) {
             // tslint:disable:no-console
             console.error(err);
@@ -128,9 +119,7 @@ export default Vue.extend({
           }
 
           try {
-            const response = await this.$http.post(`${process.env.VUE_APP_API}/tasks/`, task, {
-              headers
-            });
+            const response = await this.$http.post(`${process.env.VUE_APP_API}/tasks/`, task);
           } catch (err) {
             console.error(err);
           }

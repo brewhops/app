@@ -99,15 +99,10 @@ export default Vue.extend({
         update_user: Cookie.getJSON('loggedIn').id
       };
 
-      const headers = {
-        Authorization: `Bearer ${Cookie.getJSON('loggedIn').token}`
-      };
-
       try {
         const response = await this.$http.patch(
           `${process.env.VUE_APP_API}/recipes/id/${brand.id}/`,
-          brand,
-          { headers }
+          brand
         );
         if (response.ok) {
           this.$emit('update');

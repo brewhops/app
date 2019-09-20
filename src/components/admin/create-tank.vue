@@ -67,14 +67,8 @@ export default Vue.extend({
           in_use: this.in_use
         };
 
-        const headers = {
-          Authorization: `Bearer ${Cookie.getJSON('loggedIn').token}`
-        };
-
         try {
-          const response = await this.$http.post(`${process.env.VUE_APP_API}/tanks/`, tank, {
-            headers
-          });
+          const response = await this.$http.post(`${process.env.VUE_APP_API}/tanks/`, tank);
           if (response.ok) {
             this.feedback.server.tank = `Tank ${this.tank_name} succesfully created.`;
             setTimeout(async () => (this.feedback.server.tank = ``), 5000);

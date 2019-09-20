@@ -66,17 +66,10 @@ export default Vue.extend({
           update_user: Cookie.getJSON('loggedIn').id
         };
 
-        const headers = {
-          Authorization: `Bearer ${Cookie.getJSON('loggedIn').token}`
-        };
-
         try {
           const response = await this.$http.patch(
             `${process.env.VUE_APP_API}/tanks/id/${id}/`,
-            tank,
-            {
-              headers
-            }
+            tank
           );
           if (response.ok) {
             this.feedback.server.tank = `Tank ${name} succesfully updated.`;

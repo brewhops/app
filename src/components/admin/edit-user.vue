@@ -175,17 +175,10 @@ export default Vue.extend({
           password: CryptoJS.SHA3(this.password).toString()
         };
 
-        const headers = {
-          Authorization: `Bearer ${Cookie.getJSON('loggedIn').token}`
-        };
-
         try {
           const response = await this.$http.patch(
             `${process.env.VUE_APP_API}/employees/id/${this.employee.id}/`,
-            user,
-            {
-              headers
-            }
+            user
           );
           if (response.ok) {
             this.$emit('update');
