@@ -10,6 +10,9 @@
     "deploy-staging": "sh ./scripts/staging-deploy.sh"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.24",
+    "@fortawesome/free-solid-svg-icons": "^5.11.1",
+    "@fortawesome/vue-fontawesome": "^0.1.7",
     "c3": "^0.7.1",
     "core-js": "^2.6.5",
     "crypto-js": "^3.1.9-1",
