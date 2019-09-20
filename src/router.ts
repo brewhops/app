@@ -34,7 +34,7 @@ const routes = [
   },
   {
     name: 'batch-history',
-    path: '/batch-history',
+    path: '/batch-history/:batchId?',
     meta: { title: 'Brewhops - Batch History' },
     component: () => import('@/views/batch-history.vue'),
   },

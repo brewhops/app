@@ -88,6 +88,8 @@
                 v => v.temperature,
                 v => v.pressure
               ]"
+              v-bind:editAction="this.editVersion"
+              v-bind:deleteAction="this.deleteVersion"
             />
           </div>
         </div>
@@ -176,6 +178,11 @@ export default Vue.extend({
       this.employees = <Employee[]>employees.data;
       this.actions = <Action[]>actions.data;
       this.batches = orderBy(<Batch[]>response.data, (b: Batch) => b.name, 'desc');
+
+      if (this.$route.params.batchId) {
+        this.batch_id = parseInt(this.$route.params.batchId);
+        await this.batchChoose();
+      }
     } catch (err) {
       // tslint:disable-next-line:no-console
       console.error(err);
@@ -184,6 +191,12 @@ export default Vue.extend({
   methods: {
     home() {
       router.push('/');
+    },
+    async editVersion(version) {
+      console.log('Edit: ', version);
+    },
+    async deleteVersion(version) {
+      console.log('Delete: ', version);
     },
     getEmployeeName(employee: Employee) {
       let name = 'N/A';
@@ -203,42 +216,49 @@ export default Vue.extend({
       return date ? moment(date).format('MM-DD-YYYY') : '';
     },
     async batchChoose() {
+      router.push(`/batch-history/${this.batch_id}`);
       this.loading = true;
       // filter out all the batches that aren't ours, and set that one element
       // to our batch object
-      this.batch = this.batches.filter(e => e.id === this.batch_id)[0];
+      const batch = this.batches.find(e => e.id === this.batch_id);
 
-      // when the user chooses a batch, get the info on that batch
-      const [versions, tasks, ...arr] = await Promise.all([
-        (async () => {
-          const batchResponse = await this.$http.get(
-            `${process.env.VUE_APP_API}/versions/batch/${this.batch_id}/`
-          );
+      if (batch === undefined) {
+        console.error(`Could not find selected batch by id: ${this.batch_id}`);
+      } else {
+        this.batch = batch;
 
-          return (batchResponse.data as Version[])
-            .map((v: Version) => {
-              v.measured_on = moment(v.measured_on);
-              return v;
-            })
-            .sort((a: Version, b: Version) => {
-              return moment.utc(a.measured_on).diff(moment.utc(b.measured_on));
+        // when the user chooses a batch, get the info on that batch
+        const [versions, tasks, ...arr] = await Promise.all([
+          (async () => {
+            const batchResponse = await this.$http.get(
+              `${process.env.VUE_APP_API}/versions/batch/${this.batch_id}/`
+            );
+
+            return (batchResponse.data as Version[])
+              .map((v: Version) => {
+                v.measured_on = moment(v.measured_on);
+                return v;
+              })
+              .sort((a: Version, b: Version) => {
+                return moment.utc(a.measured_on).diff(moment.utc(b.measured_on));
+              });
+          })(),
+          (async () => {
+            const taskResponse = await this.$http.get(
+              `${process.env.VUE_APP_API}/tasks/batch/${this.batch_id}/`
+            );
+
+            return (taskResponse.data as Task[]).map((t: Task) => {
+              t.added_on = moment(t.added_on);
+              return t;
             });
-        })(),
-        (async () => {
-          const taskResponse = await this.$http.get(
-            `${process.env.VUE_APP_API}/tasks/batch/${this.batch_id}/`
-          );
+          })(),
+          this.loadGraphData(this.batch_id, this.batch.recipe_id)
+        ]);
 
-          return (taskResponse.data as Task[]).map((t: Task) => {
-            t.added_on = moment(t.added_on);
-            return t;
-          });
-        })(),
-        this.loadGraphData(this.batch.id, this.batch.recipe_id)
-      ]);
-
-      this.versions = versions;
-      this.tasks = tasks;
+        this.versions = versions;
+        this.tasks = tasks;
+      }
 
       this.loading = false;
     },
