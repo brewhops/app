@@ -10,5 +10,5 @@ The app is written in VueJs and bootstrapped by the vue cli. If you need to add 
 - `npm run lint`: runs the linter on the project to enforce consistent code styling
 
 ## Deployment Commands 
-- `npm run deploy` - __Please don't run this!__ it will deploy to production
-- `npm run deploy-staging` - use this if you want to deploy your current changes to a `now` staging environment so you can test them
+- `npm run deploy` - __Please don't run this!__ runs a script prompting you if you want to manually deploy the app to production
+- `npm run deploy-staging` - use this if you want to deploy your current changes to a `now` staging environment so you can test them. This is run through a script that prompts if you actually want to do this
