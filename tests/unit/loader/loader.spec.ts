@@ -1,9 +1,9 @@
-import Loader from "@/components/loader.vue";
-import { shallowMount } from "@vue/test-utils";
+import { shallowMount } from '@vue/test-utils'
+import Loader from '@/components/loader.vue'
 
-describe("loader.vue", () => {
-  it("renders loader component", () => {
+describe('loader.vue', () => {
+  it('renders loader component', () => {
     const wrapper = shallowMount(Loader);
     expect(wrapper).toMatchSnapshot();
-  });
-});
+  })
+})

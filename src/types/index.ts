@@ -1,8 +1,8 @@
-import { Moment } from "moment";
+import { Moment } from 'moment';
 
 export type KeyAccessor = {
   [key: string]: any;
-};
+}
 
 export type Employee = {
   id?: number;

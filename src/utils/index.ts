@@ -1,39 +1,39 @@
-import router from "@/router";
-import Cookie from "js-cookie";
+import Cookie from 'js-cookie';
+import router from '@/router';
 
 export function isLoggedIn(): boolean {
-  if (Cookie.getJSON("loggedIn")) {
-    return Cookie.getJSON("loggedIn");
+  if (Cookie.getJSON('loggedIn')) {
+    return Cookie.getJSON('loggedIn');
   } else {
     return false;
   }
 }
 
 export function isAdmin(): boolean {
-  if (Cookie.getJSON("loggedIn")) {
-    return Cookie.getJSON("loggedIn").admin;
+  if(Cookie.getJSON('loggedIn')) {
+    return Cookie.getJSON('loggedIn').admin;
   } else {
-    return false;
+    return false
   }
 }
 
 export function logout(): void {
-  if (Cookie.getJSON("loggedIn")) {
-    Cookie.remove("loggedIn");
+  if (Cookie.getJSON('loggedIn')) {
+    Cookie.remove('loggedIn');
   }
-  router.push("/");
+  router.push('/');
 }
 
 export enum TANK_STATUS {
-  BUSY = "busy",
-  BROKEN = "broken",
-  AVAILABLE = "available",
-  BREWING = "brewing",
-  TRANSFERRING = "transferring",
-  COMPLETED = "completed",
+  BUSY = 'busy',
+  BROKEN = 'broken',
+  AVAILABLE = 'available',
+  BREWING = 'brewing',
+  TRANSFERRING = 'transferring',
+  COMPLETED = 'completed'
 }
 
 export enum ACTION {
   PRIMARY_FERMENTATION = 1,
-  EXCEPTION = 6,
+  EXCEPTION = 6
 }
