@@ -17,6 +17,7 @@
       <p>{{ feedback.server.tank }}</p>
     </div>
     <button v-on:click="tankUpdate">Submit</button>
+    <button v-on:click="tankDelete">Delete</button>
     <button v-on:click="clearTank">Select a Tank</button>
   </div>
 </template>
@@ -37,8 +38,6 @@ interface IUpdateTankState {
     };
   };
 }
-
-// tslint:disable: no-console
 
 export default Vue.extend({
   name: 'edit-tank',
@@ -72,7 +71,7 @@ export default Vue.extend({
             tank
           );
           if (response.ok) {
-            this.feedback.server.tank = `Tank ${name} succesfully updated.`;
+            this.feedback.server.tank = `${name} succesfully updated.`;
             setTimeout(async () => {
               this.feedback.server.tank = ``;
               this.clearTank();
@@ -82,6 +81,33 @@ export default Vue.extend({
         } catch (err) {
           console.error(err);
           this.feedback.server.tank = `Failed to update ${name}.`;
+        }
+      }
+    },
+    async tankDelete() {
+      if (this.tank) {
+        const { id, name, status } = this.tank;
+        const tank = {
+          disabled: true,
+          in_use: false,
+          name,
+          status
+        };
+        try {
+          const response = await this.$http.patch(
+            `${process.env.VUE_APP_API}/tanks/id/${id}`,
+            tank
+          );
+          if (response.ok) {
+            this.feedback.server.tank = `Tank ${name} succesfully deleted.`;
+            setTimeout(async () => {
+              this.feedback.server.tank = ``;
+              this.clearTank();
+            }, 5000);
+          }
+        } catch (err) {
+          console.error(err);
+          this.feedback.server.tank = `Failed to delete ${this.tank_name}`;
         }
       }
     },

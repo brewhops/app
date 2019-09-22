@@ -4,24 +4,24 @@
       <h2>Tank Info</h2>
       <div id="tankContents" v-if="tanks.length > 0">
         <a v-on:click="showTankInfo(tank.id)" v-for="tank in tanks" v-bind:key="tank.id">
-          <div class="tank" v-bind:class="tank.action_id">
+          <div class="tank" v-bind:class="tank.classname">
             <div class="tank-name">
               {{ tank.name }}
             </div>
             <table>
               <tr>
-                <td v-if="tank.airplane_code">{{ tank.airplane_code }}</td>
+                <td v-if="tank.beer_name">{{ tank.beer_name }}</td>
                 <td v-if="tank.pressure">{{ tank.pressure }} psi</td>
                 <td v-else>{{ tank.status }}</td>
               </tr>
               <tr>
-                <td v-if="tank.batch">{{ tank.batch.name }}</td>
+                <td v-if="tank.batch_name">{{ tank.batch_name }}</td>
                 <td v-if="tank.temperature">{{ tank.temperature }}ºF</td>
               </tr>
             </table>
 
-            <div v-if="tank.action && tank.action !== 'No Action'" class="tank-action">
-              {{ tank.action }}
+            <div v-if="tank.action_name && tank.action_name !== 'No Action'" class="tank-action">
+              {{ tank.action_name }}
             </div>
           </div>
         </a>
@@ -62,16 +62,17 @@ import { HttpResponse } from 'vue-resource/types/vue_resource';
 // tslint:disable: max-func-body-length no-any
 
 interface ITank {
-  action?: string;
+  action_name?: string;
   action_id?: number | string;
-  batch?: any;
+  batch_name?: any;
   pressure?: number;
   temperature?: number;
   recipe_id?: number;
-  airplane_code?: string;
+  beer_name?: string;
   id?: number;
   name?: string;
   status?: string;
+  classname?: string;
 }
 
 // tslint:disable:no-any no-console
@@ -115,26 +116,8 @@ export default Vue.extend({
     this.file = null;
 
     try {
-      const data: HttpResponse[] = await Promise.all([
-        this.$http.get(`${process.env.VUE_APP_API}/tanks/`),
-        this.$http.get(`${process.env.VUE_APP_API}/batches/`),
-        this.$http.get(`${process.env.VUE_APP_API}/actions/`),
-        this.$http.get(`${process.env.VUE_APP_API}/recipes/`)
-      ]);
-      const [tanksResponse, batchResponse, actionsResponse, recipeResponse] = data;
-
-      const tanks: Tank[] = orderBy(tanksResponse.data as Tank[], (t: Tank) => t.name, 'asc');
-
-      this.tanks = await Promise.all(
-        tanks.map((tankInfo: Tank) =>
-          this.createTankModel(
-            tankInfo,
-            batchResponse.data as Batch[],
-            recipeResponse.data as Recipe[],
-            actionsResponse.data as Action[]
-          )
-        )
-      );
+      const response = await this.$http.get(`${process.env.VUE_APP_API}/tanks/monitoring/`);
+      this.tanks = response.data as ITank[];
     } catch (err) {
       // tslint:disable-next-line:no-console
       console.error(err);
@@ -145,97 +128,6 @@ export default Vue.extend({
       // send us over to the tank info page and set the id on the url
       // to be the tankID that we clicked on.
       router.push({ name: 'tank-info', params: { tankID } });
-    },
-    async createTankModel(
-      tankInfo: Tank,
-      batches: Batch[],
-      recipes: Recipe[],
-      actions: Action[]
-    ): Promise<ITank> {
-      // create a temporary tank for us to fill with data
-      const tank: ITank = {
-        // keep track of tank id for searching
-        id: Number(tankInfo.id),
-        // keep track of tank name for displaying
-        name: tankInfo.name,
-        status: tankInfo.status
-      };
-
-      // Get batch information
-      const batch: Batch = batches
-        .filter((b: Batch) => b.completed_on === null && b.tank_id === tankInfo.id)
-        .sort((a: Batch, b: Batch) => {
-          return moment.utc(b.started_on).diff(moment.utc(a.started_on));
-        })[0];
-
-      if (batch) {
-        tank.batch = {};
-        tank.batch.tank_id = tank.id;
-        // add in our batchesID to the tank info box
-        tank.batch.id = batch.id;
-        tank.batch.name = batch.name;
-        // add the recipeID to the tank info box
-        tank.recipe_id = batch.recipe_id;
-        tank.batch.recipe_id = batch.recipe_id;
-
-        tank.batch.volume = batch.volume;
-        tank.batch.bright = batch.bright;
-        tank.batch.generation = batch.generation;
-
-        // Set recipe information
-        for (const recipe of recipes) {
-          if (batch.recipe_id === recipe.id) {
-            tank.airplane_code = recipe.airplane_code;
-          }
-        }
-
-        // Get version information if tank is in use
-        if (tankInfo.in_use) {
-          const versionsResponse = await this.$http.get(
-            `${process.env.VUE_APP_API}/versions/batch/${batch.id}/`
-          );
-          const versions: Version[] = (versionsResponse.data as Version[])
-            .map((v: Version) => {
-              v.measured_on = moment(v.measured_on);
-
-              return v;
-            })
-            .sort((a: Version, b: Version) => {
-              return moment.utc(a.measured_on).diff(moment.utc(b.measured_on));
-            });
-
-          if (versions.length > 0) {
-            const lastVersion = versions[versions.length - 1];
-
-            tank.pressure = lastVersion.pressure;
-            tank.temperature = lastVersion.temperature;
-          }
-        }
-
-        // Get task information
-        const tasksResponse = await this.$http.get(
-          `${process.env.VUE_APP_API}/tasks/batch/${batch.id}/`
-        );
-        const activeTasks: Task[] = (tasksResponse.data as Task[]).filter(
-          (t: Task) => !t.completed_on
-        );
-
-        if (activeTasks.length > 0) {
-          const task: Task = activeTasks[0];
-          tank.action_id = task.action_id;
-
-          // Set action data
-          for (const action of actions) {
-            if (tank.action_id === action.id) {
-              tank.action = action.name;
-              tank.action_id = action.classname;
-            }
-          }
-        }
-      }
-
-      // return tank
-      return tank;
     }
   }
 });
