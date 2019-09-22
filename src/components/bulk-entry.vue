@@ -106,9 +106,6 @@ export default Vue.extend({
 
     async updateTanks(readings: IDataEntryState[]) {
       const cookie: BrewhopsCookie = Cookie.getJSON('loggedIn');
-      const headers = {
-        Authorization: `Bearer ${cookie.token}`
-      };
 
       if (!this.tanks) return;
 
@@ -143,10 +140,7 @@ export default Vue.extend({
             };
             return await this.$http.post(
               `${process.env.VUE_APP_API}/batches/update/`,
-              requestObject,
-              {
-                headers
-              }
+              requestObject
             );
           })()
         )

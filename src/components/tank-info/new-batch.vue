@@ -120,19 +120,12 @@ export default Vue.extend({
           tank_id: this.tank.id
         };
 
-        const headers = {
-          Authorization: `Bearer ${Cookie.getJSON('loggedIn').token}`
-        };
-
         try {
           const batchResponse = await this.$http.post(
             `${process.env.VUE_APP_API}/batches/new/`,
-            batch,
-            {
-              headers
-            }
+            batch
           );
-          await this.updateTank(employeeId, headers);
+          await this.updateTank(employeeId);
           await this.createInitialTask(employeeId);
           router.push('/');
         } catch (err) {
@@ -173,7 +166,7 @@ export default Vue.extend({
       }
     },
     // tslint:disable-next-line:no-any
-    async updateTank(employeeId: number, headers: any) {
+    async updateTank(employeeId: number) {
       const { id, ...tank } = this.tank;
       tank.in_use = true;
       tank.update_user = employeeId;
@@ -182,10 +175,7 @@ export default Vue.extend({
       try {
         const tankResponse = await this.$http.patch(
           `${process.env.VUE_APP_API}/tanks/id/${id}/`,
-          tank,
-          {
-            headers
-          }
+          tank
         );
       } catch (err) {
         console.error(err);

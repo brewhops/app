@@ -146,14 +146,8 @@ export default Vue.extend({
         password: CryptoJS.SHA3(this.password).toString()
       };
 
-      const headers = {
-        Authorization: `Bearer ${Cookie.getJSON('loggedIn').token}`
-      };
-
       try {
-        const response = await this.$http.post(`${process.env.VUE_APP_API}/employees/`, user, {
-          headers
-        });
+        const response = await this.$http.post(`${process.env.VUE_APP_API}/employees/`, user);
         if (response.ok) {
           this.$emit('update');
           this.feedback.server.user = 'New user succesfully created';

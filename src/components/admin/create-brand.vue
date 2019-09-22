@@ -92,14 +92,8 @@ export default Vue.extend({
         name: this.recipe_name
       };
 
-      const headers = {
-        Authorization: `Bearer ${Cookie.getJSON('loggedIn').token}`
-      };
-
       try {
-        const response = await this.$http.post(`${process.env.VUE_APP_API}/recipes/`, recipe, {
-          headers
-        });
+        const response = await this.$http.post(`${process.env.VUE_APP_API}/recipes/`, recipe);
         if (response.ok) {
           this.$emit('update');
           this.feedback.server.brand = 'Created a new brand.';
