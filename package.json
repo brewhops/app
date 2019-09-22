@@ -6,6 +6,7 @@
     "dev": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test": "vue-cli-service test:unit",
+    "lint": "tslint -c ./tslint.json -p ./tsconfig.json",
     "deploy": "sh ./scripts/prod-deploy.sh",
     "deploy-staging": "sh ./scripts/staging-deploy.sh"
   },
@@ -67,12 +68,13 @@
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged",
+      "pre-push": "npm run test",
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   },
   "lint-staged": {
     "src/**/*.{ts}": [
-      "tslint --fix -p ./tsconfig.json",
+      "tslint -c ./tslint.json -p ./tsconfig.json --fix",
       "prettier --single-quote --print-width 100 --write",
       "git add"
     ],
