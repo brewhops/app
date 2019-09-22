@@ -55,8 +55,7 @@ import {
   Task,
   Version,
   BrewhopsCookie,
-  BatchUpdateOrCreate,
-  TankMonitoringStatus
+  BatchUpdateOrCreate
 } from '@/types/index';
 import { HttpResponse } from 'vue-resource/types/vue_resource';
 
