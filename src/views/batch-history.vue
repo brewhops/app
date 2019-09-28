@@ -111,6 +111,7 @@ import chart from '@/components/chart.vue';
 import loader from '@/components/loader.vue';
 import dataTable from '@/components/data-table.vue';
 import { orderBy } from 'natural-orderby';
+import { getAPIUrl } from '@/utils';
 
 interface IHistoryState {
   batch_titles: string[];
@@ -170,9 +171,9 @@ export default Vue.extend({
     }
 
     try {
-      const response = await this.$http.get(`${process.env.VUE_APP_API}/batches/`);
-      const employees = await this.$http.get(`${process.env.VUE_APP_API}/employees/`);
-      const actions = await this.$http.get(`${process.env.VUE_APP_API}/actions/`);
+      const response = await this.$http.get(`${getAPIUrl()}/batches/`);
+      const employees = await this.$http.get(`${getAPIUrl()}/employees/`);
+      const actions = await this.$http.get(`${getAPIUrl()}/actions/`);
       this.employees = <Employee[]>employees.data;
       this.actions = <Action[]>actions.data;
       this.batches = orderBy(<Batch[]>response.data, (b: Batch) => b.name, 'desc');

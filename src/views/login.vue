@@ -24,6 +24,7 @@ import Vue from 'vue';
 import router from '@/router';
 import CryptoJS from 'crypto-js';
 import Cookie from 'js-cookie';
+import { getAPIUrl } from '@/utils';
 
 interface ILoginState {
   isAdmin: boolean;
@@ -113,7 +114,7 @@ export default Vue.extend({
       const password = CryptoJS.SHA3(pw).toString();
 
       try {
-        const response = await this.$http.post(`${process.env.VUE_APP_API}/employees/login/`, {
+        const response = await this.$http.post(`${getAPIUrl()}/employees/login/`, {
           username,
           password
         });

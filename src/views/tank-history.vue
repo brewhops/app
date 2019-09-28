@@ -48,6 +48,7 @@ import Cookie from 'js-cookie';
 import moment from 'moment';
 import { Tank, Employee } from '@/types/index';
 import { orderBy } from 'natural-orderby';
+import { getAPIUrl } from '@/utils';
 
 // tslint:disable: no-any
 
@@ -84,7 +85,7 @@ export default Vue.extend({
     }
 
     try {
-      const response = await this.$http.get(`${process.env.VUE_APP_API}/tanks/`);
+      const response = await this.$http.get(`${getAPIUrl()}/tanks/`);
       this.tanks = orderBy(<Tank[]>response.data, (t: Tank) => t.name, 'asc');
     } catch (err) {
       // tslint:disable-next-line:no-console
@@ -114,7 +115,7 @@ export default Vue.extend({
         const tankResponse = await this.$http.get(
           `${process.env.VUE_APP_API}/batches/tank/${this.tank_id}/`
         );
-        const employeesResponse = await this.$http.get(`${process.env.VUE_APP_API}/employees/`);
+        const employeesResponse = await this.$http.get(`${getAPIUrl()}/employees/`);
 
         this.histories = tankResponse.data;
         this.employees = employeesResponse.data;

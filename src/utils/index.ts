@@ -1,6 +1,15 @@
 import Cookie from 'js-cookie';
 import router from '@/router';
 
+export function getAPIUrl(): string {
+  if (process.env.VUE_APP_DEPLOYMENT !== 'production-live'
+      && Cookie.get("VUE_APP_API")) {
+    return <string>Cookie.get("VUE_APP_API");
+  } else {
+    return process.env.VUE_APP_API;
+  }
+}
+
 export function isLoggedIn(): boolean {
   if (Cookie.getJSON('loggedIn')) {
     return Cookie.getJSON('loggedIn');

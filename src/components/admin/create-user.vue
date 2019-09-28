@@ -30,6 +30,7 @@ import Cookie from 'js-cookie';
 import CryptoJS from 'crypto-js';
 import router from '@/router';
 import { Tank, BrewhopsCookie } from '@/types/index';
+import { getAPIUrl } from '@/utils';
 
 interface ICreateUserState {
   first_name: string;
@@ -147,7 +148,7 @@ export default Vue.extend({
       };
 
       try {
-        const response = await this.$http.post(`${process.env.VUE_APP_API}/employees/`, user);
+        const response = await this.$http.post(`${getAPIUrl()}/employees/`, user);
         if (response.ok) {
           this.$emit('update');
           this.feedback.server.user = 'New user succesfully created';

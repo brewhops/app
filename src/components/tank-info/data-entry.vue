@@ -56,6 +56,7 @@ import {
 } from '@/types/index';
 import { HttpResponse } from 'vue-resource/types/vue_resource';
 import { TANK_STATUS } from '../../utils/index';
+import { getAPIUrl } from '@/utils';
 
 // tslint:disable:no-any no-console
 interface IDataEntryState {
@@ -185,19 +186,19 @@ export default Vue.extend({
         const confirmation = confirm('Are you sure you want to close the batch?');
         if (confirmation) {
           try {
-            await this.$http.delete(`${process.env.VUE_APP_API}/batches/close/${this.batch.id}/`);
+            await this.$http.delete(`${getAPIUrl()}/batches/close/${this.batch.id}/`);
 
             const { id, ...tank } = this.tank;
             tank.status = TANK_STATUS.AVAILABLE;
             tank.in_use = false;
             tank.update_user = cookie.id;
-            await this.$http.patch(`${process.env.VUE_APP_API}/tanks/id/${this.tank.id}/`, tank);
+            await this.$http.patch(`${getAPIUrl()}/tanks/id/${this.tank.id}/`, tank);
 
             if (this.activeTask) {
               const task: Task = this.activeTask;
               task.completed_on = moment().toISOString();
               task.update_user = Number(cookie.id);
-              const response = await this.$http.patch(`${process.env.VUE_APP_API}/tasks/`, task);
+              const response = await this.$http.patch(`${getAPIUrl()}/tasks/`, task);
             }
 
             router.push('/');

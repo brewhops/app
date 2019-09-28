@@ -46,6 +46,7 @@ import Cookie from 'js-cookie';
 import moment from 'moment';
 import Datepicker from 'vuejs-datepicker';
 import { orderBy } from 'natural-orderby';
+import { getAPIUrl } from '@/utils';
 
 import {
   Action,
@@ -116,10 +117,10 @@ export default Vue.extend({
 
     try {
       const data: HttpResponse[] = await Promise.all([
-        this.$http.get(`${process.env.VUE_APP_API}/tanks/`),
-        this.$http.get(`${process.env.VUE_APP_API}/batches/`),
-        this.$http.get(`${process.env.VUE_APP_API}/actions/`),
-        this.$http.get(`${process.env.VUE_APP_API}/recipes/`)
+        this.$http.get(`${getAPIUrl()}/tanks/`),
+        this.$http.get(`${getAPIUrl()}/batches/`),
+        this.$http.get(`${getAPIUrl()}/actions/`),
+        this.$http.get(`${getAPIUrl()}/recipes/`)
       ]);
       const [tanksResponse, batchResponse, actionsResponse, recipeResponse] = data;
 

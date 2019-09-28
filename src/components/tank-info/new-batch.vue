@@ -47,6 +47,7 @@ import loader from '../loader.vue';
 import { Recipe, Batch, Tank, Task } from '@/types/index';
 import { TANK_STATUS, ACTION } from '@/utils';
 import { HttpOptions } from 'vue-resource/types/vue_resource';
+import { getAPIUrl } from '@/utils';
 
 interface INewBatchState {
   recipes: Recipe[];
@@ -95,7 +96,7 @@ export default Vue.extend({
     }
 
     try {
-      const recipeResponse = await this.$http.get(`${process.env.VUE_APP_API}/recipes/`);
+      const recipeResponse = await this.$http.get(`${getAPIUrl()}/recipes/`);
       this.recipes = <Recipe[]>recipeResponse.data;
     } catch (err) {
       console.error(err);
@@ -151,7 +152,7 @@ export default Vue.extend({
     },
     async createInitialTask(employee_id: number) {
       try {
-        const batchResponse = await this.$http.get(`${process.env.VUE_APP_API}/batches/`);
+        const batchResponse = await this.$http.get(`${getAPIUrl()}/batches/`);
         const batches = batchResponse.data.filter((batch: Batch) => batch.name === this.batch_name);
 
         const task: Task = {
@@ -160,7 +161,7 @@ export default Vue.extend({
           action_id: ACTION.PRIMARY_FERMENTATION,
           added_on: new Date().toUTCString()
         };
-        const taskResponse = await this.$http.post(`${process.env.VUE_APP_API}/tasks/`, task);
+        const taskResponse = await this.$http.post(`${getAPIUrl()}/tasks/`, task);
       } catch (err) {
         console.log(err);
       }

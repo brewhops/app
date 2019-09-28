@@ -30,7 +30,7 @@ import Cookie from 'js-cookie';
 import moment, { unix } from 'moment';
 import { Action, Task, BrewhopsCookie } from '@/types/index';
 import { HttpResponse } from 'vue-resource/types/vue_resource';
-import { ACTION } from '@/utils';
+import { ACTION, getAPIUrl } from '@/utils';
 import Datepicker from 'vuejs-datepicker';
 
 interface IUpdateAction {
@@ -97,7 +97,7 @@ export default Vue.extend({
           }
 
           try {
-            const response = await this.$http.patch(`${process.env.VUE_APP_API}/tasks/`, task);
+            const response = await this.$http.patch(`${getAPIUrl()}/tasks/`, task);
           } catch (err) {
             // tslint:disable:no-console
             console.error(err);
@@ -119,7 +119,7 @@ export default Vue.extend({
           }
 
           try {
-            const response = await this.$http.post(`${process.env.VUE_APP_API}/tasks/`, task);
+            const response = await this.$http.post(`${getAPIUrl()}/tasks/`, task);
           } catch (err) {
             console.error(err);
           }

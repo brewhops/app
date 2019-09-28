@@ -26,7 +26,7 @@
 import Vue from 'vue';
 import Cookie from 'js-cookie';
 import router from '@/router';
-import { TANK_STATUS } from '@/utils';
+import { TANK_STATUS, getAPIUrl } from '@/utils';
 import CreateTank from '@/components/admin/create-tank.vue';
 import UpdateTank from '@/components/admin/edit-tank.vue';
 import CreateUser from '@/components/admin/create-user.vue';
@@ -92,7 +92,7 @@ export default Vue.extend({
   methods: {
     async tankUpdate() {
       try {
-        const response = await this.$http.get(`${process.env.VUE_APP_API}/tanks/`);
+        const response = await this.$http.get(`${getAPIUrl()}/tanks/`);
         this.tanks = response.data as Tank[];
       } catch (err) {
         console.error(err);
@@ -100,7 +100,7 @@ export default Vue.extend({
     },
     async usersUpdate() {
       try {
-        const response = await this.$http.get(`${process.env.VUE_APP_API}/employees/`);
+        const response = await this.$http.get(`${getAPIUrl()}/employees/`);
         this.employees = response.data as Employee[];
       } catch (err) {
         console.error(err);
@@ -108,7 +108,7 @@ export default Vue.extend({
     },
     async brandsUpdate() {
       try {
-        const response = await this.$http.get(`${process.env.VUE_APP_API}/recipes/`);
+        const response = await this.$http.get(`${getAPIUrl()}/recipes/`);
         this.brands = response.data as Recipe[];
       } catch (err) {
         console.error(err);

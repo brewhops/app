@@ -25,6 +25,7 @@
 import Vue from 'vue';
 import Cookie from 'js-cookie';
 import { Tank, BrewhopsCookie } from '@/types/index';
+import { getAPIUrl } from '@/utils';
 
 interface ICreateTankState {
   tank_name: string;
@@ -68,7 +69,7 @@ export default Vue.extend({
         };
 
         try {
-          const response = await this.$http.post(`${process.env.VUE_APP_API}/tanks/`, tank);
+          const response = await this.$http.post(`${getAPIUrl()}/tanks/`, tank);
           if (response.ok) {
             this.feedback.server.tank = `Tank ${this.tank_name} succesfully created.`;
             setTimeout(async () => (this.feedback.server.tank = ``), 5000);
