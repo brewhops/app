@@ -93,7 +93,7 @@
                 v => v.temperature,
                 v => v.pressure
               ]"
-              v-bind:editAction="this.editVersion"
+              v-bind:editAction="version => (this.editableVersion = version)"
               v-bind:deleteAction="this.deleteVersion"
             />
           </div>
@@ -200,13 +200,11 @@ export default Vue.extend({
     home() {
       router.push('/');
     },
-    async editVersion(version: Version) {
-      console.log('Edit');
-      this.editableVersion = version;
-    },
     async editVersionCloseHook(version: Version) {
       this.editableVersion = undefined;
-      console.log('closed');
+      if (version) {
+        console.log(version);
+      }
     },
     async deleteVersion(version: Version) {
       const confirmation = confirm(
