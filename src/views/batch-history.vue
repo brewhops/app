@@ -119,6 +119,7 @@ import loader from '@/components/loader.vue';
 import dataTable from '@/components/data-table.vue';
 import editVersion from '@/components/edit-version.vue';
 import { orderBy } from 'natural-orderby';
+import versions from '../../../api/src/components/versions';
 
 interface IHistoryState {
   batch_titles: string[];
@@ -203,7 +204,11 @@ export default Vue.extend({
     async editVersionCloseHook(version: Version) {
       this.editableVersion = undefined;
       if (version) {
-        console.log(version);
+        try {
+          await this.$http.patch(`${process.env.VUE_APP_API}/versions/id/${version.id}`, version);
+        } catch (e) {
+          console.error(e);
+        }
       }
     },
     async deleteVersion(version: Version) {
@@ -211,7 +216,12 @@ export default Vue.extend({
         `Are you sure you want to delete the version from ${this.formatDate(version.measured_on)}?`
       );
       if (confirmation) {
-        console.log('Delete');
+        try {
+          await this.$http.delete(`${process.env.VUE_APP_API}/versions/id/${version.id}`);
+          this.versions = this.versions.filter(v => v.id !== version.id);
+        } catch (e) {
+          console.error(e);
+        }
       }
     },
     getEmployeeName(employee: Employee) {
