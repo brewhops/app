@@ -41,9 +41,8 @@
 <script lang="ts">
 import Vue from 'vue';
 import Datepicker from 'vuejs-datepicker';
-import versions from '../../../api/src/components/versions';
 import moment, { Moment } from 'moment';
-import { Version } from '../../../api/src/components/batches/types';
+import { Version } from '@/types/index';
 
 interface IEditVersion {
   SG: number;

@@ -119,7 +119,6 @@ import loader from '@/components/loader.vue';
 import dataTable from '@/components/data-table.vue';
 import editVersion from '@/components/edit-version.vue';
 import { orderBy } from 'natural-orderby';
-import versions from '../../../api/src/components/versions';
 
 interface IHistoryState {
   batch_titles: string[];
