@@ -1,6 +1,11 @@
 <template lang="html">
   <div>
     <div id="content">
+      <editVersion
+        v-bind:version="editableVersion"
+        @editted-version="this.editVersionCloseHook"
+      ></editVersion>
+
       <div>
         <h2>Batch History</h2>
         <div>
@@ -88,6 +93,8 @@
                 v => v.temperature,
                 v => v.pressure
               ]"
+              v-bind:editAction="version => (this.editableVersion = version)"
+              v-bind:deleteAction="this.deleteVersion"
             />
           </div>
         </div>
@@ -110,6 +117,7 @@ import { Moment } from 'moment';
 import chart from '@/components/chart.vue';
 import loader from '@/components/loader.vue';
 import dataTable from '@/components/data-table.vue';
+import editVersion from '@/components/edit-version.vue';
 import { orderBy } from 'natural-orderby';
 
 interface IHistoryState {
@@ -129,11 +137,12 @@ interface IHistoryState {
   pHData: any[];
   abvData: any[];
   tempData: any[];
+  editableVersion?: Version;
 }
 
 export default Vue.extend({
   name: 'batch-history',
-  components: { chart: chart, dataTable: dataTable, loader: loader },
+  components: { chart: chart, dataTable: dataTable, loader: loader, editVersion: editVersion },
   data(): IHistoryState {
     return {
       batch_titles: ['Volume', 'Bright', 'Generation', 'Date Started', 'Date Completed'],
@@ -160,7 +169,8 @@ export default Vue.extend({
       fermentationData: [],
       pHData: [],
       abvData: [],
-      tempData: []
+      tempData: [],
+      editableVersion: undefined
     };
   },
   async beforeMount() {
@@ -176,6 +186,11 @@ export default Vue.extend({
       this.employees = <Employee[]>employees.data;
       this.actions = <Action[]>actions.data;
       this.batches = orderBy(<Batch[]>response.data, (b: Batch) => b.name, 'desc');
+
+      if (this.$route.params.batchId) {
+        this.batch_id = parseInt(this.$route.params.batchId);
+        await this.batchChoose();
+      }
     } catch (err) {
       // tslint:disable-next-line:no-console
       console.error(err);
@@ -184,6 +199,29 @@ export default Vue.extend({
   methods: {
     home() {
       router.push('/');
+    },
+    async editVersionCloseHook(version: Version) {
+      this.editableVersion = undefined;
+      if (version) {
+        try {
+          await this.$http.patch(`${process.env.VUE_APP_API}/versions/id/${version.id}`, version);
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    },
+    async deleteVersion(version: Version) {
+      const confirmation = confirm(
+        `Are you sure you want to delete the version from ${this.formatDate(version.measured_on)}?`
+      );
+      if (confirmation) {
+        try {
+          await this.$http.delete(`${process.env.VUE_APP_API}/versions/id/${version.id}`);
+          this.versions = this.versions.filter(v => v.id !== version.id);
+        } catch (e) {
+          console.error(e);
+        }
+      }
     },
     getEmployeeName(employee: Employee) {
       let name = 'N/A';
@@ -199,46 +237,53 @@ export default Vue.extend({
         ]
       ];
     },
-    formatDate(date: string | null) {
+    formatDate(date: string | Moment | undefined) {
       return date ? moment(date).format('MM-DD-YYYY') : '';
     },
     async batchChoose() {
+      router.push(`/batch-history/${this.batch_id}`);
       this.loading = true;
       // filter out all the batches that aren't ours, and set that one element
       // to our batch object
-      this.batch = this.batches.filter(e => e.id === this.batch_id)[0];
+      const batch = this.batches.find(e => e.id === this.batch_id);
 
-      // when the user chooses a batch, get the info on that batch
-      const [versions, tasks, ...arr] = await Promise.all([
-        (async () => {
-          const batchResponse = await this.$http.get(
-            `${process.env.VUE_APP_API}/versions/batch/${this.batch_id}/`
-          );
+      if (batch === undefined) {
+        console.error(`Could not find selected batch by id: ${this.batch_id}`);
+      } else {
+        this.batch = batch;
 
-          return (batchResponse.data as Version[])
-            .map((v: Version) => {
-              v.measured_on = moment(v.measured_on);
-              return v;
-            })
-            .sort((a: Version, b: Version) => {
-              return moment.utc(a.measured_on).diff(moment.utc(b.measured_on));
+        // when the user chooses a batch, get the info on that batch
+        const [versions, tasks, ...arr] = await Promise.all([
+          (async () => {
+            const batchResponse = await this.$http.get(
+              `${process.env.VUE_APP_API}/versions/batch/${this.batch_id}/`
+            );
+
+            return (batchResponse.data as Version[])
+              .map((v: Version) => {
+                v.measured_on = moment(v.measured_on);
+                return v;
+              })
+              .sort((a: Version, b: Version) => {
+                return moment.utc(a.measured_on).diff(moment.utc(b.measured_on));
+              });
+          })(),
+          (async () => {
+            const taskResponse = await this.$http.get(
+              `${process.env.VUE_APP_API}/tasks/batch/${this.batch_id}/`
+            );
+
+            return (taskResponse.data as Task[]).map((t: Task) => {
+              t.added_on = moment(t.added_on);
+              return t;
             });
-        })(),
-        (async () => {
-          const taskResponse = await this.$http.get(
-            `${process.env.VUE_APP_API}/tasks/batch/${this.batch_id}/`
-          );
+          })(),
+          this.loadGraphData(this.batch_id, this.batch.recipe_id)
+        ]);
 
-          return (taskResponse.data as Task[]).map((t: Task) => {
-            t.added_on = moment(t.added_on);
-            return t;
-          });
-        })(),
-        this.loadGraphData(this.batch.id, this.batch.recipe_id)
-      ]);
-
-      this.versions = versions;
-      this.tasks = tasks;
+        this.versions = versions;
+        this.tasks = tasks;
+      }
 
       this.loading = false;
     },
