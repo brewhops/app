@@ -1,36 +1,37 @@
 <template>
   <div>
-    <div class="title">
-      <h3>Tank {{ tankInfo.name }}</h3>
+    <h3>Tank {{ tankInfo.name }}</h3>
+    <div v-if="loading" class="center">
+      <loader class="col-6" />
     </div>
-    <div v-show="loading" class="center">
-      <loader></loader>
-    </div>
-    <div v-show="!loading" v-if="tank && this.tank.in_use && recipe && batch" id="content">
-      <div id="info-content">
-        <div id="tank">
-          <h2>Info</h2>
-          <tank-status v-bind:tankInfo="tankInfo" v-bind:task="task" />
-          <recipe id="recipe" v-bind:recipe="recipe" v-bind:volume="tankInfo.volume" />
-        </div>
-
-        <div id="entry">
-          <update-action
-            v-bind:tank="tank"
-            v-bind:batch="batch"
-            v-bind:activeTask="task"
-            @newDataCallback="loadData"
-          ></update-action>
-          <data-entry
-            v-bind:tank="tank"
-            v-bind:batch="batch"
-            v-bind:recipe="recipe"
-            v-bind:activeTask="task"
-            @newDataCallback="loadData"
-          ></data-entry>
-        </div>
+    <div
+      v-show="!loading"
+      v-if="tank && this.tank.in_use && recipe && batch"
+      id="content"
+      class="grid"
+    >
+      <div id="tank" class="paper col-6">
+        <h2>Info</h2>
+        <tank-status v-bind:tankInfo="tankInfo" v-bind:task="task" />
+        <recipe id="recipe" v-bind:recipe="recipe" v-bind:volume="tankInfo.volume" />
       </div>
-      <div v-show="versions.length > 0" id="data">
+      <div class="col-6">
+        <data-entry
+          v-bind:tank="tank"
+          v-bind:batch="batch"
+          v-bind:recipe="recipe"
+          v-bind:activeTask="task"
+          style="margin-bottom: 10px"
+          @newDataCallback="loadData"
+        ></data-entry>
+        <update-action
+          v-bind:tank="tank"
+          v-bind:batch="batch"
+          v-bind:activeTask="task"
+          @newDataCallback="loadData"
+        ></update-action>
+      </div>
+      <div v-show="versions.length > 0" id="data" class="paper col-12">
         <h2>Batch History</h2>
         <charts v-bind:batch="batch" v-on:loaded="loading = false" />
       </div>
@@ -318,13 +319,6 @@ export default Vue.extend({
 <style lang="stylus" scoped>
 @import '../styles/breakpoints';
 
-.title {
-  display: flex;
-  width: 100vw;
-  justify-content: center;
-  align-items: center;
-}
-
 .center {
   display: flex;
   width: 100vw;
@@ -333,23 +327,9 @@ export default Vue.extend({
   align-items: center;
 }
 
-#info-content {
-  display: grid;
-  grid-template-columns: 45vw 45vw;
-  grid-template-areas: 'tank entry';
-  width: 90vw;
-  margin: auto;
-
-  +less-than(tablet) {
-    grid-template-columns: 90vw;
-    grid-template-areas: 'tank' 'entry' 'recipe';
-  }
-
-  +less-than(mobile) {
-    grid-template-columns: 90vw;
-    grid-template-areas: 'tank' 'recipe';
-  }
-}
+#info-content
+  width 95vw
+  margin auto
 
 #new-batch {
   display: grid;
@@ -361,45 +341,6 @@ export default Vue.extend({
 
 #recipe {
   margin-top: 30px;
-}
-
-#entry {
-  +less-than(tablet) {
-    margin: auto;
-  }
-}
-
-#data {
-  justify-content: center;
-  width: 90vw;
-  margin: auto;
-  margin-top: 30px;
-
-  #charts {
-    display: grid;
-    justify-content: center;
-    grid-template-columns: repeat(2, 43vw);
-
-    +less-than(tablet) {
-      grid-template-columns: 90vw;
-    }
-
-    .chart {
-      margin-left: 1vw;
-      margin-right: 1vw;
-    }
-  }
-
-  h2 {
-    text-align: center;
-  }
-}
-
-#entry {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
 }
 
 #tank {
@@ -416,7 +357,5 @@ export default Vue.extend({
   h2, h3, h4 {
     text-align: center;
   }
-
-  grid-area: tank;
 }
 </style>

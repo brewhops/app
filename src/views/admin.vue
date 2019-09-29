@@ -1,21 +1,21 @@
 <template>
-  <div v-if="this.brands && this.employees && this.tanks">
-    <div id="content">
-      <create-tank
-        :tanks="this.tanks"
-        :statuses="this.tankStatuses"
-        @update="this.tankUpdate"
-      ></create-tank>
-      <update-tank
-        :tanks="this.tanks"
-        :statuses="this.tankStatuses"
-        @update="this.tankUpdate"
-      ></update-tank>
-      <create-user :employees="this.employees" @update="this.usersUpdate"></create-user>
-      <edit-user :employees="this.employees" @update="this.usersUpdate"></edit-user>
-      <create-brand @update="this.brandsUpdate"></create-brand>
-      <edit-brand :brands="this.brands" @update="this.brandsUpdate"></edit-brand>
-    </div>
+  <div v-if="this.brands && this.employees && this.tanks" class="content grid">
+    <create-tank
+      :tanks="this.tanks"
+      :statuses="this.tankStatuses"
+      @update="this.tankUpdate"
+      class="col-6"
+    ></create-tank>
+    <update-tank
+      :tanks="this.tanks"
+      :statuses="this.tankStatuses"
+      @update="this.tankUpdate"
+      class="col-6"
+    ></update-tank>
+    <create-user :employees="this.employees" @update="this.usersUpdate" class="col-6"></create-user>
+    <edit-user :employees="this.employees" @update="this.usersUpdate" class="col-6"></edit-user>
+    <create-brand @update="this.brandsUpdate" class="col-6"></create-brand>
+    <edit-brand :brands="this.brands" @update="this.brandsUpdate" class="col-6"></edit-brand>
   </div>
   <div v-else>
     <loader></loader>
@@ -119,34 +119,13 @@ export default Vue.extend({
 </script>
 
 <style lang="stylus" scoped>
-@import '../styles/breakpoints'
 
-#content
-  display grid
-  grid-template-columns 1fr 1fr
-  grid-gap 3vw
-  width 80%
-  margin auto
-  align-items flex-start
-  overflow-x: hidden;
-  align-content center
-  +less-than(1400px)
-    width 98%
-    align-content center
-    grid-template-rows auto
-    grid-template-columns 1fr
-    justify-content center
-  +less-than(400px)
-    grid-template-rows auto
-    grid-template-columns center 80vw
+.content
+  max-width 1200px
 
-
+// each box should get some padding and have everything centered
 .element
   padding 20px
   text-align center
-
-#brand
-  .inline
-    input
-      width 49%
+  box-sizing border-box
 </style>

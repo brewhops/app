@@ -48,7 +48,6 @@ export default Vue.extend({
 
 <style lang="stylus" scoped>
 #recipe
-  grid-area recipe
   text-align center
   table
     text-align left

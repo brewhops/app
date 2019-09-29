@@ -39,6 +39,7 @@ export default Vue.extend({
 @import './styles/colors'
 @import './styles/mixins'
 @import './styles/breakpoints'
+@import './styles/components/paper'
 
 //************* globals *************//
 html, body
@@ -48,11 +49,13 @@ html, body
   min-height 100vh
   padding 0
   margin 0
+  background HTMLBackground
 
 h1, h2, h3, h4, h5, h6
   color Teal
   font-weight bold
   margin 0
+  text-align center
 
 h1
   font-size 2em
@@ -65,6 +68,12 @@ h3
   padding 2vh
 h4
   font-size 1.2em
+  padding 1vh
+h5
+  font-size 1em
+  padding 1vh
+h6
+  font-size 0.9em
   padding 1vh
 
 a
@@ -96,6 +105,11 @@ button
   &:active
     background darken(Teal, 30%)
 
+.btn-center
+  display block
+  margin auto
+  margin-top 30px
+
 //************* header ***********//
 .header
   font-family sans-serif
@@ -119,7 +133,7 @@ button
 
 
 //************* inputs *************//
-input, .dropdown
+input
   padding 10px 0
   box-sizing border-box
   font-size 1em
@@ -166,7 +180,18 @@ select
     font-size 14px
 
 .dropdown
-  min-height 30px
+  padding 2px
+  cursor pointer
+  box-sizing border-box
+  font-size 1em
+  display block
+  width 100%
+  color Teal
+  border 1px solid Teal
+  background none
+  margin-top 25px
+  &:focus
+    border-bottom 2px solid Teal
 
 .inline
   display flex
@@ -195,38 +220,63 @@ select
 //************** tables *************//
 table
   margin auto
+  border-collapse collapse
+  margin 10px auto
+  th, td
+    padding 10px
 
 //************** grids *************//
 .grid
   display grid
+  padding 10px 0
   grid-gap 25px 10px
-  +greater-than(mobile)
+  +greater-than(tablet)
     grid-template-columns repeat(12, 1fr)
     .col-1
-      grid-column span 12
+      grid-column span 1
     .col-2
-      grid-column span 6
+      grid-column span 2
     .col-3
-      grid-column span 4
-    .col-4
       grid-column span 3
-    .col-span-8
+    .col-4
+      grid-column span 4
+    .col-5
+      grid-column span 5
+    .col-6
+      grid-column span 6
+    .col-7
+      grid-column span 7
+    .col-8
       grid-column span 8
+    .col-9
+      grid-column span 9
+    .col-10
+      grid-column span 10
+    .col-11
+      grid-column span 11
+    .col-12
+      grid-column span 12
 
 .navbar {
   display flex
   position sticky
+  height 50px
   top 0
   background-color #00aaa6
   justify-content center
   z-index 1
 }
 
+.content
+  margin auto
+  margin-top 20px
+  width 98%
+
 .option {
   color #ffffff
   text-decoration none
-  padding 5px
-  margin 5px
+  line-height 50px
+  padding 0 10px
   font-size 14pt
   +less-than(tablet){
     font-size 12pt

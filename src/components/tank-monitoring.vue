@@ -1,37 +1,34 @@
 <template>
-  <div>
-    <div id="tankInfo" v-if="tanks">
+  <div class="content grid">
+    <div id="tankInfo" v-if="tanks" class="paper col-12">
       <h2>Tank Info</h2>
       <div id="tankContents" v-if="tanks.length > 0">
         <a v-on:click="showTankInfo(tank.id)" v-for="tank in tanks" v-bind:key="tank.id">
-          <div class="tank" v-bind:class="tank.action_id">
-            <div class="tank-name">
-              {{ tank.name }}
-            </div>
-            <table>
-              <tr>
-                <td v-if="tank.airplane_code">{{ tank.airplane_code }}</td>
-                <td v-if="tank.pressure">{{ tank.pressure }} psi</td>
-                <td v-else>{{ tank.status }}</td>
-              </tr>
-              <tr>
-                <td v-if="tank.batch">{{ tank.batch.name }}</td>
-                <td v-if="tank.temperature">{{ tank.temperature }}ºF</td>
-              </tr>
-            </table>
-
-            <div v-if="tank.action && tank.action !== 'No Action'" class="tank-action">
-              {{ tank.action }}
-            </div>
-          </div>
+          <table class="tank" v-bind:class="tank.action_id">
+            <tr>
+              <td colspan="2">{{ tank.name }}</td>
+            </tr>
+            <tr>
+              <td v-if="tank.airplane_code">{{ tank.airplane_code }}</td>
+              <td v-if="tank.pressure">{{ tank.pressure }} psi</td>
+              <td v-else>{{ tank.status }}</td>
+            </tr>
+            <tr>
+              <td v-if="tank.batch">{{ tank.batch.name }}</td>
+              <td v-if="tank.temperature">{{ tank.temperature }}ºF</td>
+            </tr>
+            <tr v-if="tank.action && tank.action !== 'No Action'">
+              <td colspan="2">{{ tank.action }}</td>
+            </tr>
+          </table>
         </a>
       </div>
       <div v-else class="text-center">
         No tanks exist yet
       </div>
-      <bulk-entry v-bind:tanks="tanks" />
     </div>
-    <div v-else class="center">
+    <bulk-entry v-bind:tanks="tanks" class="col-12" />
+    <div v-if="!tanks" class="center col-12">
       <loader></loader>
     </div>
   </div>
@@ -256,85 +253,41 @@ export default Vue.extend({
 
 .dataEntry {
   padding 15px
-  grid-area entry
   display flex
   justify-content center
   align-items center
 }
 
 #tankInfo {
-  grid-area: info;
-
   h2 {
     text-align: center;
   }
 
   #tankContents {
-    display: grid;
-    justify-content: center;
-    grid-gap: 10px;
-    color: white;
-    font-weight: 300;
-    margin: 5px;
-    grid-auto-rows: minmax(128px, max-content);
+    display grid
+    grid-template-columns repeat(auto-fill, minmax(200px, 1fr));
+    grid-gap 10px
+    color white
+    font-weight 300
 
-    +greater-than(desktop) {
-      grid-template-columns: repeat(4, 250px);
-    }
-
-    +between(laptop, desktop) {
-      grid-template-columns: repeat(4, 220px);
-    }
-
-    +less-than(laptop) {
-      grid-template-columns: repeat(3, 200px);
-    }
-
-    +less-than(tablet) {
-      grid-template-columns: repeat(2, 200px);
-    }
-
-    +less-than(mobile) {
-      grid-template-columns: repeat(1, 250px);
+    table {
+      background Teal
+      width 100%
+      margin 0
+      min-height 170px
+      td:nth-child(2) {
+        text-align: right;
+      }
+      tr:last-child {
+        td {
+          text-align center
+        }
+      }
     }
 
     a {
       text-decoration: none;
       color: white;
-    }
-
-    .tank {
-      background: Teal;
-      width: 100%;
-      height: 100%;
-      min-height 128px;
-
-      table {
-        width: 100%;
-        padding-left: 5px;
-        padding-right: 7px;
-
-        td:nth-child(2) {
-          text-align: right;
-        }
-
-        td {
-          padding: 3px;
-        }
-      }
-
-      .tank-name {
-        padding: 8px;
-        font-size: 20px;
-      }
-
-      .tank-action {
-        padding-left: 10px;
-        padding-right: 10px;
-        margin-top: 10px;
-        margin-bottom: 8px;
-        text-align: center;
-      }
     }
 
     .primary-fermentation {

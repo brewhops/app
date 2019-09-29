@@ -1,24 +1,24 @@
 <template lang="html">
-  <div>
-    <div id="content">
+  <div class="content grid">
+    <div class="paper selector">
+      <h3>Batch</h3>
       <div>
-        <h2>Batch History</h2>
-        <div>
-          <select v-model="batch_id" v-on:change="batchChoose">
-            <option disabled value="">Batch</option>
-            <option v-for="(batch, idx) in batches" v-bind:key="idx" v-bind:value="batch.id">{{
-              batch.name
-            }}</option>
-          </select>
-          <a id="csvDownload" @click="downloadCSV()">
-            <button v-if="batch_id" type="button" name="button">
-              Download CSV
-            </button>
-          </a>
-        </div>
+        <select v-model="batch_id" v-on:change="batchChoose" class="dropdown">
+          <option disabled value="">Batch</option>
+          <option v-for="(batch, idx) in batches" v-bind:key="idx" v-bind:value="batch.id">{{
+            batch.name
+          }}</option>
+        </select>
+        <a id="csvDownload" @click="downloadCSV()">
+          <button v-if="batch_id" type="button" name="button" class="btn-center">
+            Download CSV
+          </button>
+        </a>
       </div>
-      <div v-if="batch_id && batch">
-        <div class="tables">
+    </div>
+    <div class="grid col-12">
+      <div v-if="batch_id && batch" class="grid col-12">
+        <div class="tables col-12 paper">
           <data-table
             class="table"
             v-bind:title="''"
@@ -33,63 +33,62 @@
             ]"
           />
         </div>
-        <div id="charts">
+        <div id="charts" class="col-12 paper grid">
+          <h4 class="col-12">Charts</h4>
           <chart
-            class="chart"
+            class="chart col-6"
             v-bind:title="'pH'"
             v-bind:date="pHData.map(elm => elm.date)"
             v-bind:data="pHData.map(elm => elm.data)"
           />
           <chart
-            class="chart"
+            class="chart col-6"
             v-bind:title="'ABV'"
             v-bind:date="abvData.map(elm => elm.date)"
             v-bind:data="abvData.map(elm => elm.data)"
           />
           <chart
-            class="chart"
+            class="chart col-6"
             v-bind:title="'SG'"
             v-bind:date="fermentationData.map(elm => elm.date)"
             v-bind:data="fermentationData.map(elm => elm.data)"
           />
           <chart
+            class="col-6"
             v-bind:title="'Temperature'"
             v-bind:date="tempData.map(elm => elm.date)"
             v-bind:data="tempData.map(elm => elm.data)"
           />
         </div>
-
-        <div class="tables">
-          <div>
-            <data-table
-              class="table"
-              v-bind:title="'Tasks'"
-              v-bind:data="tasks"
-              v-bind:headers="task_titles"
-              v-bind:fields="[
-                t => actions.filter(a => a.id === t.action_id)[0].name,
-                t => getEmployeeName(employees.filter(e => e.id === t.employee_id)[0]),
-                t => formatDate(t.added_on),
-                t => formatDate(t.completed_on)
-              ]"
-            />
-          </div>
-          <div>
-            <data-table
-              class="table"
-              v-bind:title="'Version'"
-              v-bind:data="versions"
-              v-bind:headers="version_titles"
-              v-bind:fields="[
-                v => formatDate(v.measured_on),
-                v => v.sg,
-                v => v.ph,
-                v => v.abv,
-                v => v.temperature,
-                v => v.pressure
-              ]"
-            />
-          </div>
+        <div class="paper col-12">
+          <data-table
+            class="table"
+            v-bind:title="'Tasks'"
+            v-bind:data="tasks"
+            v-bind:headers="task_titles"
+            v-bind:fields="[
+              t => actions.filter(a => a.id === t.action_id)[0].name,
+              t => getEmployeeName(employees.filter(e => e.id === t.employee_id)[0]),
+              t => formatDate(t.added_on),
+              t => formatDate(t.completed_on)
+            ]"
+          />
+        </div>
+        <div class="paper col-12">
+          <data-table
+            class="table"
+            v-bind:title="'Version'"
+            v-bind:data="versions"
+            v-bind:headers="version_titles"
+            v-bind:fields="[
+              v => formatDate(v.measured_on),
+              v => v.sg,
+              v => v.ph,
+              v => v.abv,
+              v => v.temperature,
+              v => v.pressure
+            ]"
+          />
         </div>
       </div>
       <div v-else-if="loading" class="center">
@@ -364,68 +363,9 @@ export default Vue.extend({
 </script>
 
 <style lang="stylus" scoped>
-@import '../styles/breakpoints'
-#content {
-  display: grid;
-  justify-items: center;
-  text-align: center;
-  min-height: 60vh;
-  z-index: -1;
+@import '../styles/breakpoints';
 
-  p {
-    color: Teal;
-    font-weight: bold;
-  }
-    & /deep/ tr {
-      td, th {
-    @media screen and (max-width: 540px){
-      font-size: 14px
-      padding: 5px
-    }
-    @media screen and (max-width: 480px){
-      font-size: 12px
-    }
-    @media screen and (max-width: 414px){
-      font-size 12px
-    }
-    @media screen and (max-width: 360px){
-      font-size 11px
-    }
-    @media screen and (max-width: 325px){
-      padding: 4px
-      font-size 9px
-    }
-      padding: 10px;
-      border-left: 1px solid black;
-      }
-    }
-
-}
-  #charts{
-    display grid
-    justify-content center
-    grid-template-columns repeat(2, 48vw)
-    +less-than(tablet) {
-      justify-content center
-      grid-template-columns 92vw
-    }
-    .chart {
-      +less-than(tablet) {
-        margin-left 3vw
-        margin-right 5vw
-
-      }
-      margin-left 5vw
-      margin-right 5vw
-    }
-  }
-
-  table {
-    background-color: red;
-    +less-than(tablet) {
-      justify-content center
-      grid-template-columns 92vw
-    border-collapse: collapse;
-    }
-  }
+.selector
+  +greater-than(tablet)
+    grid-column 5 / span 4
 </style>

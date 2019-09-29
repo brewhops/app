@@ -1,12 +1,12 @@
 <template>
-  <div v-if="!tank" class="element">
+  <div v-if="!tank" class="element paper">
     <h2>Edit Tank</h2>
     <select v-model="tank_id" v-on:change="populateTank" class="dropdown">
       <option disabled value="">Select Tank</option>
       <option v-for="tank in tanks" v-bind:key="tank.id" :value="tank.id">{{ tank.name }}</option>
     </select>
   </div>
-  <div v-else class="element">
+  <div v-else class="element paper">
     <h2>Edit {{ this.tank.name }}</h2>
     <input v-model="tank_name" placeholder="Tank Name" type="string" />
     <select v-model="status" class="dropdown">

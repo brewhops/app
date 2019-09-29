@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!brand" class="element">
+  <div v-if="!brand" class="element paper">
     <h2>Edit Brand</h2>
     <select class="dropdown" v-on:change="populateBrand" v-model="brandID">
       <option disabled value="">Select Brand</option>
@@ -8,7 +8,7 @@
       }}</option>
     </select>
   </div>
-  <div v-else class="element">
+  <div v-else class="element paper">
     <h2>Edit {{ recipe_name }}</h2>
     <div id="full">
       <input v-model.lazy="recipe_name" placeholder="Brand Name" />

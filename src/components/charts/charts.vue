@@ -1,25 +1,25 @@
 <template>
-  <div id="charts">
+  <div id="charts" class="grid">
     <chart
-      class="chart"
+      class="chart col-6"
       v-bind:title="'pH'"
       v-bind:date="pHData.map(elm => elm.date)"
       v-bind:data="pHData.map(elm => elm.data)"
     />
     <chart
-      class="chart"
+      class="chart col-6"
       v-bind:title="'ABV'"
       v-bind:date="abvData.map(elm => elm.date)"
       v-bind:data="abvData.map(elm => elm.data)"
     />
     <chart
-      class="chart"
+      class="chart col-6"
       v-bind:title="'SG'"
       v-bind:date="fermentationData.map(elm => elm.date)"
       v-bind:data="fermentationData.map(elm => elm.data)"
     />
     <chart
-      class="chart"
+      class="chart col-6"
       v-bind:title="'Temperature'"
       v-bind:date="tempData.map(elm => elm.date)"
       v-bind:data="tempData.map(elm => elm.data)"

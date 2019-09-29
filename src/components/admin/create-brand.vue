@@ -1,5 +1,5 @@
 <template>
-  <div class="element">
+  <div class="element paper">
     <h2>Create New Brand</h2>
     <div id="full">
       <input v-model.lazy="recipe_name" placeholder="Brand Name" />

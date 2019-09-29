@@ -1,5 +1,5 @@
 <template>
-  <div class="element">
+  <div class="element paper">
     <h2>Create New Tank</h2>
     <input v-model.lazy="tank_name" placeholder="New Tank Number" />
     <span>{{ feedback.tank_name }}</span>
