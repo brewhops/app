@@ -1,44 +1,42 @@
 <template>
   <div>
-    <div v-if="!action" class="center">
+    <div class="title">
+      <h3>Tank {{ tankInfo.name }}</h3>
+    </div>
+    <div v-show="loading" class="center">
       <loader></loader>
     </div>
-    <div v-else>
-      <div class="title">
-        <h3>Tank {{ tankInfo.name }}</h3>
-      </div>
-      <div v-if="tank && this.tank.in_use && recipe && batch" id="content">
-        <div id="info-content">
-          <div id="tank">
-            <h2>Info</h2>
-            <tank-status v-bind:tankInfo="tankInfo" v-bind:task="task" />
-            <recipe id="recipe" v-bind:recipe="recipe" v-bind:volume="tankInfo.volume" />
-          </div>
+    <div v-show="!loading" v-if="tank && this.tank.in_use && recipe && batch" id="content">
+      <div id="info-content">
+        <div id="tank">
+          <h2>Info</h2>
+          <tank-status v-bind:tankInfo="tankInfo" v-bind:task="task" />
+          <recipe id="recipe" v-bind:recipe="recipe" v-bind:volume="tankInfo.volume" />
+        </div>
 
-          <div id="entry">
-            <update-action
-              v-bind:tank="tank"
-              v-bind:batch="batch"
-              v-bind:activeTask="task"
-              @newDataCallback="loadData"
-            ></update-action>
-            <data-entry
-              v-bind:tank="tank"
-              v-bind:batch="batch"
-              v-bind:recipe="recipe"
-              v-bind:activeTask="task"
-              @newDataCallback="loadData"
-            ></data-entry>
-          </div>
-        </div>
-        <div v-show="versions.length > 0" id="data">
-          <h2>Batch History</h2>
-          <charts v-bind:batch="batch" />
+        <div id="entry">
+          <update-action
+            v-bind:tank="tank"
+            v-bind:batch="batch"
+            v-bind:activeTask="task"
+            @newDataCallback="loadData"
+          ></update-action>
+          <data-entry
+            v-bind:tank="tank"
+            v-bind:batch="batch"
+            v-bind:recipe="recipe"
+            v-bind:activeTask="task"
+            @newDataCallback="loadData"
+          ></data-entry>
         </div>
       </div>
-      <div v-if="tank && !this.tank.in_use" id="new-batch">
-        <new-batch :tank="this.tank" />
+      <div v-show="versions.length > 0" id="data">
+        <h2>Batch History</h2>
+        <charts v-bind:batch="batch" v-on:loaded="loading = false" />
       </div>
+    </div>
+    <div v-if="tank && !this.tank.in_use" id="new-batch">
+      <new-batch :tank="this.tank" />
     </div>
   </div>
 </template>

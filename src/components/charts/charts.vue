@@ -29,7 +29,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import chart from '@/components/chart.vue';
+import chart from '@/components/charts/chart.vue';
 import moment, { unix, months, Moment } from 'moment';
 
 interface IChartsState {
@@ -41,7 +41,7 @@ interface IChartsState {
 
 export default Vue.extend({
   name: 'charts',
-  props: ['batch'],
+  props: ['batch', 'chart-load'],
   components: {
     chart
   },
@@ -144,6 +144,7 @@ export default Vue.extend({
       this.pHData = formattedData.map((e: any) => e.ph);
       this.abvData = formattedData.map((e: any) => e.abv);
       this.tempData = formattedData.map((e: any) => e.temp);
+      this.$emit('loaded');
     }
   }
 });

@@ -107,7 +107,7 @@ import Cookie from 'js-cookie';
 import moment from 'moment';
 import { Batch, Version, Task, Employee, Action } from '@/types/index';
 import { Moment } from 'moment';
-import chart from '@/components/chart.vue';
+import chart from '@/components/charts/chart.vue';
 import loader from '@/components/loader.vue';
 import dataTable from '@/components/data-table.vue';
 import { orderBy } from 'natural-orderby';
