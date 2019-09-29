@@ -1,5 +1,5 @@
 <template>
-  <div class="element">
+  <div class="element paper">
     <h2>Create New User</h2>
     <input v-model.lazy="first_name" placeholder="First Name" />
     <span>{{ feedback.first_name }}</span>

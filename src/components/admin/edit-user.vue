@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!employee" class="element">
+  <div v-if="!employee" class="element paper">
     <h2>Edit User</h2>
     <select class="dropdown" v-on:change="populateEmployee" v-model="employee_id">
       <option disabled value="">Select Employee</option>
@@ -8,7 +8,7 @@
       }}</option>
     </select>
   </div>
-  <div v-else class="element">
+  <div v-else class="element paper">
     <h2>Edit {{ name }}</h2>
     <table>
       <tr>

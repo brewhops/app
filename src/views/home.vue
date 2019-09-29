@@ -1,8 +1,6 @@
 <template>
-  <div>
-    <div id="content">
-      <tank-monitoring></tank-monitoring>
-    </div>
+  <div class="content">
+    <tank-monitoring></tank-monitoring>
   </div>
 </template>
 
@@ -24,24 +22,4 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="stylus" scoped>
-@import '../styles/breakpoints';
-
-#content {
-  display: grid;
-
-  +greater-than(desktop) {
-    grid-template-columns: 1fr;
-  }
-
-  grid-template-columns: 1fr;
-  grid-template-areas: 'info';
-
-  +less-than(tablet) {
-    grid-template-columns: 98vw;
-    grid-template-areas: 'info';
-  }
-
-  justify-items: center;
-}
-</style>
+<style lang="stylus" scoped></style>

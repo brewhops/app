@@ -1,38 +1,36 @@
 <template>
-  <div>
+  <div class="paper">
     <form class="dataEntry" @submit.prevent="submit">
       <h2>Data Entry</h2>
       <div class="formFields grid">
-        <div class="col-3 inputGroup">
+        <div class="col-4 inputGroup">
           <input v-model="pH" type="number" step="0.01" required />
           <label>pH</label>
         </div>
-        <div class="col-3 inputGroup">
+        <div class="col-4 inputGroup">
           <input v-model="ABV" type="number" step="0.01" required />
           <label>ABV</label>
         </div>
-        <div class="col-3 inputGroup">
+        <div class="col-4 inputGroup">
           <input v-model="pressure" type="number" step="0.01" required />
           <label>Pressure</label>
         </div>
-        <div class="col-3 inputGroup">
+        <div class="col-4 inputGroup">
           <input v-model="SG" type="number" step="0.000001" required />
           <label>Specific Gravity</label>
         </div>
-        <div class="col-3 inputGroup">
+        <div class="col-4 inputGroup">
           <input v-model="temp" type="number" step="0.1" required />
           <label>Temperature</label>
         </div>
-        <div class="col-3 time inputGroup">
+        <div class="col-4 time inputGroup">
           <datepicker placeholder="Select Date" v-model="time"></datepicker>
-          <!-- <input v-model="time" type="datetime-local" /> -->
-          <!-- <label>Time Measured</label> -->
         </div>
       </div>
       <button>Submit</button>
     </form>
     <form class="dataEntry" v-if="admin" @submit.prevent="completeBatch">
-      <button class="col-2">Complete Batch</button>
+      <button>Complete Batch</button>
     </form>
   </div>
 </template>
@@ -220,11 +218,9 @@ export default Vue.extend({
 
 .dataEntry
   padding 15px
-  grid-area entry
   display flex
   flex-direction column
   align-items center
-  max-width 500px
   button
     margin-top 30px
 

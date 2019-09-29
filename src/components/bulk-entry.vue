@@ -1,16 +1,12 @@
 <template>
-  <div>
-    <h4 class="text-center">Input Alcolyzer Data</h4>
-    <form class="dataEntry" @submit.prevent="submit">
-      <div class="col-3 inputGroup">
-        <input type="file" placeholder="Upload From CSV" @change="readAlcolyzerData" />
-      </div>
-      <div class="col-3 inputGroup">
-        <datepicker placeholder="Date: Last Batch" v-model="goal_time"></datepicker>
-      </div>
-      <button class="col-3">Submit</button>
+  <div class="paper grid" id="alcolizer">
+    <h4 class="center col-12">Input Alcolyzer Data</h4>
+    <form @submit.prevent="submit" class="grid col-12">
+      <input type="file" class="col-6" placeholder="Upload From CSV" @change="readAlcolyzerData" />
+      <datepicker placeholder="Date: Last Batch" v-model="goal_time" class="col-6" />
+      <button class="col-12 center" style="margin: auto">Submit</button>
     </form>
-    <h5 class="text-center">{{ update_text }}</h5>
+    <h5 class="center">{{ update_text }}</h5>
   </div>
 </template>
 
@@ -244,20 +240,5 @@ export default Vue.extend({
 @import '../styles/breakpoints';
 
 .center
-  display flex
-  width 100vw
-  height 90vh
-  justify-content center
-  align-items center
-
-.text-center
   text-align center
-
-.dataEntry {
-  padding 15px
-  grid-area entry
-  display flex
-  justify-content center
-  align-items center
-}
 </style>
