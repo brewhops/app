@@ -159,7 +159,7 @@ export default Vue.extend({
 
       reader.onload = () => {
         if (reader.result) {
-          let strs = (reader.result as string).split('\n');
+          let strs = (reader.result as string).split('\n').filter(str => str !== '');
 
           // Map of property key to possible columns
           const columnDict: KeyAccessor = {
@@ -214,12 +214,10 @@ export default Vue.extend({
           });
 
           // if date picker is filled use it, otherwise most recent time
-          const lastTime = Math.max.apply(
-            Math,
-            parsedReadings.map((o: any) => {
-              return o.time;
-            })
-          );
+          const lastTime = parsedReadings.reduce((dateA: IDataEntryState, dateB: IDataEntryState) =>
+            moment(dateA.time).unix() > moment(dateB.time).unix() ? dateA : dateB
+          ).time;
+          console.log(lastTime);
           this.goal_time = this.goal_time ? moment(this.goal_time).format('MM/DD/YYYY') : lastTime;
 
           // Set the readings
