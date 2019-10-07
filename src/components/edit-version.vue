@@ -1,36 +1,39 @@
 <template lang="html">
   <modal
     name="edit-version-modal"
-    v-bind:resizable="true"
-    v-bind:adaptive="true"
-    v-bind:draggable="true"
+    :resizable="true"
+    :adaptive="true"
+    :scrollable="true"
+    :draggable="true"
+    :minWidth="350"
+    :minHeight="500"
     @before-close="this.closedEarly"
   >
-    <div v-if="version" id="content">
+    <div v-if="version" style="padding: 20px">
       <h3>Edit Version</h3>
       <div class="formFields grid">
-        <div class="col-3 inputGroup">
-          <input v-model="pH" type="number" step="0.01" required />
+        <div class="col-4 time inputGroup">
+          <datepicker placeholder="Select Date" v-model="time"></datepicker>
+        </div>
+        <div class="col-4 inputGroup">
+          <input v-model="pH" type="number" step="0.0000001" required />
           <label>pH</label>
         </div>
-        <div class="col-3 inputGroup">
+        <div class="col-4 inputGroup">
           <input v-model="ABV" type="number" step="0.01" required />
           <label>ABV</label>
         </div>
-        <div class="col-3 inputGroup">
-          <input v-model="pressure" type="number" step="0.01" required />
+        <div class="col-4 inputGroup">
+          <input v-model="pressure" type="number" step="0.0000001" required />
           <label>Pressure</label>
         </div>
-        <div class="col-3 inputGroup">
+        <div class="col-4 inputGroup">
           <input v-model="SG" type="number" step="0.000001" required />
           <label>Specific Gravity</label>
         </div>
-        <div class="col-3 inputGroup">
-          <input v-model="temp" type="number" step="0.01" required />
+        <div class="col-4 inputGroup">
+          <input v-model="temp" type="number" step="0.0000001" required />
           <label>Temperature</label>
-        </div>
-        <div class="col-3 time inputGroup">
-          <datepicker placeholder="Select Date" v-model="time"></datepicker>
         </div>
       </div>
       <button v-on:click="this.closed">Submit</button>
@@ -97,28 +100,7 @@ export default Vue.extend({
 <style lang="stylus" scoped>
 @import '../styles/breakpoints'
 
-#content
-  display: grid;
-  justify-items: center;
-  text-align: center;
-  padding: 5px 25px 20px 20px;
-
-modal
-  display: grid;
-  justify-items: center;
-  text-align: center;
-  padding 15px
-  flex-direction column
-  align-items center
-  max-width 500px
-  button
-    margin-top 40px
-    margin-bottom 30px
-
-  .formFields
-    .time
-      display block
-      datepicker
-        overflow visible
-    text-align center
+button
+  margin 30px auto 0 auto
+  display block
 </style>

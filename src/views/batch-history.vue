@@ -1,24 +1,21 @@
 <template lang="html">
   <div>
-    <div id="content">
-      <editVersion
-        v-bind:version="editableVersion"
-        @editted-version="this.editVersionCloseHook"
-      ></editVersion>
-
-      <div>
-        <select v-model="batch_id" v-on:change="batchChoose" class="dropdown">
-          <option disabled value="">Batch</option>
-          <option v-for="(batch, idx) in batches" v-bind:key="idx" v-bind:value="batch.id">{{
-            batch.name
-          }}</option>
-        </select>
-        <a id="csvDownload" @click="downloadCSV()">
-          <button v-if="batch_id" type="button" name="button" class="btn-center">
-            Download CSV
-          </button>
-        </a>
-      </div>
+    <editVersion
+      v-bind:version="editableVersion"
+      @editted-version="this.editVersionCloseHook"
+    ></editVersion>
+    <div class="paper">
+      <select v-model="batch_id" v-on:change="batchChoose" class="dropdown">
+        <option disabled value="">Batch</option>
+        <option v-for="(batch, idx) in batches" v-bind:key="idx" v-bind:value="batch.id">{{
+          batch.name
+        }}</option>
+      </select>
+      <a id="csvDownload" @click="downloadCSV()">
+        <button v-if="batch_id" type="button" name="button" class="btn-center">
+          Download CSV
+        </button>
+      </a>
     </div>
     <div class="grid col-12">
       <div v-if="batch_id && batch" class="grid col-12">
@@ -65,39 +62,19 @@
           />
         </div>
 
-        <div class="tables">
-          <div>
-            <data-table
-              class="table"
-              v-bind:title="'Tasks'"
-              v-bind:data="tasks"
-              v-bind:headers="task_titles"
-              v-bind:fields="[
-                t => actions.filter(a => a.id === t.action_id)[0].name,
-                t => getEmployeeName(employees.filter(e => e.id === t.employee_id)[0]),
-                t => formatDate(t.added_on),
-                t => formatDate(t.completed_on)
-              ]"
-            />
-          </div>
-          <div>
-            <data-table
-              class="table"
-              v-bind:title="'Version'"
-              v-bind:data="versions"
-              v-bind:headers="version_titles"
-              v-bind:fields="[
-                v => formatDate(v.measured_on),
-                v => v.sg,
-                v => v.ph,
-                v => v.abv,
-                v => v.temperature,
-                v => v.pressure
-              ]"
-              v-bind:editAction="version => (this.editableVersion = version)"
-              v-bind:deleteAction="this.deleteVersion"
-            />
-          </div>
+        <div class="paper col-12">
+          <data-table
+            class="table"
+            v-bind:title="'Tasks'"
+            v-bind:data="tasks"
+            v-bind:headers="task_titles"
+            v-bind:fields="[
+              t => actions.filter(a => a.id === t.action_id)[0].name,
+              t => getEmployeeName(employees.filter(e => e.id === t.employee_id)[0]),
+              t => formatDate(t.added_on),
+              t => formatDate(t.completed_on)
+            ]"
+          />
         </div>
         <div class="paper col-12">
           <data-table
@@ -113,6 +90,8 @@
               v => v.temperature,
               v => v.pressure
             ]"
+            v-bind:editAction="version => (this.editableVersion = version)"
+            v-bind:deleteAction="this.deleteVersion"
           />
         </div>
       </div>
