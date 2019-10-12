@@ -92,7 +92,7 @@ export default Vue.extend({
         },
         legend: {
           item: {
-            onclick: (id: any) => {
+            onclick: (id: string) => {
               if (this.focusItems.includes(id)) {
                 this.focusItems = this.focusItems.filter(v => v !== id);
               } else {
@@ -100,12 +100,8 @@ export default Vue.extend({
               }
               chart.focus(this.focusItems);
             },
-            onmouseover: (id: any) => {
-              chart.focus([id, ...this.focusItems]);
-            },
-            onmouseout: (id: any) => {
-              chart.focus(this.focusItems);
-            }
+            onmouseover: (id: string) => chart.focus([id, ...this.focusItems]),
+            onmouseout: (id: string) => chart.focus(this.focusItems)
           }
         }
       };
