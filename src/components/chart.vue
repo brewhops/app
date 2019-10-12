@@ -70,9 +70,12 @@ export default Vue.extend({
         }
       };
 
-      const config: ChartConfiguration = {
+      const config = {
         // bind it to this instance of the component
         bindto: <HTMLElement>this.$el,
+        title: {
+          text: this.title
+        },
         data: {
           xs,
           //xFormat: '%m/%d/%Y %H:%M',
@@ -89,7 +92,7 @@ export default Vue.extend({
         },
         legend: {
           item: {
-            onclick: id => {
+            onclick: (id: string) => {
               if (this.focusItems.includes(id)) {
                 this.focusItems = this.focusItems.filter(v => v !== id);
               } else {
@@ -97,12 +100,8 @@ export default Vue.extend({
               }
               chart.focus(this.focusItems);
             },
-            onmouseover: id => {
-              chart.focus([id, ...this.focusItems]);
-            },
-            onmouseout: id => {
-              chart.focus(this.focusItems);
-            }
+            onmouseover: (id: string) => chart.focus([id, ...this.focusItems]),
+            onmouseout: (id: string) => chart.focus(this.focusItems)
           }
         }
       };
