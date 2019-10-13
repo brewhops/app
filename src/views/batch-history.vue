@@ -33,32 +33,9 @@
             ]"
           />
         </div>
-        <div id="charts" class="col-12 paper grid">
+        <div id="charts" class="col-12 paper">
           <h4 class="col-12">Charts</h4>
-          <chart
-            class="chart col-6"
-            v-bind:title="'pH'"
-            v-bind:date="pHData.map(elm => elm.date)"
-            v-bind:data="pHData.map(elm => elm.data)"
-          />
-          <chart
-            class="chart col-6"
-            v-bind:title="'ABV'"
-            v-bind:date="abvData.map(elm => elm.date)"
-            v-bind:data="abvData.map(elm => elm.data)"
-          />
-          <chart
-            class="chart col-6"
-            v-bind:title="'SG'"
-            v-bind:date="fermentationData.map(elm => elm.date)"
-            v-bind:data="fermentationData.map(elm => elm.data)"
-          />
-          <chart
-            class="col-6"
-            v-bind:title="'Temperature'"
-            v-bind:date="tempData.map(elm => elm.date)"
-            v-bind:data="tempData.map(elm => elm.data)"
-          />
+          <charts v-bind:batch="batch" v-on:loaded="loading = false" />
         </div>
         <div class="paper col-12">
           <data-table
@@ -107,6 +84,7 @@ import moment from 'moment';
 import { Batch, Version, Task, Employee, Action } from '@/types/index';
 import { Moment } from 'moment';
 import chart from '@/components/charts/chart.vue';
+import charts from '@/components/charts/charts.vue';
 import loader from '@/components/loader.vue';
 import dataTable from '@/components/data-table.vue';
 import { orderBy } from 'natural-orderby';
@@ -132,7 +110,7 @@ interface IHistoryState {
 
 export default Vue.extend({
   name: 'batch-history',
-  components: { chart: chart, dataTable: dataTable, loader: loader },
+  components: { chart: chart, dataTable: dataTable, loader: loader, charts: charts },
   data(): IHistoryState {
     return {
       batch_titles: ['Volume', 'Bright', 'Generation', 'Date Started', 'Date Completed'],
