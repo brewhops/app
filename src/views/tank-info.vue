@@ -1,7 +1,15 @@
 <template>
   <div>
     <h3>Tank {{ tankInfo.name }}</h3>
-    <div v-if="tank && this.tank.in_use && recipe && batch" id="content" class="grid">
+    <div v-if="loading && this.tank.in_use" class="center">
+      <loader class="col-6" />
+    </div>
+    <div
+      v-show="!loading"
+      v-if="tank && this.tank.in_use && recipe && batch"
+      id="content"
+      class="grid"
+    >
       <div id="tank" class="paper col-6">
         <h2>Info</h2>
         <tank-status v-bind:tankInfo="tankInfo" v-bind:task="task" />
@@ -25,39 +33,11 @@
       </div>
       <div v-show="versions.length > 0" id="data" class="paper col-12">
         <h2>Batch History</h2>
-        <div id="charts" class="grid">
-          <chart
-            class="chart col-6"
-            v-bind:title="'pH'"
-            v-bind:date="pHData.map(elm => elm.date)"
-            v-bind:data="pHData.map(elm => elm.data)"
-          />
-          <chart
-            class="chart col-6"
-            v-bind:title="'ABV'"
-            v-bind:date="abvData.map(elm => elm.date)"
-            v-bind:data="abvData.map(elm => elm.data)"
-          />
-          <chart
-            class="chart col-6"
-            v-bind:title="'SG'"
-            v-bind:date="fermentationData.map(elm => elm.date)"
-            v-bind:data="fermentationData.map(elm => elm.data)"
-          />
-          <chart
-            class="chart col-6"
-            v-bind:title="'Temperature'"
-            v-bind:date="tempData.map(elm => elm.date)"
-            v-bind:data="tempData.map(elm => elm.data)"
-          />
-        </div>
+        <charts v-bind:batch="batch" v-on:loaded="loading = false" />
       </div>
     </div>
     <div v-if="tank && !this.tank.in_use" id="new-batch">
       <new-batch :tank="this.tank" />
-    </div>
-    <div v-if="!tank && !recipe && !batch" class="center">
-      <loader></loader>
     </div>
   </div>
 </template>
@@ -71,6 +51,7 @@ import newBatch from '@/components/tank-info/new-batch.vue';
 import updateAction from '@/components/tank-info/update-action.vue';
 import tankStatus from '@/components/tank-info/tank-status.vue';
 import loader from '@/components/loader.vue';
+import charts from '@/components/charts/charts.vue';
 import router from '@/router';
 import Cookie from 'js-cookie';
 
@@ -88,18 +69,15 @@ interface ITankInfoState {
   action?: Action;
   doneLink?: any;
   home?: any;
+  loading: boolean;
   debugging?: string;
-  fermentationData: any[];
-  pHData: any[];
-  abvData: any[];
-  tempData: any[];
 }
 
 export default Vue.extend({
   name: 'tank-info',
   components: {
     recipe,
-    chart,
+    charts,
     dataEntry,
     newBatch,
     tankStatus,
@@ -124,19 +102,17 @@ export default Vue.extend({
         time: '',
         name: '',
         action: '',
+        loading: true,
         in_use: undefined
       },
       doneLink: '',
       home: '',
+      loading: true,
       debugging: '',
       tank: undefined,
       task: undefined,
       batch: undefined,
       versions: [],
-      fermentationData: [],
-      pHData: [],
-      abvData: [],
-      tempData: [],
       recipe: undefined,
       action: undefined
     };
@@ -183,14 +159,7 @@ export default Vue.extend({
     async loadData() {
       try {
         await this.loadBatchData();
-        const methods = await Promise.all([
-          this.loadTaskData(),
-          this.loadHistoryData(),
-          this.loadGraphData(
-            this.batch ? this.batch.id : undefined,
-            this.batch ? this.batch.recipe_id : undefined
-          )
-        ]);
+        const methods = await Promise.all([this.loadTaskData(), this.loadHistoryData()]);
       } catch (err) {
         console.error(err);
       }
@@ -342,88 +311,6 @@ export default Vue.extend({
           console.error(err);
         }
       }
-    },
-    async loadGraphData(batchId: any, recipeId: any) {
-      let previousBatches: Batch[] = [];
-      try {
-        const { data } = await this.$http.get(
-          `${process.env.VUE_APP_API}/batches/recipe/${recipeId}/`
-        );
-        previousBatches = <Batch[]>data.sort((a: Batch, b: Batch) => {
-          return moment.utc(b.started_on).diff(moment.utc(a.started_on));
-        });
-      } catch (err) {
-        console.error(err);
-      }
-
-      let currentBatchIdx: any;
-      previousBatches.some((b, i) => {
-        currentBatchIdx = i;
-
-        return b.id === batchId;
-      });
-
-      previousBatches = previousBatches.splice(currentBatchIdx, 10);
-
-      const startDate = this.batch ? moment(this.batch.started_on) : undefined;
-
-      let formattedData: any[] = [];
-
-      try {
-        formattedData = await Promise.all(
-          previousBatches.map(async (batch, i) => {
-            const response = await this.$http.get(
-              `${process.env.VUE_APP_API}/versions/batch/${batch.id}/`
-            );
-
-            const versions = (response.data as Version[])
-              .map((v: Version) => {
-                v.measured_on = moment(v.measured_on);
-
-                return v;
-              })
-              .sort((a: Version, b: Version) => {
-                return moment.utc(a.measured_on).diff(moment.utc(b.measured_on));
-              });
-
-            const sg = versions.map(v => v.sg);
-            const ph = versions.map(v => v.ph);
-            const abv = versions.map(v => v.abv);
-            const temp = versions.map(v => v.temperature);
-
-            const date = versions.map(v => v.measured_on) as Moment[];
-            const days = date.map(d =>
-              moment(startDate).add(moment.duration(d.diff(date[0])).asMilliseconds(), 'ms')
-            );
-
-            return {
-              sg: {
-                data: [batch.name, ...sg],
-                date: [`Days${i}`, ...days]
-              },
-              ph: {
-                data: [batch.name, ...ph],
-                date: [`Days${i}`, ...days]
-              },
-              abv: {
-                data: [batch.name, ...abv],
-                date: [`Days${i}`, ...days]
-              },
-              temp: {
-                data: [batch.name, ...temp],
-                date: [`Days${i}`, ...days]
-              }
-            };
-          })
-        );
-      } catch (err) {
-        console.error(err);
-      }
-
-      this.fermentationData = formattedData.map((e: any) => e.sg);
-      this.pHData = formattedData.map((e: any) => e.ph);
-      this.abvData = formattedData.map((e: any) => e.abv);
-      this.tempData = formattedData.map((e: any) => e.temp);
     }
   }
 });

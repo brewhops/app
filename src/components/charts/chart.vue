@@ -109,6 +109,7 @@ export default Vue.extend({
 
       // create our chart
       const chart = c3.generate(config);
+      this.$emit('loaded');
 
       if (zippedNames.length > 0) {
         this.focusItems.push(zippedNames[0][1]);
