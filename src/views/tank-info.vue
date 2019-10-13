@@ -1,7 +1,7 @@
 <template>
   <div>
     <h3>Tank {{ tankInfo.name }}</h3>
-    <div v-if="loading" class="center">
+    <div v-if="loading && this.tank.in_use" class="center">
       <loader class="col-6" />
     </div>
     <div
